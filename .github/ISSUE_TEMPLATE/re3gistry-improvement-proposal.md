@@ -4,13 +4,10 @@ about: GitHub issue which proposes an improvement of the Re3gistry
 
 ---
 
-**Re3gistry Improvement Proposal**
+_Please follow the template below and provide at least information for
+the first 4 sections_
 
-GitHub issue which proposes an improvement of the Re3gistry.
-It should follow the template below and provide at least information for
-the first 4 sections.
-
-# Background and Motivation:
+# Background and Motivation
 Explain the problem behind this proposal. If the problem has already been
 discussed externally, please add a link. Source code or data snippets,
 diagrams, graphics that illustrate the problem are welcome.
