@@ -7,19 +7,17 @@ ensuring concepts are correctly referenced in INSPIRE, or for content in any oth
 
 The **Re3gistry software v2** is being completed and tested. A development collaboration with **National Land Survey of Finland** has been set up to work on the implementation of the missing **data cache** and **data API** module. Below there is an approximate release plan for the Re3gistry 2.
 
-**April**
+**July**
 
  - Testing Editing interface, Bulk import
- - Developing data cache and data API
 
-**May**
+**August**
+ - Fine tune of the Data API
+ - Testing the Data API
 
- -  Open test-bed instance
- - Testing and fine tune data cache and data API
-
-**June**
+**September**
 
 - Integrating service front-end with new data API
 - Testing of the overall application
-- Target release (end of June)
+- Target release (end of October)
 
