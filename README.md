@@ -20,4 +20,3 @@ The **Re3gistry software v2** is being completed and tested. A development colla
 - Integrating service front-end with new data API
 - Testing of the overall application
 - Target release (end of October)
-
