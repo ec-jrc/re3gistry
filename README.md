@@ -9,14 +9,15 @@ The **Re3gistry software v2** is being completed and tested. A development colla
 
 **July**
 
- - Testing Editing interface, Bulk import
+ - The JRC launched a test-bed on the Editing interface and on the Bulk import. If you want to participate in the test-bed get in contact with us at jrc-inspire-support@ec.europa.eu
+ - The JRC is testing the Data API provided by the National Land Survey of Finland.
 
 **August**
- - Fine tune of the Data API
- - Testing the Data API
+ - The JRC and the National Land Survey of Finland will work together to fine tune the Data API
+ - In parallel, the progress on the Data API will be tested, and the work on the service front-end user interface will be started
 
 **September**
 
-- Integrating service front-end with new data API
-- Testing of the overall application
-- Target release (end of October)
+- The JRC will integrating service front-end with new Data API
+- The JRC and the National Land Survey of Finland will test the overall application
+- The target release date for the Re3gistry 2 is the end of October
