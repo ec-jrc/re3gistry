@@ -5,25 +5,14 @@ ensuring concepts are correctly referenced in INSPIRE, or for content in any oth
 
 ## Release Plan
 
-The **Re3gistry software v2** is currently being finalised and tested, with a target release date in October 2019.
+The **Re3gistry software v2** is currently being tested, with a target release date as open source project in February 2019.
 
-A development collaboration with **National Land Survey of Finland** has been set up to work on the implementation of the missing **data cache** and **data API** module. Below there is an approximate release plan for the Re3gistry 2.
+A development collaboration with **National Land Survey of Finland** has been set up to work on the implementation of the **data cache** and **data API** module. Below there is an approximate release plan for the Re3gistry 2.
 
-**July**
+**December**
 
- - The JRC launched a test-bed on the Editing interface and on the Bulk import. If you want to participate in the test-bed get in contact with us at jrc-inspire-support@ec.europa.eu
- - The JRC is testing the Data API provided by the National Land Survey of Finland.
+ - The JRC will launch a test-bed on the system. If you want to participate in the test-bed get in contact with us at jrc-inspire-support@ec.europa.eu
 
-**August**
+**February**
 
- - The JRC and the National Land Survey of Finland will work together to fine tune the Data API
- - In parallel, the progress on the Data API will be tested, and the work on the service front-end user interface will be started
-
-**September**
-
-- The JRC will integrate the service front-end with the new Data API
-- The JRC and the National Land Survey of Finland will test the overall application
-
-**October**
-
-- Planned release of v2
+- Planned release of v2 as open source project
