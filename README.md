@@ -19,7 +19,7 @@ The **Re3gistry software v2** is currently being tested, with a target release d
 
 A development collaboration with **National Land Survey of Finland** has been set up to work on the implementation of the **data cache** and **data API** module. Below there is an approximate release plan for the Re3gistry 2.
 
-**December**
+**January**
 
  - The JRC will launch a test-bed on the system. If you want to participate in the test-bed get in contact with us at jrc-inspire-support@ec.europa.eu
 
