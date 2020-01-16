@@ -19,7 +19,7 @@ The aim of the test-bed is to let the users try the new version of the Re3gistry
 Once these tasks are completed and published in the management interface, the publication interface can be used to check the results.
 
 If you want to participate to the test-bed, send an email to jrc-inspire-support@ec.europa.eu including your **EU Login** email .
-During the test period, users can report issues or provide feedback using the "issue tracker"(http://...).
+During the test period, users can report issues or provide feedback using the [issue tracker](https://github.com/ec-jrc/re3gistry/issues).
 The test period will run until 6 March 2020.
 
 ### Major changes
