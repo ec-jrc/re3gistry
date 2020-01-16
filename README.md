@@ -6,14 +6,8 @@ The Re3gistry is a reusable open source solution for managing and sharing ‘ref
 
 The sandbox instance to test the Re3gistry 2 software and the new INSPIRE registry service is available at the following addresses:
 
-<<<<<<< HEAD
 management interface: https://inspire-sandbox.jrc.ec.europa.eu/re3gistry2
 publication interface (with example content from INSPIRE): https://inspire-sandbox.jrc.ec.europa.eu/registry
-=======
-Re3gistry2 management interface: https://inspire-sandbox.jrc.ec.europa.eu/re3gistry2
-
-INSPIRE registry: https://inspire-sandbox.jrc.ec.europa.eu/registry
->>>>>>> cf538efcf0afdfbb8f698acd6e67924c25b8ed77
 
 The aim of the test-bed is to let the users try the new version of the Re3gistry software using the management interface and workflow of the system to complete some common tasks like the examples listed below.
 - Adding a new reference codes
@@ -25,7 +19,7 @@ The aim of the test-bed is to let the users try the new version of the Re3gistry
 Once these tasks are completed and published in the management interface, the publication interface can be used to check the results.
 
 If you want to participate to the test-bed, send an email to jrc-inspire-support@ec.europa.eu including your **EU Login** email .
-During the test period, users can report issues or provide feedback using the [issue tracker](https://github.com/ec-jrc/re3gistry/issues).
+During the test period, users can report issues or provide feedback using the "issue tracker"(http://...).
 The test period will run until 6 March 2020.
 
 ### Major changes
