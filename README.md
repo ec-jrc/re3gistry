@@ -16,6 +16,8 @@ The aim of the test-bed is to let the users try the new version of the Re3gistry
 - Superseding, Invalidating, Retiring a reference code
 - Adding a new field
 
+To understand the main concepts and functionalities of the  Re3gistry 2 management interface, check the **[quick start guide](Quick-start-guide.md)**.
+
 Once these tasks are completed and published in the management interface, the publication interface can be used to check the results.
 
 If you want to participate to the test-bed, send an email to jrc-inspire-support@ec.europa.eu including your **EU Login** email .
