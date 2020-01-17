@@ -6,8 +6,8 @@ The Re3gistry is a reusable open source solution for managing and sharing ‘ref
 
 The sandbox instance to test the Re3gistry 2 software and the new INSPIRE registry service is available at the following addresses:
 
-management interface: https://inspire-sandbox.jrc.ec.europa.eu/re3gistry2
-publication interface (with example content from INSPIRE): https://inspire-sandbox.jrc.ec.europa.eu/registry
+- management interface: https://inspire-sandbox.jrc.ec.europa.eu/re3gistry2
+- publication interface (with example content from INSPIRE): https://inspire-sandbox.jrc.ec.europa.eu/registry
 
 The aim of the test-bed is to let the users try the new version of the Re3gistry software using the management interface and workflow of the system to complete some common tasks like the examples listed below.
 - Adding a new reference codes
