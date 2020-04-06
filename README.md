@@ -39,7 +39,7 @@ The list below shows the major changes that the Re3gistry 2 software will introd
 
 ### Release Plan
 
-The **Re3gistry software v2** is currently being tested, with a target release date as open source project in March 2020.
+The **Re3gistry software v2** is currently being tested, with a target release date as open source project in June 2020.
 
 A development collaboration with **National Land Survey of Finland** has been set up to work on the implementation of the **data cache** and **data API** module. Below there is an approximate release plan for the Re3gistry 2.
 
@@ -47,6 +47,6 @@ A development collaboration with **National Land Survey of Finland** has been se
 
 - The JRC will launch a test-bed on the system. If you want to participate in the test-bed get in contact with us at jrc-inspire-support@ec.europa.eu
 
-**March**
+**June**
 
 - Planned release of v2 as open source project
