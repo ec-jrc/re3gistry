@@ -1,0 +1,250 @@
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <title data-i18n="s-site-title">Title</title>
+        <meta content="width=device-width,initial-scale=1" name="viewport" />
+        <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+
+        <link href="/registry/libs/fontawesome-free-5.13.0-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+        <link rel="stylesheet" href="/registry/libs/DataTables_v1.10.20/css/jquery.dataTables.min.css"/>
+        <link rel="stylesheet" href="/registry/css/layout.css"/>
+
+        <script src="/registry/libs/jquery.min.js" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="/registry/libs/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+        <script src="/registry/libs/bootstrap-4.3.1-dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+        <script src="/registry/conf/conf.js"></script>
+        <script src="/registry/js/app_common.js"></script>
+        <script src="/registry/js/app_i18n.js"></script>
+        <script src="/registry/js/app_core_search.js"></script>
+        <script src="/registry/js/app_init.js" defer></script>
+
+        <script src="/registry/libs/DataTables_v1.10.20/js/jquery.dataTables.min.js" defer></script>
+
+    </head>
+    <body>
+
+        <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+            <h5 class="my-0 mr-md-auto font-weight-normal" data-i18n="s-site-title"><a href="/registry">Your organisation</a></h5>
+            <nav class="my-2 my-md-0 mr-md-3">
+                <a class="p-2 text-dark" href="#" data-i18n="c-about" data-i18n-link="c-about-link">About</a>
+                <a class="p-2 text-dark" href="#" data-i18n="c-contact" data-i18n-link="c-contact-link">Contact</a>
+                <a class="p-2 text-dark" href="#" data-i18n="c-privacyppolicy" data-i18n-link="c-privacyppolicy-link">Privacy Policy</a>
+                <a class="p-2 text-dark" href="#" data-i18n="c-legalnotice" data-i18n-link="c-legalnotice-link">Legal notice</a>
+                <a class="p-2 text-dark" href="#" data-i18n="c-cookies" data-i18n-link="c-cookies-link">Cookies</a>
+                <a class="p-2 text-dark" href="#" data-toggle="modal" data-target="#changeLanguage" id="selectedLanguage" title="Click to change the language" data-i18n="c-changelanguage">Change language</a>
+            </nav>
+
+            <form class="form-inline mb-0 ecl-site-header__search ecl-search-form" role="search">
+                <input type="search" id="search-form" class="form-control mr-sm-2 ui-autocomplete-input ecl-search-form__text-input ecl-text-input" placeholder="Search..." id="q" name="q" autocomplete="off">
+                <button id="btn-search" class="btn btn-outline-success" type="submit"><i class="fas fa-search my-1"></i></button>
+                <ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content" id="ui-id-1" tabindex="0" style="display: none;"></ul>
+            </form>
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="changeLanguage" tabindex="-1" role="dialog" aria-labelledby="changeLanguageLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changeLanguageLabel" data-i18n="c-changelanguage">Change language</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="ecl-language-list__column col-12 col-lg-4 offset-lg-2">
+                                <ul class="ecl-language-list__list list-group list-group-flush">
+                                    <li class="ecl-language-list__item list-group-item"><a lang="bg" hrefLang="bg" rel="alternate"
+                                                                                           href="#language_bg"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">български</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="es" hrefLang="es" rel="alternate"
+                                                                                           href="#language_es"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">español</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="cs" hrefLang="cs" rel="alternate"
+                                                                                           href="#language_cs"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">čeština</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="da" hrefLang="da" rel="alternate"
+                                                                                           href="#language_da"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">dansk</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="de" hrefLang="de" rel="alternate"
+                                                                                           href="#language_de"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">Deutsch</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="et" hrefLang="et" rel="alternate"
+                                                                                           href="#language_et"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">eesti</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="el" hrefLang="el" rel="alternate"
+                                                                                           href="#language_el"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">ελληνικά</a></li>
+                                    <li class="ecl-language-list__item list-group-item ecl-language-list__item--is-active"><a lang="en" hrefLang="en"
+                                                                                                                              rel="alternate" href="#language_en"
+                                                                                                                              class="ecl-language-list__link ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-after"><span
+                                                class="ecl-link__label">English</span> <i class="fas fa-check"></i></a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="fr" hrefLang="fr" rel="alternate"
+                                                                                           href="#language_fr"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">français</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="ga" hrefLang="ga" rel="alternate"
+                                                                                           href="#language_ga"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">Gaeilge</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="hr" hrefLang="hr" rel="alternate"
+                                                                                           href="#language_hr"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">hrvatski</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="it" hrefLang="it" rel="alternate"
+                                                                                           href="#language_it"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">italiano</a></li>
+                                </ul>
+                            </div>
+                            <div class="ecl-language-list__column col-12 col-lg-4">
+                                <ul class="ecl-language-list__list list-group list-group-flush">
+                                    <li class="ecl-language-list__item list-group-item"><a lang="lv" hrefLang="lv" rel="alternate"
+                                                                                           href="#language_lv"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">latviešu</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="lt" hrefLang="lt" rel="alternate"
+                                                                                           href="#language_lt"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">lietuvių</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="hu" hrefLang="hu" rel="alternate"
+                                                                                           href="#language_hu"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">magyar</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="mt" hrefLang="mt" rel="alternate"
+                                                                                           href="#language_mt"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">Malti</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="nl" hrefLang="nl" rel="alternate"
+                                                                                           href="#language_nl"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">Nederlands</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="pl" hrefLang="pl" rel="alternate"
+                                                                                           href="#language_pl"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">polski</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="pt" hrefLang="pt" rel="alternate"
+                                                                                           href="#language_pt"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">português</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="ro" hrefLang="ro" rel="alternate"
+                                                                                           href="#language_ro"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">română</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="sk" hrefLang="sk" rel="alternate"
+                                                                                           href="#language_sk"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">slovenčina</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="sl" hrefLang="sl" rel="alternate"
+                                                                                           href="#language_sl"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">slovenščina</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="fi" hrefLang="fi" rel="alternate"
+                                                                                           href="#language_fi"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">suomi</a></li>
+                                    <li class="ecl-language-list__item list-group-item"><a lang="sv" hrefLang="sv" rel="alternate"
+                                                                                           href="#language_sv"
+                                                                                           class="ecl-language-list__link ecl-link ecl-link--standalone">svenska</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container registry">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <nav aria-label="breadcrumb mb-5">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/registry" data-i18n="s-site-title">Title</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" data-i18n="c-search">Search</li>
+                        </ol>
+                    </nav>
+
+                    <h2 class="my-3" id="page-title" data-i18n="s-site-title">Title</h2>
+
+                    <div class="overlay-loader">
+                        <div class="load-feedback">
+                            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                                <span class="sr-only" data-i18n="c-loading">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ecl-u-pv-3xl">
+                        <div class="ecl-container">
+
+                            <div class="row">
+                                <div class="col-md-4 order-md-2 mb-4">
+
+                                    <!--<h4 class="ecl-u-type-heading-2 ecl-u-type-color-black ecl-u-d-lg-none ecl-u-mv-none search-results-count">Search results (0)</h4>-->
+                                    <h5 data-i18n="s-search-options" class="ecl-u-type-heading-3 ecl-u-type-color-black ecl-u-mt-l ecl-u-mt-lg-none">Search options</h5>
+                                    <form id="facet-form">
+
+                                        <div id="dynamic-facets-container"></div>
+
+
+                                        <div class="row mt-3">
+                                            <div class="col">
+                                                <button type="submit" class="ecl-u-mt-l btn btn-primary  w-100" id="btn-refine-results">
+                                                    <span class="ecl-button__container"><span class="ecl-button__label" data-ecl-label="true">Refine results</span></span>
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <button type="submit" class="ecl-u-mt-m ecl-u-mt-lg-l btn btn-secondary w-100" id="btn-clear-all">
+                                                    <span class="ecl-button__container"><span class="ecl-button__label" data-ecl-label="true">Clear all</span></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                                <div class="col-md-8 order-md-1">
+
+                                    <h4 class="ecl-u-type-heading-2 ecl-u-type-color-black ecl-u-d-none ecl-u-d-lg-block ecl-u-mv-none search-results-count">Search results (0)</h4>
+                                    <h5 class="ecl-u-type-heading-3 ecl-u-type-color-black ecl-u-mb-none ecl-u-mt-3xl ecl-u-mt-lg-l search-results-count-current-page"></h5>
+                                    <div class="ecl-u-type-m ecl-u-type-color-grey ecl-u-mt-l ecl-u-d-flex ecl-u-flex-column ecl-u-flex-lg-row ecl-u-align-items-lg-center my-4" id="selected-facet"></div>
+                                    <div id="resultsContainer"></div>
+
+                                    <nav class="ecl-u-mt-l ecl-pagination" id="paginationContainer" aria-label=""></nav>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <footer class="pt-4 my-md-5 pt-md-5 border-top">
+                <div class="row">
+                    <div class="col-12 col-md">
+                        <img class="mb-2" src="/registry/img/logo.png" alt="" width="124" height="100">
+                        <!--<small class="d-block mb-3 text-muted">Optional additional text</small>-->
+                    </div>
+                    <div class="col-6 col-md">
+                        <h5 data-i18n="fm-1-title">Menu 1</h5>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="text-muted" href="#" data-i18n="fm-1-item-1" data-i18n-link="fm-1-link-1">Menu Item 1</a></li>
+                            <li><a class="text-muted" href="#" data-i18n="fm-1-item-2" data-i18n-link="fm-1-link-2">Menu Item 2</a></li>
+                            <li><a class="text-muted" href="#" data-i18n="fm-1-item-3" data-i18n-link="fm-1-link-3">Menu Item 3</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md">
+                        <h5 data-i18n="fm-2-title">Menu 2</h5>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="text-muted" href="#" data-i18n="fm-2-item-1" data-i18n-link="fm-2-link-1">Menu Item 1</a></li>
+                            <li><a class="text-muted" href="#" data-i18n="fm-2-item-2" data-i18n-link="fm-2-link-2">Menu Item 2</a></li>
+                            <li><a class="text-muted" href="#" data-i18n="fm-2-item-3" data-i18n-link="fm-2-link-3">Menu Item 3</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md">
+                        <h5 data-i18n="fm-3-title">Menu 3</h5>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="text-muted" href="#" data-i18n="fm-3-item-1" data-i18n-link="fm-3-link-1">Menu Item 1</a></li>
+                            <li><a class="text-muted" href="#" data-i18n="fm-3-item-2" data-i18n-link="fm-3-link-2">Menu Item 2</a></li>
+                            <li><a class="text-muted" href="#" data-i18n="fm-3-item-3" data-i18n-link="fm-3-link-3">Menu Item 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+
+    </body>
+</html>
+

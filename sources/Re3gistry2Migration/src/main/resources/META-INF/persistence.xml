@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="Re3gistry2Migration" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Localization</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Languagecode</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Procedurestatus</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Customattributevalue</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Registry</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Customattribute</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Itemclasscustomattribute</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Itemcollection</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Changelog</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Item</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Customattributecode</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Reference</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Itemsuccessor</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Users</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Register</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Itemparent</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Dataprocedure</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Itemclass</class>
+    <class>eu.europa.ec.re3gistry2.migration.migrationmodel.Status</class>
+
+  </persistence-unit>
+</persistence>

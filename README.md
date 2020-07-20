@@ -1,52 +1,61 @@
-# Re3gistry
+# Re3gistry 2 software
 
-The Re3gistry is a reusable open source solution for managing and sharing ‘reference codes’, ensuring concepts are correctly referenced in INSPIRE, or for content in any other sector.
+[![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
 
-## Re3gistry and INSPIRE registry test-bed
+&copy; 2020 European Union, National Land Survey of Finland. Licensed under the EUPL.
 
-The sandbox instance to test the Re3gistry 2 software and the new INSPIRE registry service is available at the following addresses:
+## About the Re3gistry 2
 
-- management interface: https://inspire-sandbox.jrc.ec.europa.eu/re3gistry2
-- publication interface (with example content from INSPIRE): https://inspire-sandbox.jrc.ec.europa.eu/registry
+The Re3gistry 2 is a reusable open source solution for managing and sharing "reference codes".
 
-The aim of the test-bed is to let the users try the new version of the Re3gistry software using the management interface and workflow of the system to complete some common tasks like the examples listed below.
-- Adding a new reference codes
-- Editing an existing reference code
-- Adding a relation between two reference codes
-- Superseding, Invalidating, Retiring a reference code
-- Adding a new field
+It provides a consistent central access point where labels and descriptions for reference codes can be easily browsed by humans and retrieved by machines.
 
-To understand the main concepts and functionalities of the  Re3gistry 2 management interface, check the **[quick start guide](Quick-start-guide.md)**.
+Reference codes are exchanged between applications to uniquely reference some ‘thing’. They can be used to define sets of permissible values for a data field or to provide a reference or context for the data being exchanged. Examples are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
 
-Once these tasks are completed and published in the management interface, the publication interface can be used to check the results.
+The Re3gistry 2 supports organisations in managing and updating reference codes in a consistent way.
 
-If you want to participate to the test-bed, send an email to jrc-inspire-support@ec.europa.eu including your **EU Login** email .
-During the test period, users can report issues or provide feedback using the [issue tracker](https://github.com/ec-jrc/re3gistry/issues).
-The test period will run until 6 March 2020.
+The Re3gistry software version numbers comply with the [Semantic Versioning Specification 2.0.0](http://semver.org/spec/v2.0.0.html).
 
-### Major changes
+### Acknowledgments
 
-The list below shows the major changes that the Re3gistry 2 software will introduce compared to the current release of the software (1.3.1).
-- Backward compatibility with Re3gistry >= v1 (data migration tool included)
-- User friendly editing interface (Create, edit, update registers, items, fields)
-- Handle localization of each custom field
-- Manage the ISO 19135 workflow in a visual way
-- Manage users, roles and groups
-- Better handling of the service (new caching system for the data access, no more static files)
-- APIs
-- Simple software installation
+The development of this tool has been funded by the European Iinteroperability Programme ISA2 though the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/elise-re3gistry-software). The European Location Interoperability Solutions for e-Government (ELISE) Action aims at Enabling Digital Government through Geospatial Data and Location Intelligence.
 
+This new version of the software has been developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
-### Release Plan
+## Re3gistry 2 features
 
-The **Re3gistry software v2** is currently being tested, with a target release date as open source project in June 2020.
+* User friendly editing interface to add, edit and manage easily the registers and reference codes
+* Management of the full lifecycle of the reference codes (based on the ISO 19135 Standard)
+* Highly flexible and customisable data models
+* Multi-lingual content support
+* Support for versioning
+* RESTful API with content negotiation (including OpenAPI 3 descriptor)
+* Free-text search
+* Supported formats: HTML, XML, JSON, RDF, Atom, CSV
+* Service formats can be easily added or customised (default formats: Json and ISO 19135 XML)
+* Multiple authentication options
+* Externally governed items referenced through URI 
+* INSPIRE register federation format support (option to automatically create the RoR format)
+* Web-app to access the reference codes in a human readable way.
 
-A development collaboration with **National Land Survey of Finland** has been set up to work on the implementation of the **data cache** and **data API** module. Below there is an approximate release plan for the Re3gistry 2.
+## Documentation
 
-**January**
+* [User manual](documentation/user-manual.md)
+* [Administrator manual](documentation/administrator-manual.md)
+* [Developer manual](documentation/developer-manual.md)
 
-- The JRC will launch a test-bed on the system. If you want to participate in the test-bed get in contact with us at jrc-inspire-support@ec.europa.eu
+## Community
 
-**June**
+Use the [the issue tracker](https://github.com/ec-jrc/re3gistry/issues) to:
+* report a problem,
+* propose a new feature or an improvement to the existing functionality,
+* start a discussion or raise a question
 
-- Planned release of v2 as open source project
+## Missing features
+
+* Cache of the elements in the dropdowns of the application.
+* Some formats available in the old version of the Re3gistry:
+    * RDF/XML
+    * ATOM
+    * Re3gistry XML
+    * CSV 

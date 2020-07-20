@@ -1,0 +1,53 @@
+openapi: 3.0.1
+info:
+  title: Re3gistry 2 API
+  description: "The Re3gistry 2 API provides access to the items contained in the registry system."
+  version: 2.0.0
+servers:
+- url: https://example-url.eu/registry
+tags:
+- name: Get registry resources
+paths:
+  /rest:
+    get:
+      tags:
+      - Get registry resources
+      description: "Retrieve the Registry Register or item whith the specified URI,\
+        \ language and in the specified format. \n"
+      parameters:
+      - name: uri
+        in: query
+        description: The uniform resource identifier of the item.
+        required: true
+        schema:
+          type: string
+      - name: language
+        in: query
+        description: The language of the item specified as 2 character code.
+        schema:
+          type: string
+          default: en
+      - name: format
+        in: query
+        description: The format of the response.
+        schema:
+          type: string
+          default: json
+          enum:
+          - json
+          - iso19135xml
+      responses:
+        200:
+          description: An object describing the item, and list of contained item (if
+            any).
+          content: {}
+        404:
+          description: The item with the requested URI is not available.
+          content: {}
+        406:
+          description: The request is not acceptable. Parameter(s) missing or not
+            valid.
+          content: {}
+        500:
+          description: An error has occurred at server level.
+          content: {}

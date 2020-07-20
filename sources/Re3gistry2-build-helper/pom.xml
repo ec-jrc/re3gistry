@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>eu.europa.ec</groupId>
+    <artifactId>Re3gistry2-build-helper</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+    <name>Re3gistry2-build-helper</name>
+    <properties>
+        <war.target.name>re3gistry2</war.target.name>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <persistence.unitname>Re3gistry2</persistence.unitname>
+        <persistence.transactiontpye>RESOURCE_LOCAL</persistence.transactiontpye>        
+        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+        <persistence.eclipselink.ddl-generation>create-tables</persistence.eclipselink.ddl-generation>
+        <persistence.dependency.postgres.version>9.4.1212</persistence.dependency.postgres.version>
+        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+        <analytics.id></analytics.id>
+        <analytics.url></analytics.url>
+        <header.message.class></header.message.class>
+        <header.message.text></header.message.text>
+        <application.rooturl>http://localhost:8080/registry/</application.rooturl>
+        <!-- ECAS config -->
+        <!-- hint: it should match the application.hostname property -->
+        <ecas.filter.serverName>localhost</ecas.filter.serverName>
+        <ecas.filter.serverPort>8080</ecas.filter.serverPort>
+        <!-- useful in case of reverse proxy configuration, it should match application.rootURL -->
+        <ecas.filter.serverContextPath>/re3gistry2</ecas.filter.serverContextPath>
+        <application.solr.url>http://localhost:8983/solr/</application.solr.url>
+        <application.solr.core>re3gistry2</application.solr.core>
+        <application.solr.isactive>true</application.solr.isactive>
+    </properties>
+    <modules>
+        <module>../Re3gistry2Model</module>
+        <module>../Re3gistry2CRUDinterface</module>
+        <module>../Re3gistry2CRUDrdb</module>
+        <module>../Re3gistry2Base</module>
+        <module>../Re3gistry2JavaAPI</module>
+        <module>../Re3gistry2Migration</module>
+        <module>../Re3gistry2RestAPI</module>
+        <module>../Re3gistry2</module>
+    </modules>
+    <profiles>        
+        <!-- Development profile --> 
+        <profile>
+            <id>developer-example-profile</id>                   
+            <properties>
+                <persistence.db.address>DB_ADDRESS</persistence.db.address>
+                <persistence.db.port>5432</persistence.db.port>                
+                <persistence.db.name>re3gistry2_dev</persistence.db.name>
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
+                <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
+                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>
+                <application.rooturl>https://localhost/r3egistry2</application.rooturl> 
+            </properties>
+        </profile>        
+        <!-- Server profile -->
+        <profile>
+            <id>server-example-profile</id>                      
+            <properties>            
+                <persistence.db.address>DB_ADDRESS</persistence.db.address>
+                <persistence.db.port>5432</persistence.db.port>                
+                <persistence.db.name>re3gistry2_srv</persistence.db.name>
+				<persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
+                <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
+                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>            
+                <application.rooturl>https://registry-test.eu/r3egistry2</application.rooturl>
+                <application.solr.isactive>false</application.solr.isactive>        
+            </properties>
+        </profile>     
+    </profiles>
+</project>

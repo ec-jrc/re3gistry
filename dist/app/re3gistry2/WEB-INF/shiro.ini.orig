@@ -1,0 +1,79 @@
+#
+# Copyright 2010,2017 EUROPEAN UNION
+# Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
+# the European Commission - subsequent versions of the EUPL (the "Licence");
+# You may not use this work except in compliance with the Licence.
+# You may obtain a copy of the Licence at:
+# 
+# //ec.europa.eu/isa2/solutions/european-union-public-licence-eupl_en
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the Licence is distributed on an "AS IS" basis,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the Licence for the specific language governing permissions and
+# limitations under the Licence.
+# 
+# Date: ----/--/--
+# Authors: European Commission, Joint Research Centre
+# jrc-inspire-support@ec.europa.eu
+# 
+# This work was supported by the EU  Interoperability Solutions for
+# European Public Administrations Programme (http://ec.europa.eu/isa)
+# through Action 1.17: Re-usable INSPIRE Reference Platform 
+
+[main]
+authc.loginUrl = /login
+authc.successUrl = /index
+logout.redirectUrl = /login
+
+# ------------------------
+# Database
+
+# Own Realm
+jdbcRealm = eu.europa.ec.re3gistry2.base.utility.RegistryRealm
+
+# Sha256
+sha256Matcher = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+# base64 encoding, not hex in this example:
+sha256Matcher.storedCredentialsHexEncoded = false
+sha256Matcher.hashIterations = 1024
+
+jdbcRealm.credentialsMatcher = $sha256Matcher
+
+# User Query
+# default is "select password from users where username = ?"
+jdbcRealm.authenticationQuery = SELECT shiropassword, shirosalt FROM RegUser WHERE email = ?
+
+# permissions
+# jdbcRealm.permissionsLookupEnabled = true
+# jdbcRealm.userRolesQuery = select roleName from UserRole where email = ?
+# jdbcRealm.permissionsQuery = select permission from RolesPermission where roleName = ?
+
+# Connection 
+ds = org.postgresql.jdbc2.optional.SimpleDataSource
+ds.serverName = dbhost
+ds.databaseName = dbname
+ds.user = dbuser
+ds.password = dbpassword
+jdbcRealm.dataSource=$ds
+
+authc.usernameParam = email
+authc.passwordParam = password
+authc.failureKeyAttribute = shiroLoginFailure
+
+# Use Built-in Chache Manager
+builtInCacheManager = org.apache.shiro.cache.MemoryConstrainedCacheManager
+securityManager.cacheManager = $builtInCacheManager
+
+securityManager.realms = $jdbcRealm
+
+[urls]
+/res/** = anon
+/install/** = anon
+/installRunning/** = anon
+/resetPassword/** = anon
+/about/** = anon
+/help/** = anon
+/login = authc
+/logout = logout
+/** = authc
