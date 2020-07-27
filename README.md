@@ -31,7 +31,7 @@ This new version of the software has been developed in cooperation with the [Nat
 * Support for versioning
 * RESTful API with content negotiation (including OpenAPI 3 descriptor)
 * Free-text search
-* Supported formats: HTML, XML, JSON, RDF, Atom, CSV
+* Supported formats: HTML, ISO 19135 XML, JSON
 * Service formats can be easily added or customised (default formats: Json and ISO 19135 XML)
 * Multiple authentication options
 * Externally governed items referenced through URI 
