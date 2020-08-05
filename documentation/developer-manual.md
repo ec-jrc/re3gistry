@@ -26,6 +26,11 @@ A summary of some of the technologies used to implement the software is presente
     * jQuery 3.x
     * Bootstrap 4.x
 
+### Initialization of the project
+
+There is one library (ecas-tomcat-client) in the sources that is not available in any public maven repositories. For that reason, it is inclded in the Re3gistry2Base module in the "dependencies" folder.
+To inizialize the local maven repository, the first step to do is to launch the maven "initialize" goal on the Re3gistry2Base project (&lt;package-root&gt;/sources/Re3gistry2Base).
+
 ## Software modules
 
 The following sections are providing a description of each module and its functionalities. The details of each class can be found directly inline in the code.
