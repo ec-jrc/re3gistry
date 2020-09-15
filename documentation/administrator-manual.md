@@ -39,7 +39,7 @@ The following steps needs to be followed in order to properly install the system
 
 ### Distribution package
 
-The [distribution folder](dist/) contains all the file required for the Re3gistry 2 system installation. Download the distribution package and check the folder content. 
+The [distribution folder](../dist/) contains all the file required for the Re3gistry 2 system installation. Download the distribution package and check the folder content. 
 
 The "app" folder contains the Registry 2 main application and the related Re3gistry 2 rest API application.
 
@@ -156,7 +156,7 @@ Every configuration entry is well documented with inline comment. An important p
 The webapp contains also an example configuration files fot the Apache HTTP server. 
 This file may needs some customization based on your OS and Apache version.
 
-The Apache configuration file (apache-example-configuration.conf) can be found in the [webapp](dist/webapp/) folder.
+The Apache configuration file (apache-example-configuration.conf) can be found in the [webapp](../dist/webapp/) folder.
 
 Remember to restart the Apache HTTP server after including the configuration.
 
@@ -164,6 +164,6 @@ Remember to restart the Apache HTTP server after including the configuration.
 
 ### Open API descriptor
 
-The OpenAPI 3 descriptor is available in the [source](sources/Re3gistry2RestAPI) folder: "openapi.yaml" .
+The OpenAPI 3 descriptor is available in the [source](../sources/Re3gistry2RestAPI) folder: "openapi.yaml" .
 This file can be exposed through a HTTP server in order to describe the Re3gistry 2 API in a machine readable way. 
 
