@@ -1,4 +1,4 @@
-# User maual
+# User manual
 
 ## Scope
 
