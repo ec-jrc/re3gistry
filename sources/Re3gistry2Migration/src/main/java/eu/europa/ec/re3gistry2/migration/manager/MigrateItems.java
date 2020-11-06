@@ -103,7 +103,13 @@ public class MigrateItems {
              * get all the item class for the item
              */
             Query queryItemclass = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.ITEMCLASS_BY_DATAPROCEDUREORDER_ASC);
-            List<Itemclass> itemclassList = queryItemclass.getResultList();
+            List<Itemclass> itemclassList;
+            try {
+                itemclassList = queryItemclass.getResultList();
+            } catch (Exception ex) {
+                logger.error("Error in  getting the result list for " + queryItemclass + " " + ex.getMessage());
+                throw new Exception("Error in  getting the localization for " + queryItemclass + " " + ex.getMessage());
+            }
 
             MigrateItemLatestVersion migrateItemLatestVersion = new MigrateItemLatestVersion(migrationManager);
             MigrateItemHistory migrateItemHistory = new MigrateItemHistory(migrationManager);
@@ -113,7 +119,7 @@ public class MigrateItems {
                 Integer AUTO_INCREMENT_REG_FIELD_LIST_ORDER = 0;
 
                 /**
-                 * if the reg item class is exist than use than one, otherwise
+                 * if the reg item class exist than use than one, otherwise
                  * create it
                  */
                 RegItemclass regItemclass;
@@ -170,7 +176,15 @@ public class MigrateItems {
                 try {
                     Query queryItemByItemClass = entityManagerRe3gistry2Migration.createNativeQuery(ConstantsMigration.ITEMS_LATEST_VERSION_LIST_BY_ITEMCLASS.replace(":" + ConstantsMigration.KEY_PARAMETER_ITEMCLASS, "'" + itemclass.getUuid() + "'"), ConstantsMigration.KEY_PARAMETER_ITEMRESULT);
                     queryItemByItemClass.setParameter(ConstantsMigration.KEY_PARAMETER_ITEMCLASS, itemclass);
-                    List<Item> itemsList = queryItemByItemClass.getResultList();
+
+                    List<Item> itemsList;
+                    try {
+                        itemsList = queryItemByItemClass.getResultList();
+                    } catch (Exception ex) {
+                        logger.error("Error in  getting the result list for " + queryItemByItemClass + " " + ex.getMessage());
+                        throw new Exception("Error in  getting the localization for " + queryItemByItemClass + " " + ex.getMessage());
+                    }
+
                     for (Item item : itemsList) {
 
                         Item collection = getCollectionFromItem(item);
@@ -217,13 +231,13 @@ public class MigrateItems {
             /**
              * index SOLR
              */
-                itemsToIndexSOLR.forEach((regItem) -> {
-                    try {
-                        SolrHandler.indexSingleItem(regItem);
-                    } catch (Exception e) {
-                        logger.error("@ MigrateItems.startMigrationItems: Solr indexing error.", e);
-                    }
-                });
+            itemsToIndexSOLR.forEach((regItem) -> {
+                try {
+                    SolrHandler.indexSingleItem(regItem);
+                } catch (Exception e) {
+                    logger.error("@ MigrateItems.startMigrationItems: Solr indexing error.", e);
+                }
+            });
 
             /**
              * migrate parent the commit is coming back to true because we want
@@ -281,13 +295,11 @@ public class MigrateItems {
                             } else {
                                 migrateItemLatestVersion.migrateRegRelation(regItem, regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(collectionUuid + collectionVersion)), commit, key);
                             }
+                        } else if (collectionVersion == 0) {
+                            RegItem regItemCollection = getRegItemFromItem(collection);
+                            migrateItemHistory.migrateRegRelation(regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(itemUuid + itemVersion)), regItemCollection, commit, key);
                         } else {
-                            if (collectionVersion == 0) {
-                                RegItem regItemCollection = getRegItemFromItem(collection);
-                                migrateItemHistory.migrateRegRelation(regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(itemUuid + itemVersion)), regItemCollection, commit, key);
-                            } else {
-                                migrateItemHistory.migrateRegRelation(regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(itemUuid + itemVersion)), regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(collectionUuid + collectionVersion)), commit, key);
-                            }
+                            migrateItemHistory.migrateRegRelation(regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(itemUuid + itemVersion)), regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(collectionUuid + collectionVersion)), commit, key);
                         }
                     } catch (Exception exe) {
                         logger.error(exe.getMessage() + " - item: " + itemUuid + " - collection: " + collection.getUuid());
@@ -315,7 +327,13 @@ public class MigrateItems {
              */
             try {
                 Query queryParent = entityManagerRe3gistry2Migration.createNamedQuery("Itemparent.findAll", Itemparent.class);
-                List<Itemparent> itemListParent = queryParent.getResultList();
+                List<Itemparent> itemListParent;
+                try {
+                    itemListParent = queryParent.getResultList();
+                } catch (Exception ex) {
+                    logger.error("Error in  getting the result list for " + queryParent + " " + ex.getMessage());
+                    throw new Exception("Error in  getting the localization for " + queryParent + " " + ex.getMessage());
+                }
 
                 String key = BaseConstants.KEY_PREDICATE_PARENT;
                 for (Itemparent itemparent : itemListParent) {
@@ -337,13 +355,11 @@ public class MigrateItems {
                             } else {
                                 migrateItemLatestVersion.migrateRegRelation(regItem, regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(parentUuid + parentVersion)), commit, key);
                             }
+                        } else if (parentVersion == 0) {
+                            RegItem regItemPrent = getRegItemFromItem(parent);
+                            migrateItemHistory.migrateRegRelation(regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(itemUuid + itemVersion)), regItemPrent, commit, key);
                         } else {
-                            if (parentVersion == 0) {
-                                RegItem regItemPrent = getRegItemFromItem(parent);
-                                migrateItemHistory.migrateRegRelation(regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(itemUuid + itemVersion)), regItemPrent, commit, key);
-                            } else {
-                                migrateItemHistory.migrateRegRelation(regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(itemUuid + itemVersion)), regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(parentUuid + parentVersion)), commit, key);
-                            }
+                            migrateItemHistory.migrateRegRelation(regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(itemUuid + itemVersion)), regItemhistoryManager.get(correspondentItemToRegItemHistoryMap.get(parentUuid + parentVersion)), commit, key);
                         }
                     } catch (Exception ex) {
                         logger.error(ex.getMessage() + " - item: " + itemUuid + " - parent: " + parentUuid);
@@ -370,7 +386,13 @@ public class MigrateItems {
              */
             try {
                 Query querySuccessor = entityManagerRe3gistry2Migration.createNamedQuery("Itemsuccessor.findAll", Itemsuccessor.class);
-                List<Itemsuccessor> itemListSuccessor = querySuccessor.getResultList();
+                List<Itemsuccessor> itemListSuccessor;
+                try {
+                    itemListSuccessor = querySuccessor.getResultList();
+                } catch (Exception ex) {
+                    logger.error("Error in  getting the result list for " + querySuccessor + " " + ex.getMessage());
+                    throw new Exception("Error in  getting the localization for " + querySuccessor + " " + ex.getMessage());
+                }
 
                 String keySuccessor = BaseConstants.KEY_PREDICATE_SUCCESSOR;
                 String keyPredecessor = BaseConstants.KEY_PREDICATE_PREDECESSOR;
@@ -511,7 +533,15 @@ public class MigrateItems {
         try {
             Query itemQuery = entityManagerRe3gistry2Migration.createNamedQuery("Itemcollection.findByItem", Itemcollection.class);
             itemQuery.setParameter("item", item);
-            List<Itemcollection> collectionList = itemQuery.getResultList();
+
+            List<Itemcollection> collectionList;
+            try {
+                collectionList = itemQuery.getResultList();
+            } catch (Exception ex) {
+                logger.error("Error in  getting the result list for " + itemQuery + " " + ex.getMessage());
+                throw new Exception("Error in  getting the localization for " + itemQuery + " " + ex.getMessage());
+            }
+
             for (Itemcollection itemcollection : collectionList) {
                 if (itemcollection.getCollection().getVersionnumber() == 0) {
                     collection = itemcollection.getCollection();
@@ -570,12 +600,25 @@ public class MigrateItems {
         queryItemclasscustomattribute.setParameter(ConstantsMigration.KEY_PARAMETER_ITEMCLASS, itemclass);
 
         try {
-            List<Itemclasscustomattribute> itemclasscustomattributeList = queryItemclasscustomattribute.getResultList();
+            List<Itemclasscustomattribute> itemclasscustomattributeList;
+            try {
+                itemclasscustomattributeList = queryItemclasscustomattribute.getResultList();
+            } catch (Exception ex) {
+                logger.error("Error in  getting the result list for " + queryItemclasscustomattribute + " " + ex.getMessage());
+                throw new Exception("Error in  getting the localization for " + queryItemclasscustomattribute + " " + ex.getMessage());
+            }
 
             for (Itemclasscustomattribute itemclasscustomattribute : itemclasscustomattributeList) {
                 Query queryCustomattribute = entityManagerRe3gistry2Migration.createNamedQuery("Customattribute.findByUuid", Customattribute.class);
                 queryCustomattribute.setParameter("uuid", itemclasscustomattribute.getCustomattribute().getUuid());
-                List<Customattribute> customattributeList = queryCustomattribute.getResultList();
+
+                List<Customattribute> customattributeList;
+                try {
+                    customattributeList = queryCustomattribute.getResultList();
+                } catch (Exception ex) {
+                    logger.error("Error in  getting the result list for " + queryCustomattribute + " " + ex.getMessage());
+                    throw new Exception("Error in  getting the localization for " + queryCustomattribute + " " + ex.getMessage());
+                }
 
                 for (Customattribute customattribute : customattributeList) {
 
@@ -630,6 +673,7 @@ public class MigrateItems {
                     itemclasscustomattributByItemclassAndCustomAttribute = (Itemclasscustomattribute) itemclasscustomattributeForeygnKeyQuery.getSingleResult();
                 } catch (Exception ex) {
                     logger.error("Error in  " + ConstantsMigration.KEY_PARAMETER_ITEMCLASS + " for customattribute" + customattribute.getUuid() + ex.getMessage());
+                    throw new Exception("Error in  " + ConstantsMigration.KEY_PARAMETER_ITEMCLASS + " for customattribute" + customattribute.getUuid() + ex.getMessage());
                 }
 
                 if (itemclasscustomattributByItemclassAndCustomAttribute != null) {
@@ -638,7 +682,12 @@ public class MigrateItems {
                         regFieldtype = regFieldtypeManager.get(BaseConstants.KEY_FIELDTYPE_RELATIONREFERENCE_UUID);
 
                         RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
-                        regField.setRegItemclassReference(regItemclassManager.getByLocalid(customattribute.getName()));
+                        try {
+                            regField.setRegItemclassReference(regItemclassManager.getByLocalid(customattribute.getName()));
+                        } catch (Exception ex) {
+                            logger.error("Error in getting the foreign key item class with the name" + customattribute.getName() + customattribute.getUuid() + ex.getMessage());
+                            throw new Exception("Error in getting foreign key the item class with the name" + customattribute.getName() + customattribute.getUuid() + ex.getMessage());
+                        }
                     } else {
                         regFieldtype = regFieldtypeManager.get(BaseConstants.KEY_FIELDTYPE_STRING_UUID);
                     }
@@ -684,6 +733,7 @@ public class MigrateItems {
                 }
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
+                throw new Exception(ex.getMessage());
             }
         }
 
@@ -730,6 +780,7 @@ public class MigrateItems {
                     itemclasscustomattributByItemclassAndCustomAttribute = (Itemclasscustomattribute) itemclasscustomattributeForeygnKeyQuery.getSingleResult();
                 } catch (Exception ex) {
                     logger.error("Error in  " + ConstantsMigration.KEY_PARAMETER_ITEMCLASS + " for customattribute" + customattribute.getUuid() + ex.getMessage());
+                    throw new Exception("Error in  " + ConstantsMigration.KEY_PARAMETER_ITEMCLASS + " for customattribute" + customattribute.getUuid() + ex.getMessage());
                 }
 
                 if (itemclasscustomattributByItemclassAndCustomAttribute != null) {

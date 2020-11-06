@@ -56,7 +56,13 @@ public class MigrateLanguage {
 
         try {
             Query queryLanguagecode = entityManagerRe3gistry2Migration.createNamedQuery("Languagecode.findAll", Languagecode.class);
-            List<Languagecode> languagecodeList = queryLanguagecode.getResultList();
+            List<Languagecode> languagecodeList;
+            try {
+                languagecodeList = queryLanguagecode.getResultList();
+            } catch (Exception ex) {
+                logger.error("Error in  getting the result list for " + queryLanguagecode + " " + ex.getMessage());
+                throw new Exception("Error in  getting the localization for " + queryLanguagecode + " " + ex.getMessage());
+            }
 
             RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManagerRe3gistry2);
             List<RegLanguagecode> reglanguagecodeList = regLanguagecodeManager.getAll();
@@ -94,7 +100,7 @@ public class MigrateLanguage {
                 }
             }
             addLanguageIfNotExistent(languagecodeList, reglanguagecodeSet);
-            
+
         } catch (Exception ex) {
             logger.error(ex.getMessage());
         }

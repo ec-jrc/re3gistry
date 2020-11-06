@@ -133,7 +133,13 @@ public class MigrateItemHistory {
          */
         Query customattributevalueQuery = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.CUSTOMATTRIBUTEVALUE_BY_ITEM);
         customattributevalueQuery.setParameter("item", item);
-        List<Customattributevalue> customattributesValueList = customattributevalueQuery.getResultList();
+        List<Customattributevalue> customattributesValueList;
+        try {
+            customattributesValueList = customattributevalueQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error("Error in  getting the result list for " + customattributevalueQuery + " " + ex.getMessage());
+            throw new Exception("Error in  getting the localization for " + customattributevalueQuery + " " + ex.getMessage());
+        }
 
         Query queryMasterLanguagecode = entityManagerRe3gistry2Migration.createNamedQuery("Languagecode.findByMasterlanguage", Languagecode.class);
         queryMasterLanguagecode.setParameter("masterlanguage", Boolean.TRUE);
@@ -142,6 +148,7 @@ public class MigrateItemHistory {
             masterLanguagecode = (Languagecode) queryMasterLanguagecode.getSingleResult();
         } catch (Exception ex) {
             logger.error("Error in  Languagecode.findByMasterlanguage" + ex.getMessage());
+            throw new Exception("Error in  getting the localization for " + queryMasterLanguagecode + " " + ex.getMessage());
         }
 
         for (Customattributevalue customattributevalue : customattributesValueList) {
@@ -158,7 +165,7 @@ public class MigrateItemHistory {
                 itemclasscustomattributByItemclassAndCustomAttribute = (Itemclasscustomattribute) itemclasscustomattributeForeygnKeyQuery.getSingleResult();
             } catch (Exception ex) {
                 logger.error("Error in  " + ConstantsMigration.KEY_PARAMETER_ITEMCLASS + " for itemclass" + item.getItemclass().getUuid() + " and customattribute " + customattributevalue.getCustomattribute().getName() + ex.getMessage());
-                throw new Exception(ex.getMessage());
+                throw new Exception("Error in  " + ConstantsMigration.KEY_PARAMETER_ITEMCLASS + " for itemclass" + item.getItemclass().getUuid() + " and customattribute " + customattributevalue.getCustomattribute().getName() + ex.getMessage());
             }
 
             String customAttributeItemClassUriname = customattributevalue.getCustomattribute().getName();
@@ -179,6 +186,7 @@ public class MigrateItemHistory {
                         customattributevalueLocalization = (Localization) queryLocalizationByCustomattributevalue.getSingleResult();
                     } catch (Exception ex) {
                         logger.error("Error in  " + ConstantsMigration.LOCALIZATION_BY_CUSTOMATTRIBUTEVALUE_AND_LANGUAGE + " for customattributevalue" + customattributevalue.getUuid() + " and master language " + masterLanguagecode + ex.getMessage());
+                        throw new Exception("Error in  " + ConstantsMigration.LOCALIZATION_BY_CUSTOMATTRIBUTEVALUE_AND_LANGUAGE + " for customattributevalue" + customattributevalue.getUuid() + " and master language " + masterLanguagecode + ex.getMessage());
                     }
 
                     if (customattributevalueLocalization != null) {
@@ -228,7 +236,14 @@ public class MigrateItemHistory {
                  */
                 Query queryLocalizationByCustomattributevalue = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.LOCALIZATION_BY_CUSTOMATTRIBUTEVALUE);
                 queryLocalizationByCustomattributevalue.setParameter("customattributevalue", customattributevalue);
-                List<Localization> customattributevalueLocalizationList = queryLocalizationByCustomattributevalue.getResultList();
+                List<Localization> customattributevalueLocalizationList;
+                try {
+                    customattributevalueLocalizationList = queryLocalizationByCustomattributevalue.getResultList();
+                } catch (Exception ex) {
+                    logger.error("Error in  getting the result list for " + queryLocalizationByCustomattributevalue + " " + ex.getMessage());
+                    throw new Exception("Error in  getting the localization for " + queryLocalizationByCustomattributevalue + " " + ex.getMessage());
+                }
+
                 for (Localization customattributevalueLocalization : customattributevalueLocalizationList) {
 
                     RegLanguagecode reglanguagecodeByLanguage = regLanguagecodeManager.getByIso6391code(customattributevalueLocalization.getLanguage().getIsocode());
@@ -255,7 +270,13 @@ public class MigrateItemHistory {
         Query queryLocalization = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.LOCALIZATION_BY_ITEM);
         queryLocalization.setParameter("item", item);
 
-        List<Localization> itemListLocalization = queryLocalization.getResultList();
+        List<Localization> itemListLocalization;
+        try {
+            itemListLocalization = queryLocalization.getResultList();
+        } catch (Exception ex) {
+            logger.error("Error in  getting the result list for " + queryLocalization + " " + ex.getMessage());
+            throw new Exception("Error in  getting the localization for " + queryLocalization + " " + ex.getMessage());
+        }
         for (Localization localization : itemListLocalization) {
             int fieldIndex = 0;
 
@@ -411,7 +432,7 @@ public class MigrateItemHistory {
             customattribute = BaseConstants.KEY_ITEMCLASS_EXTENSIBILITY_ITEM;
         } else if (customattribute.equals(BaseConstants.KEY_FIELD_GOVERNANCELEVEL)) {
             customattribute = BaseConstants.KEY_ITEMCLASS_GOVERNANCELEVEL_ITEM;
-        } 
+        }
         RegField regFieldForForeignKey = regFieldsMap.get(customattribute);
 
         RegLocalizationhistory regLocalizationCustomAttributeForeignKey = new RegLocalizationhistory();

@@ -78,7 +78,13 @@ public class MigrateRegistry {
          */
         try {
             Query queryRegistry = entityManagerRe3gistry2Migration.createNamedQuery("Registry.findAll", Registry.class);
-            List<Registry> registryList = queryRegistry.getResultList();
+            List<Registry> registryList;
+            try {
+                registryList = queryRegistry.getResultList();
+            } catch (Exception ex) {
+                logger.error("Error in  getting the result list for " + queryRegistry + " " + ex.getMessage());
+                throw new Exception("Error in  getting the localization for " + queryRegistry + " " + ex.getMessage());
+            }
 
             RegItemclasstypeManager regItemclasstypeManager = new RegItemclasstypeManager(entityManagerRe3gistry2);
             RegItemclasstype regItemclasstypeRegistry = regItemclasstypeManager.getByLocalid("registry");
@@ -131,12 +137,16 @@ public class MigrateRegistry {
                     queryLocalizationReference.setParameter("reference", registry.getRegistrymanager());
                     queryLocalizationReference.setParameter("language", masterLanguagecode);
 
-                    Localization referenceLocalization = (Localization) queryLocalizationReference.getSingleResult();
-
-                    /**
-                     * create groups with localization
-                     */
-                    migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registryItem, "registryManager", referenceLocalization.getLabel(), registry.getRegistrymanager(), BaseConstants.KEY_FIELDTYPE_STRING_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
+                    try {
+                        Localization referenceLocalization = (Localization) queryLocalizationReference.getSingleResult();
+                        /**
+                         * create groups with localization
+                         */
+                        migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registryItem, "registryManager", referenceLocalization.getLabel(), registry.getRegistrymanager(), BaseConstants.KEY_FIELDTYPE_STRING_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
+                    } catch (Exception referenceLocalizationException) {
+                        logger.error("Query " + queryLocalizationReference + " didn't return any result. " + referenceLocalizationException.getMessage());
+                        throw new Exception("Query " + queryLocalizationReference + " didn't return any result. " + referenceLocalizationException.getMessage());
+                    }
 
                 }
             }
@@ -172,7 +182,15 @@ public class MigrateRegistry {
          */
         Query queryLocalizationRegistry = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.LOCALIZATION_BY_REGISTRY);
         queryLocalizationRegistry.setParameter("registry", registry);
-        List<Localization> localizationRegistryList = queryLocalizationRegistry.getResultList();
+
+        List<Localization> localizationRegistryList;
+        try {
+            localizationRegistryList = queryLocalizationRegistry.getResultList();
+        } catch (Exception ex) {
+            logger.error("Error in  getting the result list for " + queryLocalizationRegistry + " " + ex.getMessage());
+            throw new Exception("Error in  getting the localization for " + queryLocalizationRegistry + " " + ex.getMessage());
+        }
+
         for (Localization registryLocalization : localizationRegistryList) {
 
             RegLanguagecode reglanguagecodeByLanguage = regLanguagecodeManager.getByIso6391code(registryLocalization.getLanguage().getIsocode());
