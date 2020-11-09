@@ -19,7 +19,7 @@
  *
  * This work was supported by the Interoperability solutions for public
  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
- * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
+ * through Action 2016.10: European Location Interoperability Solutions
  */
 package eu.europa.ec.re3gistry2.migration.manager;
 
@@ -142,7 +142,13 @@ public class MigrateItemLatestVersion {
         Query queryLocalization = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.LOCALIZATION_BY_ITEM);
         queryLocalization.setParameter("item", item);
 
-        List<Localization> itemListLocalization = queryLocalization.getResultList();
+        List<Localization> itemListLocalization;
+        try {
+            itemListLocalization = queryLocalization.getResultList();
+        } catch (Exception ex) {
+            logger.error("Error in  getting the result list for " + queryLocalization + " " + ex.getMessage());
+            throw new Exception("Error in  getting the localization for " + queryLocalization + " " + ex.getMessage());
+        }
 
         for (Localization localization : itemListLocalization) {
             int fieldIndex = 0;
@@ -236,7 +242,13 @@ public class MigrateItemLatestVersion {
          */
         Query customattributevalueQuery = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.CUSTOMATTRIBUTEVALUE_BY_ITEM);
         customattributevalueQuery.setParameter("item", item);
-        List<Customattributevalue> customattributesValueList = customattributevalueQuery.getResultList();
+        List<Customattributevalue> customattributesValueList;
+        try {
+            customattributesValueList = customattributevalueQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error("Error in  getting the result list for " + customattributevalueQuery + " " + ex.getMessage());
+            throw new Exception("Error in  getting the localization for " + customattributevalueQuery + " " + ex.getMessage());
+        }
 
         Query queryMasterLanguagecode = entityManagerRe3gistry2Migration.createNamedQuery("Languagecode.findByMasterlanguage", Languagecode.class);
         queryMasterLanguagecode.setParameter("masterlanguage", Boolean.TRUE);
@@ -260,6 +272,7 @@ public class MigrateItemLatestVersion {
                 itemclasscustomattributByItemclassAndCustomAttribute = (Itemclasscustomattribute) itemclasscustomattributeForeygnKeyQuery.getSingleResult();
             } catch (Exception ex) {
                 logger.error("Error in  " + ConstantsMigration.ITEMCLASS_CUSTOMATTRIBUTE_BY_ITEMCLASS_AND_CUSTOMATTRIBUTE + " for " + itemclass.getUriname() + " and " + customattributevalue.getCustomattribute().getUuid() + ex.getMessage());
+                throw new Exception("Error in  " + ConstantsMigration.ITEMCLASS_CUSTOMATTRIBUTE_BY_ITEMCLASS_AND_CUSTOMATTRIBUTE + " for " + itemclass.getUriname() + " and " + customattributevalue.getCustomattribute().getUuid() + ex.getMessage());
             }
 
             String customAttributeItemClassUriname = customattributevalue.getCustomattribute().getName();
@@ -279,6 +292,7 @@ public class MigrateItemLatestVersion {
                         customattributevalueLocalization = (Localization) queryLocalizationByCustomattributevalue.getSingleResult();
                     } catch (Exception ex) {
                         logger.error("Error in  " + ConstantsMigration.LOCALIZATION_BY_CUSTOMATTRIBUTEVALUE_AND_LANGUAGE + " for customattributevalue" + customattributevalue.getUuid() + " and language" + masterLanguagecode.getUuid() + ex.getMessage());
+                        throw new Exception("Error in  " + ConstantsMigration.LOCALIZATION_BY_CUSTOMATTRIBUTEVALUE_AND_LANGUAGE + " for customattributevalue" + customattributevalue.getUuid() + " and language" + masterLanguagecode.getUuid() + ex.getMessage());
                     }
 
                     if (customattributevalueLocalization != null) {
@@ -298,17 +312,14 @@ public class MigrateItemLatestVersion {
 
                             createRegrelationFromRegItemAndRegfieldAndKoreygnKeyRegItem(regItem, regFieldsMap, foreygnKeyRegItem, customattributevalue, fieldIndex, commit);
 
-                        } else {
-
-                            if (customattributevalue.getCustomattribute().getMultivalue()) {
-                                String[] customattributeList = customattributevalueLocalization.getLabel().split(",");
-                                for (String customattribute : customattributeList) {
-                                    createRegrelationFromRegItemAndRegfield(customattribute, customAttributeItemClassUriname, regItem, regFieldsMap, customattributevalue, fieldIndex, commit);
-                                    fieldIndex++;
-                                }
-                            } else {
-                                createRegrelationFromRegItemAndRegfield(customattributevalueLocalization.getLabel(), customAttributeItemClassUriname, regItem, regFieldsMap, customattributevalue, fieldIndex, commit);
+                        } else if (customattributevalue.getCustomattribute().getMultivalue()) {
+                            String[] customattributeList = customattributevalueLocalization.getLabel().split(",");
+                            for (String customattribute : customattributeList) {
+                                createRegrelationFromRegItemAndRegfield(customattribute, customAttributeItemClassUriname, regItem, regFieldsMap, customattributevalue, fieldIndex, commit);
+                                fieldIndex++;
                             }
+                        } else {
+                            createRegrelationFromRegItemAndRegfield(customattributevalueLocalization.getLabel(), customAttributeItemClassUriname, regItem, regFieldsMap, customattributevalue, fieldIndex, commit);
                         }
 
                     }
@@ -322,7 +333,15 @@ public class MigrateItemLatestVersion {
                  */
                 Query queryLocalizationByCustomattributevalue = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.LOCALIZATION_BY_CUSTOMATTRIBUTEVALUE);
                 queryLocalizationByCustomattributevalue.setParameter("customattributevalue", customattributevalue);
-                List<Localization> customattributevalueLocalizationList = queryLocalizationByCustomattributevalue.getResultList();
+
+                List<Localization> customattributevalueLocalizationList;
+                try {
+                    customattributevalueLocalizationList = queryLocalizationByCustomattributevalue.getResultList();
+                } catch (Exception ex) {
+                    logger.error("Error in  getting the result list for " + queryLocalizationByCustomattributevalue + " " + ex.getMessage());
+                    throw new Exception("Error in  getting the localization for " + queryLocalizationByCustomattributevalue + " " + ex.getMessage());
+                }
+
                 for (Localization customattributevalueLocalization : customattributevalueLocalizationList) {
 
                     RegLanguagecode reglanguagecodeByLanguage = regLanguagecodeManager.getByIso6391code(customattributevalueLocalization.getLanguage().getIsocode());
@@ -629,7 +648,8 @@ public class MigrateItemLatestVersion {
             }
             regItem.setRorExport(Boolean.FALSE);
 
-            regItem.setInsertdate(new Date());
+            regItem.setInsertdate(item.getDatecreation());
+            regItem.setEditdate(item.getDatelastupdate());
             regItem.setCurrentversion(version);
 
             if (localid.startsWith(BaseConstants.KEY_PARAMETER_HTTP) || localid.startsWith(BaseConstants.KEY_PARAMETER_HTTPS)) {
@@ -689,7 +709,8 @@ public class MigrateItemLatestVersion {
             }
             regItem.setRorExport(Boolean.FALSE);
 
-            regItem.setInsertdate(new Date());
+            regItem.setInsertdate(item.getDatecreation());
+            regItem.setEditdate(item.getDatelastupdate());
             regItem.setCurrentversion(version);
 
             if (localid.startsWith(BaseConstants.KEY_PARAMETER_HTTP) || localid.startsWith(BaseConstants.KEY_PARAMETER_HTTPS)) {

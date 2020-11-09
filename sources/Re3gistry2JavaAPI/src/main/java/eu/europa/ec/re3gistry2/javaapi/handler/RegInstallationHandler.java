@@ -19,7 +19,7 @@
  *
  * This work was supported by the Interoperability solutions for public
  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
- * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
+ * through Action 2016.10: European Location Interoperability Solutions
  */
 package eu.europa.ec.re3gistry2.javaapi.handler;
 
@@ -168,7 +168,7 @@ public class RegInstallationHandler {
                  * move methods from migration manager in a common place
                  */
 
-                registryItem = createRegItemWithoutCollection(registryLocalID, regItemclass, 0, adminUser, commit);
+                registryItem = createRegItemWithoutCollection(registryLocalID, regItemclass, 0, adminUser, commit, new Date(), null);
 
                 int fieldIndex = 0;
                 int AUTO_INCREMENT_REG_FIELD_LIST_ORDER = 0;
@@ -331,7 +331,7 @@ public class RegInstallationHandler {
         return regItemclass;
     }
 
-    public RegItem createRegItemWithoutCollection(String uriname, RegItemclass regItemclass, int version, RegUser reguser, boolean commit) throws Exception {
+    public RegItem createRegItemWithoutCollection(String uriname, RegItemclass regItemclass, int version, RegUser reguser, boolean commit, Date datecreation, Date datelastupdate) throws Exception {
         /**
          * create RegItem for the register
          */
@@ -357,7 +357,8 @@ public class RegInstallationHandler {
         }
 
         regItem.setCurrentversion(version);
-        regItem.setInsertdate(new Date());
+        regItem.setInsertdate(datecreation);
+        regItem.setEditdate(datelastupdate);
 
         try {
             if (!entityManagerRe3gistry2.getTransaction().isActive()) {

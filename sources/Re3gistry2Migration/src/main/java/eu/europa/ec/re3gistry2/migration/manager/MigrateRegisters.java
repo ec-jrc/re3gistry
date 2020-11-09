@@ -19,7 +19,7 @@
  *
  * This work was supported by the Interoperability solutions for public
  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
- * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
+ * through Action 2016.10: European Location Interoperability Solutions
  */
 package eu.europa.ec.re3gistry2.migration.manager;
 
@@ -80,7 +80,13 @@ public class MigrateRegisters {
          */
         try {
             Query queryRegister = entityManagerRe3gistry2Migration.createNamedQuery("Register.findAll", Register.class);
-            List<Register> registerList = queryRegister.getResultList();
+            List<Register> registerList;
+            try {
+                registerList = queryRegister.getResultList();
+            } catch (Exception ex) {
+                logger.error("Error in  getting the result list for " + queryRegister + " " + ex.getMessage());
+                throw new Exception("Error in  getting the localization for " + queryRegister + " " + ex.getMessage());
+            }
 
             RegItemclasstypeManager regItemclasstypeManager = new RegItemclasstypeManager(entityManagerRe3gistry2);
             RegItemclasstype regItemclasstypeRegister = regItemclasstypeManager.getByLocalid("register");
@@ -111,7 +117,7 @@ public class MigrateRegisters {
                     /**
                      * create register reg item
                      */
-                    RegItem registerItem = regInstallationHandler.createRegItemWithoutCollection(register.getUriname(), regItemclass, 0, migrationManager.getMigrationUser(), commit);
+                    RegItem registerItem = regInstallationHandler.createRegItemWithoutCollection(register.getUriname(), regItemclass, 0, migrationManager.getMigrationUser(), commit, register.getDatecreation(), register.getDatelastupdate());
 
                     itemsToIndexSOLR.add(registerItem);
                     /**
@@ -121,29 +127,34 @@ public class MigrateRegisters {
                     RegField regFieldContentSummary = regInstallationHandler.createDefaultField(regItemclass, BaseConstants.KEY_FIELD_MANDATORY_CONTENTSUMMARY_LOCALID, Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_LONGTEXT_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit);
 
                     int fieldIndex = migrateRegisterLocalization(register, registerItem, regFieldLabel, regFieldContentSummary, commit);
-
                     Query queryMasterLanguagecode = entityManagerRe3gistry2Migration.createNamedQuery("Languagecode.findByMasterlanguage", Languagecode.class);
                     queryMasterLanguagecode.setParameter("masterlanguage", Boolean.TRUE);
                     Languagecode masterLanguagecode = (Languagecode) queryMasterLanguagecode.getSingleResult();
 
-                    Query queryLocalizationReference = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.LOCALIZATION_BY_REFERENCE_AND_LANGUAGE);
-                    queryLocalizationReference.setParameter("language", masterLanguagecode);
+                    Query queryLocalizationReference = null;
+                    try {
+                        queryLocalizationReference = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.LOCALIZATION_BY_REFERENCE_AND_LANGUAGE);
+                        queryLocalizationReference.setParameter("language", masterLanguagecode);
 
-                    queryLocalizationReference.setParameter(ConstantsMigration.KEY_PARAMETER_REFERENCE, register.getRegistermanager());
-                    Localization referenceRegisterManagerLocalization = (Localization) queryLocalizationReference.getSingleResult();
-                    migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registerItem, BaseConstants.KEY_ROLE_REGISTERMANAGER, referenceRegisterManagerLocalization.getLabel(), register.getRegistermanager(), BaseConstants.KEY_FIELDTYPE_GROUPREFERENCE_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
+                        queryLocalizationReference.setParameter(ConstantsMigration.KEY_PARAMETER_REFERENCE, register.getRegistermanager());
+                        Localization referenceRegisterManagerLocalization = (Localization) queryLocalizationReference.getSingleResult();
+                        migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registerItem, BaseConstants.KEY_ROLE_REGISTERMANAGER, referenceRegisterManagerLocalization.getLabel(), register.getRegistermanager(), BaseConstants.KEY_FIELDTYPE_GROUPREFERENCE_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
 
-                    queryLocalizationReference.setParameter(ConstantsMigration.KEY_PARAMETER_REFERENCE, register.getRegisterowner());
-                    Localization referenceRegisterOwnerLocalization = (Localization) queryLocalizationReference.getSingleResult();
-                    migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registerItem, BaseConstants.KEY_ROLE_REGISTEROWNER, referenceRegisterOwnerLocalization.getLabel(), register.getRegisterowner(), BaseConstants.KEY_FIELDTYPE_GROUPREFERENCE_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
+                        queryLocalizationReference.setParameter(ConstantsMigration.KEY_PARAMETER_REFERENCE, register.getRegisterowner());
+                        Localization referenceRegisterOwnerLocalization = (Localization) queryLocalizationReference.getSingleResult();
+                        migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registerItem, BaseConstants.KEY_ROLE_REGISTEROWNER, referenceRegisterOwnerLocalization.getLabel(), register.getRegisterowner(), BaseConstants.KEY_FIELDTYPE_GROUPREFERENCE_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
 
-                    queryLocalizationReference.setParameter(ConstantsMigration.KEY_PARAMETER_REFERENCE, register.getRegistercontrolbody());
-                    Localization referenceControlBodyLocalization = (Localization) queryLocalizationReference.getSingleResult();
-                    migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registerItem, BaseConstants.KEY_ROLE_CONTROLBODY, referenceControlBodyLocalization.getLabel(), register.getRegistercontrolbody(), BaseConstants.KEY_FIELDTYPE_GROUPREFERENCE_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
+                        queryLocalizationReference.setParameter(ConstantsMigration.KEY_PARAMETER_REFERENCE, register.getRegistercontrolbody());
+                        Localization referenceControlBodyLocalization = (Localization) queryLocalizationReference.getSingleResult();
+                        migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registerItem, BaseConstants.KEY_ROLE_CONTROLBODY, referenceControlBodyLocalization.getLabel(), register.getRegistercontrolbody(), BaseConstants.KEY_FIELDTYPE_GROUPREFERENCE_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
 
-                    queryLocalizationReference.setParameter(ConstantsMigration.KEY_PARAMETER_REFERENCE, register.getSubmitter());
-                    Localization referenceSubmitterLocalization = (Localization) queryLocalizationReference.getSingleResult();
-                    migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registerItem, BaseConstants.KEY_ROLE_SUBMITTINGORGANIZATION, referenceSubmitterLocalization.getLabel(), register.getSubmitter(), BaseConstants.KEY_FIELDTYPE_GROUPREFERENCE_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
+                        queryLocalizationReference.setParameter(ConstantsMigration.KEY_PARAMETER_REFERENCE, register.getSubmitter());
+                        Localization referenceSubmitterLocalization = (Localization) queryLocalizationReference.getSingleResult();
+                        migrationManager.createRegisterFieldGroupAndLocalization(regItemclass, registerItem, BaseConstants.KEY_ROLE_SUBMITTINGORGANIZATION, referenceSubmitterLocalization.getLabel(), register.getSubmitter(), BaseConstants.KEY_FIELDTYPE_GROUPREFERENCE_UUID, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, fieldIndex, commit);
+                    } catch (Exception errorLocalization) {
+                        logger.error("Query " + queryLocalizationReference + " didn't return any result. " + errorLocalization.getMessage());
+                        throw new Exception("Query " + queryLocalizationReference + " didn't return any result. " + errorLocalization.getMessage());
+                    }
 
                     /**
                      * no role
@@ -182,6 +193,9 @@ public class MigrateRegisters {
                     }
 
                     try {
+                        if (!entityManagerRe3gistry2.getTransaction().isActive()) {
+                            entityManagerRe3gistry2.getTransaction().begin();
+                        }
                         entityManagerRe3gistry2.getTransaction().commit();
                     } catch (Exception ex) {
                         logger.error(ex.getMessage());
@@ -213,7 +227,15 @@ public class MigrateRegisters {
         int fieldIndex = 0;
         Query queryLocalizationRegistry = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.LOCALIZATION_BY_REGISTER);
         queryLocalizationRegistry.setParameter("register", register);
-        List<Localization> localizationRegisterList = queryLocalizationRegistry.getResultList();
+
+        List<Localization> localizationRegisterList;
+        try {
+            localizationRegisterList = queryLocalizationRegistry.getResultList();
+        } catch (Exception ex) {
+            logger.error("Error in  getting the result list for " + queryLocalizationRegistry + " " + ex.getMessage());
+            throw new Exception("Error in  getting the localization for " + queryLocalizationRegistry + " " + ex.getMessage());
+        }
+
         for (Localization localization : localizationRegisterList) {
 
             RegLanguagecode reglanguagecodeByLanguage = regLanguagecodeManager.getByIso6391code(localization.getLanguage().getIsocode());
