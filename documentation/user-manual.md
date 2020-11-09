@@ -1,4 +1,4 @@
-# User maual
+# User manual
 
 ## Scope
 
@@ -157,7 +157,7 @@ Any action performed by a submitting organisation requires the review and approv
 
 ## Status of a reference code
 
-A reference codecan pass through different status. The thype of status may depend on:
+A reference code can pass through different status. The type of status may depend on:
 
 * the approval management workflow or on
 * the life-cycle of the reference code itself.
