@@ -357,9 +357,14 @@ public class RegInstallationHandler {
         }
 
         regItem.setCurrentversion(version);
-        regItem.setInsertdate(datecreation);
-        regItem.setEditdate(datelastupdate);
-
+        if (datecreation != null) {
+            regItem.setInsertdate(datecreation);
+        } else {
+            regItem.setInsertdate(new Date());
+        }
+        if (datelastupdate != null) {
+            regItem.setEditdate(datelastupdate);
+        }
         try {
             if (!entityManagerRe3gistry2.getTransaction().isActive()) {
                 entityManagerRe3gistry2.getTransaction().begin();

@@ -648,8 +648,14 @@ public class MigrateItemLatestVersion {
             }
             regItem.setRorExport(Boolean.FALSE);
 
-            regItem.setInsertdate(item.getDatecreation());
-            regItem.setEditdate(item.getDatelastupdate());
+            if (item.getDatecreation() != null) {
+                regItem.setInsertdate(item.getDatecreation());
+            } else {
+                regItem.setInsertdate(new Date());
+            }
+            if (item.getDatelastupdate() != null) {
+                regItem.setEditdate(item.getDatelastupdate());
+            }
             regItem.setCurrentversion(version);
 
             if (localid.startsWith(BaseConstants.KEY_PARAMETER_HTTP) || localid.startsWith(BaseConstants.KEY_PARAMETER_HTTPS)) {
@@ -709,8 +715,14 @@ public class MigrateItemLatestVersion {
             }
             regItem.setRorExport(Boolean.FALSE);
 
-            regItem.setInsertdate(item.getDatecreation());
-            regItem.setEditdate(item.getDatelastupdate());
+            if (item.getDatecreation() != null) {
+                regItem.setInsertdate(item.getDatecreation());
+            } else {
+                regItem.setInsertdate(new Date());
+            }
+            if (item.getDatelastupdate() != null) {
+                regItem.setEditdate(item.getDatelastupdate());
+            }
             regItem.setCurrentversion(version);
 
             if (localid.startsWith(BaseConstants.KEY_PARAMETER_HTTP) || localid.startsWith(BaseConstants.KEY_PARAMETER_HTTPS)) {

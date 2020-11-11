@@ -83,6 +83,8 @@ public class ConstantsMigration {
             + "i.uriname as uriname, "
             + "i.itemclass as itemclass, "
             + "i.versionnumber as versionnumber, "
+            + "i.datecreation as datecreation, "
+            + "i.datelastupdate as datelastupdate, "
             + "i.status as status\n"
             + "FROM Item i \n"
             + "WHERE i.itemclass = :itemclass AND i.versionnumber = '0'";
