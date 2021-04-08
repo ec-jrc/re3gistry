@@ -33,7 +33,7 @@ Check out the [latest release](https://github.com/ec-jrc/re3gistry/releases).
 * Support for versioning
 * RESTful API with content negotiation (including OpenAPI 3 descriptor)
 * Free-text search
-* Supported formats: HTML, ISO 19135 XML, JSON, RDF/XML, ATOM, Re3gistry XML, CSV
+* Supported formats: HTML, ISO 19135 XML, JSON, RDF/XML, Re3gistry XML, CSV
 * Service formats can be easily added or customised
 * Multiple authentication options
 * Externally governed items referenced through URI 
