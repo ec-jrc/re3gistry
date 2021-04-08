@@ -167,5 +167,21 @@ public class RegStatusManager implements IRegStatusManager {
                 
         return (List<RegStatus>) q.getResultList();
     }
+    /**
+     * Returns all the RegStatus by RegStatusgroup
+     *
+     * @param regStatusgroup
+     * @return all the RegStatus
+     * @throws Exception
+     */
+    @Override
+    public List<RegStatus> getAllPublic(RegStatusgroup regStatusgroup) throws Exception {
+
+        //Preparing query              
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGSTATUSPUBIC_BY_REGSTATUSGROUP);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGSTATUSGROUP, regStatusgroup);
+                
+        return (List<RegStatus>) q.getResultList();
+    }
 
 }

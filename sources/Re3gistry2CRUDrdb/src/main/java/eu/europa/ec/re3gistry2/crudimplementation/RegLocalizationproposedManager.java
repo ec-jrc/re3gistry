@@ -217,7 +217,7 @@ public class RegLocalizationproposedManager implements IRegLocalizationproposedM
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATIONPROPOSED_BY_REGITEMPROPOSED_LANGUAGECODE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMPROPOSED, regItemproposed);
-        q.setParameter(SQLConstants.SQL_PARAMETERS_LANGUAGECODE, regLanguagecode);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (List<RegLocalizationproposed>) q.getResultList();
     }
     
@@ -235,7 +235,7 @@ public class RegLocalizationproposedManager implements IRegLocalizationproposedM
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATIONPROPOSED_ONLY_RELATION_BY_REGITEMPROPOSED_LANGUAGECODE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMPROPOSED, regItemproposed);
-        q.setParameter(SQLConstants.SQL_PARAMETERS_LANGUAGECODE, regLanguagecode);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (List<RegLocalizationproposed>) q.getResultList();
     }
     
@@ -253,7 +253,7 @@ public class RegLocalizationproposedManager implements IRegLocalizationproposedM
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATIONPROPOSED_BY_FIELD_LANGUAGECODE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGFIELD, regField);
-        q.setParameter(SQLConstants.SQL_PARAMETERS_LANGUAGECODE, regLanguagecode);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (RegLocalizationproposed) q.getSingleResult();
     }
     

@@ -44,10 +44,10 @@ public class CaffeineCache implements ItemCache {
     public CaffeineCache() {
         this.languages = new HashSet<>();
         this.itemsByUuid = Caffeine.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(10000)
                 .build();
         this.itemsByURL = Caffeine.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(10000)
                 .build();
     }
 

@@ -94,14 +94,14 @@ public class ItemListLoaderServlet extends HttpServlet {
         String sLength = request.getParameter(BaseConstants.KEY_REQUEST_DT_LENGTH);
         String sDraw = request.getParameter(BaseConstants.KEY_REQUEST_DT_DRAW);
         String searchValue = request.getParameter(BaseConstants.KEY_REQUEST_DT_SEARCHVALUE);
-        
+
         itemUUID = (itemUUID != null) ? InputSanitizerHelper.sanitizeInput(itemUUID) : null;
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
         sStart = (sStart != null) ? InputSanitizerHelper.sanitizeInput(sStart) : null;
         sLength = (sLength != null) ? InputSanitizerHelper.sanitizeInput(sLength) : null;
         sDraw = (sDraw != null) ? InputSanitizerHelper.sanitizeInput(sDraw) : null;
         searchValue = (searchValue != null) ? InputSanitizerHelper.sanitizeInput(searchValue) : null;
-        
+
         int start;
         int length;
         int draw;
@@ -174,7 +174,7 @@ public class ItemListLoaderServlet extends HttpServlet {
 
             if (searchValue != null && !searchValue.isEmpty()) {
                 containedRegItems = new ArrayList<>();
-               
+
                 // This is a search request
                 final SolrDocumentList documents = SolrHandler.performSearch(searchValue, regItem, regLanguagecode, start, length);
                 if (documents != null) {
@@ -413,7 +413,7 @@ public class ItemListLoaderServlet extends HttpServlet {
                                 j++;
 
                             } else if (tmpRegFieldmapping.getRegField().getRegFieldtype().getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_SUCCESSOR)) {
-
+                               
                                 // Get the "successor" reg relation
                                 List<RegRelation> tmpRegRelations = regRelationManager.getAll(tmpRegItem, regRelationpredicateSuccessor);
                                 if (!tmpRegRelations.isEmpty()) {
@@ -496,28 +496,30 @@ public class ItemListLoaderServlet extends HttpServlet {
                                 j++;
                             } else {
 
-                                List<RegLocalization> tmpRegLocalozations;
+                                List<RegLocalization> tmpRegLocalizations;
                                 try {
-                                    tmpRegLocalozations = regLocalizationManager.getAll(tmpRegFieldmapping.getRegField(), tmpRegItem, regLanguagecode);
-                                    if (tmpRegLocalozations.isEmpty()) {
+                                    tmpRegLocalizations = regLocalizationManager.getAll(tmpRegFieldmapping.getRegField(), tmpRegItem, regLanguagecode);
+                                    if (tmpRegLocalizations.isEmpty()) {
                                         throw new NoResultException();
                                     }
                                 } catch (NoResultException e) {
                                     if (tmpRegFieldmapping.getRegField().getIstitle()) {
                                         languageNotAvailable = true;
                                     }
-                                    tmpRegLocalozations = regLocalizationManager.getAll(tmpRegFieldmapping.getRegField(), tmpRegItem, masterLanguage);
+                                    tmpRegLocalizations = regLocalizationManager.getAll(tmpRegFieldmapping.getRegField(), tmpRegItem, masterLanguage);
                                 }
-                                if (!tmpRegLocalozations.isEmpty()) {
+                                if (!tmpRegLocalizations.isEmpty()) {
                                     if (j != 0) {
                                         outs += ",";
                                     }
-                                    if (tmpRegLocalozations.size() > 1) {
+                                    if (tmpRegLocalizations.size() > 1) {
                                         outs += "[";
                                     }
                                     int k = 0;
-                                    for (RegLocalization tmpRegLocalization : tmpRegLocalozations) {
-
+                                    for (RegLocalization tmpRegLocalization : tmpRegLocalizations) {
+                                        if (k != 0) {
+                                            outs += ",";
+                                        }
                                         if (tmpRegLocalization.getValue() != null) {
                                             // If the field is a title, put the link to the item
                                             if (tmpRegFieldmapping.getRegField().getIstitle()) {
@@ -527,9 +529,9 @@ public class ItemListLoaderServlet extends HttpServlet {
                                             }
 
                                         } else if (tmpRegLocalization.getRegRelationReference() != null) {
-                                            if (k != 0) {
-                                                outs += ",";
-                                            }
+//                                            if (k != 0) {
+//                                                outs += ",";
+//                                            }
 
                                             RegRelation regRelation = tmpRegLocalization.getRegRelationReference();
                                             RegItem regItemReference = regRelation.getRegItemObject();
@@ -548,9 +550,9 @@ public class ItemListLoaderServlet extends HttpServlet {
                                         } else {
                                             // Check if there is the localization (relationreference) in the master language
                                             // Getting the RegItem localization for the current field
-                                            tmpRegLocalozations = regLocalizationManager.getAll(tmpRegFieldmapping.getRegField(), tmpRegItem, masterLanguage);
+                                            tmpRegLocalizations = regLocalizationManager.getAll(tmpRegFieldmapping.getRegField(), tmpRegItem, masterLanguage);
 
-                                            for (RegLocalization regLocalizationCheck : tmpRegLocalozations) {
+                                            for (RegLocalization regLocalizationCheck : tmpRegLocalizations) {
                                                 if (regLocalizationCheck.getRegRelationReference() != null) {
                                                     RegRelation regRelation = regLocalizationCheck.getRegRelationReference();
                                                     RegItem regItemReference = regRelation.getRegItemObject();
@@ -562,7 +564,7 @@ public class ItemListLoaderServlet extends HttpServlet {
                                                     } catch (NoResultException e) {
                                                         regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
                                                     }
-
+                                                       
                                                     if (k != 0) {
                                                         outs += ",";
                                                     }
@@ -576,7 +578,7 @@ public class ItemListLoaderServlet extends HttpServlet {
                                         k++;
                                     }
 
-                                    if (tmpRegLocalozations.size() > 1) {
+                                    if (tmpRegLocalizations.size() > 1) {
                                         outs += "]";
                                     }
                                 } else {

@@ -30,6 +30,7 @@ public interface IRegStatusgroupManager{
     
     public RegStatusgroup get(String uuid) throws Exception;
     public List<RegStatusgroup> getAll() throws Exception;
+    public RegStatusgroup findByLocalid(String localid) throws Exception;
     
     public boolean add(RegStatusgroup i) throws Exception;
     public boolean update(RegStatusgroup i) throws Exception;

@@ -40,6 +40,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.restapi.model.ContainedItem;
 import eu.europa.ec.re3gistry2.restapi.model.Item;
 import eu.europa.ec.re3gistry2.restapi.model.LocalizedProperty;
+import eu.europa.ec.re3gistry2.restapi.util.IndentingXMLStreamWriter;
 
 /**
  * https://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd
@@ -69,7 +70,9 @@ public class ISO19135Formatter implements Formatter {
     }
 
     private XMLStreamWriter getXMLWriter(OutputStream out, String rootElement) throws XMLStreamException {
-        XMLStreamWriter xml = XML.XOF.createXMLStreamWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
+        XMLStreamWriter xml = XMLFactory.XOF.createXMLStreamWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
+        xml = new IndentingXMLStreamWriter(xml, XMLFactory.NEW_LINE, XMLFactory.INDENT);
+        
         MapNameSpaceContext nsCtx = new MapNameSpaceContext();
         nsCtx.add("gmd", "http://www.isotc211.org/2005/gmd");
         nsCtx.add("gco", "http://www.isotc211.org/2005/gco");

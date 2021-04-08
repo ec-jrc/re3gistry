@@ -547,6 +547,7 @@ public class BaseConstants {
     public static final String KEY_ROLE_REGISTRYMANAGER = "registryManager";
     public static final String KEY_ROLE_REGISTERMANAGER = "registerManager";
     public static final String KEY_ROLE_REGISTEROWNER = "registerOwner";
+    public static final String KEY_ROLE_SUBMITTER = "submitter";
     public static final String KEY_ROLE_CONTACT_POINT = "contactPoint";
     public static final String KEY_ROLE_LICENSE = "license";
 
@@ -580,6 +581,10 @@ public class BaseConstants {
     
     /* Re3gistry2 rest API keys*/
     public static final String KEY_ALLOW_NULL_FIELDS = "application.returnnullfields";
+    public static final String KEY_DISK_CACHE_PATH = "application.cache.disk.path";
+    public static final String KEY_DISK_CACHE_MAXIMUM_SPACE = "application.cache.disk.maximum.space";
+    public static final String KEY_CACHE_NAME_UUID = "items-by-uuid";
+    public static final String KEY_CACHE_NAME_URL = "items-by-url";    
 
     public String getKEY_APP_NAME() {
         return KEY_APP_NAME;

@@ -77,7 +77,7 @@ public class Configuration {
         this.initLocalization();
 
     }
-    
+
     // This can be used to just initialize properties (lightConfig mode)
     private Configuration(boolean lightConfig) {
 
@@ -98,9 +98,10 @@ public class Configuration {
             properties = new Properties();
 
             String propertiesPath = System.getProperty(BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS);
-            InputStream input = new FileInputStream(propertiesPath + File.separator + BaseConstants.KEY_FILE_NAME_CONFIGURATIONS);
 
-            properties.load(input);
+            try (InputStream input = new FileInputStream(propertiesPath + File.separator + BaseConstants.KEY_FILE_NAME_CONFIGURATIONS)) {
+                 properties.load(input);
+            }
 
         } catch (Exception e) {
             System.out.println("@@ Error reading configurations: " + e.getMessage());

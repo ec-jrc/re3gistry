@@ -21,7 +21,7 @@
  *  *
  *  * This work was supported by the Interoperability solutions for public
  *  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
- *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
+ *  * through Action 2016.10: European Location Interoperability Solutions
  *  * for e-Government (ELISE)
  */
 package eu.europa.ec.re3gistry2.restapi.model;
@@ -29,47 +29,32 @@ package eu.europa.ec.re3gistry2.restapi.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serializable;
 
 /**
  * Common basic information about any registry item
  */
 @JsonPropertyOrder({
     "uri",
+    "localid",
     "version",
     "versionHistory",
     "language",
     "type",
+    "insertDate",
+    "editDate",
     "itemclass",
     "registry",
     "register",
     "properties",
-    "containedItems",
-    "narrower"
+    "containedItems"
 })
-public class Item extends ContainedItem {
+public class Item extends ContainedItem implements Serializable {
 
-    private VersionInformation version;
-    private List<VersionInformation> versionHistory;
+   
     private ItemRef registry;
     private ItemRef register;
     private List<ContainedItem> containedItems;
-    private List<ContainedItem> narrower;
-
-    public VersionInformation getVersion() {
-        return version;
-    }
-
-    public void setVersion(VersionInformation version) {
-        this.version = version;
-    }
-
-    public List<VersionInformation> getVersionHistory() {
-        return versionHistory;
-    }
-
-    public void setVersionHistory(List<VersionInformation> versionHistory) {
-        this.versionHistory = versionHistory;
-    }
 
     public ItemRef getRegistry() {
         return registry;
@@ -93,14 +78,6 @@ public class Item extends ContainedItem {
 
     public void setContainedItems(List<ContainedItem> containedItems) {
         this.containedItems = containedItems;
-    }
-
-    public List<ContainedItem> getNarrower() {
-        return narrower;
-    }
-
-    public void setNarrower(List<ContainedItem> narrower) {
-        this.narrower = narrower;
     }
 
 }

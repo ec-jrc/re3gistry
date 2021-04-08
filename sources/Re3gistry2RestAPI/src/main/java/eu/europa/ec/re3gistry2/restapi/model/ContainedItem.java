@@ -21,7 +21,7 @@
  *  *
  *  * This work was supported by the Interoperability solutions for public
  *  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
- *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
+ *  * through Action 2016.10: European Location Interoperability Solutions
  *  * for e-Government (ELISE)
  */
 package eu.europa.ec.re3gistry2.restapi.model;
@@ -30,18 +30,42 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * ContainedItem information
  */
-public class ContainedItem {
+public class ContainedItem extends BasicContainedItem implements Serializable {
 
     private String uuid;
     private String uri;
+    private String localid;
+    private VersionInformation version;
+    private List<VersionInformation> versionHistory;
     private String language;
     private String type;
+    private boolean hasCollection;
+    private boolean isParent;
+    private boolean latest = false;
+    private boolean external;
+    private Date insertdate;
+    private Date editdate;
     private ItemClass itemclass;
+    private ItemRef registry;
+    private ItemRef register;
+
+    private BasicContainedItem inScheme;
+    private BasicContainedItem topConceptOf;
+    private List<ContainedItem> isDefinedBy;
+
     private List<LocalizedProperty> properties;
+
+    private List<ContainedItem> containedItemsBeeingParentItemClass;
+    private List<ContainedItem> containedItems;
+    private List<BasicContainedItem> narrower;
+    private List<BasicContainedItem> broader;
+    private List<BasicContainedItem> topConcepts;
 
     @JsonIgnore
     public String getUuid() {
@@ -61,6 +85,30 @@ public class ContainedItem {
         this.uri = uri;
     }
 
+    public String getLocalid() {
+        return localid;
+    }
+
+    public void setLocalid(String localid) {
+        this.localid = localid;
+    }
+
+    public VersionInformation getVersion() {
+        return version;
+    }
+
+    public void setVersion(VersionInformation version) {
+        this.version = version;
+    }
+
+    public List<VersionInformation> getVersionHistory() {
+        return versionHistory;
+    }
+
+    public void setVersionHistory(List<VersionInformation> versionHistory) {
+        this.versionHistory = versionHistory;
+    }
+
     public String getLanguage() {
         return language;
     }
@@ -77,12 +125,84 @@ public class ContainedItem {
         this.type = type;
     }
 
+    public boolean isHasCollection() {
+        return hasCollection;
+    }
+
+    public void setHasCollection(boolean hasCollection) {
+        this.hasCollection = hasCollection;
+    }
+
+    public boolean isIsParent() {
+        return isParent;
+    }
+
+    public void setIsParent(boolean isParent) {
+        this.isParent = isParent;
+    }
+
+    public boolean isExternal() {
+        return external;
+    }
+
+    public void setExternal(boolean external) {
+        this.external = external;
+    }
+
+    public Date getInsertdate() {
+        return insertdate;
+    }
+
+    public void setInsertdate(Date insertdate) {
+        this.insertdate = insertdate;
+    }
+
+    public Date getEditdate() {
+        return editdate;
+    }
+
+    public void setEditdate(Date editdate) {
+        this.editdate = editdate;
+    }
+
     public ItemClass getItemclass() {
         return itemclass;
     }
 
     public void setItemclass(ItemClass itemclass) {
         this.itemclass = itemclass;
+    }
+
+    public ItemRef getRegistry() {
+        return registry;
+    }
+
+    public void setRegistry(ItemRef registry) {
+        this.registry = registry;
+    }
+
+    public ItemRef getRegister() {
+        return register;
+    }
+
+    public void setRegister(ItemRef register) {
+        this.register = register;
+    }
+
+    public BasicContainedItem getInScheme() {
+        return inScheme;
+    }
+
+    public void setInScheme(BasicContainedItem inScheme) {
+        this.inScheme = inScheme;
+    }
+
+    public BasicContainedItem getTopConceptOf() {
+        return topConceptOf;
+    }
+
+    public void setTopConceptOf(BasicContainedItem topConceptOf) {
+        this.topConceptOf = topConceptOf;
     }
 
     public List<LocalizedProperty> getProperties() {
@@ -101,5 +221,63 @@ public class ContainedItem {
                 .filter(l -> l.getId().equals(localId))
                 .findAny();
     }
+
+    public List<ContainedItem> getContainedItemsBeeingParentItemClass() {
+        return containedItemsBeeingParentItemClass;
+    }
+
+    public void setContainedItemsBeeingParentItemClass(List<ContainedItem> containedItemsBeeingParentItemClass) {
+        this.containedItemsBeeingParentItemClass = containedItemsBeeingParentItemClass;
+    }
+    
+    public List<ContainedItem> getContainedItems() {
+        return containedItems;
+    }
+
+    public void setContainedItems(List<ContainedItem> containedItems) {
+        this.containedItems = containedItems;
+    }
+
+    public List<BasicContainedItem> getNarrower() {
+        return narrower;
+    }
+
+    public void setNarrower(List<BasicContainedItem> narrower) {
+        this.narrower = narrower;
+    }
+
+    public List<BasicContainedItem> getBroader() {
+        return broader;
+    }
+
+    public void setBroader(List<BasicContainedItem> broader) {
+        this.broader = broader;
+    }
+
+    public List<BasicContainedItem> getTopConcepts() {
+        return topConcepts;
+    }
+
+    public void setTopConcepts(List<BasicContainedItem> topConcepts) {
+        this.topConcepts = topConcepts;
+    }
+
+    public void setIsDefinedBy(List<ContainedItem> isDefinedBy) {
+        this.isDefinedBy = isDefinedBy;
+    }
+
+    public List<ContainedItem> getIsDefinedBy() {
+        return isDefinedBy;
+    }
+
+    public boolean isLatest() {
+        return latest;
+    }
+
+    public void setLatest(boolean latest) {
+        this.latest = latest;
+    }
+    
+    
 
 }

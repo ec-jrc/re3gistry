@@ -26,7 +26,9 @@
  */
 package eu.europa.ec.re3gistry2.restapi.model;
 
-public class ItemClass {
+import java.io.Serializable;
+
+public class ItemClass implements Serializable{
 
     private final String id;
 

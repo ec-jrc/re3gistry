@@ -138,6 +138,22 @@ public class RegLocalizationhistoryManager implements IRegLocalizationhistoryMan
     }
 
     /**
+     * Returns all the RegLocalization for the specified RegItem
+     *
+     * @param regLocalizationhistory
+     * @return all the RegLocalizationhistory
+     * @throws Exception
+     */
+    @Override
+    public List<RegLocalizationhistory> getAll(RegItemhistory regLocalizationhistory) throws Exception {
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_FIELDS_BY_ITEMHISTORY);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMHISTORY, regLocalizationhistory);
+        return (List<RegLocalizationhistory>) q.getResultList();
+    }
+
+    /**
      * Returns all the RegLocalization for the specified RegField and RegItem
      *
      * @param regField The RegField to find the localization
@@ -197,4 +213,22 @@ public class RegLocalizationhistoryManager implements IRegLocalizationhistoryMan
         return (List<RegLocalizationhistory>) q.getResultList();
     }
 
+     /**
+     * Returns all the RegLocalization for the specified RegItem in the specific
+     * language
+     *
+     * @param regItemhistory The regItem to find the localization fields
+     * @param regLanguagecode
+     * @return all the RegLocalization
+     * @throws Exception
+     */
+    @Override
+    public List<RegLocalizationhistory> getAll(RegItemhistory regItemhistory, RegLanguagecode regLanguagecode) throws Exception {
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATIONHISTORY_BY_ITEM_LANGUAGECODE);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM, regItemhistory);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
+        return (List<RegLocalizationhistory>) q.getResultList();
+    }
 }

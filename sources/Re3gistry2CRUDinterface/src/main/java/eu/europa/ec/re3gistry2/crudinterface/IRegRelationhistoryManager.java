@@ -37,5 +37,8 @@ public interface IRegRelationhistoryManager{
     public boolean update(RegRelationhistory i) throws Exception;
     
     public List<RegRelationhistory> getAll(RegItemhistory regItemhistory, RegRelationpredicate regRelationPredicate) throws Exception;
-    
+    public List<RegRelationhistory> getAllByRegItemHistorySubjectAndPredicate(RegItemhistory regItemhistory, RegRelationpredicate regRelationPredicate) throws Exception;
+    public List<RegRelationhistory> getAllByRegItemHistoryObjectAndPredicate(RegItemhistory regItemhistory, RegRelationpredicate regRelationPredicate) throws Exception;
+   
+
 }

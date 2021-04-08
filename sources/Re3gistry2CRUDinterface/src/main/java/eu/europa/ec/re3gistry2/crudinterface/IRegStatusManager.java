@@ -37,5 +37,6 @@ public interface IRegStatusManager{
     public boolean update(RegStatus i) throws Exception;
     
      public List<RegStatus> getAll(RegStatusgroup regStatusgroup) throws Exception;
+     public List<RegStatus> getAllPublic(RegStatusgroup regStatusgroup) throws Exception;
     
 }

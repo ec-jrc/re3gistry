@@ -54,9 +54,9 @@
     RegStatus newRegStatus = (RegStatus) request.getAttribute(BaseConstants.KEY_REQUEST_NEWREGSTATUS);
 %>
 <form method="post" action=".<%=WebConstants.PAGE_URINAME_STATUSCHANGE%>">
-    
+
     <input type="hidden" name="csrfPreventionSalt" value="${csrfPreventionSalt}"/>
-    
+
     <input type="hidden" name="<%=BaseConstants.KEY_REQUEST_ITEMUUID%>" value="<%=regItem.getUuid()%>" />
     <input type="hidden" name="<%=BaseConstants.KEY_REQUEST_NEWSTATUSLOCALID%>" value="<%=newRegStatus.getLocalid()%>" />
     <input type="hidden" name="<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID%>" value="<%=currentLanguage.getUuid()%>" />    
@@ -82,7 +82,17 @@
             <button type="button" class="btn btn-secondary width100" data-dismiss="modal"><i class="fas fa-ban"></i> Close</button>
         </div>
         <div class="col-sm-6">
-            <button type="submit" class="btn btn-primary width100"><i class="far fa-save"></i> Save changes</button>
+            <button type="submit" class="btn btn-primary width100 d-none" id="saveSuccessor"><i class="far fa-save"></i> Save changes</button>
         </div>
     </div>
 </form>
+<script>
+    $('select').on('change', function (e) {
+        console.log(this.selectedIndex);
+        if (this.selectedIndex >= 0) {
+            $('#saveSuccessor').removeClass("d-none");
+        } else {
+            $('#saveSuccessor').addClass("d-none");
+        }
+    });
+</script>

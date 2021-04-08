@@ -26,9 +26,10 @@
  */
 package eu.europa.ec.re3gistry2.restapi.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ItemRef {
+public class ItemRef implements Serializable {
 
     private final String uri;
     private final List<LocalizedProperty> properties;

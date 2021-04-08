@@ -38,8 +38,10 @@ public interface IRegLocalizationhistoryManager{
     public boolean add(RegLocalizationhistory i) throws Exception;
     public boolean update(RegLocalizationhistory i) throws Exception;
     
+    public List<RegLocalizationhistory> getAll(RegItemhistory regLocalizationhistory) throws Exception;
     public List<RegLocalizationhistory> getAll(RegField regField, RegItemhistory regItemhistory) throws Exception;
     public List<RegLocalizationhistory> getAll(RegField regField, RegItemhistory regItemhistory, RegLanguagecode regLanguagecode) throws Exception;
     public List<RegLocalizationhistory> getAll(RegField regField, RegItemhistory regItemhistory, RegAction regAction) throws Exception;
+    public List<RegLocalizationhistory> getAll(RegItemhistory regItemhistory, RegLanguagecode regLanguagecode) throws Exception;
     
 }

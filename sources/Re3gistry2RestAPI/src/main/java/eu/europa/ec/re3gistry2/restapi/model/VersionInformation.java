@@ -26,7 +26,9 @@
  */
 package eu.europa.ec.re3gistry2.restapi.model;
 
-public class VersionInformation {
+import java.io.Serializable;
+
+public class VersionInformation implements Serializable{
 
     private final int number;
     private final String uri;

@@ -186,7 +186,7 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_FIELDS_BY_ITEM_AND_LANGUAGE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM, regItem);
-        q.setParameter(SQLConstants.SQL_PARAMETERS_LANGUAGECODE, regLanguagecode);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (List<RegLocalization>) q.getResultList();
     }
 
@@ -203,7 +203,7 @@ public class RegLocalizationManager implements IRegLocalizationManager {
     public List<RegLocalization> getAll(RegLanguagecode regLanguagecode, List<RegItem> regItems) throws Exception {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_FIELDS_BY_LANGUAGE_AND_ITEMS);
-        q.setParameter(SQLConstants.SQL_PARAMETERS_LANGUAGECODE, regLanguagecode);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM_LIST, regItems);
         return (List<RegLocalization>) q.getResultList();
     }
@@ -271,7 +271,7 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_BY_FIELD_LANGUAGECODE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGFIELD, regField);
-        q.setParameter(SQLConstants.SQL_PARAMETERS_LANGUAGECODE, regLanguagecode);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (RegLocalization) q.getSingleResult();
     }
 
@@ -310,7 +310,7 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_BY_FIELD_ITEM_LANGUAGECODE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGFIELD, regField);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM, regItem);
-        q.setParameter("language", regLanguagecode);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (List<RegLocalization>) q.getResultList();
     }
 

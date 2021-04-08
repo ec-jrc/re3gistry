@@ -108,7 +108,8 @@ public class RegInstallationStepMigrationPorcessHandler {
              * set session user to null
              */
             if (session != null) {
-                session.setAttribute(BaseConstants.KEY_SESSION_USER, null);
+//                session.setAttribute(BaseConstants.KEY_SESSION_USER, null);
+                session.invalidate();
             }
         } catch (Exception ex) {
             /**

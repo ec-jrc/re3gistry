@@ -26,9 +26,10 @@
  */
 package eu.europa.ec.re3gistry2.restapi.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class LocalizedProperty {
+public class LocalizedProperty implements Serializable{
 
     private final String lang;
     private final String id;
@@ -36,15 +37,17 @@ public class LocalizedProperty {
     private final String label;
     private final List<LocalizedPropertyValue> values;
     private final int order;
+    private final String tablevisible;
 
     public LocalizedProperty(String lang, String id, boolean istitle,
-            String label, List<LocalizedPropertyValue> values, int order) {
+            String label, List<LocalizedPropertyValue> values, int order, boolean tablevisible) {
         this.lang = lang;
         this.id = id;
         this.istitle = istitle ? "true" : null;
         this.label = label;
         this.values = values;
         this.order = order;
+        this.tablevisible = tablevisible ? "true" : "null";
     }
 
     public String getLang() {
@@ -69,6 +72,10 @@ public class LocalizedProperty {
 
     public int getOrder() {
         return order;
+    }
+
+    public String getTablevisible() {
+        return tablevisible;
     }
 
 }

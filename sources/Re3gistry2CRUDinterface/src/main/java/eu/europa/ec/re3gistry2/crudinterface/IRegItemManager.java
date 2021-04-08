@@ -28,6 +28,7 @@ import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegItemclasstype;
 import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
+import eu.europa.ec.re3gistry2.model.RegStatus;
 import java.util.List;
 
 public interface IRegItemManager{
@@ -50,7 +51,8 @@ public interface IRegItemManager{
     public List<RegItem> getAllActive(RegItemclasstype regItemcalsstype) throws Exception;
     public List<RegItem> getChildItemsList(RegItem regItem) throws Exception;
     public List<RegItem> getAllSubjectsByRegItemObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception;
-    
+    public List<String> getAllItemByRegItemObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception;
+        
     public boolean add(RegItem i) throws Exception;
     public boolean update(RegItem i) throws Exception;
     public boolean delete(RegItem regItem) throws Exception;

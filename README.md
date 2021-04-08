@@ -24,6 +24,8 @@ This new version of the software has been developed in cooperation with the [Nat
 
 ## Re3gistry 2 features
 
+Check out the [latest release](https://github.com/ec-jrc/re3gistry/releases).
+
 * User friendly editing interface to add, edit and manage easily the registers and reference codes
 * Management of the full lifecycle of the reference codes (based on the ISO 19135 Standard)
 * Highly flexible and customisable data models
@@ -31,8 +33,8 @@ This new version of the software has been developed in cooperation with the [Nat
 * Support for versioning
 * RESTful API with content negotiation (including OpenAPI 3 descriptor)
 * Free-text search
-* Supported formats: HTML, ISO 19135 XML, JSON
-* Service formats can be easily added or customised (default formats: Json and ISO 19135 XML)
+* Supported formats: HTML, ISO 19135 XML, JSON, RDF/XML, ATOM, Re3gistry XML, CSV
+* Service formats can be easily added or customised
 * Multiple authentication options
 * Externally governed items referenced through URI 
 * INSPIRE register federation format support (option to automatically create the RoR format)
@@ -54,8 +56,4 @@ Use the [the issue tracker](https://github.com/ec-jrc/re3gistry/issues) to:
 ## Missing features
 
 * Cache of the elements in the dropdowns of the application.
-* Some formats available in the old version of the Re3gistry:
-    * RDF/XML
-    * ATOM
-    * Re3gistry XML
-    * CSV 
+* Improvements on the cache of the data API.

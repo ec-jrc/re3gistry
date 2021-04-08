@@ -236,4 +236,23 @@ public class RegItemclassManager implements IRegItemclassManager {
         return ((Number) q.getSingleResult()).intValue();
 
     }
+
+    /**
+     * It retrieves the child RegItemclass of the RegItemclass passed by
+     * parameter if available, otherwise it returns null
+     *
+     * @return RegItemclass
+     * @throws Exception
+     */
+    @Override
+    public List<RegItemclass> getAlltemclassOrderAscByDataprocedureorder() throws Exception {
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_ALL_ITEMCLASS_CHILD_BY_ITEMCLASS_ORDERASC);
+        try {
+            return (List<RegItemclass>) q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

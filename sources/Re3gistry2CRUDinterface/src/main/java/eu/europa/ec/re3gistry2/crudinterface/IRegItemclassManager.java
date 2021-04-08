@@ -37,13 +37,15 @@ public interface IRegItemclassManager {
     public boolean add(RegItemclass i) throws Exception;
 
     public boolean update(RegItemclass i) throws Exception;
-    
+
     public boolean delete(RegItemclass i) throws Exception;
 
     public List<RegItemclass> getChildItemclass(RegItemclass regItemclass) throws Exception;
-    
+
     public int getRegItemclassMaxDataprocedureorder() throws Exception;
-    
+
+    public List<RegItemclass> getAlltemclassOrderAscByDataprocedureorder() throws Exception;
+
     public List<RegItemclass> getAll(boolean systemItems) throws Exception;
 
 }

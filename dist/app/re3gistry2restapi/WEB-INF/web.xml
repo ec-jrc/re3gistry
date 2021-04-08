@@ -1,41 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://java.sun.com/xml/ns/javaee"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-    version="2.5">
+<web-app version="2.5" 
+         xmlns="http://java.sun.com/xml/ns/javaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name>Re3gistry2RestAPI</display-name>
-
     <servlet>
         <servlet-name>InitializerLight</servlet-name>
         <servlet-class>eu.europa.ec.re3gistry2.base.utility.InitializerLight</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    
     <servlet>
         <servlet-name>items-api</servlet-name>
         <servlet-class>eu.europa.ec.re3gistry2.restapi.ItemsServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
-
     <servlet>
         <servlet-name>cache-api</servlet-name>
         <servlet-class>eu.europa.ec.re3gistry2.restapi.CacheServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
+    <servlet>
+        <servlet-name>cache-all-api</servlet-name>
+        <servlet-class>eu.europa.ec.re3gistry2.restapi.CacheAllServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>items-api</servlet-name>
         <url-pattern>/items/*</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>cache-api</servlet-name>
         <url-pattern>/cache/*</url-pattern>
     </servlet-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>cache-all-api</servlet-name>
+        <url-pattern>/cacheall/*</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>InitializerLight</servlet-name>
         <url-pattern>/InitializerLight</url-pattern>
     </servlet-mapping>
-
 </web-app>

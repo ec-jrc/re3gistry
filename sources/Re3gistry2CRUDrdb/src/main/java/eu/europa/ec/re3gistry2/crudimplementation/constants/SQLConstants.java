@@ -47,7 +47,7 @@ public class SQLConstants {
     public static final String SQL_PARAMETERS_REGITEM_LIST = "regitemList";
     public static final String SQL_PARAMETERS_ACTION = "regaction";
     public static final String SQL_PARAMETERS_REGFIELD = "regfield";
-    public static final String SQL_PARAMETERS_LANGUAGECODE = "languagecode";
+    public static final String SQL_PARAMETERS_REGLANGUAGECODE = "regLanguagecode";
     public static final String SQL_PARAMETERS_LABEL = "label";
     public static final String SQL_PARAMETERS_PREDICATE = "predicate";
     public static final String SQL_PARAMETERS_NOT_PREDICATE = "notpredicate";
@@ -78,6 +78,7 @@ public class SQLConstants {
     public static final String SQL_GET_REGITEM_BY_RELATION_AND_ITEMOBJECT_COUNT_NO_SYSTEMITEM = "SELECT count(i.regItemSubject) FROM RegRelation i JOIN i.regItemObject r JOIN r.regItemclass c WHERE i.regRelationpredicate=:regRelationpredicete AND i.regItemObject = :regItemObject AND c.systemitem = FALSE";
 
     public static final String SQL_GET_REG_ITEM_BY_OBJECT_PREDICATE_AND_SUBJECT_FILTER = "SELECT r.regItemSubject FROM RegRelation r WHERE r.regItemObject = :regitem AND r.regRelationpredicate = :predicate AND r.regItemSubject NOT IN (SELECT r1.regItemSubject FROM RegRelation r1 WHERE r1.regRelationpredicate = :notpredicate)";
+    public static final String SQL_GET_REG_ITEM_BY_SUBJECT_PREDICATE_AND_FILTER_PREDICATE = "SELECT r0.regItemSubject FROM (SELECT * FROM RegRelation r JOIN RegItem ri on ri.uuid = r.regItemSubject WHERE ri.regStatus = :regStatus AND r.regItemObject = :regitem AND r.regRelationpredicate = :predicate) as r0 WHERE r0.regItemSubject NOT IN (SELECT r1.regItemSubject FROM RegRelation r1 WHERE r1.regRelationpredicate = :notpredicate)";
 
     // RegItemproposed
     public static final String SQL_GET_REGITEMPROPOSED_BY_LOCALID_REGITEMCLASS = "SELECT r FROM RegItemproposed r WHERE r.localid = :localid AND r.regItemclass = :regItemclass";
@@ -102,6 +103,7 @@ public class SQLConstants {
     public static final String SQL_GET_REGITEMHISTORY_BY_LOCALID_REGITEMCLASS_MAX_VERSION = "SELECT r FROM RegItemhistory r WHERE r.localid = :localid AND r.regItemclass = :regItemclass AND r.versionnumber = (SELECT max(r.versionnumber) FROM RegItemhistory r WHERE r.localid = :localid AND r.regItemclass = :regItemclass)";
     public static final String SQL_GET_REGITEMHISTORY_BY_LOCALID_REGITEMCLASS_MIN_VERSION = "SELECT r FROM RegItemhistory r WHERE r.localid = :localid AND r.regItemclass = :regItemclass AND r.versionnumber = (SELECT min(r.versionnumber) FROM RegItemhistory r WHERE r.localid = :localid AND r.regItemclass = :regItemclass)";
     public static final String SQL_GET_REGITEMHISTORY_BY_LOCALID_VERSION_REGITEMCLASS = "SELECT r FROM RegItemhistory r WHERE r.localid = :localid AND r.regItemclass = :regItemclass AND r.versionnumber = :versionnumber";
+    public static final String SQL_GET_REGITEMHISTORY_BY_REGITEMCLASS = "SELECT r FROM RegItemhistory r WHERE r.regItemclass = :regItemclass";
     public static final String SQL_GET_REGITEMHISTORY_BY_LOCALID_VERSION_REGITEMCLASS_REITEMREFERENCE = "SELECT r FROM RegItemhistory r WHERE r.localid = :localid AND r.regItemclass = :regItemclass AND r.versionnumber = :versionnumber AND r.regItemReference = :regItemReference";
     public static final String SQL_GET_REGITEMHISTORY_BY_REITEMREFERENCE = "SELECT r FROM RegItemhistory r WHERE r.regItemReference = :regItemReference";
     public static final String SQL_GET_REGITEMHISTORY_BY_REGACTION = "SELECT r FROM RegItemhistory r WHERE r.regAction = :regAction";
@@ -121,13 +123,13 @@ public class SQLConstants {
 
     // RegLocalization
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEM = "SELECT r FROM RegLocalization r WHERE r.regItem = :regitem AND r.regField IS NOT NULL";
-    public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEM_AND_LANGUAGE = "SELECT r FROM RegLocalization r WHERE r.regItem = :regitem AND r.regLanguagecode = :languagecode AND r.regField IS NOT NULL";
-    public static final String SQL_GET_LOCALIZATION_FIELDS_BY_LANGUAGE_AND_ITEMS = "SELECT r FROM RegLocalization r WHERE r.regLanguagecode = :languagecode AND r.regField IS NOT NULL AND r.regItem IN :regitemList";
+    public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEM_AND_LANGUAGE = "SELECT r FROM RegLocalization r WHERE r.regItem = :regitem AND r.regLanguagecode = :regLanguagecode AND r.regField IS NOT NULL";
+    public static final String SQL_GET_LOCALIZATION_FIELDS_BY_LANGUAGE_AND_ITEMS = "SELECT r FROM RegLocalization r WHERE r.regLanguagecode = :regLanguagecode AND r.regField IS NOT NULL AND r.regItem IN :regitemList";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMCLASS = "SELECT r FROM RegLocalization r WHERE r.regItemclass = :regitemclass";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem IS NULL";
-    public static final String SQL_GET_LOCALIZATION_BY_FIELD_LANGUAGECODE = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regLanguagecode = :languagecode AND r.regItem IS NULL";
+    public static final String SQL_GET_LOCALIZATION_BY_FIELD_LANGUAGECODE = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regLanguagecode = :regLanguagecode AND r.regItem IS NULL";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD_ITEM = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem = :regitem";
-    public static final String SQL_GET_LOCALIZATION_BY_FIELD_ITEM_LANGUAGECODE = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem = :regitem AND r.regLanguagecode = :language";
+    public static final String SQL_GET_LOCALIZATION_BY_FIELD_ITEM_LANGUAGECODE = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem = :regitem AND r.regLanguagecode = :regLanguagecode";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD_ITEM_ACTION = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem = :regitem AND r.regAction = :regaction";
     public static final String SQL_GET_LOCALIZATION_WITH_RELATION_REFERENCE_BY_ITEM = "SELECT r FROM RegLocalization r WHERE r.regItem = :regitem AND r.regField IS NOT NULL AND r.regRelationReference IS NOT NULL";
 
@@ -137,22 +139,25 @@ public class SQLConstants {
     public static final String SQL_GET_LOCALIZATIONPROPOSED_FIELDS_BY_ITEM = "SELECT r FROM RegLocalizationproposed r WHERE r.regItemproposed = :regitem AND r.regField IS NOT NULL";
     public static final String SQL_GET_LOCALIZATIONPROPOSED_FIELDS_BY_ITEMCLASS = "SELECT r FROM RegLocalizationproposed r WHERE r.regItemclass = :regitemclass";
     public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_FIELD = "SELECT r FROM RegLocalizationproposed r WHERE r.regField = :regfield AND r.regItemproposed IS NULL";
-    public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_FIELD_LANGUAGECODE = "SELECT r FROM RegLocalizationproposed r WHERE r.regField = :regfield AND r.regLanguagecode = :languagecode AND r.regItemproposed IS NULL";
+    public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_FIELD_LANGUAGECODE = "SELECT r FROM RegLocalizationproposed r WHERE r.regField = :regfield AND r.regLanguagecode = :regLanguagecode AND r.regItemproposed IS NULL";
     public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_FIELD_ITEM = "SELECT r FROM RegLocalizationproposed r WHERE r.regField = :regfield AND r.regItemproposed = :regitem";
     public static final String SQL_GET_LOCALIZATIONPROPOSED_NULL_BY_FIELD_ITEM = "SELECT r FROM RegLocalizationproposed r WHERE r.regField = :regfield AND r.regItemproposed = :regitem AND r.value IS NULL AND r.regRelationproposedReference IS NULL";
     public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_FIELD_ITEM_LANGUAGECODE = "SELECT r FROM RegLocalizationproposed r WHERE r.regField = :regfield AND r.regItemproposed = :regitem AND r.regLanguagecode = :language";
     public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_FIELD_ITEM_ACTION = "SELECT r FROM RegLocalizationproposed r WHERE r.regField = :regfield AND r.regItemproposed = :regitem AND r.regAction = :regaction";
     public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_FIELD_ITEM_LANGUAGECODE_NEW = "SELECT r FROM RegLocalizationproposed r WHERE r.regField = :regfield AND r.regItemproposed = :regitem AND r.regLanguagecode = :language AND r.regLocalizationReference IS NULL";
     public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_REGLOCALIZATION_REFERENCE_AND_LANGUAGE = "SELECT r FROM RegLocalizationproposed r WHERE r.regLocalizationReference = :regLocalizationReference AND r.regLanguagecode = :regLanguagecode";
-    public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_REGITEMPROPOSED_LANGUAGECODE = "SELECT r FROM RegLocalizationproposed r WHERE r.regItemproposed = :regItemproposed AND r.regLanguagecode = :languagecode";
-    public static final String SQL_GET_LOCALIZATIONPROPOSED_ONLY_RELATION_BY_REGITEMPROPOSED_LANGUAGECODE = "SELECT r FROM RegLocalizationproposed r WHERE r.regItemproposed = :regItemproposed AND r.regLanguagecode = :languagecode AND r.regRelationproposedReference IS NOT NULL";
+    public static final String SQL_GET_LOCALIZATIONPROPOSED_BY_REGITEMPROPOSED_LANGUAGECODE = "SELECT r FROM RegLocalizationproposed r WHERE r.regItemproposed = :regItemproposed AND r.regLanguagecode = :regLanguagecode";
+    public static final String SQL_GET_LOCALIZATIONPROPOSED_ONLY_RELATION_BY_REGITEMPROPOSED_LANGUAGECODE = "SELECT r FROM RegLocalizationproposed r WHERE r.regItemproposed = :regItemproposed AND r.regLanguagecode = :regLanguagecode AND r.regRelationproposedReference IS NOT NULL";
 
     //RegLocalizationhistory
-    public static final String SQL_GET_LOCALIZATION_BY_FIELD_ITEMHISTORY = "SELECT r FROM RegLocalizationhistory r WHERE r.regField = :regfield AND r.regItemhistory = :regitemhistory";
+    public static final String SQL_GET_LOCALIZATION_BY_FIELD_ITEMHISTORY = "SELECT r FROM RegLocalizationhistory r WHERE r.regField = :regfield AND r.regItemhistory = :regItemhistory";
+    public static final String SQL_GET_LOCALIZATION_BY_TEMHISTORY = "SELECT r FROM RegLocalizationhistory r WHERE r.regItemhistory = :regItemhistory";
     public static final String SQL_GET_LOCALIZATIONHISTORY_BY_FIELD_ITEM_LANGUAGECODE = "SELECT r FROM RegLocalizationhistory r WHERE r.regField = :regfield AND r.regItemhistory = :regitem AND r.regLanguagecode = :language";
+    public static final String SQL_GET_LOCALIZATIONHISTORY_BY_ITEM_LANGUAGECODE = "SELECT r FROM RegLocalizationhistory r WHERE r.regItemhistory = :regitem AND r.regLanguagecode = :regLanguagecode";
     public static final String SQL_GET_LOCALIZATIONHISTORY_BY_FIELD_ITEM_ACTION = "SELECT r FROM RegLocalizationhistory r WHERE r.regField = :regfield AND r.regItemhistory = :regitem AND r.regAction = :regaction";
-
-    // RegRelation
+    public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMHISTORY = "SELECT r FROM RegLocalizationhistory r WHERE r.regItemhistory = :regItemhistory AND r.regField IS NOT NULL";
+    
+// RegRelation
     public static final String SQL_GET_RELATION_BY_SUBJECT_ITEM = "SELECT r FROM RegRelation r WHERE r.regItemSubject = :regitem";
     public static final String SQL_GET_RELATION_BY_OBJECT_ITEM = "SELECT r FROM RegRelation r WHERE r.regItemObject = :regitem";
     public static final String SQL_GET_RELATION_COLLECTION_REFERENCE = "SELECT r FROM RegRelation r WHERE r.regItemSubject = :regitem AND r.regRelationpredicate = :predicate";
@@ -169,10 +174,15 @@ public class SQLConstants {
     public static final String SQL_GET_RELATIONPROPOSED_BY_REG_RELATION_REFERENCE = "SELECT r FROM RegRelationproposed r WHERE r.regRelationReference = :regrelationreference";
 
     //RegRelationistory
-    public static final String SQL_GET_COLLECTION_REFERENCE_HISTORY = "SELECT r FROM RegRelationhistory r WHERE r.regItemSubjectHistory = :regitemhistory AND r.regRelationpredicate = :predicate";
+    public static final String SQL_GET_COLLECTION_REFERENCE_HISTORY = "SELECT r FROM RegRelationhistory r WHERE r.regItemhistorySubject = :regItemhistory AND r.regRelationpredicate = :predicate";
+    public static final String SQL_GET_RELATIONHISTORY_SUBJECT_PREDICATE = "SELECT r FROM RegRelationhistory r WHERE r.regItemhistorySubject = :regItemhistory AND r.regRelationpredicate = :predicate";
+    public static final String SQL_GET_RELATIONHISTORY_OBJECT_PREDICATE = "SELECT r FROM RegRelationhistory r WHERE r.regItemhistoryObject = :regItemhistory AND r.regRelationpredicate = :predicate";
+    public static final String SQL_GET_RELATIONHISTORY_BY_OBJECT_PREDICATE_AND_SUBJECT_FILTER = "SELECT r.regItemSubject FROM RegRelationhistory r WHERE r.regItemhistoryObject = :regitem AND r.regRelationpredicate = :predicate AND r.regItemSubject NOT IN (SELECT r1.regItemSubject FROM RegRelation r1 WHERE r1.regRelationpredicate = :notpredicate)";
+    public static final String SQL_GET_RELATIONHISTORYBY_SUBJECT_PREDICATE_AND_FILTER_PREDICATE = "SELECT r0.regItemSubject FROM (SELECT * FROM RegRelationhistory r JOIN RegItem ri on ri.uuid = r.regItemSubject WHERE ri.regStatus = :regStatus AND r.regItemObjectHistory = :regitem AND r.regRelationpredicate = :predicate) as r0 WHERE r0.regItemSubject NOT IN (SELECT r1.regItemSubject FROM RegRelation r1 WHERE r1.regRelationpredicate = :notpredicate)";
 
     // RegItemclass
     public static final String SQL_GET_ITEMCLASS_CHILD_BY_ITEMCLASS = "SELECT r FROM RegItemclass r WHERE r.regItemclassParent = :regitemclass";
+    public static final String SQL_GET_ALL_ITEMCLASS_CHILD_BY_ITEMCLASS_ORDERASC = "SELECT r FROM RegItemclass r ORDER BY r.dataprocedureorder ASC";
     public static final String SQL_GET_REGITEMCLASS_MAX_DATAPROCEDUREORDER = "SELECT max(r.dataprocedureorder) FROM RegItemclass r";
 
     // RegItemclasstype
@@ -210,5 +220,6 @@ public class SQLConstants {
 
     // RegStatus
     public static final String SQL_GET_REGSTATUS_BY_REGSTATUSGROUP = "SELECT r FROM RegStatus r WHERE r.regStatusgroup = :regStatusgroup";
+    public static final String SQL_GET_REGSTATUSPUBIC_BY_REGSTATUSGROUP = "SELECT r FROM RegStatus r WHERE r.regStatusgroup = :regStatusgroup AND r.ispublic = TRUE";
 
 }

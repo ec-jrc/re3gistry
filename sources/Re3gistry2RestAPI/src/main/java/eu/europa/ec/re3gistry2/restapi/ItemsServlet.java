@@ -21,7 +21,7 @@
  *  *
  *  * This work was supported by the Interoperability solutions for public
  *  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
- *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
+ *  * through Action 2016.10: European Location Interoperability Solutions
  *  * for e-Government (ELISE)
  */
 package eu.europa.ec.re3gistry2.restapi;
@@ -43,21 +43,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
-import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegStatuslocalizationManager;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.restapi.cache.ItemCache;
+import eu.europa.ec.re3gistry2.restapi.format.CSVFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.Formatter;
 import eu.europa.ec.re3gistry2.restapi.format.ISO19135Formatter;
 import eu.europa.ec.re3gistry2.restapi.format.JSONFormatter;
+import eu.europa.ec.re3gistry2.restapi.format.JSONInternalFormatter;
+import eu.europa.ec.re3gistry2.restapi.format.RDFFormatter;
+import eu.europa.ec.re3gistry2.restapi.format.RORFormatter;
+import eu.europa.ec.re3gistry2.restapi.format.XMLFormatter;
 import eu.europa.ec.re3gistry2.restapi.model.Item;
 import eu.europa.ec.re3gistry2.restapi.util.NoVersionException;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
@@ -68,9 +64,9 @@ public class ItemsServlet extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(ItemsServlet.class.getName());
     private static final long serialVersionUID = 1L;
 
-    private EntityManagerFactory emf;
-    private ItemCache cache;
-    private Map<String, Formatter> formatters;
+    private static EntityManagerFactory emf;
+    private static ItemCache cache;
+    private static Map<String, Formatter> formatters;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -78,9 +74,14 @@ public class ItemsServlet extends HttpServlet {
             this.emf = PersistenceFactory.getEntityManagerFactory();
             this.cache = (ItemCache) config.getServletContext().getAttribute(CacheServlet.ATTRIBUTE_CACHE_KEY);
             this.formatters = new HashMap<>();
+
+            addFormatter(new JSONInternalFormatter());
+            addFormatter(new XMLFormatter());
             addFormatter(new JSONFormatter());
             addFormatter(new ISO19135Formatter());
-            // addFormatter(new RDFFormatter());
+            addFormatter(new RDFFormatter());
+            addFormatter(new CSVFormatter(emf));
+            addFormatter(new RORFormatter());
         } catch (Exception e) {
             LOG.error("Unexpected exception occured: cannot load the configuration system", e);
         }
@@ -93,115 +94,162 @@ public class ItemsServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String path = req.getPathInfo();
-        String lang = RequestUtil.getParamTrimmed(req, "lang", null);
-        String format = RequestUtil.getParamTrimmed(req, "format", "json");
-        String uuid = RequestUtil.getParamTrimmed(req, "uuid", null);
-        String uri = RequestUtil.getParamTrimmed(req, "uri", null);
-        uri = removeTrailingSlashes(uri);
-
-        Predicate<Item> typeFilter = getTypeFilter(path);
-        Formatter formatter = formatters.get(format);
-
-        if (typeFilter == null) {
-            try {
-                ResponseUtil.err(resp, ApiError.NOT_FOUND);
-            } catch (Exception e) {
-                LOG.error("Unexpected exception occured", e);
-            }
-            return;
-        }
-        if (formatter == null) {
-            try {
-                ResponseUtil.err(resp, ApiError.FORMAT_NOT_SUPPORTED);
-            } catch (Exception e) {
-                LOG.error("Unexpected exception occured", e);
-            }
-            return;
-        }
-        if (uuid == null && uri == null) {
-            try {
-                ResponseUtil.err(resp, ApiError.UUID_URI_REQUIRED);
-            } catch (Exception e) {
-                LOG.error("Unexpected exception occured", e);
-            }
-            return;
-        }
-
-        EntityManager em = null;
         try {
-            em = emf.createEntityManager();
+            String path = req.getPathInfo();
+            String lang = RequestUtil.getParamTrimmed(req, "lang", null);
+            String uuid = RequestUtil.getParamTrimmed(req, "uuid", null);
+            String uri = RequestUtil.getParamTrimmed(req, "uri", null);
+            String format = RequestUtil.getParamTrimmed(req, "format", null);
+            uri = removeTrailingSlashes(uri);
 
-            RegLanguagecodeManager languageManager = new RegLanguagecodeManager(em);
-            RegLanguagecode masterLanguage = languageManager.getMasterLanguage();
-            RegLanguagecode languageCode = getLanguageCode(languageManager, lang, masterLanguage);
-            if (languageCode == null) {
-                ResponseUtil.err(resp, ApiError.LANGUAGE_NOT_SUPPORTED);
+            if (uri != null) {
+                int slash = uri.lastIndexOf('/');
+                String localid = uri.substring(slash + 1);
+                int count = countOccurance(uri, localid);
+
+                if (count == 2) {
+                    int start = uri.lastIndexOf(localid);
+                    uri = uri.substring(0, start - 1);
+                }
+            }
+
+            Predicate<Item> typeFilter = getTypeFilter(path);
+            Formatter formatter = formatters.get(format);
+
+            if (typeFilter == null) {
+                ResponseUtil.err(resp, ApiError.NOT_FOUND);
+                return;
+            }
+            if (formatter == null) {
+                ResponseUtil.err(resp, ApiError.FORMAT_NOT_SUPPORTED);
+                return;
+            }
+            if (uuid == null && uri == null) {
+                ResponseUtil.err(resp, ApiError.UUID_URI_REQUIRED);
                 return;
             }
 
-            RegItemclassManager classManager = new RegItemclassManager(em);
-            RegItemManager itemManager = new RegItemManager(em);
-            RegItemhistoryManager itemHistoryManager = new RegItemhistoryManager(em);
-            RegRelationpredicateManager relationPredicateManager = new RegRelationpredicateManager(em);
-            RegRelationManager relationManager = new RegRelationManager(em);
-            RegFieldManager fieldManager = new RegFieldManager(em);
-            RegLocalizationManager localizationManager = new RegLocalizationManager(em);
-            RegFieldmappingManager fieldmappingManager = new RegFieldmappingManager(em);
-            RegStatuslocalizationManager statusLocalizationManager = new RegStatuslocalizationManager(em);
+            EntityManager em = null;
+            try {
+                em = emf.createEntityManager();
 
-            ItemSupplier itemSupplier = new ItemSupplier(classManager,
-                    itemManager, itemHistoryManager,
-                    relationPredicateManager, relationManager,
-                    fieldManager, localizationManager,
-                    fieldmappingManager, statusLocalizationManager,
-                    masterLanguage, languageCode);
+                RegLanguagecodeManager languageManager = new RegLanguagecodeManager(em);
+                RegLanguagecode masterLanguage = languageManager.getMasterLanguage();
+                RegLanguagecode languageCode = getLanguageCode(languageManager, lang, masterLanguage);
+                if (languageCode == null) {
+                    ResponseUtil.err(resp, ApiError.LANGUAGE_NOT_SUPPORTED);
+                    return;
+                }
 
-            Optional<Item> optItem;
-            if (uuid != null) {
-                optItem = getItemByUuid(uuid, lang, itemSupplier);
-            } else {
-                optItem = getItemByUri(uri, lang, itemSupplier);
-            }
+                ItemSupplier itemSupplier = new ItemSupplier(em,
+                        masterLanguage, languageCode);
+                ItemHistorySupplier itemHistorySupplier = new ItemHistorySupplier(em,
+                        masterLanguage, languageCode);
 
-            Item item = optItem.filter(typeFilter).orElse(null);
-            if (item == null) {
+                Optional<Item> optItem;
+                if (uuid != null) {
+                    try {
+                        optItem = getItemByUuid(uuid, lang, itemSupplier);
+                    } catch (Exception ex) {
+                        optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
+                    }
+                } else {
+                    Integer version = getVersionFromUri(uri);
+                    //version is null if the uri doesnt contain any version information, so is a RegItem
+                    if (version != null) {
+                        if (version == 0) {
+                            optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+                        } else {
+                            optItem = getItemHistoryByUri(uri, version, lang, itemHistorySupplier);
+                            if (!optItem.isPresent()) {
+                                optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+                            }
+                        }
+                    } else {
+                        if (uri.endsWith(":0")) {
+                            optItem = getItemByUri(uri.replace("0:", ""), lang, itemSupplier);
+                        } else {
+                            optItem = getItemByUri(uri, lang, itemSupplier);
+                        }
+                    }
+                }
+
+                //try to see if is a status request
+                if (!optItem.isPresent()) {
+                    StatusSupplier statusSupplier = new StatusSupplier(em, masterLanguage, languageCode);
+                    if (uuid != null) {
+                        optItem = getItemStatusByUuid(uuid, lang, statusSupplier);
+                    } else {
+                        optItem = getItemStatusByUri(uri, lang, statusSupplier);
+                    }
+                }
+
+                Item item = optItem.filter(typeFilter).orElse(null);
+                if (item == null) {
+                    ResponseUtil.err(resp, ApiError.NOT_FOUND);
+                } else {
+                    ResponseUtil.ok(resp, item, languageCode, formatter);
+                }
+            } catch (NoResultException e) {
                 try {
                     ResponseUtil.err(resp, ApiError.NOT_FOUND);
-                } catch (Exception e) {
-                    LOG.error("Unexpected exception occured", e);
+                } catch (IOException ex) {
+                    LOG.error("Unexpected exception occured", ex);
                 }
-            } else {
+            } catch (NoVersionException e) {
                 try {
-                    ResponseUtil.ok(resp, item, languageCode, formatter);
-                } catch (Exception e) {
+                    ResponseUtil.err(resp, ApiError.VERSION_NOT_FOUND);
+                } catch (IOException ex) {
+                    LOG.error("Unexpected exception occured", ex);
+                }
+            } catch (Exception e) {
+                try {
                     LOG.error("Unexpected exception occured", e);
+                    ResponseUtil.err(resp, ApiError.INTERNAL_SERVER_ERROR);
+                } catch (IOException ex) {
+                    LOG.error("Unexpected exception occured", ex);
+                }
+            } finally {
+                if (em != null) {
+                    em.close();
                 }
             }
-        } catch (NoResultException e) {
-            try {
-                ResponseUtil.err(resp, ApiError.NOT_FOUND);
-            } catch (Exception ex) {
-                LOG.error("Unexpected exception occured", e);
-            }
-        } catch (NoVersionException e) {
-            try {
-                ResponseUtil.err(resp, ApiError.VERSION_NOT_FOUND);
-            } catch (Exception ex) {
-                LOG.error("Unexpected exception occured", e);
-            }
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOG.error("Unexpected exception occured", e);
-            try {
-                ResponseUtil.err(resp, ApiError.INTERNAL_SERVER_ERROR);
-            } catch (Exception ex) {
-                LOG.error("Unexpected exception occured", e);
-            }
-        } finally {
-            if (em != null) {
-                em.close();
+        }
+    }
+
+    private int countOccurance(String whereToCount, String whatToCount) {
+        int lastIndex = 0;
+        int count = 0;
+
+        while (lastIndex != -1) {
+
+            lastIndex = whereToCount.indexOf(whatToCount, lastIndex);
+
+            if (lastIndex != -1) {
+                count++;
+                lastIndex += whatToCount.length();
             }
         }
+        return count;
+    }
+
+    private Integer getVersionFromUri(String uri) {
+        Integer version = null;
+        // Check if the part after the last slash contains a colon
+        int i = uri.lastIndexOf('/');
+        i = uri.indexOf(':', i + 1);
+        if (i < 0) {
+            version = null;
+        } else {
+            try {
+                version = Integer.parseInt(uri.substring(i + 1));
+            } catch (Exception ignore) {
+                return null;
+            }
+        }
+        return version;
     }
 
     private RegLanguagecode getLanguageCode(RegLanguagecodeManager languageManager, String lang, RegLanguagecode fallback) throws Exception {
@@ -249,7 +297,6 @@ public class ItemsServlet extends HttpServlet {
         if (cached != null) {
             return Optional.of(cached);
         }
-
         Item item = itemSupplier.getItemByUuid(uuid);
         if (item == null) {
             return Optional.empty();
@@ -271,7 +318,67 @@ public class ItemsServlet extends HttpServlet {
         }
 
         cache.add(language, item);
+
+        Item it = cache.getByUrl(language, uri);
+
         return Optional.of(item);
     }
 
+    private Optional<Item> getItemHistoryByUuid(String uuid, String language, ItemHistorySupplier itemHistorySupplier) throws Exception {
+        Item cached = cache.getByUuid(language, uuid);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+        Item item = itemHistorySupplier.getItemHistoryByUuid(uuid);
+        if (item == null) {
+            return Optional.empty();
+        }
+
+        cache.add(language, item);
+        return Optional.of(item);
+    }
+
+    private Optional<Item> getItemHistoryByUri(String uri, Integer version, String language, ItemHistorySupplier itemHistorySupplier) throws Exception {
+        Item cached = cache.getByUrl(language, uri);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+
+        Item item = itemHistorySupplier.getItemHistoryByUri(uri, version);
+        if (item == null) {
+            return Optional.empty();
+        }
+
+        cache.add(language, item);
+        return Optional.of(item);
+    }
+
+    private Optional<Item> getItemStatusByUuid(String uuid, String language, StatusSupplier statusSupplier) throws Exception {
+        Item cached = cache.getByUuid(language, uuid);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+        Item item = statusSupplier.getItemByUuid(uuid);
+        if (item == null) {
+            return Optional.empty();
+        }
+
+        cache.add(language, item);
+        return Optional.of(item);
+    }
+
+    private Optional<Item> getItemStatusByUri(String uri, String language, StatusSupplier statusSupplier) throws Exception {
+        Item cached = cache.getByUrl(language, uri);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+
+        Item item = statusSupplier.getItemByUri(uri);
+        if (item == null) {
+            return Optional.empty();
+        }
+
+        cache.add(language, item);
+        return Optional.of(item);
+    }
 }

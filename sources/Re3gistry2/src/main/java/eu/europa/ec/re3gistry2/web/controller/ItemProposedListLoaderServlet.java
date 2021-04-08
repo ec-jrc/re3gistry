@@ -173,7 +173,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                     //Check collections
                     List<RegItemproposed> containedRegItemsCheck = regItemproposedManager.getAllNew(regItemclasses, regItem, regRelationpredicateCollection, start, length);
                     
-                    if (containedRegItemsCheck!=null && containedRegItemsCheck.size() >=0 && containedRegItemsCheck.size() != containedRegItems.size()) {
+                    if (!containedRegItemsCheck.isEmpty() && containedRegItemsCheck.size() != containedRegItems.size()) {
                         containedRegItems = containedRegItemsCheck;
                         totalCount = regItemproposedManager.countAllNew(regItemclasses, regItem, regRelationpredicateCollection);
                     }

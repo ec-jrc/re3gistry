@@ -28,7 +28,6 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
 import eu.europa.ec.re3gistry2.migration.migrationmodel.Customattributevalue;

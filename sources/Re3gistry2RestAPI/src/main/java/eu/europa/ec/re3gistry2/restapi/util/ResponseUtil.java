@@ -36,7 +36,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.restapi.ApiError;
 import eu.europa.ec.re3gistry2.restapi.ApiResponse;
 import eu.europa.ec.re3gistry2.restapi.format.Formatter;
-import eu.europa.ec.re3gistry2.restapi.format.JSONFormatter;
+import eu.europa.ec.re3gistry2.restapi.format.JSONInternalFormatter;
 import eu.europa.ec.re3gistry2.restapi.model.Item;
 
 public class ResponseUtil {
@@ -52,14 +52,14 @@ public class ResponseUtil {
     public static void ok(HttpServletResponse resp, ApiResponse value) throws Exception {
         int sc = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         String type = "application/json";
-        byte[] body = JSONFormatter.OM.writeValueAsBytes(value);
+        byte[] body = JSONInternalFormatter.OM.writeValueAsBytes(value);
         send(resp, sc, type, body);
     }
 
     public static void err(HttpServletResponse resp, ApiError err) throws IOException {
         int sc = err.getError().getCode();
         String type = "application/json";
-        byte[] body = JSONFormatter.OM.writeValueAsBytes(err);
+        byte[] body = JSONInternalFormatter.OM.writeValueAsBytes(err);
         send(resp, sc, type, body);
     }
 

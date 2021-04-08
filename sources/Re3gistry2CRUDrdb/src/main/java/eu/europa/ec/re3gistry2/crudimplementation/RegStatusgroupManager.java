@@ -24,7 +24,9 @@
 package eu.europa.ec.re3gistry2.crudimplementation;
 
 import eu.europa.ec.re3gistry2.crudimplementation.constants.ErrorConstants;
+import eu.europa.ec.re3gistry2.crudimplementation.constants.SQLConstants;
 import eu.europa.ec.re3gistry2.crudinterface.IRegStatusgroupManager;
+import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegStatusgroup;
 import java.text.MessageFormat;
 import java.util.List;
@@ -128,6 +130,27 @@ public class RegStatusgroupManager implements IRegStatusgroupManager {
         em.merge(regStatusgroup);
 
         return true;
+    }
+
+    /**
+     * Returns the RegStatus object
+     *
+     * @param localid The localid of the RegStatus
+     * @return RegStatus object with the localid passed by parameter
+     * @throws java.lang.Exception
+     */
+    @Override
+    public RegStatusgroup findByLocalid(String localid) throws Exception {
+        //Checking parameters
+        if (localid == null) {
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, SQLConstants.SQL_PARAMETERS_LOCALID));
+        }
+
+        //Preparing query
+        Query q = this.em.createNamedQuery("RegStatusgroup.findByLocalid");
+        q.setParameter(SQLConstants.SQL_PARAMETERS_LOCALID, localid);
+        return (RegStatusgroup) q.getSingleResult();
+
     }
 
 }

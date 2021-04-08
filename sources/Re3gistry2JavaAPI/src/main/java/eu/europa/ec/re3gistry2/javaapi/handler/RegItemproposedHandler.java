@@ -440,7 +440,7 @@ public class RegItemproposedHandler {
                     registerFederationExportBol = false;
                 }
 
-                if(regItemproposed != null){
+                if (regItemproposed != null) {
                     regItemproposed.setRorExport(registerFederationExportBol);
                 }
 
@@ -1196,14 +1196,14 @@ public class RegItemproposedHandler {
             // Getting the value
             String[] values = entry.getValue();
             String value = values[0];
-            
+
             // Handling charset            
             byte[] bytes = value.getBytes(StandardCharsets.ISO_8859_1);
             value = new String(bytes, StandardCharsets.UTF_8);
-            
+
             // !!! Sanitizing form input
             value = (value.length() == 0) ? "" : InputSanitizerHelper.sanitizeInput(value);
-            
+
             // Getting the eventual href
             String hrefFieldName = processFieldHrefName(key);
             String[] paramHrefs = (String[]) requestParameters.get(hrefFieldName);
@@ -1278,7 +1278,7 @@ public class RegItemproposedHandler {
                         regLocalizationproposed.setHref(null);
 
                         regLocalizationproposed.setRegRelationproposedReference(newRegRelationproposed);
-                        
+
                         regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
 
                         RegLocalization tmpRegLocalizationReference = null;
@@ -1415,9 +1415,9 @@ public class RegItemproposedHandler {
                             if (regLocalizationReference != null) {
                                 regLocalizationproposed.setRegLocalizationReference(regLocalizationReference);
                             }
-                            
+
                             regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
-                            
+
                             regLocalizationproposedManager.add(regLocalizationproposed);
                         }
 
@@ -1608,9 +1608,9 @@ public class RegItemproposedHandler {
                     regLocalizationproposed.setValue(null);
                     regLocalizationproposed.setHref(null);
                     regLocalizationproposed.setRegRelationproposedReference(null);
-                    
+
                     regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
-                    
+
                     regLocalizationproposedManager.update(regLocalizationproposed);
 
                     if (regRelationproposed != null) {
@@ -1739,7 +1739,9 @@ public class RegItemproposedHandler {
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
-            copyRegRelationsToRegRelationproposeds(regItem, regItemproposed);
+            if (regItem != null && regItemproposed != null) {
+                copyRegRelationsToRegRelationproposeds(regItem, regItemproposed);
+            }
             entityManager.getTransaction().commit();
 
             if (!entityManager.getTransaction().isActive()) {

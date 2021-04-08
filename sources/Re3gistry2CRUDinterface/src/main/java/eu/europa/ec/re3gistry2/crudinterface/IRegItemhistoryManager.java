@@ -27,19 +27,24 @@ import eu.europa.ec.re3gistry2.model.RegAction;
 import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegItemhistory;
+import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
+import eu.europa.ec.re3gistry2.model.RegStatus;
 import java.util.List;
 
 public interface IRegItemhistoryManager{
     
     public RegItemhistory get(String uuid) throws Exception;
     public List<RegItemhistory> getAll() throws Exception;
-    public RegItemhistory getByLocalidAndRegItemClass(String localid, RegItemclass regItemclass) throws Exception;
+    public List<RegItemhistory> getByLocalidAndRegItemClass(String localid, RegItemclass regItemclass) throws Exception;
+    public List<RegItemhistory> getByRegItemClass(RegItemclass regItemclass) throws Exception;
     public RegItemhistory getByLocalidVersionnumberAndRegItemClass(String localid, int versionnumber, RegItemclass regItemclass) throws Exception;
     public RegItemhistory getByLocalidVersionnumberRegItemClassRegItemReference(String localid, int versionnumber, RegItemclass regItemclass, RegItem regItemReference) throws Exception;
     public List<RegItemhistory> getByRegItemReference(RegItem regItemReference) throws Exception;
     public RegItemhistory getMaxVersionByLocalidAndRegItemClass(String localid, RegItemclass regItemclass) throws Exception;
     public RegItemhistory getMinVersionByLocalidAndRegItemClass(String localid, RegItemclass regItemclass) throws Exception;
     public List<RegItemhistory> getAll(RegAction regAction) throws Exception;
+    public List<RegItem> getAllSubjectsByRegItemObjectAndPredicateAndSubjectNotPredicate(RegItemhistory regItemhistory, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception;
+    public List<String> getAllItemByRegItemObjectAndPredicateAndSubjectNotPredicate(RegItemhistory regItemhistory, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception;
     
     public boolean add(RegItemhistory i) throws Exception;
     public boolean update(RegItemhistory i) throws Exception;

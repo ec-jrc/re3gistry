@@ -26,7 +26,9 @@
  */
 package eu.europa.ec.re3gistry2.restapi.model;
 
-public class LocalizedPropertyValue {
+import java.io.Serializable;
+
+public class LocalizedPropertyValue implements Serializable{
 
     private final String value;
     private final String href;

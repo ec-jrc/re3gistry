@@ -106,11 +106,12 @@ public class RegRelationhistoryManager implements IRegRelationhistoryManager {
     }
 
     /**
-     * Update the RegRelationhistory specified by parameter. Returns true if the operation
-     * succeed.
+     * Update the RegRelationhistory specified by parameter. Returns true if the
+     * operation succeed.
      *
-     * @param regRelationhistory the updated RegRelationhistory (this method update the RegRelationhistory
-     * on the db with the RegRelationhistory passed by parameter)
+     * @param regRelationhistory the updated RegRelationhistory (this method
+     * update the RegRelationhistory on the db with the RegRelationhistory
+     * passed by parameter)
      * @return True if the operation was successfully completed; otherwise it
      * returns false.
      * @throws java.lang.Exception
@@ -134,7 +135,8 @@ public class RegRelationhistoryManager implements IRegRelationhistoryManager {
     }
 
     /**
-     * Returns all the RegRelationhistory by RegItemhistory and RegRelationpredicate subject
+     * Returns all the RegRelationhistory by RegItemhistory and
+     * RegRelationpredicate subject
      *
      * @param regItemhistory
      * @param regRelationPredicate
@@ -148,6 +150,50 @@ public class RegRelationhistoryManager implements IRegRelationhistoryManager {
         Query q = this.em.createQuery(SQLConstants.SQL_GET_COLLECTION_REFERENCE_HISTORY);
         q.setParameter("regitemhistory", regItemhistory);
         q.setParameter("predicate", regRelationPredicate);
+        try {
+            return (List<RegRelationhistory>) q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all the RegRelation by RegItem (object) and RegPredicate
+     *
+     * @param regItemhistory
+     * @param regRelationPredicate
+     * @return list of RegRelation
+     * @throws Exception
+     */
+    @Override
+    public List<RegRelationhistory> getAllByRegItemHistorySubjectAndPredicate(RegItemhistory regItemhistory, RegRelationpredicate regRelationPredicate) throws Exception {
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_RELATIONHISTORY_SUBJECT_PREDICATE);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMHISTORY, regItemhistory);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate);
+        try {
+            return (List<RegRelationhistory>) q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all the RegRelation by RegItem (object) and RegPredicate
+     *
+     * @param regItemhistory
+     * @param regRelationPredicate
+     * @return list of RegRelation
+     * @throws Exception
+     */
+    @Override
+    public List<RegRelationhistory> getAllByRegItemHistoryObjectAndPredicate(RegItemhistory regItemhistory, RegRelationpredicate regRelationPredicate) throws Exception {
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_RELATIONHISTORY_OBJECT_PREDICATE);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMHISTORY, regItemhistory);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate);
         try {
             return (List<RegRelationhistory>) q.getResultList();
         } catch (Exception e) {

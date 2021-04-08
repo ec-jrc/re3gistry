@@ -31,8 +31,8 @@ The Re3gistry 2 supports organisations in managing and updating reference codes 
 * Support for versioning
 * RESTful API with content negotiation (including OpenAPI 3 descriptor)
 * Free-text search
-* Supported formats: HTML, XML, JSON, RDF, Atom, CSV
-* Service formats can be easily added or customised (default formats: Json and ISO 19135 XML)
+* Supported formats: HTML, ISO 19135 XML, JSON, RDF/XML, ATOM, Re3gistry XML, CSV, ROR
+* Service formats can be easily added or customised
 * Multiple authentication options
 * Externally governed items referenced through URI 
 * INSPIRE register federation format support (option to automatically create the RoR format)

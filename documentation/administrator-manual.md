@@ -85,6 +85,8 @@ The tomcat webapp folder should have the following 2 folders:
 * `<tomcat-home>/webapp/re3gistry2`
 * `<tomcat-home>/webapp/re3gistry2restapi`
 
+Important note: the folder `<tomcat-home>/webapp/re3gistry2/WEB-INF/classes/*configurations_files*` and `<tomcat-home>/webapp/re3gistry2restapi/WEB-INF/classes/*configurations_files*` needs to have write permission (the installation file is going to be written there).
+
 The last step is to start tomcat.
 
 ### Installation wizard
@@ -167,3 +169,9 @@ Remember to restart the Apache HTTP server after including the configuration.
 The OpenAPI 3 descriptor is available in the [source](../sources/Re3gistry2RestAPI) folder: "openapi.yaml" .
 This file can be exposed through a HTTP server in order to describe the Re3gistry 2 API in a machine readable way. 
 
+### Building the service API cache
+
+The software comes with an engine that is creating automatically the cache for all the elements. To start this engine, you need to launch the following command from the server console (the example below assumes that your servlet container is configured on port 8080).
+```
+curl --noproxy localhost -i -X GET http://localhost:8080/re3gistry2restapi/cacheall
+```

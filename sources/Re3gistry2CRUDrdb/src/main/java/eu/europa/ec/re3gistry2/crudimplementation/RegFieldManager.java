@@ -152,7 +152,7 @@ public class RegFieldManager implements IRegFieldManager {
 
         //Preparing query
         Query q = this.em.createNamedQuery("RegField.findByLabel");
-        q.setParameter(SQLConstants.SQL_PARAMETERS_LANGUAGECODE, label);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, label);
         return (RegField) q.getSingleResult();
     }
 

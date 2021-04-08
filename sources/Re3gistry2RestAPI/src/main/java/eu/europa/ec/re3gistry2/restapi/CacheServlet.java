@@ -34,7 +34,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import eu.europa.ec.re3gistry2.restapi.cache.CaffeineCache;
+//import eu.europa.ec.re3gistry2.restapi.cache.CaffeineCache;
+import eu.europa.ec.re3gistry2.restapi.cache.EhCache;
 import eu.europa.ec.re3gistry2.restapi.cache.ItemCache;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
@@ -47,10 +48,11 @@ public class CacheServlet extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(ItemsServlet.class.getName());
     private static final long serialVersionUID = 1L;
 
-    private ItemCache cache;
+    private static ItemCache cache;
 
     public void init(ServletConfig config) throws ServletException {
-        this.cache = new CaffeineCache();
+        //this.cache = new CaffeineCache();
+        this.cache = new EhCache();
         config.getServletContext().setAttribute(ATTRIBUTE_CACHE_KEY, cache);
     }
 

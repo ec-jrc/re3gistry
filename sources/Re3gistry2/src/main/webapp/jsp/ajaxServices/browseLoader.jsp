@@ -485,7 +485,6 @@
         </div> 
         <script>
             $(document).on('click', '.btn-modal-successor', function (e) {
-                console.log("qwas");
                 var href = $(this).attr("href");
                 $('#modalSuccessor .modal-content').html('<div class="modal-header">The list of items is being loaded.</div><div class="modal-body"><img src="./res/img/ajax-loader.gif" /></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-ban"></i> Close</button></div>');
                 $('#modalSuccessor').modal();
