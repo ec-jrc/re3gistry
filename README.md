@@ -18,7 +18,7 @@ The Re3gistry software version numbers comply with the [Semantic Versioning Spec
 
 ### Acknowledgments
 
-The development of this tool has been funded by the European Iinteroperability Programme ISA2 though the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/elise-re3gistry-software). The European Location Interoperability Solutions for e-Government (ELISE) Action aims at Enabling Digital Government through Geospatial Data and Location Intelligence.
+The development of this tool has been funded by the European Iinteroperability Programme ISA2 though the [ELISE action](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about). The European Location Interoperability Solutions for e-Government (ELISE) Action aims at Enabling Digital Government through Geospatial Data and Location Intelligence.
 
 This new version of the software has been developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
