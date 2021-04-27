@@ -23,6 +23,7 @@ const key_cookiePath = 'path';
 const key_ascOrdering = 'asc';
 const key_descOrdering = 'desc';
 const key_json = 'json';
+const key_jsonc = 'jsonc';
 const key_src = 'src';
 const key_searchParameter = 'q';
 const key_dataEclMessage = 'data-ecl-message';
