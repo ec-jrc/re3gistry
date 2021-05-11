@@ -25,7 +25,7 @@ public class DateUtil {
         try {
             DateFormat f = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy");
             Date d = f.parse(date.toString());
-            DateFormat out = new SimpleDateFormat("YYYY-DD-MM");
+            DateFormat out = new SimpleDateFormat("YYYY-dd-MM");
             return out.format(d);
 
         } catch (ParseException ex) {
