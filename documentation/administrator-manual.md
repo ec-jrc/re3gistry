@@ -59,7 +59,7 @@ In particular, the `init.properties` contains the properties to be customised (d
 * statusbaseuri: the status base URI is the first part of the URL of the status contained in the system. Usually this URI is the same of the main URL of the service but since in some cases it may be different, the Re3gistry system is providing this option (e.g. https://test-uri.eu).
 * solrurl: the URL of the Apache Solr instance to be used (e.g. http://localhost:8983/solr/)
 * smtphost: the address of the SMTP server (e.g. yoursmtp.test-url.eu)
-* applicationrooturl: the root URL of the application (e.g. http://www.test-url.eu/r3egistry2
+* applicationrooturl: the root URL of the application (e.g. http://www.test-url.eu/re3gistry2)
 
 Once the above file has been customised, the init script needs to be launched. Depending on your system you need to launch init-config.bat (Windows systems) or init-config.sh (Linux systems).
 
