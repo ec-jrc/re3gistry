@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,6 +40,7 @@ import javax.persistence.NoResultException;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
+import eu.europa.ec.re3gistry2.base.utility.ItemHelper;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
@@ -174,12 +174,12 @@ public class ItemSupplier {
             RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
 
             RegItem regItem = regItemManager.getByLocalidAndRegItemClass(localid, regItemRegItemClass);
-            if (uri.equals(getURI(regItem))) {
+            if (uri.equals(ItemHelper.getURI(regItem))) {
                 return regItem;
             }
         } catch (Exception e) {
             for (RegItem item : regItemManager.getByLocalid(localid)) {
-                if (uri.equals(getURI(item))) {
+                if (uri.equals(ItemHelper.getURI(item))) {
                     return item;
                 }
             }
@@ -229,7 +229,7 @@ public class ItemSupplier {
 
     protected BasicContainedItem toBasicContainedItem(RegItem regItem) throws Exception {
         BasicContainedItem citem = new ContainedItem();
-        citem.setUri(getURI(regItem));
+        citem.setUri(ItemHelper.getURI(regItem));
         return citem;
     }
 
@@ -254,7 +254,7 @@ public class ItemSupplier {
 
     private ContainedItem setMainPropertiesForRegItem(RegItem regItem, ContainedItem item) throws Exception {
         item.setUuid(regItem.getUuid());
-        item.setUri(getURI(regItem));
+        item.setUri(ItemHelper.getURI(regItem));
         item.setLocalid(regItem.getLocalid());
         item.setLatest(true);
         item.setInsertdate(regItem.getInsertdate());
@@ -660,7 +660,7 @@ public class ItemSupplier {
     }
 
     protected ItemRef toItemRef(RegItem regItem) throws Exception {
-        String uri = getURI(regItem);
+        String uri = ItemHelper.getURI(regItem);
 
         RegField labelField = getLabelField();
         RegFieldmapping labelFieldmapping = regFieldmappingManager.getByFieldAndItemClass(labelField, regItem.getRegItemclass());
@@ -690,43 +690,6 @@ public class ItemSupplier {
             labelField = regFieldManager.getByLocalid(BaseConstants.KEY_FIELD_MANDATORY_LABEL_LOCALID);
         }
         return labelField;
-    }
-
-    protected String getURI(RegItem regItem) throws Exception {
-        if (regItem == null) {
-            return null;
-        }
-        RegItemclass itemclass = regItem.getRegItemclass();
-        switch (itemclass.getRegItemclasstype().getLocalid()) {
-            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY:
-                return itemclass.getBaseuri() + "/" + regItem.getLocalid();
-            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
-                String baseuri = itemclass.getBaseuri();
-                if (baseuri != null) {
-                    return baseuri + "/" + regItem.getLocalid();
-                }
-                String registryURI = getURI(getRelatedItemBySubject(regItem, hasRegistry));
-                return registryURI + "/" + regItem.getLocalid();
-            case BaseConstants.KEY_ITEMCLASS_TYPE_ITEM:
-                String itemURI = null;
-                if (regItem.getExternal()) {
-                    itemURI = regItem.getLocalid();
-                } else {
-                    String registerURI = getURI(getRelatedItemBySubject(regItem, hasRegister));
-                    List<RegItem> collectionChain = getCollectionChain(regItem);
-                    if (collectionChain.isEmpty()) {
-                        return registerURI + "/" + regItem.getLocalid();
-                    }
-                    String collectionsPath = collectionChain.stream()
-                            .map(collection -> collection.getLocalid())
-                            .collect(Collectors.joining("/"));
-                    itemURI = registerURI + "/" + collectionsPath + "/" + regItem.getLocalid();
-                }
-
-                return itemURI;
-            default:
-                throw new RuntimeException("Invalid type");
-        }
     }
 
     private List<RegFieldmapping> getFieldmappings(RegItemclass itemclass) throws Exception {
@@ -972,7 +935,7 @@ public class ItemSupplier {
             if (value == null) {
                 continue;
             }
-            String href = getURI(relItem);
+            String href = ItemHelper.getURI(relItem);
             values.add(new LocalizedPropertyValue(value, href));
         }
 
@@ -995,7 +958,7 @@ public class ItemSupplier {
         if (value == null) {
             return null;
         }
-        String href = getURI(collection);
+        String href = ItemHelper.getURI(collection);
         values.add(new LocalizedPropertyValue(value, href));
 
         if (values.isEmpty()) {
@@ -1070,19 +1033,6 @@ public class ItemSupplier {
 
     private List<String> getAllColectionsNoParentOfItem(RegItem item) throws Exception {
         return regItemManager.getAllItemByRegItemObjectAndPredicateAndSubjectNotPredicate(item, regStatusManager.get("1"), hasCollection, hasParent);
-    }
-
-    private List<RegItem> getCollectionChain(RegItem regItem) throws Exception {
-        RegItem collection = getRelatedItemBySubject(regItem, hasCollection);
-        if (collection == null) {
-            return Collections.emptyList();
-        }
-        LinkedList<RegItem> collectionChain = new LinkedList<>();
-        while (collection != null) {
-            collectionChain.addFirst(collection);
-            collection = getRelatedItemBySubject(collection, hasCollection);
-        }
-        return collectionChain;
     }
 
     protected RegItem getRelatedItemBySubject(RegItem regItem, RegRelationpredicate predicate) throws Exception {

@@ -96,6 +96,7 @@ public class BaseConstants {
     public static final String KEY_MAIL_PASSWORD = "mail.password";
     public static final String KEY_MAIL_SENDER = "mail.sender";
     public static final String KEY_MAIL_APPLICATION_ROOTURL = "application.rooturl";
+    public static final String KEY_RELEASENOTE_RSS_APPLICATION = "application.releasenote.rss.path";
 
     /* Mail Subjects  and body */
     public static final String KEY_EMAIL_SUBJECT_SUCCESS = "mail.text.subject.success";

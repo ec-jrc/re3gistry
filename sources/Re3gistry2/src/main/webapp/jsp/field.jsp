@@ -332,7 +332,7 @@
                     of the RegField, activating the function --%>
                     <% if (permissionManageFieldMapping) { %>
                     rowReorder: true,
-                            columnDefs: [{orderable: true, className: 'reorder', targets: 0 }],
+                            columnDefs: [{orderable: true, className: 'reorder', targets: 0, type: 'num-fmt' }],
                     <% } %>
                     "columns": [null, { "width": "16%" }, null, null, null, null, null, null, null],
                     'drawCallback': function () {

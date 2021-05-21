@@ -165,7 +165,7 @@
             of the RegItemclass, activating the function --%>
             <% if (permissionRegisterRegistry) { %>
             rowReorder: true,
-                    columnDefs: [{orderable: true, className: 'reorder', targets: 0
+                    columnDefs: [{orderable: true, className: 'reorder', targets: 0, type: 'num-fmt'
                     }
                     ],
             <% } %>

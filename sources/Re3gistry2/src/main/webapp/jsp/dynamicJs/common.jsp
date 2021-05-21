@@ -104,7 +104,7 @@ $(document).ready(function(){
         if((sessionExpiration - now) < config.sessionCheckWarningTreshold){
             $('#expirationWarning').modal('show');
         }
-        console.log(sessionExpiration - now);
+        //console.log(sessionExpiration - now);
 
     }, config.sessionCheckInterval);
  

@@ -112,9 +112,9 @@
 
             %>
             <form method="post" class="form-post-submitting">
-                
+
                 <input type="hidden" name="csrfPreventionSalt" value="${csrfPreventionSalt}"/>
-                
+
                 <table id="list-table" class="table table-striped table-bordered mt-3" cellspacing="0" width="100%">
                     <thead>
                         <tr>
@@ -526,9 +526,9 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <form method="post">
-                        
+
                         <input type="hidden" name="csrfPreventionSalt" value="${csrfPreventionSalt}"/>
-                        
+
                         <input type="hidden" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>" id="<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>"/>
                         <input type="hidden" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_SUBMITACTION%>" value="true" />
                         <div class="modal-header">
@@ -544,10 +544,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label>${localization.getString('submittingorganisations.label.modal.submitdescnotice')}</label>
-                                <textarea  class="form-control" rows="5" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>" id="<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>">
+                                <label><i class="fas fa-star text-danger"></i> ${localization.getString('submittingorganisations.label.modal.submitdescnotice')}</label>
+                                <textarea class="form-control border-danger" rows="5" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>" id="<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>">
                                     <%=(regAction != null && regAction.getChangelog() != null && regAction.getChangelog().length() > 0) ? regAction.getChangelog() : ""%>
                                 </textarea>
+                                <label class="text-sm text-danger">${localization.getString('submittingorganisations.label.modal.field.required')}</label>
                             </div>
 
                             <div class="form-group">
@@ -555,13 +556,16 @@
                                 <input class="form-control" type="text" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_ISSUEREFERENCE%>" id="<%=BaseConstants.KEY_FORM_FIELD_NAME_ISSUEREFERENCE%>" <%=(regAction != null && regAction.getIssueTrackerLink() != null && regAction.getIssueTrackerLink().length() > 0) ? "value=\"" + regAction.getIssueTrackerLink() + "\"" : ""%> maxlength="<%= configuration.getProperties().getProperty("application.input.maxlength")%>"  />
                             </div>
 
+<!--                            <div class="col-sm-12 text-sm">
+                                <i class="fas fa-star text-danger"></i> = Required fields
+                            </div>-->
                         </div>
                         <div class="modal-footer">
                             <div class="col-sm-6">
                                 <button type="button" class="btn btn-secondary width100" data-dismiss="modal"><i class="fas fa-ban"></i> ${localization.getString('label.cancel')}</button>
                             </div>
                             <div class="col-sm-6">
-                                <button type="submit" class="btn btn-success width100"><i class="far fa-paper-plane"></i> ${localization.getString('label.submit')}</button>
+                                <button type="submit" class="btn btn-success width100 d-none" id="submitButton"><i class="far fa-paper-plane"></i> ${localization.getString('label.submit')}</button>
                             </div>
                         </div>
                     </form>  
@@ -607,6 +611,16 @@
                     "order": [[0, "desc"]]
                 });
             });
+
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>').bind('input propertychange', function () {
+
+                if (this.value.length) {
+                    $('#submitButton').removeClass("d-none");
+                } else {
+                    $('#submitButton').addClass("d-none");
+                }
+            });
+
         </script>
 
     </body>

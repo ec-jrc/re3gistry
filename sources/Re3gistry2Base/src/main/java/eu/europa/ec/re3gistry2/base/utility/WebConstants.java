@@ -33,6 +33,7 @@ public class WebConstants {
     // Js file extension
     public static final String PAGE_JS_EXTENSION = ".js";
 
+    public static final String PAGE_RSS_EXTENSION = ".xml";
     // Pages urinames
     public static final String PAGE_URINAME_INSTALL = "/install";
     public static final String PAGE_PATH_INSTALL = "/install";
@@ -182,6 +183,9 @@ public class WebConstants {
 
     public static final String PAGE_URINAME_ABOUT = "/about";
     public static final String PAGE_PATH_ABOUT = "";
+    
+    public static final String PAGE_URINAME_RSS = "/release-note";
+    public static final String PAGE_PATH_RSS = "";
 
     public static final String PAGE_URINAME_HELP = "/help";
     public static final String PAGE_PATH_HELP = "";

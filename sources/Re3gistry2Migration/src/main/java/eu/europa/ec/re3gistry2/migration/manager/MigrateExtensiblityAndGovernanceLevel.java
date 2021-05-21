@@ -85,6 +85,7 @@ public class MigrateExtensiblityAndGovernanceLevel {
             = "INSERT INTO public.reg_item VALUES ('050ef0d0e3bb244923bd94c183852445', 'governance-level', '09f068599d89407a4fd5b48d8ad58061', '1', NULL, false, 0, '2019-07-19 15:57:31.852', NULL, 'USERMIGRATION_UUID', true);\n"
             + "INSERT INTO public.reg_item VALUES ('5247138f69b59f59ddacf742cdb5b448', 'eu-legal', '233b80ac5ad1731cb789f3dbf33811b7', '1', NULL, false, 0, '2019-07-30 09:25:06.544', '2019-07-29 17:09:47.852', 'USERMIGRATION_UUID', false);\n"
             + "INSERT INTO public.reg_item VALUES ('24bb2984999c116018d3ba95c1aa3082', 'eu-technical', '233b80ac5ad1731cb789f3dbf33811b7', '1', NULL, false, 0, '2019-07-31 11:07:50.016', '2019-07-31 11:07:50.011398', 'USERMIGRATION_UUID', false);\n"
+            + "INSERT INTO public.reg_item VALUES ('e7462cf53d17f16c4c0f8e48d40055a7', 'eu-good-practice', '233b80ac5ad1731cb789f3dbf33811b7', '1', NULL, false, 0, '2021-04-15 11:07:50.016', '2021-04-15 11:07:50.011398', 'USERMIGRATION_UUID', false);\n"
             + "INSERT INTO public.reg_item VALUES ('a2290d202bbd591377234ce2eee350df', 'extensibility', '4d843e0e6ac86113f543de29b0c8e81d', '1', NULL, false, 0, '2019-07-30 10:56:01.607', '2019-07-30 10:56:01.548234', 'USERMIGRATION_UUID', false);\n"
             + "INSERT INTO public.reg_item VALUES ('aad13ff0ff9fb151cb8410801e4eeb0a', 'open', '1053ab3f4a9e29a3d6d24d1ac5125667', '1', NULL, false, 0, '2019-07-30 14:33:39.699', '2019-07-30 14:33:39.601507', 'USERMIGRATION_UUID', false);\n"
             + "INSERT INTO public.reg_item VALUES ('31082311814c08a2ae0e5e647669c73f', 'none', '1053ab3f4a9e29a3d6d24d1ac5125667', '1', NULL, false, 0, '2019-07-30 14:33:47.792', '2019-07-30 14:33:47.695846', 'USERMIGRATION_UUID', false);\n"
@@ -95,6 +96,7 @@ public class MigrateExtensiblityAndGovernanceLevel {
         "050ef0d0e3bb244923bd94c183852445",
         "5247138f69b59f59ddacf742cdb5b448",
         "24bb2984999c116018d3ba95c1aa3082",
+        "e7462cf53d17f16c4c0f8e48d40055a7",
         "a2290d202bbd591377234ce2eee350df",
         "aad13ff0ff9fb151cb8410801e4eeb0a",
         "31082311814c08a2ae0e5e647669c73f",
@@ -124,7 +126,9 @@ public class MigrateExtensiblityAndGovernanceLevel {
             + "INSERT INTO public.reg_relation VALUES ('cdbafce40ef0bd588686e936eee8a30d', '31082311814c08a2ae0e5e647669c73f', '2', 'a2290d202bbd591377234ce2eee350df', '2019-07-30 10:46:04.223', NULL);\n"
             + "INSERT INTO public.reg_relation VALUES ('9499c1e96e073a939393ecd3b6b33508', '31082311814c08a2ae0e5e647669c73f', '1', 'REGISTRY_UUID', '2019-07-30 10:46:04.223', NULL);\n"
             + "INSERT INTO public.reg_relation VALUES ('20edf377e7c22992aff2102ecc7a3a63', '24bb2984999c116018d3ba95c1aa3082', '1', 'REGISTRY_UUID', '2019-07-31 11:05:04.812', NULL);\n"
-            + "INSERT INTO public.reg_relation VALUES ('e0670112b1d4ee26027689d8c625a5ac', '24bb2984999c116018d3ba95c1aa3082', '2', '050ef0d0e3bb244923bd94c183852445', '2019-07-31 11:05:04.812', NULL);";
+            + "INSERT INTO public.reg_relation VALUES ('e0670112b1d4ee26027689d8c625a5ac', '24bb2984999c116018d3ba95c1aa3082', '2', '050ef0d0e3bb244923bd94c183852445', '2019-07-31 11:05:04.812', NULL);"
+            + "INSERT INTO public.reg_relation VALUES ('2fda34c09e874729192fb35a8f9a8dda', 'e7462cf53d17f16c4c0f8e48d40055a7', '1', 'REGISTRY_UUID', '2019-07-31 11:05:04.812', NULL);\n"
+            + "INSERT INTO public.reg_relation VALUES ('a3cd7b9f291cf9851971f4c47509a501', 'e7462cf53d17f16c4c0f8e48d40055a7', '2', '050ef0d0e3bb244923bd94c183852445', '2019-07-31 11:05:04.812', NULL);";
 
     private final String QUERY_GOVERNANCELEVEL
             = "INSERT INTO public.reg_localization VALUES ('a7a42f83dff18daf47035605d1e1d6e8', 'en', '050ef0d0e3bb244923bd94c183852445', 'FIELD_LABEL_UUID', 0, 'Governance level', NULL, NULL, NULL, '2019-07-19 15:57:31.872', NULL);\n"
@@ -168,7 +172,9 @@ public class MigrateExtensiblityAndGovernanceLevel {
             + "INSERT INTO public.reg_localization VALUES ('4f880ab0108e593197b1d10bf310a781', 'hr', '24bb2984999c116018d3ba95c1aa3082', 'FIELD_LABEL_UUID', 0, 'Tehnički (EU)', NULL, NULL, NULL, '2019-07-31 11:07:50.048', NULL);\n"
             + "INSERT INTO public.reg_localization VALUES ('754e7c3e91dc60f25736dd8ad29033f3', 'hr', '24bb2984999c116018d3ba95c1aa3082', 'FIELD_DEFINITION_UUID', 0, '<p>Stavkom se upravlja na razini Tehničkih naputaka INSPIRE-a</p>', NULL, NULL, NULL, '2019-07-31 11:07:50.063', NULL);\n"
             + "INSERT INTO public.reg_localization VALUES ('40c9d2c3bad430b9509e7a511a7cd37b', 'ro', '24bb2984999c116018d3ba95c1aa3082', 'FIELD_LABEL_UUID', 0, 'Tehnic (EU)', NULL, NULL, NULL, '2019-07-31 11:07:50.063', NULL);\n"
-            + "INSERT INTO public.reg_localization VALUES ('f6bfb1b041ca41bf92bae2581898465d', 'ro', '24bb2984999c116018d3ba95c1aa3082', 'FIELD_DEFINITION_UUID', 0, '<p>Elementul este reglementat la nivelul Ghidului Tehnic INSPIRE.</p>', NULL, NULL, NULL, '2019-07-31 11:07:50.063', NULL);";
+            + "INSERT INTO public.reg_localization VALUES ('f6bfb1b041ca41bf92bae2581898465d', 'ro', '24bb2984999c116018d3ba95c1aa3082', 'FIELD_DEFINITION_UUID', 0, '<p>Elementul este reglementat la nivelul Ghidului Tehnic INSPIRE.</p>', NULL, NULL, NULL, '2019-07-31 11:07:50.063', NULL);"
+            + "INSERT INTO public.reg_localization VALUES ('d3b65ef302fdf442030063604b5786fd', 'en', 'e7462cf53d17f16c4c0f8e48d40055a7', 'FIELD_LABEL_UUID', 0, 'Good Pranctice (EU)', NULL, NULL, NULL, '2021-04-15 11:05:04.812', NULL);\n"
+            + "INSERT INTO public.reg_localization VALUES ('31fa9b5a822ffec25e86a77775403a7d', 'en', 'e7462cf53d17f16c4c0f8e48d40055a7', 'FIELD_DEFINITION_UUID', 0, '<p>The item is governed at the level of INSPIRE Good Practice.</p>', NULL, NULL, NULL, '2019-07-31 11:05:04.828', NULL);\n";
 
     private final String QUERY_EXTENSIBILITY
             = "INSERT INTO public.reg_localization VALUES ('e3bdb192afe7e9c9f1d77270d87adf7d', 'en', 'a2290d202bbd591377234ce2eee350df', 'FIELD_LABEL_UUID', 0, 'Extensibility', NULL, NULL, NULL, '2019-07-30 10:34:07.401', NULL);\n"

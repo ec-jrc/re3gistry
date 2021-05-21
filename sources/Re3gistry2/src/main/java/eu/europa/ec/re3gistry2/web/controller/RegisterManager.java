@@ -163,15 +163,22 @@ public class RegisterManager extends HttpServlet {
                         regAction = regActionManager.get(regActionUuid);
                         regActions.add(regAction);
 
-                        if (regAction.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_NOTACCEPTED)) {
-                            // Getting the list of RegItemhistory contained in the action
-                            regItemhistorys = regItemhistoryManager.getAll(regAction);
-                        } else if (regAction.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_PUBLISHED)) {
-                            // Getting the list of RegItem contained in the action
-                            regItems = regItemManager.getAll(regAction);
-                        } else {
-                            // Getting the list of RegItemproposed contained in the action
-                            regItemproposeds = regItemproposedManager.getAll(regAction);
+                        switch (regAction.getRegStatus().getLocalid()) {
+                            case BaseConstants.KEY_STATUS_LOCALID_NOTACCEPTED:
+                                // Getting the list of RegItemhistory contained in the action
+                                regItemhistorys = regItemhistoryManager.getAll(regAction);
+                                break;
+                            case BaseConstants.KEY_STATUS_LOCALID_PUBLISHED:
+                                // Getting the list of RegItem contained in the action
+                                regItems = regItemManager.getAll(regAction);
+                                if (!regItems.isEmpty()) {
+                                    UpdateRSS.updateRSS(regAction, regItems);
+                                }
+                                break;
+                            default:
+                                // Getting the list of RegItemproposed contained in the action
+                                regItemproposeds = regItemproposedManager.getAll(regAction);
+                                break;
                         }
 
                         // If the reg action is valid but no related items are shown 
@@ -223,4 +230,5 @@ public class RegisterManager extends HttpServlet {
             logger.error(ex);
         }
     }
+
 }

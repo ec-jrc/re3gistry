@@ -70,6 +70,9 @@ application.systemregisters.show=false
 # Date format
 application.dateformat=yyyy-MM-dd
 
+# RSS release-note
+application.releasenote.rss.path=rsspath
+
 # Optional heading message
 application.headingmessage.class=
 application.headingmessage.text=

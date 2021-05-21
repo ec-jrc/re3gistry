@@ -39,6 +39,7 @@ import javax.persistence.NoResultException;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
+import eu.europa.ec.re3gistry2.base.utility.ItemHelper;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
@@ -296,14 +297,14 @@ public class ItemHistorySupplier {
                 if (baseuri != null) {
                     return baseuri + "/" + regItemhistory.getLocalid();
                 }
-                String registryURI = itemSupplier.getURI(getRelatedItemByRegitemHistorySubject(regItemhistory, hasRegistry));
+                String registryURI = ItemHelper.getURI(getRelatedItemByRegitemHistorySubject(regItemhistory, hasRegistry));
                 return registryURI + "/" + regItemhistory.getLocalid();
             case BaseConstants.KEY_ITEMCLASS_TYPE_ITEM:
                 String itemURI = null;
                 if (regItemhistory.getExternal()) {
                     itemURI = regItemhistory.getLocalid();
                 } else {
-                    String registerURI = itemSupplier.getURI(getRelatedItemByRegitemHistorySubject(regItemhistory, hasRegister));
+                    String registerURI = ItemHelper.getURI(getRelatedItemByRegitemHistorySubject(regItemhistory, hasRegister));
                     List<RegItem> collectionChain = getCollectionChain(regItemhistory);
                     if (collectionChain.isEmpty()) {
                         return registerURI + "/" + regItemhistory.getLocalid();
@@ -619,7 +620,7 @@ public class ItemHistorySupplier {
         if (value == null) {
             return null;
         }
-        String href = itemSupplier.getURI(collection);
+        String href = ItemHelper.getURI(collection);
         values.add(new LocalizedPropertyValue(value, href));
 
         if (values.isEmpty()) {

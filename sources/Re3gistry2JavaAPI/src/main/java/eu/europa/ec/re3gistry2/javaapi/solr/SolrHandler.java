@@ -445,7 +445,8 @@ public class SolrHandler {
         }
 
         // Setting the item's URI
-        String uri = ItemHelper.getURI(regItem, regItemRegistry, regItemRegister, regRelationpredicateCollection, regRelationManager);
+        String uri = ItemHelper.getURI(regItem);
+//        String uri = ItemHelper.getURI(regItem, regItemRegistry, regItemRegister, regRelationpredicateCollection, regRelationManager);
         document.setField(BaseConstants.KEY_SOLR_ITEM_URI, uri);
 
         // Adding the contained itemclass (if available)
@@ -511,7 +512,8 @@ public class SolrHandler {
                         document.addField(BaseConstants.KEY_SOLR_FIELD_NAME_FIELD_PREFIX + regLocalization.getRegField().getLocalid() + BaseConstants.KEY_SOLR_FIELD_NAME_SEPARATOR + BaseConstants.KEY_SOLR_ITEM_REGISTERITEMCLASSLOCALID, regItemRegister.getRegItemclass().getLocalid());
 
                         // Setting the URI
-                        uri = ItemHelper.getURI(regItemReference, regItemRegistry, regItemRegister, regRelationpredicateCollection, regRelationManager);
+                        uri = ItemHelper.getURI(regItemReference);
+//                        uri = ItemHelper.getURI(regItemReference, regItemRegistry, regItemRegister, regRelationpredicateCollection, regRelationManager);
                         document.addField(BaseConstants.KEY_SOLR_FIELD_NAME_FIELD_PREFIX + regLocalization.getRegField().getLocalid() + BaseConstants.KEY_SOLR_FIELD_NAME_SEPARATOR + BaseConstants.KEY_SOLR_ITEM_URI, uri);
 
                         // Setting the localization

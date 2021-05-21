@@ -54,6 +54,7 @@
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>
                 <application.rooturl>https://localhost/r3egistry2</application.rooturl> 
+				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
             </properties>
         </profile>        
         <!-- Server profile -->
