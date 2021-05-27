@@ -78,7 +78,7 @@ application.headingmessage.class=
 application.headingmessage.text=
 
 # Application root taken from pom
-application.rooturl=http://testinspire.ec.europa.eu/r3egistry2
+application.rooturl=applicationrooturl
 
 # Solr configurations
 application.solr.isactive=true
