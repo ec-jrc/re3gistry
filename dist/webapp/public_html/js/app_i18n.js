@@ -42,29 +42,20 @@ var i18n;
  * @param {type} selector
  */
 function initLocalization(selector) {
-
     let storedLanguage = val_emptyString;
+
     // checking if there is the language passed by URL
     if (languageFromUrl !== null && languageFromUrl.length === 2) {
-
         currentLanguage = languageFromUrl;
     } else {
-
         // Checking if there is a language stored in the cookies
         if (navigator.cookieEnabled) {
-
             // Getting the language stored in the cookie
             storedLanguage = getCookie(key_cookieName_language);
         }
-        
-        let fallbackLang = getBrowserLanguage();
-        if(selector !== val_emptyString || typeof selector === val_undefined || selector === val_emptyString){
-            fallbackLang = $(selector).attr('hreflang');
-        }
-        
-        // Takes the cookie stored language if available, otherwise the default
-        currentLanguage = (storedLanguage !== val_emptyString && typeof storedLanguage !== val_undefined && storedLanguage !== null) ? storedLanguage : fallbackLang;
 
+        // Takes the cookie stored language if available, otherwise the default
+        currentLanguage = (storedLanguage !== val_emptyString  && storedLanguage !== "undefined") ? storedLanguage : getBrowserLanguage();
     }
 
     // Storing the language to the cookie if needed
@@ -80,6 +71,7 @@ function initLocalization(selector) {
 
     // Loading the localization file for the current language
     loadI18nFile(currentLanguage);
+
     // Iinitializing the page elements with the language
     refreshSelectedLanguages(selector);
 }
