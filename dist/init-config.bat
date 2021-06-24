@@ -6,6 +6,7 @@ echo Y | copy app\re3gistry2\WEB-INF\shiro.ini.orig app\re3gistry2\WEB-INF\shiro
 echo Y | copy app\re3gistry2\WEB-INF\classes\configurations_files\configuration.properties.orig app\re3gistry2\WEB-INF\classes\configurations_files\configuration.properties
 echo Y | copy db-scripts\registry2_drop-and-create-and-init.sql.orig db-scripts\registry2_drop-and-create-and-init.sql
 echo Y | copy app\re3gistry2restapi\WEB-INF\classes\META-INF\persistence.xml.orig app\re3gistry2restapi\WEB-INF\classes\META-INF\persistence.xml
+echo Y | copy app\re3gistry2restapi\WEB-INF\classes\configurations_files\configuration.properties.orig app\re3gistry2restapi\WEB-INF\classes\configurations_files\configuration.properties
 
 REM Replacing values from the init.properties file
 For /F "tokens=1* delims==" %%A IN (init.properties) DO (
@@ -17,5 +18,6 @@ For /F "tokens=1* delims==" %%A IN (init.properties) DO (
 	powershell -Command "(gc app\re3gistry2\WEB-INF\shiro.ini) -replace '%%A', '%%B' | sc app\re3gistry2\WEB-INF\shiro.ini"
 	powershell -Command "(gc app\re3gistry2\WEB-INF\classes\configurations_files\configuration.properties) -replace '%%A', '%%B' | sc app\re3gistry2\WEB-INF\classes\configurations_files\configuration.properties"
 	powershell -Command "(gc app\re3gistry2restapi\WEB-INF\classes\META-INF\persistence.xml) -replace '%%A', '%%B' | sc app\re3gistry2restapi\WEB-INF\classes\META-INF\persistence.xml"
+	powershell -Command "(gc app\re3gistry2restapi\WEB-INF\classes\configurations_files\configuration.properties) -replace '%%A', '%%B' | sc app\re3gistry2restapi\WEB-INF\classes\configurations_files\configuration.properties"
 
 )

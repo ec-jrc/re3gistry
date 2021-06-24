@@ -6,6 +6,7 @@ yes | cp "app/re3gistry2/WEB-INF/shiro.ini.orig" "app/re3gistry2/WEB-INF/shiro.i
 yes | cp "app/re3gistry2/WEB-INF/classes/configurations_files/configuration.properties.orig" "app/re3gistry2/WEB-INF/classes/configurations_files/configuration.properties"
 yes | cp "db-scripts/registry2_drop-and-create-and-init.sql.orig" "db-scripts/registry2_drop-and-create-and-init.sql"
 yes | cp "app/re3gistry2restapi/WEB-INF/classes/META-INF/persistence.xml.orig" "app/re3gistry2restapi/WEB-INF/classes/META-INF/persistence.xml"
+yes | cp "app/re3gistry2restapi/WEB-INF/classes/configurations_files/configuration.properties.orig" "app/re3gistry2restapi/WEB-INF/classes/configurations_files/configuration.properties"
 
 # Replacing values from the init.properties file
 while IFS="=" read -r key value; do 
@@ -21,5 +22,6 @@ while IFS="=" read -r key value; do
 	sed -i "s/$key/$tmp/g" "app/re3gistry2/WEB-INF/shiro.ini"
 	sed -i "s/$key/$tmp/g" "app/re3gistry2/WEB-INF/classes/configurations_files/configuration.properties"
 	sed -i "s/$key/$tmp/g" "app/re3gistry2restapi/WEB-INF/classes/META-INF/persistence.xml"
+	sed -i "s/$key/$tmp/g" "app/re3gistry2restapi/WEB-INF/classes/configurations_files/configuration.properties"
 
 done < init.properties
