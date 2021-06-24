@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://inspire.ec.europa.eu/docs">
+  <channel>
+    <title>INSPIRE Re3gistry v2.0 news</title>
+    <link>https://inspire.ec.europa.eu/registry</link>
+    <description>The INSPIRE infrastructure involves a number of items, which require clear descriptions and the possibility to be referenced through unique identifiers. Examples for such items include INSPIRE themes, code lists, application schemas or discovery services. Registers provide a means to assign identifiers to items and their labels, definitions and descriptions (in different languages). The INSPIRE registry provides a central access point to a number of centrally managed INSPIRE registers. The content of these registers are based on the INSPIRE Directive, Implementing Rules and Technical Guidelines.</description>
+    <language>en</language>
+    <atom:link href="https://inspire.ec.europa.eu/registry/release-note" rel="self" type="application/rss+xml"/>
+  </channel>
+</rss>
