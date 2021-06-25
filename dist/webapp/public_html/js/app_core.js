@@ -413,26 +413,27 @@ function renderTableProperties(data) {
         });
         // Rendering the HTML of each field for the table
         $.each(data.properties, function (index, item) {
-
-            let values = item.values;
-            let value = val_emptyString;
-            if (values.length > 1) {
-                value = renderList(values);
-            } else if (values.length == 1) {
-                let tmpValue = values[0].value;
-                let href = values[0].href;
-                // In the table view, in case the field is a 'titlefield' the href
-                // is added, in order to enable the link to the related element
-                // directly from the table
-                if (item.istitle !== null && item.istitle === val_true) {
-                    value = renderHref(tmpValue, data.uri);
-                } else {
-                    value = (href !== null && href !== val_emptyString) ? renderHref(tmpValue, href) : tmpValue;
+            if (item.tablevisible !== null && item.tablevisible === val_true) {
+                let values = item.values;
+                let value = val_emptyString;
+                if (values.length > 1) {
+                    value = renderList(values);
+                } else if (values.length == 1) {
+                    let tmpValue = values[0].value;
+                    let href = values[0].href;
+                    // In the table view, in case the field is a 'titlefield' the href
+                    // is added, in order to enable the link to the related element
+                    // directly from the table
+                    if (item.istitle !== null && item.istitle === val_true) {
+                        value = renderHref(tmpValue, data.uri);
+                    } else {
+                        value = (href !== null && href !== val_emptyString) ? renderHref(tmpValue, href) : tmpValue;
+                    }
                 }
-            }
 
-            // Rendering the HTML of the td
-            htmlOutput += renderTd(value);
+                // Rendering the HTML of the td
+                htmlOutput += renderTd(value);
+            }
         });
         // Rendering the HTML of the tr
         htmlOutput = renderTr(htmlOutput);
@@ -489,7 +490,9 @@ function renderTableHeader(properties) {
     // Rendering the table head
     let htmlOutput = val_emptyString;
     $.each(properties, function (index, item) {
-        htmlOutput += renderTh(item.label, val_emptyString);
+        if (item.tablevisible !== null && item.tablevisible === val_true) {
+            htmlOutput += renderTh(item.label, val_emptyString);
+        }
     });
     // Rendering the HTML of the tr
     return renderTr(htmlOutput);
