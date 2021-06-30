@@ -42,20 +42,25 @@ var i18n;
  * @param {type} selector
  */
 function initLocalization(selector) {
+
     let storedLanguage = val_emptyString;
 
     // checking if there is the language passed by URL
     if (languageFromUrl !== null && languageFromUrl.length === 2) {
+
         currentLanguage = languageFromUrl;
     } else {
+
         // Checking if there is a language stored in the cookies
         if (navigator.cookieEnabled) {
+
             // Getting the language stored in the cookie
             storedLanguage = getCookie(key_cookieName_language);
         }
 
         // Takes the cookie stored language if available, otherwise the default
         currentLanguage = (storedLanguage !== val_emptyString  && storedLanguage !== "undefined") ? storedLanguage : getBrowserLanguage();
+
     }
 
     // Storing the language to the cookie if needed

@@ -79,13 +79,13 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
         String sStart = request.getParameter(BaseConstants.KEY_REQUEST_DT_START);
         String sLength = request.getParameter(BaseConstants.KEY_REQUEST_DT_LENGTH);
         String sDraw = request.getParameter(BaseConstants.KEY_REQUEST_DT_DRAW);
-        
+
         itemUUID = (itemUUID != null) ? InputSanitizerHelper.sanitizeInput(itemUUID) : null;
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
         sStart = (sStart != null) ? InputSanitizerHelper.sanitizeInput(sStart) : null;
         sLength = (sLength != null) ? InputSanitizerHelper.sanitizeInput(sLength) : null;
         sDraw = (sDraw != null) ? InputSanitizerHelper.sanitizeInput(sDraw) : null;
-        
+
         int start;
         int length;
         int draw;
@@ -166,17 +166,25 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                 regItemclasses.clear();
                 regItemclasses.add(newRegItemclass);
 
-                containedRegItems = regItemproposedManager.getAllNew(regItemclasses, start, length);
-                totalCount = regItemproposedManager.countAllNew(regItemclasses);
+//                containedRegItems = regItemproposedManager.getAllNew(regItemclasses, start, length);
+//                totalCount = regItemproposedManager.countAllNew(regItemclasses);
+//
+//                if (containedRegItems!=null && containedRegItems.size() > 0) {
+//                    //Check collections
+//                    List<RegItemproposed> containedRegItemsCheck = regItemproposedManager.getAllNew(regItemclasses, regItem, regRelationpredicateCollection, start, length);
+//                    
+//                    if (!containedRegItemsCheck.isEmpty() && containedRegItemsCheck.size() != containedRegItems.size()) {
+//                        containedRegItems = containedRegItemsCheck;
+//                        totalCount = regItemproposedManager.countAllNew(regItemclasses, regItem, regRelationpredicateCollection);
+//                    }
+//                }
+                List<RegItemproposed> containedRegItemsCheck = regItemproposedManager.getAllNew(regItemclasses, regItem, regRelationpredicateCollection, start, length);
 
-                if (containedRegItems!=null && containedRegItems.size() > 0) {
-                    //Check collections
-                    List<RegItemproposed> containedRegItemsCheck = regItemproposedManager.getAllNew(regItemclasses, regItem, regRelationpredicateCollection, start, length);
-                    
-                    if (!containedRegItemsCheck.isEmpty() && containedRegItemsCheck.size() != containedRegItems.size()) {
-                        containedRegItems = containedRegItemsCheck;
-                        totalCount = regItemproposedManager.countAllNew(regItemclasses, regItem, regRelationpredicateCollection);
-                    }
+                if (!containedRegItemsCheck.isEmpty()
+//                        && containedRegItemsCheck.size() != containedRegItems.size()
+                        ) {
+                    containedRegItems = containedRegItemsCheck;
+                    totalCount = regItemproposedManager.countAllNew(regItemclasses, regItem, regRelationpredicateCollection);
                 }
 
             } else {
