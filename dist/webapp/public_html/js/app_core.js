@@ -183,7 +183,7 @@ function renderServiceError(data) {
  */
 function renderUri(data) {
 
-    return renderField(i18n[key_uri], data.uri);
+    return renderField(i18n[key_uri], renderHref(data.uri, data.uri));
 }
 
 /*
