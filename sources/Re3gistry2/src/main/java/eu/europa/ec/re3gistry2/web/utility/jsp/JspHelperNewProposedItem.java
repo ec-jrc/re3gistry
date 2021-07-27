@@ -1222,7 +1222,8 @@ public class JspHelperNewProposedItem {
             regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage);
         }
 
-        tmp += "<a data-uri=\"./" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid() + "\" href=\"." + WebConstants.PAGE_URINAME_STATUS + "\">" + regStatusLocalization.getLabel() + "</a>";
+        String statusURI = regStatusgroup.getBaseuri()+ "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();
+        tmp += "<a data-uri=\"/" + statusURI + "\" href=\"" + statusURI + "\">" + regStatusLocalization.getLabel() + "</a>";
 
         return tmp;
     }

@@ -491,7 +491,8 @@ public class ItemListLoaderServlet extends HttpServlet {
                                     regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage);
                                 }
 
-                                outs += "\"<a data-uri=\\\"./" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid() + "\\\" href=\\\"." + WebConstants.PAGE_URINAME_STATUS + "\\\">" + regStatusLocalization.getLabel() + regItemproposedStatus + "</a>\"";
+                                String statusURI = regStatusgroup.getBaseuri()+ "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();
+                                outs += "\"<a data-uri=\\\"/" + statusURI + "\\\" href=\\\"" + statusURI + "\\\">" + regStatusLocalization.getLabel() + regItemproposedStatus + "</a>\"";
 
                                 j++;
                             } else {
@@ -545,7 +546,7 @@ public class ItemListLoaderServlet extends HttpServlet {
                                             }
 
                                             for (RegLocalization regLocalizationTmp : regLocalizationTmps) {
-                                                outs += "\"<a href=\\\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
+                                                outs += "\"<a href=\\\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
                                             }
                                         } else {
                                             // Check if there is the localization (relationreference) in the master language

@@ -459,7 +459,8 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                     regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage);
                                 }
 
-                                outs += "\"<a data-uri=\\\"./" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid() + "\\\" href=\\\"." + WebConstants.PAGE_URINAME_STATUS + "\\\">" + regStatusLocalization.getLabel() + "</a>\"";
+                                String statusURI = regStatusgroup.getBaseuri()+ "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();
+                                outs += "\"<a data-uri=\\\"/" + statusURI + "\\\" href=\\\"" + statusURI + "\\\">" + regStatusLocalization.getLabel() + "</a>\"";
 
                                 j++;
                             } else {
@@ -511,7 +512,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                             }
 
                                             for (RegLocalization regLocalizationTmp : regLocalizationTmps) {
-                                                outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
+                                                outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
                                             }
                                         } else {
                                             // Check if there is the localization (relationreference) in the master language
