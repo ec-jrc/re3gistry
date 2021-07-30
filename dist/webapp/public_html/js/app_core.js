@@ -23,6 +23,8 @@ const key_marginT2xl = 'mt-3';
 const key_genericError = 's-error-fetch';
 const key_paginationPrevious = 'previous';
 const key_paginationNext = 'next';
+const key_otherFormats = 's-other-formats';
+
 // Value constants
 const val_itemTypeItem = 'item';
 const val_itemTypeRegister = 'register';
@@ -34,7 +36,8 @@ const htmlSnippet_tr = '<tr>{0}</tr>';
 const htmlSnippet_td = '<td>{0}</td>';
 const htmlSnippet_ul = '<ul class="list_nobullet">{0}</ul>';
 const htmlSnippet_li = '<li class="ml-2">{0}</li>';
-const htmlSnippet_href = '<a href="{0}" class="btn btn-link p-0">{1}</a>';
+const htmlSnippet_href = '<a href="{0}" class="btn btn-link linktable">{1}</a>';
+const htmlSnippet_href_format = '<a href="{0}" class="mr-2"><i class="far fa-file-alt"></i> {1}</a>';
 const htmlSnippet_field = '<div class="row my-2"><div class="col-3 font-weight-bold">{0}</div><div class="col-9">{1}</div></div>';
 //const htmlSnippet_field = '<dt class="ecl-description-list__term">{0}</dt><dd class="ecl-description-list__definition">{1}</dd>';
 const htmlSnippet_hx = '<h{0} class="ecl-u-type-heading-{0}{1}">{2}</h{0}>';
@@ -114,6 +117,7 @@ function renderData(data) {
         handleBreadcrumbs(data);
         renderSiteIdentity(data);
         mainContainer.append(renderProperties(data));
+        mainContainer.append(renderFormats(data));
         let containedItems = data.containedItems;
         if (containedItems !== null && typeof containedItems !== val_undefined && containedItems.length > 0) {
             mainContainer.append(renderCollections(data));
@@ -270,6 +274,42 @@ function renderProperties(data) {
 }
 
 /*
+ * Render the formats of the current element
+ * 
+ * @param {Json} data The Re3gistry json data
+ * @returns {String} The rendered HTML string of the properties
+ */
+function renderFormats(data) {
+
+    let href;
+    if (data.latest == true) {
+        href = data.uri + "/" + data.localid + "." + currentLanguage + ".";
+    } else {
+        href = data.uri + ":" + data.version.number + "/" + data.localid + "." + currentLanguage + ".";
+    }
+
+    let htmlInner = val_emptyString;
+    htmlInner += renderHrefFormat("XML Registry", href + "xml");
+    htmlInner += renderHrefFormat("XML ISO 19135", href + "iso19135xml");
+    htmlInner += renderHrefFormat("RDF/XML", href + "rdf");
+    htmlInner += renderHrefFormat("JSON", href + "json");
+
+    let containedItems = data.containedItems;
+    let narrowerItems = data.narrower;
+    if (containedItems !== null && typeof containedItems !== val_undefined && containedItems.length > 0) {
+        htmlInner += renderHrefFormat("CSV", href + "csv");
+    } else if (narrowerItems !== null && typeof narrowerItems !== val_undefined && narrowerItems.length > 0) {
+        htmlInner += renderHrefFormat("CSV", href + "csv");
+    }
+
+    //TODO to be completed
+    let htmlOutput = val_emptyString;
+    htmlOutput += renderField(i18n[key_otherFormats], htmlInner);
+
+    return htmlOutput;
+}
+
+/*
  * Render the collection related to the current element
  *
  * @param {Json} data The Re3gistry json data
@@ -395,6 +435,19 @@ function renderHref(value, href) {
     return htmlSnippet_href.replace('{0}', href).replace('{1}', value);
 }
 
+
+/*
+ * Render the href of the field in HTML
+ * 
+ * @param {String} value The value of the field
+ * @param {String} href The href of the field
+ * @returns {String} The rendered href HTML element of the field  
+ * 
+ */
+function renderHrefFormat(value, href) {
+
+    return htmlSnippet_href_format.replace('{0}', href).replace('{1}', value);
+}
 
 /*
  * Render table properties
