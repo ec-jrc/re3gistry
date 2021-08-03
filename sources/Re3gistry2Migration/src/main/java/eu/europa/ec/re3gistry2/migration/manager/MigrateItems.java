@@ -116,115 +116,115 @@ public class MigrateItems {
 
             for (Itemclass itemclass : itemclassList) {
 
-                    Integer AUTO_INCREMENT_REG_FIELD_LIST_ORDER = 0;
+                Integer AUTO_INCREMENT_REG_FIELD_LIST_ORDER = 0;
 
-                    /**
-                     * if the reg item class exist than use than one, otherwise
-                     * create it
-                     */
-                    RegItemclass regItemclass;
+                /**
+                 * if the reg item class exist than use than one, otherwise
+                 * create it
+                 */
+                RegItemclass regItemclass;
+                try {
+                    RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
+                    regItemclass = regItemclassManager.getByLocalid(itemclass.getUriname());
+                } catch (Exception exe) {
                     try {
-                        RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
-                        regItemclass = regItemclassManager.getByLocalid(itemclass.getUriname());
-                    } catch (Exception exe) {
-                        try {
-                            RegItemclasstypeManager regItemclasstypeManager = new RegItemclasstypeManager(entityManagerRe3gistry2);
-                            RegItemclasstype regItemclasstypeItem = regItemclasstypeManager.getByLocalid("item");
-                            regItemclass = addRegItemClassByItemclass(itemclass, procedureorder, regItemclasstypeItem, commit);
-                        } catch (Exception ex) {
-                            logger.error(ex.getMessage());
-                            throw new Exception(ex.getMessage());
-                        }
-                    }
-                    procedureorder++;
-
-                    RegInstallationHandler regInstallationHandler = new RegInstallationHandler(entityManagerRe3gistry2);
-                    HashMap<String, RegField> regFieldsMap = new HashMap<>();
-                    regFieldsMap.put("label", regInstallationHandler.createDefaultField(regItemclass, "label", Boolean.TRUE, BaseConstants.KEY_FIELDTYPE_STRING_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-                    regFieldsMap.put("definition", regInstallationHandler.createDefaultField(regItemclass, "definition", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_LONGTEXT_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-                    regFieldsMap.put("description", regInstallationHandler.createDefaultField(regItemclass, "description", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_LONGTEXT_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-
-                    regFieldsMap.put("collection", regInstallationHandler.createDefaultField(regItemclass, "collection", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_COLLECTION_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-                    regFieldsMap.put("parent", regInstallationHandler.createDefaultField(regItemclass, "parent", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_PARENT_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-                    regFieldsMap.put("successor", regInstallationHandler.createDefaultField(regItemclass, "successor", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_SUCCESSOR_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-                    regFieldsMap.put("predecessor", regInstallationHandler.createDefaultField(regItemclass, "predecessor", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_PREDECESSOR_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-                    regFieldsMap.put("registry", regInstallationHandler.createDefaultField(regItemclass, "registry", Boolean.TRUE, BaseConstants.KEY_FIELDTYPE_REGISTRY_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-                    regFieldsMap.put("register", regInstallationHandler.createDefaultField(regItemclass, "register", Boolean.TRUE, BaseConstants.KEY_FIELDTYPE_REGISTER_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-
-                    AUTO_INCREMENT_REG_FIELD_LIST_ORDER = migrateCustomattributesByItemClass(itemclass, regItemclass, regFieldsMap, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit);
-                    regFieldsMap.put("status", regInstallationHandler.createDefaultField(regItemclass, "status", Boolean.TRUE, BaseConstants.KEY_FIELDTYPE_STATUS_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
-
-                    /**
-                     * now you can commit all the item classes
-                     */
-                    try {
-                        if (!entityManagerRe3gistry2.getTransaction().isActive()) {
-                            entityManagerRe3gistry2.getTransaction().begin();
-                        }
-                        entityManagerRe3gistry2.getTransaction().commit();
+                        RegItemclasstypeManager regItemclasstypeManager = new RegItemclasstypeManager(entityManagerRe3gistry2);
+                        RegItemclasstype regItemclasstypeItem = regItemclasstypeManager.getByLocalid("item");
+                        regItemclass = addRegItemClassByItemclass(itemclass, procedureorder, regItemclasstypeItem, commit);
                     } catch (Exception ex) {
                         logger.error(ex.getMessage());
                         throw new Exception(ex.getMessage());
                     }
-                    /**
-                     * commit is false because we don't want to commit anything
-                     * before the end of the item creation so, once the item and
-                     * all its related relations have been created, than we
-                     * commit the entire item and relations
-                     */
-                    commit = false;
+                }
+                procedureorder++;
+
+                RegInstallationHandler regInstallationHandler = new RegInstallationHandler(entityManagerRe3gistry2);
+                HashMap<String, RegField> regFieldsMap = new HashMap<>();
+                regFieldsMap.put("label", regInstallationHandler.createDefaultField(regItemclass, "label", Boolean.TRUE, BaseConstants.KEY_FIELDTYPE_STRING_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+                regFieldsMap.put("definition", regInstallationHandler.createDefaultField(regItemclass, "definition", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_LONGTEXT_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+                regFieldsMap.put("description", regInstallationHandler.createDefaultField(regItemclass, "description", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_LONGTEXT_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+
+                regFieldsMap.put("collection", regInstallationHandler.createDefaultField(regItemclass, "collection", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_COLLECTION_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+                regFieldsMap.put("parent", regInstallationHandler.createDefaultField(regItemclass, "parent", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_PARENT_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+                regFieldsMap.put("successor", regInstallationHandler.createDefaultField(regItemclass, "successor", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_SUCCESSOR_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+                regFieldsMap.put("predecessor", regInstallationHandler.createDefaultField(regItemclass, "predecessor", Boolean.FALSE, BaseConstants.KEY_FIELDTYPE_PREDECESSOR_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+                regFieldsMap.put("registry", regInstallationHandler.createDefaultField(regItemclass, "registry", Boolean.TRUE, BaseConstants.KEY_FIELDTYPE_REGISTRY_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+                regFieldsMap.put("register", regInstallationHandler.createDefaultField(regItemclass, "register", Boolean.TRUE, BaseConstants.KEY_FIELDTYPE_REGISTER_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+
+                AUTO_INCREMENT_REG_FIELD_LIST_ORDER = migrateCustomattributesByItemClass(itemclass, regItemclass, regFieldsMap, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit);
+                regFieldsMap.put("status", regInstallationHandler.createDefaultField(regItemclass, "status", Boolean.TRUE, BaseConstants.KEY_FIELDTYPE_STATUS_UUID, null, AUTO_INCREMENT_REG_FIELD_LIST_ORDER++, commit));
+
+                /**
+                 * now you can commit all the item classes
+                 */
+                try {
+                    if (!entityManagerRe3gistry2.getTransaction().isActive()) {
+                        entityManagerRe3gistry2.getTransaction().begin();
+                    }
+                    entityManagerRe3gistry2.getTransaction().commit();
+                } catch (Exception ex) {
+                    logger.error(ex.getMessage());
+                    throw new Exception(ex.getMessage());
+                }
+                /**
+                 * commit is false because we don't want to commit anything
+                 * before the end of the item creation so, once the item and all
+                 * its related relations have been created, than we commit the
+                 * entire item and relations
+                 */
+                commit = false;
+                try {
+                    Query queryItemByItemClass = entityManagerRe3gistry2Migration.createNativeQuery(ConstantsMigration.ITEMS_LATEST_VERSION_LIST_BY_ITEMCLASS.replace(":" + ConstantsMigration.KEY_PARAMETER_ITEMCLASS, "'" + itemclass.getUuid() + "'"), ConstantsMigration.KEY_PARAMETER_ITEMRESULT);
+                    queryItemByItemClass.setParameter(ConstantsMigration.KEY_PARAMETER_ITEMCLASS, itemclass);
+
+                    List<Item> itemsList;
                     try {
-                        Query queryItemByItemClass = entityManagerRe3gistry2Migration.createNativeQuery(ConstantsMigration.ITEMS_LATEST_VERSION_LIST_BY_ITEMCLASS.replace(":" + ConstantsMigration.KEY_PARAMETER_ITEMCLASS, "'" + itemclass.getUuid() + "'"), ConstantsMigration.KEY_PARAMETER_ITEMRESULT);
-                        queryItemByItemClass.setParameter(ConstantsMigration.KEY_PARAMETER_ITEMCLASS, itemclass);
+                        itemsList = queryItemByItemClass.getResultList();
+                    } catch (Exception ex) {
+                        logger.error("Error in  getting the result list for " + queryItemByItemClass + " " + ex.getMessage());
+                        throw new Exception("Error in  getting the localization for " + queryItemByItemClass + " " + ex.getMessage());
+                    }
 
-                        List<Item> itemsList;
+                    for (Item item : itemsList) {
+
+                        Item collection = getCollectionFromItem(item);
+
+                        RegItem regItem = migrateItemLatestVersion.migrateItemLatestVersion(item, collection, regItemclass, regFieldsMap, item.getItemclass(), commit);
+                        itemsToIndexSOLR.add(regItem);
+                        /**
+                         * check if item has other versions*
+                         */
                         try {
-                            itemsList = queryItemByItemClass.getResultList();
-                        } catch (Exception ex) {
-                            logger.error("Error in  getting the result list for " + queryItemByItemClass + " " + ex.getMessage());
-                            throw new Exception("Error in  getting the localization for " + queryItemByItemClass + " " + ex.getMessage());
-                        }
+                            List<Item> previousVersions = getAllItemVersionOrderDescByVersionnumber(item);
+                            if (previousVersions != null) {
+                                for (Item previousVersionItem : previousVersions) {
+                                    if (previousVersionItem.getVersionnumber() != 0) {
 
-                        for (Item item : itemsList) {
-
-                            Item collection = getCollectionFromItem(item);
-
-                            RegItem regItem = migrateItemLatestVersion.migrateItemLatestVersion(item, collection, regItemclass, regFieldsMap, item.getItemclass(), commit);
-                            itemsToIndexSOLR.add(regItem);
-                            /**
-                             * check if item has other versions*
-                             */
-                            try {
-                                List<Item> previousVersions = getAllItemVersionOrderDescByVersionnumber(item);
-                                if (previousVersions != null) {
-                                    for (Item previousVersionItem : previousVersions) {
-                                        if (previousVersionItem.getVersionnumber() != 0) {
-
-                                            Item collectionHistory = getCollectionFromItem(previousVersionItem);
-                                            RegItemhistory regItemHistory = migrateItemHistory.migrateItemHistory(previousVersionItem, collectionHistory, regItemclass, regFieldsMap, regItem, commit);
-                                            correspondentItemToRegItemHistoryMap.put(previousVersionItem.getUuid() + previousVersionItem.getVersionnumber(), regItemHistory.getUuid());
-                                        }
+                                        Item collectionHistory = getCollectionFromItem(previousVersionItem);
+                                        RegItemhistory regItemHistory = migrateItemHistory.migrateItemHistory(previousVersionItem, collectionHistory, regItemclass, regFieldsMap, regItem, commit);
+                                        correspondentItemToRegItemHistoryMap.put(previousVersionItem.getUuid() + previousVersionItem.getVersionnumber(), regItemHistory.getUuid());
                                     }
                                 }
-                            } catch (Exception ex) {
-                                logger.error(ex.getMessage());
-                                throw new Exception(ex.getMessage());
                             }
-
-                            try {
-                                if (!entityManagerRe3gistry2.getTransaction().isActive()) {
-                                    entityManagerRe3gistry2.getTransaction().begin();
-                                }
-                                entityManagerRe3gistry2.getTransaction().commit();
-                            } catch (Exception ex) {
-                                logger.error(ex.getMessage());
-                                throw new Exception(ex.getMessage());
-                            }
-
+                        } catch (Exception ex) {
+                            logger.error(ex.getMessage());
+                            throw new Exception(ex.getMessage());
                         }
-                    } catch (Exception ex) {
-                        logger.error(ex.getMessage());
+
+                        try {
+                            if (!entityManagerRe3gistry2.getTransaction().isActive()) {
+                                entityManagerRe3gistry2.getTransaction().begin();
+                            }
+                            entityManagerRe3gistry2.getTransaction().commit();
+                        } catch (Exception ex) {
+                            logger.error(ex.getMessage());
+                            throw new Exception(ex.getMessage());
+                        }
+
                     }
+                } catch (Exception ex) {
+                    logger.error(ex.getMessage());
+                }
             }
 
             /**
@@ -853,7 +853,15 @@ public class MigrateItems {
             /**
              * difficult to understand how to put the table visibility
              */
-            regFieldmapping.setTablevisible(Boolean.TRUE);
+            if (regItemclass.getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)) {
+                if (regField.getIstitle()) {
+                    regFieldmapping.setTablevisible(Boolean.TRUE);
+                } else {
+                    regFieldmapping.setTablevisible(Boolean.FALSE);
+                }
+            } else {
+                regFieldmapping.setTablevisible(Boolean.TRUE);
+            }
             regFieldmapping.setInsertdate(new Date());
             /**
              * set status, but maybe will be deleted

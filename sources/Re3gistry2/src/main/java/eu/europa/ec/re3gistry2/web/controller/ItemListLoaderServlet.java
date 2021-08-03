@@ -491,7 +491,8 @@ public class ItemListLoaderServlet extends HttpServlet {
                                     regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage);
                                 }
 
-                                outs += "\"<a data-uri=\\\"./" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid() + "\\\" href=\\\"." + WebConstants.PAGE_URINAME_STATUS + "\\\">" + regStatusLocalization.getLabel() + regItemproposedStatus + "</a>\"";
+                                String statusURI = regStatusgroup.getBaseuri()+ "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();
+                                outs += "\"<a data-uri=\\\"/" + statusURI + "\\\" href=\\\"" + statusURI + "\\\">" + regStatusLocalization.getLabel() + regItemproposedStatus + "</a>\"";
 
                                 j++;
                             } else {

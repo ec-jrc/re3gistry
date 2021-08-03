@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_3_0.xsd">
     <display-name>Re3gistry2</display-name>
+    <session-config>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>true</secure>
+        </cookie-config>
+    </session-config>
     <!--Configurations-->
     <jsp-config>
         <jsp-property-group>
@@ -99,10 +105,10 @@
             <description>Encryption is not required for the application in general.</description>
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
-    </security-constraint>-->
+    </security-constraint>
 
-    <!-- prevents anyone from accessing the /includes path -->
-<!--    <security-constraint>
+     prevents anyone from accessing the /includes path 
+    <security-constraint>
         <web-resource-collection>
             <web-resource-name>re3gistry2</web-resource-name>
             <description>prevents anyone from accessing the /includes path</description>

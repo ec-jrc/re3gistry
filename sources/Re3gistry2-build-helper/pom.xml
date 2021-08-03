@@ -67,7 +67,7 @@
 				<persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>            
-                <application.rooturl>https://registry-test.eu/r3egistry2</application.rooturl>
+                <application.rooturl>https://registry-test.eu/re3gistry2</application.rooturl>
                 <application.solr.isactive>false</application.solr.isactive>        
             </properties>
         </profile>     

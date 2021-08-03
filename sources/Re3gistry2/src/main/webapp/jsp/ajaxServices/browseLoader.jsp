@@ -183,6 +183,8 @@
         registerURI = en.getValue();
     }
 
+    boolean statusDisallowed = regItem.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_INVALID) || regItem.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_RETIRED) || regItem.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_SUPERSEDED);
+
     String collecitonHTML = ItemHelper.getBreadcrumbCollectionHTMLForRegitem("", regItem, entityManager, currentLanguage);
     request.setCharacterEncoding("UTF-8");
 %>
@@ -231,6 +233,17 @@
 
     <input type="hidden" name="<%=BaseConstants.KEY_REQUEST_FORM_ITEMUUID%>" value="<%=regItem.getUuid()%>" />
     <input type="hidden" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_REGLANGUAGECODEUUID%>" value="<%=currentLanguage.getUuid()%>" /> 
+
+
+    <%if (statusDisallowed) { %>
+    <div class="row"> 
+        <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+            <%=MessageFormat.format(localization.getString("warning.item.cannot.beedited"), regItem.getRegStatus().getLocalid())%>
+        </div>
+        </div>
+    </div>
+    <% }%>
 
     <%-- The URI field is always available and non editable --%>
     <div class="row form-group editing-labels">
@@ -351,7 +364,7 @@
             else if (regFieldmapping.getRegField().getRegFieldtype().getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_DATECREATION)) {%>                
             <%-- Process the "date creation" of the current item --%>
             <%=JspHelper.jspDateCreationHandler(regItem, regItemproposed, regLocalizationproposeds, currentLanguage, masterLanguage, regStatusManager, regStatuslocalizationManager)%>
-             <%} // Date Edit
+            <%} // Date Edit
             else if (regFieldmapping.getRegField().getRegFieldtype().getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_DATEEDIT)) {%>                
             <%-- Process the "date edit" of the current item --%>
             <%=JspHelper.jspDateEditHandler(regItem, regItemproposed, regLocalizationproposeds, currentLanguage, masterLanguage, regStatusManager, regStatuslocalizationManager)%>
@@ -439,7 +452,7 @@
 
         <%
             boolean separatorNeeded = false;
-            if ((permissionItemProposal || permissionItemRegisterRegistry || permissionRegisterRegistry) && canWrite) { %>
+            if ((permissionItemProposal || permissionItemRegisterRegistry || permissionRegisterRegistry) && canWrite && !statusDisallowed) { %>
         <div class="col-sm-3">
             <div class="dropdown d-inline">
                 <button type="button" class="btn btn-secondary dropdown-toggle width100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${localization.getString("label.moreactions")}</button>
@@ -496,9 +509,11 @@
         </script>
         <% } %>
 
+        <% if (!statusDisallowed) { %>        
         <div class="col-sm-3">
             <button id="save-clarification" disabled="disabled" type="submit" class="btn btn-success width100"><i class="far fa-save"></i> ${localization.getString("label.saveclarification")}</button>
         </div>
+        <% } %>
         <% } %>
 
 
@@ -604,11 +619,14 @@
             <% if (regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER) || regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_ITEM)) {%>
 
             <%-- Bulk import commands --%>
+            <%
+                if (!statusDisallowed) { %> 
             <div class="col-sm-6">
                 <button type="button" class="btn btn-primary float-right mr-2 width100" data-toggle="modal" data-target="#exampleModalLong" title="${localization.getString("load.template.bulkimport.title")}">
                     <i class="fas fa-upload"></i> ${localization.getString("label.bulkimport")}
                 </button>
             </div>
+            <% }%>  
 
 
             <!-- Modal -->
@@ -657,11 +675,13 @@
             <div class="col-sm-6"></div>
             <%}%>
 
-
+            <%
+                if (!statusDisallowed) {%> 
             <div class="col-sm-6">
                 <a href=".<%=(regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) ? WebConstants.PAGE_URINAME_ADDREGISTER : WebConstants.PAGE_URINAME_ADDITEM%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=regItem.getUuid()%>" class="btn btn-success float-right width100"><% if (regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) {%><i class="fas fa-plus"></i> ${localization.getString("label.addregister")}<%} else {%><i class="fas fa-plus"></i> ${localization.getString("label.additem")}<%}%></a>
             </div>
 
+            <% } %> 
             <% } %> 
             <% } %> 
         </div>

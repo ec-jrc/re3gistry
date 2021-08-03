@@ -513,7 +513,7 @@
                 tmpOut = tmpOut.replace('{1}', tmpResLabel);
                 // Handling the register
                 let tmpHref = result.register_itemclass_baseuri + '/' + result.register_itemclass_localid
-                tmpOut = tmpOut.replace('{2}', i18n[key_searchRegisterLabel] + ': ' + renderHref(tmpHref));
+                tmpOut = tmpOut.replace('{2}', i18n[key_searchRegisterLabel] + ': ' + renderHref(tmpHref,tmpHref));
                 // Handling definition
                 let tmpResDefinition = checkField(result, key_solrResultFieldDefinitionPrefix, currentLanguage);
                 if (tmpResDefinition.length > 0) {

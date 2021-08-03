@@ -1231,7 +1231,7 @@ public class BaseConstants {
         return KEY_REQUEST_ADMIN_PASSWORD;
     }
 
-    public static String getKEY_REQUEST_ADMIN_SSOREFERENCE() {
+    public String getKEY_REQUEST_ADMIN_SSOREFERENCE() {
         return KEY_REQUEST_ADMIN_SSOREFERENCE;
     }
 

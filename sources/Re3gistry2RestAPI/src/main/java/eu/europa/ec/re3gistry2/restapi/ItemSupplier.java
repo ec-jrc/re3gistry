@@ -812,28 +812,42 @@ public class ItemSupplier {
                     return linksToRelatedItemsParent;
                 }
             case BaseConstants.KEY_FIELDTYPE_SUCCESSOR_UUID:
-                RegItem successor = getRelatedItemBySubject(regItem, hasSuccessor);
-                LocalizedProperty linksToRelatedItemsSuccessor = getLinksToRelationItems(field, label, order, tablevisible, successor);
+                List<RegItem> successorList = getRelatedItemsBySubject(regItem, hasSuccessor);
+                List<LocalizedPropertyValue> successorValues = new ArrayList<>();
+
+                for (RegItem successor : successorList) {
+                    LocalizedProperty linksToRelatedItemsSuccessor = getLinksToRelationItems(field, label, order, tablevisible, successor);
+                    if (linksToRelatedItemsSuccessor.getValues() != null && !linksToRelatedItemsSuccessor.getValues().isEmpty()) {
+                        successorValues.addAll(linksToRelatedItemsSuccessor.getValues());
+                    }
+                }
 
                 // Handling the cases in which the values are null and the flag to display null values is true/false
-                if (linksToRelatedItemsSuccessor == null && !allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+                if (successorValues.isEmpty() && !allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
                     return null;
-                } else if (linksToRelatedItemsSuccessor == null && allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+                } else if (successorValues.isEmpty() && allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
                     return new LocalizedProperty(lang, id, istitle, label, values, order, tablevisible);
                 } else {
-                    return linksToRelatedItemsSuccessor;
+                    return new LocalizedProperty(lang, id, istitle, label, successorValues, order, tablevisible);
                 }
             case BaseConstants.KEY_FIELDTYPE_PREDECESSOR_UUID:
-                RegItem predecessor = getRelatedItemBySubject(regItem, hasPredecessor);
-                LocalizedProperty linksToRelatedItemsPredecessor = getLinksToRelationItems(field, label, order, tablevisible, predecessor);
+                List<RegItem> predecessorList = getRelatedItemsBySubject(regItem, hasPredecessor);
+                List<LocalizedPropertyValue> predecessorValues = new ArrayList<>();
+
+                for (RegItem predecessor : predecessorList) {
+                    LocalizedProperty linksToRelatedItemsPredecessor = getLinksToRelationItems(field, label, order, tablevisible, predecessor);
+                    if (linksToRelatedItemsPredecessor.getValues() != null && !linksToRelatedItemsPredecessor.getValues().isEmpty()) {
+                        predecessorValues.addAll(linksToRelatedItemsPredecessor.getValues());
+                    }
+                }
 
                 // Handling the cases in which the values are null and the flag to display null values is true/false
-                if (linksToRelatedItemsPredecessor == null && !allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+                if (predecessorValues.isEmpty() && !allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
                     return null;
-                } else if (linksToRelatedItemsPredecessor == null && allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+                } else if (predecessorValues.isEmpty() && allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
                     return new LocalizedProperty(lang, id, istitle, label, values, order, tablevisible);
                 } else {
-                    return linksToRelatedItemsPredecessor;
+                    return new LocalizedProperty(lang, id, istitle, label, predecessorValues, order, tablevisible);
                 }
             case BaseConstants.KEY_FIELDTYPE_RELATIONREFERENCE_UUID:
                 LocalizedProperty linksToRelatedItems = getLinksToRelatedItems(field, label, order, tablevisible, regItem, localizationsByField, localizationsByFieldML);
@@ -848,7 +862,7 @@ public class ItemSupplier {
                 }
 
             case BaseConstants.KEY_FIELDTYPE_STATUS_UUID:
-                StatusLocalization statusLocalization = getLocalizedStatus(fieldmapping.getRegStatus());
+                StatusLocalization statusLocalization = getLocalizedStatus(regItem.getRegStatus());
                 if (statusLocalization == null) {
                     return null;
                 }

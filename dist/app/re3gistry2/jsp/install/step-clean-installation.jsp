@@ -130,7 +130,7 @@
                                 <div class="row form-group editing-labels">
                                     <div class="col-sm-6">
                                         <label for="${constants.KEY_REQUEST_REGISTRY_BASEURI}">${localization.getString("installation.clean.registry.baseuri")}</label>
-                                        <p class="gray-text">${localization.getString("installation.clean.registry.localid.description")}</p>
+                                        <p class="gray-text">${localization.getString("installation.clean.registry.baseuri.description")}</p>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="input-group">
@@ -145,7 +145,7 @@
                                 <div class="row form-group editing-labels">
                                     <div class="col-sm-6">
                                         <label for="${constants.KEY_REQUEST_REGISTRY_LOCALID}">${localization.getString("installation.clean.registry.localid")}</label>
-                                        <p class="gray-text">${localization.getString("installation.clean.registry.baseuri.description")}</p>
+                                        <p class="gray-text">${localization.getString("installation.clean.registry.localid.description")}</p>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="input-group">
