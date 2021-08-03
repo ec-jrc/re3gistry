@@ -571,7 +571,7 @@ public class ItemListLoaderServlet extends HttpServlet {
                                                     }
 
                                                     for (RegLocalization regLocalizationTmp : regLocalizationTmps) {
-                                                        outs += "\"<a href=\\\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
+                                                        outs += "\"<a href=\\\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
                                                     }
                                                 }
                                             }
