@@ -537,7 +537,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                                     }
 
                                                     for (RegLocalization regLocalizationTmp : regLocalizationTmps) {
-                                                        outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
+                                                        outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
                                                     }
                                                 }
                                             }
