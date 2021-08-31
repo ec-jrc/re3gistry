@@ -61,11 +61,11 @@
     <input type="hidden" name="<%=BaseConstants.KEY_REQUEST_NEWSTATUSLOCALID%>" value="<%=newRegStatus.getLocalid()%>" />
     <input type="hidden" name="<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID%>" value="<%=currentLanguage.getUuid()%>" />    
     <div class="modal-header">
-        You are about to change the status to: <%=newRegStatus.getLocalid()%>.
+        ${localization.getString("label.changestatus")}: <%=newRegStatus.getLocalid()%>.
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label for="successor">Select successor(s):</label>
+            <label for="successor">${localization.getString("label.selectsuccesor")}:</label>
             <select class="selectpicker form-control" name="<%=BaseConstants.KEY_REQUEST_SUCCESSORS%>" multiple data-live-search="true">
                 <% for (RegItem tmp : regItems) {
                         List<RegLocalization> tmpLoc = regLocalizationManager.getAll(regFieldLabel, tmp, currentLanguage);
@@ -79,10 +79,10 @@
     </div>
     <div class="modal-footer">
         <div class="col-sm-6">
-            <button type="button" class="btn btn-secondary width100" data-dismiss="modal"><i class="fas fa-ban"></i> Close</button>
+            <button type="button" class="btn btn-secondary width100" data-dismiss="modal"><i class="fas fa-ban"></i> ${localization.getString("label.close")}</button>
         </div>
         <div class="col-sm-6">
-            <button type="submit" class="btn btn-primary width100 d-none" id="saveSuccessor"><i class="far fa-save"></i> Save changes</button>
+            <button type="submit" class="btn btn-primary width100 d-none" id="saveSuccessor"><i class="far fa-save"></i> ${localization.getString("label.savechanges")}</button>
         </div>
     </div>
 </form>
