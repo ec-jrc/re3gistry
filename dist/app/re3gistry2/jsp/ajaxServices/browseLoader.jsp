@@ -262,8 +262,8 @@
     <% if (showChangesBar) { %>
     <div class="row">
         <div class="col-sm-4"></div>
-        <div class="col-sm-4"><div class="box-arrow-down alert-info">Proposed</div></div>
-        <div class="col-sm-4"><div class="box-arrow-down alert-success">Current</div></div>
+        <div class="col-sm-4"><div class="box-arrow-down alert-info">${localization.getString("label.proposed")}</div></div>
+        <div class="col-sm-4"><div class="box-arrow-down alert-success">${localization.getString("label.current")}</div></div>
     </div>
     <% } %>
 
