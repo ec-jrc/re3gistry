@@ -359,6 +359,10 @@
                             <%-- Do nothing: the date will be automatically created later --%>
 
                         <% } else {
+                              if (regFieldmapping.getMultivalue()) {
+			      %><ul class="field-list data-list<%=(regFieldmapping.getRequired()) ? " field-list-required" : ""%>"></ul>
+			      <a href=\"#\" data-requiredadd="requiredadd" class="btn btn-xs btn-success pull-right btn-value-add<%=(regFieldmapping.getRequired()) ? " add-required" : ""%>"<%=((regFieldmapping.getMultivalue()) ? " data-" + WebConstants.DATA_PARAMETER_MULTIVALUEDFIELD + "=\"true\"" : "")%> data-<%=WebConstants.DATA_PARAMETER_LANGUAGECONEUUID%>="<%=regLanguagecode.getUuid()%>" data-<%=WebConstants.DATA_PARAMETER_FIELDMAPPINGUUID%>="<%=regFieldmapping.getUuid()%>" data-<%= WebConstants.DATA_PARAMETER_ITEMUUID%>="<%= regItem.getUuid()%>" data-<%=BaseConstants.KEY_REQUEST_NEWITEMINSERT%>="<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>"><%=localization.getString("label.add")%></a><%
+                              } else {
                             if (regFieldmapping.getRequired()) {
                         %><div class="input-group"><%
                             }
@@ -377,6 +381,7 @@
                             </div>
                         </div><%
                                 }
+                            }
                             }
                         %>
                     </div>
@@ -428,6 +433,12 @@
         <%@include file="includes/pageend.inc.jsp" %>
 
         <script>
+            //  Add value button handler
+            $(document).on("click", ".btn-value-add", function (e) {
+              e.preventDefault();
+              var fieldMappingUuid = $(this).data("<%=WebConstants.DATA_PARAMETER_FIELDMAPPINGUUID%>");
+              getAddValueString(fieldMappingUuid, $(this));
+            }); 
             // Add relation button handler
             $(document).on("click", ".btn-relation-add", function (e) {
                 e.preventDefault();
