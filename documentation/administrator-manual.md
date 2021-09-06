@@ -128,7 +128,7 @@ Once the installation is finished, the user is redirected to the login page.
 
 In case the "Migration" option is chosen, the details of the database from the existing Re3gistry installation are requested.
 
-Fill the fileds requested and click to the "Save and continue" button. You will then get a page containing a summary of the data retrieved in the existing instance of the Re3gistry.
+Fill the fields requested and click to the "Save and continue" button. You will then get a page containing a summary of the data retrieved in the existing instance of the Re3gistry.
 
 ![Installation wizard - Migration summary](images/init-migration.png)
 
@@ -136,7 +136,7 @@ Click on "Install" to begin the migration. An information page will be shown. No
 
 #### RSS release note
 
-To set up the RSS release note automatic generation, you need to copy the examle "release-note.xml" file (available in dist/app/re3gistry2/WEB-INF/classes) to the RSS path defined in the init.properties file (at the beginning of the installation). 
+To set up the RSS release note automatic generation, you need to copy the example "release-note.xml" file (available in dist/app/re3gistry2/WEB-INF/classes) to the RSS path defined in the init.properties file (at the beginning of the installation). 
 
 ## Installing the example service frontend
 
@@ -156,11 +156,11 @@ The first step to install the webapp is to copy the files contained in the folde
 
 Once the files have been copied, the configuration files needs to be customized. The configuration files can be found at [webapp-root]/conf/conf.js.
 
-Every configuration entry is well documented with inline comment. An important part to be customized is the one where all the required URL are specified ("The app's base URLs").
+Every configuration entry is well documented with inline comments. An important part to be customized is the one where all the required URL are specified ("The app's base URLs").
 
 #### Configuring the HTTP server
 
-The webapp contains also an example configuration files fot the Apache HTTP server. 
+The webapp contains also an example configuration files for the Apache HTTP server. 
 This file may needs some customization based on your OS and Apache version.
 
 The Apache configuration file (apache-example-configuration.conf) can be found in the [webapp](../dist/webapp/) folder.

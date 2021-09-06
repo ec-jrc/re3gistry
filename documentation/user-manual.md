@@ -2,7 +2,7 @@
 
 ## Scope
 
-This manual is intended for users that are using an instance of the Re3gistry 2 softwaree to manage and publish reference codes.
+This manual is intended for users that are using an instance of the Re3gistry 2 software to manage and publish reference codes.
 
 The following documentation focuses on how to make use of the Re3gistry 2 software. For information on how to install or configure the software, refer to the [Administrator documentation](administrator-manual.md).
 
@@ -44,7 +44,7 @@ The Re3gistry 2 is released under the [European Union Public License - EUPL v.1.
 
 ### Acknowledgments
 
-The development of this tool has been funded by the European Iinteroperability Programme ISA2 though the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/elise-re3gistry-software). The European Location Interoperability Solutions for e-Government (ELISE) Action aims at Enabling Digital Government through Geospatial Data and Location Intelligence.
+The development of this tool has been funded by the European Interoperability Programme ISA2 though the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/elise-re3gistry-software). The European Location Interoperability Solutions for e-Government (ELISE) Action aims at Enabling Digital Government through Geospatial Data and Location Intelligence.
 
 This new version of the software has been developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en). 
 
@@ -98,7 +98,7 @@ An example on roles and groups assignment is provided in the following box.
 
 **Mapping**
 
-| Register | Register owner | Registe manager | Control body | Submitting organisation |
+| Register | Register owner | Register manager | Control body | Submitting organisation |
 |---|---|---|---|---|
 | Vegetables | Organisation A | Organisation A  | Organisation B | Organisation D |
 | Fruits | Organisation E | Organisation A  | Organisation C | Organisation B, Organisation D |
@@ -151,7 +151,7 @@ In the Re3gistry 2 software, the submitting organisations can use the editing in
 * to propose the addition of new codes
 * to change the status of the reference codes.
 
-The submitting organisations can only propose change at the reference codes level. Only the **registry manager**, as overall adminisrator can act at the registry and register level.
+The submitting organisations can only propose change at the reference codes level. Only the **registry manager**, as overall administrator can act at the registry and register level.
 
 Any action performed by a submitting organisation requires the review and approval by the control body to be applied.
 
@@ -176,7 +176,7 @@ Detailed information on each of the possible status is available in the next par
 
 A reference code is in "draft" status when a **change** is proposed by a **submitting organisation** but has not yet been submitted to the **control body**.
 
-Items in draft status can only be edited by the user who started the chang proposal.
+Items in draft status can only be edited by the user who started the change proposal.
 
 ### Submitted
 
@@ -222,9 +222,9 @@ Check next which are the available editing functionalities by user role.
 
 To be able to edit and manage the reference codes contained in a register, the user shall be associated with a **group** set as **"submitting organisation"** for that specific register.
 
-In the next image are shown on the left the list of **roles** and on the right, the **group** assigned to each role for that specific register, in the example being "INSPIRE code lisr register". The group with the "Submitting organisation" role in this case is "Example submitting organisation". 
+In the next image are shown on the left the list of **roles** and on the right, the **group** assigned to each role for that specific register, in the example being "INSPIRE code list register". The group with the "Submitting organisation" role in this case is "Example submitting organisation". 
 
-![Rolea and groups for a register](images/functionalities-role-groups.png)
+![Roles and groups for a register](images/functionalities-role-groups.png)
 
 The actions available for the "submitting organisation" role are listed below.
 
@@ -236,7 +236,7 @@ The change of an existing reference code is done directly using the **input box*
 
 ##### Register federation export
 
-The editing interface is providng also a flag to allow the system to expose the reference code in the RoR format. In this way it can eventually be imported in the [INSPIRE register fedderation](https://inspire-regadmin.jrc.ec.europa.eu/ror/).
+The editing interface provides also a flag to allow the system to expose the reference code in the RoR format. In this way it can eventually be imported in the [INSPIRE register federation](https://inspire-regadmin.jrc.ec.europa.eu/ror/).
 
 ##### Add new reference codes
 
@@ -260,7 +260,7 @@ The users having the "registry manager" role can use this interface to edit the 
 
 ##### Edit registry information
 
-The registry related information can uniquely be modified by a user with the registry manager role. **These changes do not need to undergo the chenge proposal workflow**.
+The registry related information can uniquely be modified by a user with the registry manager role. **These changes do not need to undergo the change proposal workflow**.
 
 ##### Add a new register
 
@@ -285,8 +285,8 @@ A content class is automatically created every time that a new register is creat
 The content classes help shaping the "data model" of the entities available in the system. For instance, they help define each of the **fields** that will be available for a reference code; the same mechanism is used to define the fields related to a register or even the registry itself. 
 
 By managing the content classes details it is possible to:
-* set the order of the fields to be displied in the user interface,
-* select which fields should be visibile or hidden and
+* set the order of the fields to be displayed in the user interface,
+* select which fields should be visible or hidden and
 * manage other properties related to that field.
 
 ![Structure section - Content class page](images/structure-mainpage.png)
@@ -301,7 +301,7 @@ The **field management** page shows all the fields that are currently available 
 
 #### Ordering a field
 
-The first column of the table, "Display order", is responsible for managing the order where to place a field. The user can easily reorder each field by using the grag and drop feature. 
+The first column of the table, "Display order", is responsible for managing the order where to place a field. The user can easily reorder each field by using the drag and drop feature. 
 
 The order set here will be reflected both in the editing interface and in the public web application.
 
@@ -317,7 +317,7 @@ The fields' table allows to customise different properties for each field.
 
 ##### Is hyperlinked
 
-By checking this box, the system will know that the field has to be hiperlinked. If checked, two fields will be requested to be completed: the label and the URL.
+By checking this box, the system will know that the field has to be hyperlinked. If checked, two fields will be requested to be completed: the label and the URL.
 
 This property is only available for the fields of type **text** or **long text** (except the label that cannot have links).
 
@@ -351,7 +351,7 @@ For each **content class**, there is the possibility to define additional fields
 
 All the fields created in the system for a specific entity (reference code, register, registry) can be reused by other entities. For example, if a "description" field is created for register x, it can be then reused for register y without the need of creating a new one from scratch.
 
-To this purpose, in the "Add field" page the user can select any of the fields available from a list of and reuse it in the selected **content classs**.
+To this purpose, in the "Add field" page the user can select any of the fields available from a list of and reuse it in the selected **content class**.
 
 If the field is not available in the list, the user can still create using the next option "**Create a new field**".
 
@@ -391,7 +391,7 @@ When the relation reference type is selected, the system will ask to match the c
 
 ##### Date creation and Date edit 
 
-These two content types are authomatically calculated by the system to determine the date of creation or date of update.
+These two content types are automatically calculated by the system to determine the date of creation or date of update.
 
 These fields provide metadata information on the reference code management that often are useful to be shown in the public interface
 
@@ -401,7 +401,7 @@ The submitting organisation tan contains the details of the actions done by the 
 
 The actions of proposed changes are grouped by register.
 
-A submitting organisation user can discard the proposal unless this has already been bubmitted to the control body. If the "**discard**" button is clicked, a confirmation will be asked to the user.
+A submitting organisation user can discard the proposal unless this has already been submitted to the control body. If the "**discard**" button is clicked, a confirmation will be asked to the user.
 
 ![Menu item, submitting organisations](images/menu-submittingorganisations.png)
 
@@ -454,7 +454,7 @@ In case the submitting organisation does not want to implement the changes, ther
 
 #### Reject changes
 
-The **control body** can reject the proposals reveived by a submitting organisation if deemed so; in this case, a justification should be written in the prompted window.
+The **control body** can reject the proposals received by a submitting organisation if deemed so; in this case, a justification should be written in the prompted window.
 
 ### Register manager tab
 
