@@ -45,7 +45,7 @@ import org.apache.logging.log4j.Logger;
 public class CacheServlet extends HttpServlet {
 
     static final String ATTRIBUTE_CACHE_KEY = "re3gistry-rest-api-cache";
-    private static final Logger LOG = LogManager.getLogger(ItemsServlet.class.getName());
+    private static final Logger LOG = LogManager.getLogger(CacheServlet.class.getName());
     private static final long serialVersionUID = 1L;
 
     private static ItemCache cache;
