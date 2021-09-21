@@ -29,7 +29,7 @@
             <scope>provided</scope>
         </dependency>-->
         <dependency>
-            <!-- if not available in the local repository, try to execute the "validate" goal configurated in this POM -->
+            <!-- if not available in the local repository, execute the "initialize" goal configured in this POM -->
             <groupId>eu.cec.digit.ecas</groupId>
             <artifactId>ecas-tomcat-7.0</artifactId>
             <version>4.26.0</version>
