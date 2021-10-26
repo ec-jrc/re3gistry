@@ -57,7 +57,7 @@ public class RegistryRealm extends JdbcRealm {
                 user = regUserManager.findByEmail(username);
             } catch (Exception ex) {
                 user = null;
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
             }
 
             if (user == null) {
@@ -70,7 +70,7 @@ public class RegistryRealm extends JdbcRealm {
 
             return info;
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             return null;
         }
     }

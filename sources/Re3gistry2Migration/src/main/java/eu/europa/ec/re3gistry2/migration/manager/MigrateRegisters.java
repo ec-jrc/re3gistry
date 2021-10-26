@@ -188,7 +188,7 @@ public class MigrateRegisters {
                             entityManagerRe3gistry2.getTransaction().commit();
                         }
                     } catch (Exception ex) {
-                        logger.error(ex.getMessage());
+                        logger.error(ex.getMessage(), ex);
                         throw new Exception(ex.getMessage());
                     }
 
@@ -198,7 +198,7 @@ public class MigrateRegisters {
                         }
                         entityManagerRe3gistry2.getTransaction().commit();
                     } catch (Exception ex) {
-                        logger.error(ex.getMessage());
+                        logger.error(ex.getMessage(), ex);
                         throw new Exception(ex.getMessage());
                     }
 
@@ -262,7 +262,7 @@ public class MigrateRegisters {
                         entityManagerRe3gistry2.getTransaction().commit();
                     }
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.getMessage(), ex);
                     throw new Exception(ex.getMessage());
                 }
             }
@@ -289,7 +289,7 @@ public class MigrateRegisters {
                         entityManagerRe3gistry2.getTransaction().commit();
                     }
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.getMessage(), ex);
                     throw new Exception(ex.getMessage());
                 }
             }
@@ -334,7 +334,7 @@ public class MigrateRegisters {
             }
             return regItemclass;
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new Exception(ex.getMessage());
         }
     }

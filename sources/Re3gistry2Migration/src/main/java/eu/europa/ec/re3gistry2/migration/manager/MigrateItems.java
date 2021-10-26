@@ -132,7 +132,7 @@ public class MigrateItems {
                         RegItemclasstype regItemclasstypeItem = regItemclasstypeManager.getByLocalid("item");
                         regItemclass = addRegItemClassByItemclass(itemclass, procedureorder, regItemclasstypeItem, commit);
                     } catch (Exception ex) {
-                        logger.error(ex.getMessage());
+                        logger.error(ex.getMessage(), ex);
                         throw new Exception(ex.getMessage());
                     }
                 }
@@ -163,7 +163,7 @@ public class MigrateItems {
                     }
                     entityManagerRe3gistry2.getTransaction().commit();
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.getMessage(), ex);
                     throw new Exception(ex.getMessage());
                 }
                 /**
@@ -207,7 +207,7 @@ public class MigrateItems {
                                 }
                             }
                         } catch (Exception ex) {
-                            logger.error(ex.getMessage());
+                            logger.error(ex.getMessage(), ex);
                             throw new Exception(ex.getMessage());
                         }
 
@@ -217,13 +217,13 @@ public class MigrateItems {
                             }
                             entityManagerRe3gistry2.getTransaction().commit();
                         } catch (Exception ex) {
-                            logger.error(ex.getMessage());
+                            logger.error(ex.getMessage(), ex);
                             throw new Exception(ex.getMessage());
                         }
 
                     }
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.getMessage(), ex);
                 }
             }
 
@@ -316,7 +316,7 @@ public class MigrateItems {
                 }
                 entityManagerRe3gistry2.getTransaction().commit();
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
                 throw new Exception(ex.getMessage());
             }
 
@@ -370,7 +370,7 @@ public class MigrateItems {
                         }
                         entityManagerRe3gistry2.getTransaction().commit();
                     } catch (Exception ex) {
-                        logger.error(ex.getMessage());
+                        logger.error(ex.getMessage(), ex);
                         throw new Exception(ex.getMessage());
                     }
                 }
@@ -443,7 +443,7 @@ public class MigrateItems {
                         }
                         entityManagerRe3gistry2.getTransaction().commit();
                     } catch (Exception ex) {
-                        logger.error(ex.getMessage());
+                        logger.error(ex.getMessage(), ex);
                         throw new Exception(ex.getMessage());
                     }
                 }
@@ -484,7 +484,7 @@ public class MigrateItems {
             regItem = regItemManager.get(uuid);
 
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new Exception(ex.getMessage());
         }
         return regItem;
@@ -520,7 +520,7 @@ public class MigrateItems {
             regItemhistory = regItemhistoryManager.get(uuid);
 
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new Exception(ex.getMessage());
         }
         return regItemhistory;
@@ -587,7 +587,7 @@ public class MigrateItems {
                 entityManagerRe3gistry2.getTransaction().commit();
             }
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new Exception(ex.getMessage());
         }
         return regItemclass;
@@ -730,7 +730,7 @@ public class MigrateItems {
                     throw new Exception(ex.getMessage());
                 }
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
                 throw new Exception(ex.getMessage());
             }
         }
@@ -825,7 +825,7 @@ public class MigrateItems {
                     throw new Exception(ex.getMessage());
                 }
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
             }
         }
 
@@ -877,7 +877,7 @@ public class MigrateItems {
                     entityManagerRe3gistry2.getTransaction().commit();
                 }
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
                 throw new Exception(ex.getMessage());
             }
         }

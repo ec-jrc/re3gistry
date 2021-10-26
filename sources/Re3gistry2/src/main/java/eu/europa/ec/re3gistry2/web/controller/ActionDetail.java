@@ -62,7 +62,7 @@ public class ActionDetail extends HttpServlet {
         try {
             regAction = regActionManager.get(actionUUID);
         } catch (NoResultException e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
         }
 
         // Setting the RegAction parameter
@@ -79,7 +79,7 @@ public class ActionDetail extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -89,7 +89,7 @@ public class ActionDetail extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 }

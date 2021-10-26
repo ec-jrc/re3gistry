@@ -163,7 +163,7 @@ public class AddRegister extends HttpServlet {
                     }
 
                 } catch (NoResultException e) {
-                    logger.error(e.getMessage());
+                    logger.error(e.getMessage(), e);
                     // Setting the operation success attribute
                     operationResult = localization.getString("error.generic");
                     request.setAttribute(BaseConstants.KEY_REQUEST_OPERATIONRESULT, operationResult);
@@ -231,7 +231,7 @@ public class AddRegister extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -241,7 +241,7 @@ public class AddRegister extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 }

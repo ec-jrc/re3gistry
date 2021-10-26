@@ -174,7 +174,7 @@ public class UserProfile extends HttpServlet {
                     request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_USERPROFILE + WebConstants.PAGE_URINAME_USERPROFILE + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 
                 } catch (Exception e) {
-                    logger.error(e);
+                    logger.error(e.getMessage(), e);
                     // Redirecting to the index page
                     response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
                 }
@@ -208,7 +208,7 @@ public class UserProfile extends HttpServlet {
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_REGISTRYMANAGER_USERS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_USERS + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 
             } catch (Exception e) {
-                logger.error(e);
+                logger.error(e.getMessage(), e);
                 // Redirecting to the RegItemclasses list page
                 response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
             }
@@ -224,7 +224,7 @@ public class UserProfile extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -234,7 +234,7 @@ public class UserProfile extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 }

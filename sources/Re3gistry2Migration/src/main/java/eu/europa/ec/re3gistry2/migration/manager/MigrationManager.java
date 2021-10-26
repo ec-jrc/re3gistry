@@ -137,7 +137,7 @@ public class MigrationManager {
                     entityManagerRe3gistry2.getTransaction().rollback();
                 }
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
                 throw new Exception(ex.getMessage());
             }
             throw new Exception(e.getMessage());
@@ -304,7 +304,7 @@ public class MigrationManager {
                 entityManagerRe3gistry2.getTransaction().commit();
             }
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new Exception(ex.getMessage());
         }
     }

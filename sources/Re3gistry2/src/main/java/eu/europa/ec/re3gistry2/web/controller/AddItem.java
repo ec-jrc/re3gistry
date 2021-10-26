@@ -231,7 +231,7 @@ public class AddItem extends HttpServlet {
                         } catch (Exception e) {
                             String operationResult = e.getMessage();
                             request.setAttribute(BaseConstants.KEY_REQUEST_OPERATIONRESULT, operationResult);
-                            logger.error(e);
+                            logger.error(e.getMessage(), e);
                         }
 
                         // Redirecting to the Item container page
@@ -299,7 +299,7 @@ public class AddItem extends HttpServlet {
                 // Redirecting to the Item container page
                 response.sendRedirect("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid);
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                logger.error(e.getMessage(), e);
             }
         } else {
             response.sendRedirect("." + WebConstants.PAGE_URINAME_BROWSE);
@@ -312,7 +312,7 @@ public class AddItem extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -322,7 +322,7 @@ public class AddItem extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 }

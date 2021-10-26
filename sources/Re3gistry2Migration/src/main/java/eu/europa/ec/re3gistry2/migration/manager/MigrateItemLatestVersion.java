@@ -325,7 +325,7 @@ public class MigrateItemLatestVersion {
                     }
 
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.getMessage(), ex);
                 }
             } else {
                 /**
@@ -569,10 +569,10 @@ public class MigrateItemLatestVersion {
                     entityManagerRe3gistry2.getTransaction().commit();
                 }
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
             }
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new Exception(ex.getMessage());
         }
     }
@@ -606,10 +606,10 @@ public class MigrateItemLatestVersion {
                     entityManagerRe3gistry2.getTransaction().commit();
                 }
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
             }
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new Exception(ex.getMessage());
         }
     }

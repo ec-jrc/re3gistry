@@ -137,7 +137,7 @@ public class RegActionHandler {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
             }
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -238,7 +238,7 @@ public class RegActionHandler {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
             }
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -278,7 +278,7 @@ public class RegActionHandler {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
             }
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -354,7 +354,7 @@ public class RegActionHandler {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
             }
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -434,7 +434,7 @@ public class RegActionHandler {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
             }
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         } finally {
             if (entityManager != null) {
                 if (entityManager.isOpen()) {
@@ -465,7 +465,7 @@ public class RegActionHandler {
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
             }
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();

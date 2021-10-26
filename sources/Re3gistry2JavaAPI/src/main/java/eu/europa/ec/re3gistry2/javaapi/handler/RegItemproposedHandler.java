@@ -450,7 +450,7 @@ public class RegItemproposedHandler {
             }
             /* ## End Synchronized ## */
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -958,7 +958,7 @@ public class RegItemproposedHandler {
 
         } catch (NoResultException e) {
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
         } finally {
             entityManager.close();
         }
@@ -1501,7 +1501,7 @@ public class RegItemproposedHandler {
             } catch (NoResultException e) {
                 // The form field is not a RegField: no action needed
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                logger.error(e.getMessage(), e);
             }
         }
 
