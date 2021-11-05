@@ -26,6 +26,8 @@ package eu.europa.ec.re3gistry2.web.controller;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
+import eu.europa.ec.re3gistry2.base.utility.Configuration;
+
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
@@ -47,12 +49,15 @@ public class LoadSalt implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        Configuration.getInstance().getLogger().trace("Start filter " + ValidateSalt.class.getName());
+      
         HttpServletRequest httpReq = (HttpServletRequest) request;
 
         // Check the user session for the salt cache, if none is present we create one
         Cache<String, Boolean> csrfPreventionSaltCache = (Cache<String, Boolean>) httpReq.getSession().getAttribute(BaseConstants.KEY_REQUEST_CSRF_PREVENTIONSALTCACHE);
 
         if (csrfPreventionSaltCache == null) {
+            Configuration.getInstance().getLogger().trace("Creating CSRF prevention salt cache");
             csrfPreventionSaltCache = CacheBuilder.newBuilder()
                     .maximumSize(5000)
                     .expireAfterWrite(20, TimeUnit.MINUTES)
@@ -61,6 +66,7 @@ public class LoadSalt implements Filter {
             httpReq.getSession().setAttribute(BaseConstants.KEY_REQUEST_CSRF_PREVENTIONSALTCACHE, csrfPreventionSaltCache);
         }
 
+        Configuration.getInstance().getLogger().trace("Generate the salt, store it in the users cache, and add it to the current request");
         // Generate the salt and store it in the users cache
         String salt = RandomStringUtils.random(20, 0, 0, true, true, null, new SecureRandom());
         csrfPreventionSaltCache.put(salt, Boolean.TRUE);
