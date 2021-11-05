@@ -81,7 +81,13 @@ public class Install extends HttpServlet {
         }
 
         if (step.equals(BaseConstants.KEY_REQUEST_CLEAN_INSTALLATION_PROFILE)) {
+          try {
             new RegInstallationStepCleanInstallationProfileHandler(request);
+          } catch (Exception ex) {
+            Configuration.getInstance().getLogger().error(ex.getMessage(), ex);
+            step = "3";
+            request.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_CLEAN_DB_ERROR, ex.getMessage());
+          }
         }
 
         boolean lastStep = false;
