@@ -92,7 +92,7 @@ The last step is to start tomcat.
 
 ### Installation wizard
 
-To start the installation wizard, visit the following address: `http://<tomcat-url>:<tomcat-port>/re3gistry2/install` (e.g. `http://localhost:8080/re3gistry2/install`).
+To start the installation wizard, visit the following address: `http://<tomcat-url>:<tomcat-port>/re3gistry2/install` (e.g. `http://localhost:8080/re3gistry2/install`). Note: do not visit `http://<tomcat-url>:<tomcat-port>/re3gistry2`, as the welcome page of the application is `http://localhost:8080/re3gistry2/login` (see sources/Re3gistry2/src/main/webapp/WEB-INF/web.xml), and that page should only be visited after a successful installation.
 
 The first page is just an introductory description. Click on "continue".
 
@@ -105,7 +105,7 @@ The next step allows you to choose between 2 options:
 *  Installation: choose this option if you want to install the Re3gistry software for the first time and to create a registry from scratch
 * Migration: choose this option if you want to upgrade a preexisting Re3gistry instance. This option will keep your settings and content. Note that this option **will work only on an existing instance running on Re3gistry version 1.3.X**.
 
-#### Installaion option
+#### Installation option
 
 In case the "Installation" option is chosen, the basic configuration for the new registry will be requested.
 
