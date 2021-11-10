@@ -96,13 +96,13 @@ public class MigrateLanguage {
                     entityManagerRe3gistry2.merge(reglanguagecode);
                     entityManagerRe3gistry2.getTransaction().commit();
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.getMessage(), ex);
                 }
             }
             addLanguageIfNotExistent(languagecodeList, reglanguagecodeSet);
 
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -128,7 +128,7 @@ public class MigrateLanguage {
                     entityManagerRe3gistry2.persist(regLanguagecode);
                     entityManagerRe3gistry2.getTransaction().commit();
                 } catch (Exception ex) {
-                    logger.error(ex.getMessage());
+                    logger.error(ex.getMessage(), ex);
                 }
             }
         }

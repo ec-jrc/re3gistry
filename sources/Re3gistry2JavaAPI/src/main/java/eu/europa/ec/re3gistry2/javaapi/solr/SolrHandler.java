@@ -107,7 +107,7 @@ public class SolrHandler {
             return true;
 
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             deleteSolrCompleteIndexinglRunningFile();
             return false;
         }
@@ -140,7 +140,7 @@ public class SolrHandler {
             return true;
 
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             deleteSolrCompleteIndexinglRunningFile();
             return false;
         }
@@ -173,7 +173,7 @@ public class SolrHandler {
                     .build();
 
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             return null;
         }
     }
@@ -317,7 +317,7 @@ public class SolrHandler {
             return documents;
 
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             return null;
         }
     }

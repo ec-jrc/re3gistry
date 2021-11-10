@@ -148,7 +148,7 @@ public class RegistryManagerGroups extends HttpServlet {
                     }
 
                 } catch (Exception e) {
-                    logger.error(e.getMessage());
+                    logger.error(e.getMessage(), e);
                 }
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
             }
@@ -196,7 +196,7 @@ public class RegistryManagerGroups extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -206,7 +206,7 @@ public class RegistryManagerGroups extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 }

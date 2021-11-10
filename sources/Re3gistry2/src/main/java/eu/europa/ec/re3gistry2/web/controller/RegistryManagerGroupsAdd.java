@@ -143,7 +143,7 @@ public class RegistryManagerGroupsAdd extends HttpServlet {
                     result = regGroupHandler.addGroup(newGroup,regUser);
 
                 } catch (Exception e) {
-                    logger.error(e.getMessage());
+                    logger.error(e.getMessage(), e);
                 }
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
             }
@@ -173,7 +173,7 @@ public class RegistryManagerGroupsAdd extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -183,7 +183,7 @@ public class RegistryManagerGroupsAdd extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 }

@@ -153,7 +153,7 @@ public class MailManager {
             Transport.send(msg);
 
         } catch (MessagingException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             throw new MessagingException(e.getMessage());
         }
     }

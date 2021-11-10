@@ -143,7 +143,7 @@ public class DiscardProposal extends HttpServlet {
                     redirectURI = "." + WebConstants.PAGE_PATH_SUBMITTINGORGANISATIONS + WebConstants.PAGE_URINAME_SUBMITTINGORGANISATIONS;
 //                    request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_SUBMITTINGORGANISATIONS + WebConstants.PAGE_URINAME_SUBMITTINGORGANISATIONS + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
                 } catch (NoResultException e) {
-                    logger.error(e);
+                    logger.error(e.getMessage(), e);
                 }
             } else //                    discard item
             if (regItemproposedUUID != null && !regItemproposedUUID.isEmpty()) {
@@ -233,7 +233,7 @@ public class DiscardProposal extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -243,7 +243,7 @@ public class DiscardProposal extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 }

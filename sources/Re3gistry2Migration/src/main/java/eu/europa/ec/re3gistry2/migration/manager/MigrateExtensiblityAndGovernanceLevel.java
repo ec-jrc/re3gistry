@@ -556,7 +556,7 @@ public class MigrateExtensiblityAndGovernanceLevel {
                     entityManagerRe3gistry2.getTransaction().commit();
                 }
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
                 throw new Exception(ex.getMessage());
             }
 

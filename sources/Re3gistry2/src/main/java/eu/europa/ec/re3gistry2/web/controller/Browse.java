@@ -90,7 +90,7 @@ public class Browse extends HttpServlet {
             mainRegistryItemclassLocalId = properties.getProperty("application.multiregistry.mainregistryitemclasslocalid");
             mainRegistryLocalId = properties.getProperty("application.multiregistry.mainregistrylocalid");
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
 
         // Setup the entity manager
@@ -310,7 +310,7 @@ public class Browse extends HttpServlet {
                     try {
                         regItemproposedHandler.handleRegItemproposedSave(requestParameters, regUser);
                     } catch (Exception e) {
-                        logger.error(e);
+                        logger.error(e.getMessage(), e);
                         saveError = true;
                     }
                 } else if (regItemproposed != null && ( // Permission to edit Registers and items
@@ -328,7 +328,7 @@ public class Browse extends HttpServlet {
                     try {
                         regItemproposedHandler.handleRegItemproposedNewSave(requestParameters, regUser);
                     } catch (Exception e) {
-                        logger.error(e);
+                        logger.error(e.getMessage(), e);
                         saveError = true;
                     }
                 }
@@ -385,7 +385,7 @@ public class Browse extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
             response.sendRedirect(".");
         } finally {
             if (entityManager.isOpen()) {
@@ -404,7 +404,7 @@ public class Browse extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -414,7 +414,7 @@ public class Browse extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            logger.error(ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 }
