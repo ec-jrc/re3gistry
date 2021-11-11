@@ -55,6 +55,7 @@
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>
                 <application.rooturl>https://localhost/r3egistry2</application.rooturl> 
 				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+				<web.session.cookie.secure>true</web.session.cookie.secure>
             </properties>
         </profile>        
         <!-- Server profile -->
@@ -69,6 +70,7 @@
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>            
                 <application.rooturl>https://registry-test.eu/re3gistry2</application.rooturl>
                 <application.solr.isactive>false</application.solr.isactive>        
+                <web.session.cookie.secure>true</web.session.cookie.secure>
             </properties>
         </profile>     
     </profiles>
