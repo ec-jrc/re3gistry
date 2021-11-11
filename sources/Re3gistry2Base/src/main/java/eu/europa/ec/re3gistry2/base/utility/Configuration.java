@@ -159,20 +159,28 @@ public class Configuration {
     }
 
     public void initServlet(HttpServletRequest request, HttpServletResponse response, boolean fromInstall, boolean fromInstalling) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Configuration.getInstance().getLogger().debug("Start initialising servlet; session id: " + session.getId());
+        
         //Check installation
 
         // If the system is installed and the user tries to access the 
         // installation, he is redirected to the login
         if (checkInstallation() && (fromInstall || fromInstalling)) {
+          Configuration.getInstance().getLogger().trace("Redirecting to " + "." + WebConstants.PAGE_URINAME_LOGIN);
             response.sendRedirect("." + WebConstants.PAGE_URINAME_LOGIN);
         } else // If the system is installed and the user tries to access the 
         // installation, he is redirected to the login
         if (checkInstallRunning() && !fromInstalling) {
+          Configuration.getInstance().getLogger().trace("Redirecting to " + "." + WebConstants.PAGE_URINAME_INSTALL_RUNNING);
             response.sendRedirect("." + WebConstants.PAGE_URINAME_INSTALL_RUNNING);
         } else // If the system is not installed, and it is not installing every request is redirected to the installation
         if (!checkInstallation() && !checkInstallRunning() && !fromInstall) {
+          Configuration.getInstance().getLogger().trace("Redirecting to " + "." + WebConstants.PAGE_URINAME_INSTALL);
             response.sendRedirect("." + WebConstants.PAGE_URINAME_INSTALL);
         } else {
+            Configuration.getInstance().getLogger().trace("Proceed initialising servlet");
+          
             //Init properties
             Properties prop = Configuration.getInstance().getProperties();
             request.setAttribute(BaseConstants.KEY_REQUEST_PROPERTIES, prop);
@@ -182,30 +190,33 @@ public class Configuration {
             request.setAttribute(BaseConstants.KEY_REQUEST_LOCALIZATION, loc);
 
             //Init available languages in the session if needed
-            if (request.getSession().getAttribute(BaseConstants.KEY_SESSION_AVAILABLELANGUAGES) == null) {
+            if (session.getAttribute(BaseConstants.KEY_SESSION_AVAILABLELANGUAGES) == null) {
                 List<Localization> availableLanguages = new ArrayList<>(LocalizationMgr.getAvailableLanguages());
-                request.getSession().setAttribute(BaseConstants.KEY_SESSION_AVAILABLELANGUAGES, availableLanguages);
+                session.setAttribute(BaseConstants.KEY_SESSION_AVAILABLELANGUAGES, availableLanguages);
                 request.setAttribute(BaseConstants.KEY_SESSION_AVAILABLELANGUAGES, availableLanguages);
             } else {
-                request.setAttribute(BaseConstants.KEY_REQUEST_AVAILABLELANGUAGES, request.getSession().getAttribute(BaseConstants.KEY_SESSION_AVAILABLELANGUAGES));
+                request.setAttribute(BaseConstants.KEY_REQUEST_AVAILABLELANGUAGES, session.getAttribute(BaseConstants.KEY_SESSION_AVAILABLELANGUAGES));
             }
 
             String uri = request.getRequestURI();
             String currentPageName = "/" + uri.substring(uri.lastIndexOf("/") + 1);
             request.setAttribute(BaseConstants.KEY_REQUEST_CURRENTPAGENAME, currentPageName);
+            Configuration.getInstance().getLogger().debug("Current page name=" + currentPageName);
 
-            HttpSession session = request.getSession();
 
             //Getting logged user
             RegUser regUser = (RegUser) session.getAttribute(BaseConstants.KEY_SESSION_USER);
 
             if (regUser == null) {
+                Configuration.getInstance().getLogger().trace("No " + BaseConstants.KEY_SESSION_USER + " found in the session, checking user");
                 regUser = UserHelper.checkUser(request);
             }
 
             if (regUser != null) {
+                Configuration.getInstance().getLogger().trace("User found using checkUser: " + regUser);
                 request.setAttribute(BaseConstants.KEY_REQUEST_REGUSER, regUser);
             } else {
+                Configuration.getInstance().getLogger().trace("No user found");
                 if (!fromInstall && !fromInstalling) {
                     request.setAttribute(BaseConstants.KEY_REQUEST_REGUSER, null);
                     //request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);

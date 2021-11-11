@@ -3,8 +3,14 @@
     <display-name>Re3gistry2</display-name>
     <session-config>
         <cookie-config>
+            <!-- A cookie with the HttpOnly attribute is inaccessible to the JavaScript Document.cookie API; it's only sent to the server. -->
             <http-only>true</http-only>
-            <secure>true</secure>
+            <!-- A cookie with the Secure attribute is only sent to the server with an encrypted request over the HTTPS protocol. 
+            It is strongly recommended to set this to true in a production environment; it may be set to false in an internal test environment
+            where HTTP is used instead of HTTPS. -->
+            <secure>${web.session.cookie.secure}</secure>
+            <!-- See more info on https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#restrict_access_to_cookies
+            and on on https://www.freecodecamp.org/news/session-hijacking-and-how-to-stop-it-711e3683d1ac/ -->
         </cookie-config>
     </session-config>
     <!--Configurations-->
