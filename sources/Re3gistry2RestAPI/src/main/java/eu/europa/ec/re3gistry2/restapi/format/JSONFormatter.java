@@ -225,7 +225,7 @@ public class JSONFormatter implements Formatter {
         VersionInformation version = item.getVersion();
 
         regItemJsonObject.put("id", item.getUri());
-        regItemJsonObject.put("thisversion", version.getUri() + ":" + version.getNumber());
+        regItemJsonObject.put("thisversion", version.getUri());
         regItemJsonObject.put("latestversion", item.getUri());
         if (!versionHistory.isEmpty()) {
             JSONArray previousversionsArray = new JSONArray();
