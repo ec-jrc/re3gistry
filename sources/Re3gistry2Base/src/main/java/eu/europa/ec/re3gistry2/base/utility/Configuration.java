@@ -44,6 +44,7 @@ public class Configuration {
     private static Configuration instance;
     private static Properties properties;
     private static Logger logger;
+    private static String pathHelperFiles;
     private ResourceBundle localization;
 
     public static Configuration getInstance() {
@@ -96,11 +97,10 @@ public class Configuration {
     private static void initProperties() {
         try {
             properties = new Properties();
-
-            String propertiesPath = System.getProperty(BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS);
-
-            try (InputStream input = new FileInputStream(propertiesPath + File.separator + BaseConstants.KEY_FILE_NAME_CONFIGURATIONS)) {
-                 properties.load(input);
+            String fileName = BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS + File.separator + BaseConstants.KEY_FILE_NAME_CONFIGURATIONS;
+            logger.trace("File name properties path: " + fileName);
+            try (InputStream propertiesStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
+                 properties.load(propertiesStream);
             }
 
         } catch (Exception e) {
@@ -110,31 +110,32 @@ public class Configuration {
     }
 
     public static boolean checkInstallation() {
-        boolean installed = false;
-        try {
-            String propertiesPath = System.getProperty(BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS);
-
-            File f = new File(propertiesPath + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLED);
-            if (f.exists() && !f.isDirectory()) {
-                installed = true;
-            }
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-        return installed;
+      boolean installed = false;
+      try {
+          File f = new File(Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLED);
+          logger.trace("Checking for existence of file " + f.getAbsolutePath());
+          if (f.exists() && !f.isDirectory()) {
+              installed = true;
+              logger.trace("The system has been installed");
+          } else {
+            logger.trace("The system has not yet been installed");
+          }
+      } catch (Exception e) {
+          logger.error(e.getMessage(), e);
+      }
+      return installed;
     }
 
     public static boolean checkInstallRunning() {
         boolean installing = false;
         try {
-            String propertiesPath = System.getProperty(BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS);
-
-            File f = new File(propertiesPath + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLING);
+            File f = new File(Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLING);
             if (f.exists() && !f.isDirectory()) {
-                installing = true;
-            }
-
+              installing = true;
+              logger.trace("Installation of the system is in progress");
+          } else {
+            logger.trace("Installation of the system is not in progress");
+          }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -245,4 +246,13 @@ public class Configuration {
     public void setLocalization(ResourceBundle localization) {
         this.localization = localization;
     }
+    
+    public static String getPathHelperFiles() {
+      return pathHelperFiles;
+    }
+
+    public static void setPathHelperFiles(String thePathHelperFiles) {
+      pathHelperFiles = thePathHelperFiles;
+    }
+    
 }

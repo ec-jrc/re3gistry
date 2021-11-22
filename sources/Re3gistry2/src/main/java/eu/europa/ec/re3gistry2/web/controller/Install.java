@@ -182,8 +182,7 @@ public class Install extends HttpServlet {
     }
 
     private void createSystemInstallingFile() throws Exception {
-        String propertiesPath = System.getProperty(BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS);
-        String systemInstallingPath = propertiesPath + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLING;
+        String systemInstallingPath = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLING;
         File systemInstallingFile = new File(systemInstallingPath);
 
         systemInstallingFile.getParentFile().mkdirs();
@@ -202,13 +201,12 @@ public class Install extends HttpServlet {
     }
 
     private void deleteSystemInstallingFile() throws Exception {
-        String propertiesPath = System.getProperty(BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS);
-        String systemInstalledPath = propertiesPath + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLING;
-        File file = new File(systemInstalledPath);
+        String systemInstallingPath = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLING;
+        File systemInstallingFile = new File(systemInstallingPath);
 
         boolean success = false;
         try {
-            success = file.delete();
+            success = systemInstallingFile.delete();
         } catch (Exception e) {
           Configuration.getInstance().getLogger().error("Error while trying to delete the system installing file", e);
         }
@@ -219,8 +217,7 @@ public class Install extends HttpServlet {
     }
 
     private void createSystemInstalledFile() throws Exception {
-        String propertiesPath = System.getProperty(BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS);
-        String systemInstalledPath = propertiesPath + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLED;
+        String systemInstalledPath = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SYSTEMINSTALLED;
         File systemInstalledFile = new File(systemInstalledPath);
 
         systemInstalledFile.getParentFile().mkdirs();

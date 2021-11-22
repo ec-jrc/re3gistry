@@ -33,15 +33,12 @@ public class InitializerLight extends HttpServlet {
     public void init() throws ServletException {
         System.out.println("### Initializing the system ...");
 
-        //Getting base configuration path
-        String configurationFolder = getServletContext().getRealPath("/" + BaseConstants.KEY_FOLDER_NAME_WEBINF) + File.separator + BaseConstants.KEY_FOLDER_NAME_CLASSES + File.separator + BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS;
-        System.setProperty(BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS, configurationFolder);
-        System.out.println("### Configuration folder: " + configurationFolder);
-        
         try {
             //Initializing the configurations
-            Configuration.getLightInstance();
-            System.out.println("### The system is now initialized.");
+            Configuration.getInstance();
+            String pathHelperFiles = getServletContext().getRealPath("/" + BaseConstants.KEY_FOLDER_NAME_WEBINF) + File.separator + BaseConstants.KEY_FOLDER_NAME_CLASSES + File.separator + BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS;
+            Configuration.setPathHelperFiles(pathHelperFiles);
+            System.out.println("### The system is now initialized. Path for the helper files: " + pathHelperFiles);
         } catch (Exception e) {
             //Error during system's copnfiguration
             System.out.println("### Error during system initialization: " + e.getMessage());
