@@ -15,6 +15,8 @@
         <persistence.transactiontpye>RESOURCE_LOCAL</persistence.transactiontpye>        
         <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
         <persistence.eclipselink.ddl-generation>create-tables</persistence.eclipselink.ddl-generation>
+        <persistence.eclipselink.logging.level>CONFIG</persistence.eclipselink.logging.level>
+        <persistence.eclipselink.logging.parameters>false</persistence.eclipselink.logging.parameters>
         <persistence.dependency.postgres.version>9.4.1212</persistence.dependency.postgres.version>
         <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
         <analytics.id></analytics.id>
@@ -53,6 +55,7 @@
                 <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>
+                <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
                 <application.rooturl>https://localhost/r3egistry2</application.rooturl> 
 				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
 				<web.session.cookie.secure>true</web.session.cookie.secure>
@@ -68,6 +71,7 @@
 				<persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>            
+                <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
                 <application.rooturl>https://registry-test.eu/re3gistry2</application.rooturl>
                 <application.solr.isactive>false</application.solr.isactive>        
                 <web.session.cookie.secure>true</web.session.cookie.secure>
