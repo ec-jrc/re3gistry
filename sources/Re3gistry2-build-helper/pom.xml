@@ -53,8 +53,16 @@
                 <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>
-                <application.rooturl>https://localhost/r3egistry2</application.rooturl> 
+                <application.status.baseuri>http://inspire.ec.europa.eu</application.status.baseuri>
+                <application.rooturl>https://localhost/re3gistry2</application.rooturl> 
 				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <mail.smtp.host>example-smtp.eu</mail.smtp.host>
+                <mail.smtp.port>25</mail.smtp.port>
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
+                <mail.user></mail.user>
+                <mail.password></mail.password>
+                <mail.sender>sender@example.eu</mail.sender>
 				<web.session.cookie.secure>true</web.session.cookie.secure>
             </properties>
         </profile>        
@@ -67,9 +75,17 @@
                 <persistence.db.name>re3gistry2_srv</persistence.db.name>
 				<persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
-                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>            
+                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>        
+                <application.status.baseuri>http://inspire.ec.europa.eu</application.status.baseuri>    
                 <application.rooturl>https://registry-test.eu/re3gistry2</application.rooturl>
                 <application.solr.isactive>false</application.solr.isactive>        
+                <mail.smtp.host>example-smtp.eu</mail.smtp.host>
+                <mail.smtp.port>25</mail.smtp.port>
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
+                <mail.user></mail.user>
+                <mail.password></mail.password>
+                <mail.sender>sender@example.eu</mail.sender>
                 <web.session.cookie.secure>true</web.session.cookie.secure>
             </properties>
         </profile>     
