@@ -356,7 +356,7 @@ public class RegItemhistoryManager implements IRegItemhistoryManager {
             q.setParameter(SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate);
         } catch (Exception e) {
             try {
-                String query = "select r0.reg_item_subject from (select * from reg_relation r JOIN reg_item ri on ri.uuid = r.reg_item_subject WHERE ri.reg_status = ':regStatus' AND r.reg_item_object = ':regitem' and r.reg_relationpredicate = ':predicate') as r0 where r0.reg_item_subject not in (select r1.reg_item_subject from reg_relation r1 where r1.reg_relationpredicate = ':notpredicate')";
+                String query = "select r0.reg_item_subject from (select * from reg_relation r JOIN reg_item ri on ri.uuid = r.reg_item_subject WHERE ri.reg_status = ':regStatus' AND r.reg_item_object = ':regitem' and r.reg_relationpredicate = ':predicate') r0 where r0.reg_item_subject not in (select r1.reg_item_subject from reg_relation r1 where r1.reg_relationpredicate = ':notpredicate')";
                 query = query.replace(":" + SQLConstants.SQL_PARAMETERS_REGSTATUS, regStatus.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_REGITEM, regItem.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate.getUuid());
                 q = this.em.createNativeQuery(query);
             } catch (Exception ex) {
@@ -391,7 +391,7 @@ public class RegItemhistoryManager implements IRegItemhistoryManager {
             q.setParameter(SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate);
         } catch (Exception e) {
             try {
-                String query = "select r0.reg_item_subject from (select * from reg_relation r JOIN reg_item ri on ri.uuid = r.reg_item_subject WHERE ri.reg_status = ':regStatus' AND r.reg_item_object = ':regitem' and r.reg_relationpredicate = ':predicate') as r0 where r0.reg_item_subject not in (select r1.reg_item_subject from reg_relation r1 where r1.reg_relationpredicate = ':notpredicate')";
+                String query = "select r0.reg_item_subject from (select * from reg_relation r JOIN reg_item ri on ri.uuid = r.reg_item_subject WHERE ri.reg_status = ':regStatus' AND r.reg_item_object = ':regitem' and r.reg_relationpredicate = ':predicate') r0 where r0.reg_item_subject not in (select r1.reg_item_subject from reg_relation r1 where r1.reg_relationpredicate = ':notpredicate')";
                 query = query.replace(":" + SQLConstants.SQL_PARAMETERS_REGSTATUS, regStatus.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_REGITEM, regItem.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate.getUuid());
                 q = this.em.createNativeQuery(query);
             } catch (Exception ex) {
