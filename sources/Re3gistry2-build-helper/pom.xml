@@ -31,6 +31,7 @@
         <application.solr.url>http://localhost:8983/solr/</application.solr.url>
         <application.solr.core>re3gistry2</application.solr.core>
         <application.solr.isactive>true</application.solr.isactive>
+        <application.solr.version>8.0.0</application.solr.version>
     </properties>
     <modules>
         <module>../Re3gistry2Model</module>
