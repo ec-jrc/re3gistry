@@ -14,9 +14,10 @@
         <persistence.unitname>Re3gistry2</persistence.unitname>
         <persistence.transactiontpye>RESOURCE_LOCAL</persistence.transactiontpye>        
         <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
-        <persistence.eclipselink.ddl-generation>create-tables</persistence.eclipselink.ddl-generation>
+        <persistence.eclipselink.ddl-generation>none</persistence.eclipselink.ddl-generation>
+        <persistence.eclipselink.logging.level>CONFIG</persistence.eclipselink.logging.level>
+        <persistence.eclipselink.logging.parameters>false</persistence.eclipselink.logging.parameters>
         <persistence.dependency.postgres.version>9.4.1212</persistence.dependency.postgres.version>
-        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
         <analytics.id></analytics.id>
         <analytics.url></analytics.url>
         <header.message.class></header.message.class>
@@ -31,6 +32,7 @@
         <application.solr.url>http://localhost:8983/solr/</application.solr.url>
         <application.solr.core>re3gistry2</application.solr.core>
         <application.solr.isactive>true</application.solr.isactive>
+        <application.solr.version>8.0.0</application.solr.version>
     </properties>
     <modules>
         <module>../Re3gistry2Model</module>
@@ -53,9 +55,10 @@
                 <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>
+                <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
                 <application.status.baseuri>http://inspire.ec.europa.eu</application.status.baseuri>
-                <application.rooturl>https://localhost/re3gistry2</application.rooturl> 
-				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <application.rooturl>https://localhost/re3gistry2</application.rooturl>
+                <application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
                 <mail.smtp.host>example-smtp.eu</mail.smtp.host>
                 <mail.smtp.port>25</mail.smtp.port>
                 <mail.smtp.auth>false</mail.smtp.auth>
@@ -75,7 +78,8 @@
                 <persistence.db.name>re3gistry2_srv</persistence.db.name>
 				<persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
-                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>        
+                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>     
+                <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
                 <application.status.baseuri>http://inspire.ec.europa.eu</application.status.baseuri>    
                 <application.rooturl>https://registry-test.eu/re3gistry2</application.rooturl>
                 <application.solr.isactive>false</application.solr.isactive>        

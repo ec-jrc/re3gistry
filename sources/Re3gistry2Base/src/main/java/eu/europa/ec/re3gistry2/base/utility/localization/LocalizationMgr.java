@@ -35,8 +35,6 @@ import org.apache.logging.log4j.Logger;
 
 public class LocalizationMgr {
 
-    private static final Logger logger = Configuration.getInstance().getLogger();
-    private static final Properties properties = Configuration.getInstance().getProperties();
     private static ArrayList<Localization> availableLanguages;
     private static Locale defaultLocale;
 
@@ -44,7 +42,7 @@ public class LocalizationMgr {
     }
 
     public static Locale getDefaultLocale() {
-        return getDefaultLocale(properties);
+        return getDefaultLocale(Configuration.getInstance().getProperties());
     }
 
     public static Locale getDefaultLocale(Properties prop) {
@@ -70,7 +68,7 @@ public class LocalizationMgr {
             }
             return new Locale(session.getAttribute(BaseConstants.KEY_SESSION_LANGUAGE).toString());
         } catch (Exception e) {
-            logger.error("Error while getting the locale's information from session - Message: " + e.getMessage(), e);
+            Configuration.getInstance().getLogger().error("Error while getting the locale's information from session - Message: " + e.getMessage(), e);
             return Locale.getDefault();
         }
     }
@@ -89,7 +87,7 @@ public class LocalizationMgr {
                 Configuration.getInstance().setLocalization(languageId);
             }
         } catch (Exception e) {
-            logger.error("Error while changing the locale - Message: " + e.getMessage(), e);
+            Configuration.getInstance().getLogger().error("Error while changing the locale - Message: " + e.getMessage(), e);
         }
     }
 
@@ -115,23 +113,23 @@ public class LocalizationMgr {
      * language label
      */
     private static ArrayList<Localization> initLanguages() {
-        String languagesString = properties.getProperty(BaseConstants.KEY_PROPERTY_AVAILABLE_LANGUAGE);
+        String languagesString = Configuration.getInstance().getProperties().getProperty(BaseConstants.KEY_PROPERTY_AVAILABLE_LANGUAGE);
         if (languagesString != null && !languagesString.trim().equals("")) {
             String[] languages = languagesString.split(BaseConstants.KEY_PROPERTY_SEPARATOR_AVAILABLE_LANGUAGE);
             availableLanguages = new ArrayList<>();
             if (languages.length > 0) {
                 for (String languageKey : languages) {
-                    String languageLabel = properties.getProperty(BaseConstants.KEY_PROPERTY_AVAILABLE_LANGUAGE_LABEL + languageKey);
+                    String languageLabel = Configuration.getInstance().getProperties().getProperty(BaseConstants.KEY_PROPERTY_AVAILABLE_LANGUAGE_LABEL + languageKey);
                     Localization localization = new Localization(languageKey, languageLabel);
                     availableLanguages.add(localization);
                 }
                 return availableLanguages;
             } else {
-                logger.error("Error while setting up the available languages.");
+                Configuration.getInstance().getLogger().error("Error while setting up the available languages.");
                 return null;
             }
         } else {
-            logger.error("Warning, there are no \"available language\"; check the properties file.");
+            Configuration.getInstance().getLogger().error("Warning, there are no \"available language\"; check the properties file.");
             return null;
         }
     }
