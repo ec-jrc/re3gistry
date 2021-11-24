@@ -17,9 +17,7 @@
         <persistence.eclipselink.ddl-generation>none</persistence.eclipselink.ddl-generation>
         <persistence.eclipselink.logging.level>CONFIG</persistence.eclipselink.logging.level>
         <persistence.eclipselink.logging.parameters>false</persistence.eclipselink.logging.parameters>
-        <persistence.eclipselink.ddl-generation>none</persistence.eclipselink.ddl-generation>
         <persistence.dependency.postgres.version>9.4.1212</persistence.dependency.postgres.version>
-        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
         <analytics.id></analytics.id>
         <analytics.url></analytics.url>
         <header.message.class></header.message.class>
