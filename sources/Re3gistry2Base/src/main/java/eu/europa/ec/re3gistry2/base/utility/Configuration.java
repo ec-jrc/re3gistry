@@ -98,9 +98,11 @@ public class Configuration {
         try {
             properties = new Properties();
             String fileName = BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS + File.separator + BaseConstants.KEY_FILE_NAME_CONFIGURATIONS;
-            logger.trace("File name properties path: " + fileName);
+            // logger is not initialised at this point
+            System.out.println("File name properties path: " + fileName);
             try (InputStream propertiesStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
                  properties.load(propertiesStream);
+                 System.out.println(properties.keySet().size() + " properties loaded from " + fileName);
             }
 
         } catch (Exception e) {

@@ -35,7 +35,7 @@ public class InitializerLight extends HttpServlet {
 
         try {
             //Initializing the configurations
-            Configuration.getInstance();
+            Configuration.getLightInstance();
             String pathHelperFiles = getServletContext().getRealPath("/" + BaseConstants.KEY_FOLDER_NAME_WEBINF) + File.separator + BaseConstants.KEY_FOLDER_NAME_CLASSES + File.separator + BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS;
             Configuration.setPathHelperFiles(pathHelperFiles);
             System.out.println("### The system is now initialized. Path for the helper files: " + pathHelperFiles);

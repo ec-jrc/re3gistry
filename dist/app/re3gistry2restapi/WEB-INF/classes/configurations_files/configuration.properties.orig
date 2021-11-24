@@ -42,3 +42,7 @@ application.dateformat=yyyy-MM-dd
 
 application.cache.disk.path=diskcachepath
 application.cache.disk.maximum.space=25
+
+# Status base URI
+application.status.baseuri=statusbaseuri
+application.status.maingroup=1
