@@ -366,7 +366,7 @@ public class SolrHandler {
 
         // Setting the item's status
         Properties properties = Configuration.getInstance().getProperties();
-        String statusBaseUri = properties.getProperty(BaseConstants.KEY_PROPERTY_STATUS_BASE_URI);
+        String statusBaseUri = regItem.getRegStatus().getRegStatusgroup().getBaseuri();
         document.setField(BaseConstants.KEY_SOLR_ITEM_STATUS, statusBaseUri + "/" + regItem.getRegStatus().getLocalid());
 
         // Getting & setting the registry

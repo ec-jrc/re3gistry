@@ -136,10 +136,18 @@
     
     <!--END ECAS authentication configs-->
     
-    <!--SHIRO authentication configs-->
+    <!--SHIRO authentication configs, see also https://shiro.apache.org/web.html#web-xml-->
+    <!-- The <listener> declaration defines a ServletContextListener that starts up the Shiro 
+    environment (including the Shiro SecurityManager) upon web application startup. By default, 
+    this listener automatically knows to look for our WEB-INF/shiro.ini file for Shiro configuration.
+    From: https://shiro.apache.org/webapp-tutorial.html -->
     <listener>
         <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
     </listener>
+    <!-- The <filter> declaration defines the main ShiroFilter. This filter is expected to filter 
+    all requests into the web application so Shiro can peform necessary identity and access control 
+    operations before allowing a request to reach the application.
+    From: https://shiro.apache.org/webapp-tutorial.html -->
     <filter>
         <filter-name>ShiroFilter</filter-name>
         <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>

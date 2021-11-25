@@ -109,10 +109,6 @@ public class UserHelper {
                     break;
                 } //Handling SHIRO login type
                 case BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO: {
-                    // init shiro - place this e.g. in the constructor
-                    Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory();
-                    org.apache.shiro.mgt.SecurityManager securityManager = factory.getInstance();
-                    SecurityUtils.setSecurityManager(securityManager);
                     String username = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_USERNAME);
                     String password = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_PASSWORD);
                     String rememberMe = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_REMEMBERME);
@@ -403,10 +399,6 @@ public class UserHelper {
                     break;
                 } //Handling SHIRO login type
                 case BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO: {
-                    // init shiro - place this e.g. in the constructor
-                    Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory();
-                    org.apache.shiro.mgt.SecurityManager securityManager = factory.getInstance();
-                    SecurityUtils.setSecurityManager(securityManager);
                     //Taking the DetailedUser from session
                     if (email != null && key != null) {
                         return tryLoginWithSHIRO(email, key);
