@@ -156,7 +156,7 @@ public class SQLConstants {
     public static final String SQL_GET_LOCALIZATIONHISTORY_BY_ITEM_LANGUAGECODE = "SELECT r FROM RegLocalizationhistory r WHERE r.regItemhistory = :regitem AND r.regLanguagecode = :regLanguagecode";
     public static final String SQL_GET_LOCALIZATIONHISTORY_BY_FIELD_ITEM_ACTION = "SELECT r FROM RegLocalizationhistory r WHERE r.regField = :regfield AND r.regItemhistory = :regitem AND r.regAction = :regaction";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMHISTORY = "SELECT r FROM RegLocalizationhistory r WHERE r.regItemhistory = :regItemhistory AND r.regField IS NOT NULL";
-    
+
 // RegRelation
     public static final String SQL_GET_RELATION_BY_SUBJECT_ITEM = "SELECT r FROM RegRelation r WHERE r.regItemSubject = :regitem";
     public static final String SQL_GET_RELATION_BY_OBJECT_ITEM = "SELECT r FROM RegRelation r WHERE r.regItemObject = :regitem";
@@ -169,6 +169,7 @@ public class SQLConstants {
     // RegRelation
     public static final String SQL_GET_RELATIONPROPOSED_BY_SUBJECT_ITEM = "SELECT r FROM RegRelationproposed r WHERE r.regItemproposedSubject = :regitem";
     public static final String SQL_GET_RELATIONPROPOSED_BY_OBJECT_ITEM = "SELECT r FROM RegRelationproposed r WHERE r.regItemproposedObject = :regitem";
+    public static final String SQL_GET_RELATIONPROPOSED_OBJECT_PREDICATE = "SELECT r FROM RegRelationproposed r WHERE r.regItemObject = :regitem AND r.regRelationpredicate = :predicate";
     public static final String SQL_GET_RELATIONPROPOSED_COLLECTION_REFERENCE = "SELECT r FROM RegRelationproposed r WHERE r.regItemproposedSubject = :regitem AND r.regRelationpredicate = :predicate";
     public static final String SQL_GET_RELATIONPROPOSED_COLLECTION_REFERENCE_NEW = "SELECT r FROM RegRelationproposed r WHERE r.regItemproposedSubject = :regitem AND r.regRelationpredicate = :predicate AND r.regRelationReference IS NULL";
     public static final String SQL_GET_RELATIONPROPOSED_BY_REG_RELATION_REFERENCE = "SELECT r FROM RegRelationproposed r WHERE r.regRelationReference = :regrelationreference";

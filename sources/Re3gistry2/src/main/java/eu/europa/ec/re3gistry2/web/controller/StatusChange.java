@@ -30,19 +30,23 @@ import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
+import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegStatusManager;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegItemproposedHandler;
 import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
+import eu.europa.ec.re3gistry2.model.RegRelation;
 import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
 import eu.europa.ec.re3gistry2.model.RegRelationproposed;
 import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegRelationproposedUuidHelper;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -152,8 +156,65 @@ public class StatusChange extends HttpServlet {
                             regRelationproposedManager.add(newRegRelationproposedPredecessor);
 
                         }
-                    }
+                    } else {
+                        if (!entityManager.getTransaction().isActive()) {
+                            entityManager.getTransaction().begin();
+                        }
+                        entityManager.getTransaction().commit();
 
+                        //get all the proposed item with collection the retired item
+                        RegRelationpredicate hasCollection = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_COLLECTION);
+                        List<RegRelationproposed> relationsProposed = regRelationproposedManager.getAllByRegItemObjectAndPredicate(regItem, hasCollection);
+                        List<RegItemproposed> subjectsProposed = new ArrayList<>();
+                        relationsProposed.forEach((relation) -> {
+                            subjectsProposed.add(relation.getRegItemproposedSubject());
+                        });
+                        for (RegItemproposed regItemproposedSubject : subjectsProposed) {
+                            //Updating the status
+                            /* ## Start Synchronized ## */
+                            if (!entityManager.getTransaction().isActive()) {
+                                entityManager.getTransaction().begin();
+                            }
+                            regItemproposedSubject.setRegStatus(regStatusManager.findByLocalid(BaseConstants.KEY_STATUS_LOCALID_NOTACCEPTED));
+                            regItemproposedManager.update(regItemproposedSubject);
+
+                            if (!entityManager.getTransaction().isActive()) {
+                                entityManager.getTransaction().begin();
+                            }
+                            entityManager.getTransaction().commit();
+                        }
+
+                        //the status is retirement, so retire as well all the valid children and not accept the submitted/draft items
+                        RegRelationManager regRelationManager = new RegRelationManager(entityManager);
+                        List<RegRelation> relations = regRelationManager.getAllByRegItemObjectAndPredicate(regItem, hasCollection);
+                        List<RegItem> subjects = new ArrayList<>();
+                        relations.forEach((relation) -> {
+                            subjects.add(relation.getRegItemSubject());
+                        });
+                        for (RegItem subject : subjects) {
+                            String statusUuid = subject.getRegStatus().getLocalid();
+                            if (statusUuid.equals(BaseConstants.KEY_STATUS_LOCALID_VALID)) {
+                                // Copying the RegItem to RegItemproposed
+                                RegItemproposed regItemproposedsubject = regItemproposedHandler.completeCopyRegItemToRegItemporposed(subject, currentUser);
+                                //Updating the status
+                                /* ## Start Synchronized ## */
+                                if (!entityManager.getTransaction().isActive()) {
+                                    entityManager.getTransaction().begin();
+                                }
+                                regItemproposedsubject.setRegStatus(newRegStatus);
+                                regItemproposedManager.update(regItemproposedsubject);
+
+                                if (!entityManager.getTransaction().isActive()) {
+                                    entityManager.getTransaction().begin();
+                                }
+                                entityManager.getTransaction().commit();
+                            }
+                        }
+
+                    }
+                    if (!entityManager.getTransaction().isActive()) {
+                        entityManager.getTransaction().begin();
+                    }
                     entityManager.getTransaction().commit();
                 }
                 /* ## End Synchronized ## */

@@ -121,7 +121,8 @@ public class RegActionHandler {
                     // Setting the submitted status
                     if (!regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_SUPERSEDED)
                             && !regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_INVALID)
-                            && !regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_RETIRED)) {
+                            && !regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_RETIRED)
+                            && !regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_NOTACCEPTED)) {
                         regItemproposed.setRegStatus(regStatusSubmitted);
                     }
 
@@ -207,14 +208,17 @@ public class RegActionHandler {
                 // In case of reject action, move the related elements in the history
                 if (approveType.equals(BaseConstants.KEY_ACTION_TYPE_REJECT)) {
                     for (RegItemproposed regItemproposed : regItemProposeds) {
-                        regItemproposed.setRegStatus(regStatusUpdate);
-                        regItemproposedManager.update(regItemproposed);
-                        entityManager.getTransaction().commit();
 
-                        regItemhistoryHandler.regItemProposedToRegItemhistory(regItemproposed);
+                        if (!regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_NOTACCEPTED)) {
+                            regItemproposed.setRegStatus(regStatusUpdate);
+                            regItemproposedManager.update(regItemproposed);
+                            entityManager.getTransaction().commit();
 
-                        if (!entityManager.getTransaction().isActive()) {
-                            entityManager.getTransaction().begin();
+                            regItemhistoryHandler.regItemProposedToRegItemhistory(regItemproposed);
+
+                            if (!entityManager.getTransaction().isActive()) {
+                                entityManager.getTransaction().begin();
+                            }
                         }
                     }
                 } else {
@@ -413,8 +417,7 @@ public class RegActionHandler {
                     if (regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_ACCEPTED)
                             || (regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT)
                             && (regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)
-                            || regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER))) 
-                        ) {
+                            || regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)))) {
                         regItemproposed.setRegStatus(regStatusUpdateValid);
                     }
 

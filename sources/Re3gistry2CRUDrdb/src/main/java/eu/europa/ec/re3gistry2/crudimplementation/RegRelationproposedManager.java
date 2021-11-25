@@ -26,6 +26,7 @@ package eu.europa.ec.re3gistry2.crudimplementation;
 import eu.europa.ec.re3gistry2.crudimplementation.constants.ErrorConstants;
 import eu.europa.ec.re3gistry2.crudimplementation.constants.SQLConstants;
 import eu.europa.ec.re3gistry2.crudinterface.IRegRelationproposedManager;
+import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegRelation;
 import eu.europa.ec.re3gistry2.model.RegRelationproposed;
@@ -207,7 +208,7 @@ public class RegRelationproposedManager implements IRegRelationproposedManager {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_RELATIONPROPOSED_COLLECTION_REFERENCE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM, regItemproposed);
-        q.setParameter("predicate", regRelationPredicate);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate);
         try {
             return (List<RegRelationproposed>) q.getResultList();
         } catch (Exception e) {
@@ -245,7 +246,29 @@ public class RegRelationproposedManager implements IRegRelationproposedManager {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_RELATIONPROPOSED_COLLECTION_REFERENCE_NEW);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM, regItemproposed);
-        q.setParameter("predicate", regRelationPredicate);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate);
+        try {
+            return (List<RegRelationproposed>) q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+     /**
+     * Returns all the RegRelation by RegItem (object) and RegPredicate
+     *
+     * @param regItem
+     * @param regRelationPredicate
+     * @return list of RegRelation
+     * @throws Exception
+     */
+    @Override
+    public List<RegRelationproposed> getAllByRegItemObjectAndPredicate(RegItem regItem, RegRelationpredicate regRelationPredicate) throws Exception {
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_RELATIONPROPOSED_OBJECT_PREDICATE);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM, regItem);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate);
         try {
             return (List<RegRelationproposed>) q.getResultList();
         } catch (Exception e) {
