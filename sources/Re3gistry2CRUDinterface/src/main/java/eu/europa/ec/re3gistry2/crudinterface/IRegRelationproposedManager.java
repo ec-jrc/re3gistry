@@ -23,6 +23,7 @@
  */
 package eu.europa.ec.re3gistry2.crudinterface;
 
+import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegRelation;
 import eu.europa.ec.re3gistry2.model.RegRelationproposed;
@@ -50,4 +51,6 @@ public interface IRegRelationproposedManager {
     public RegRelationproposed getByRegRelationReference(RegRelation regRelationReference) throws Exception;
 
     public List<RegRelationproposed> getAllNew(RegItemproposed regItemproposed, RegRelationpredicate regRelationPredicate) throws Exception;
+
+    public List<RegRelationproposed> getAllByRegItemObjectAndPredicate(RegItem regItem, RegRelationpredicate regRelationPredicate) throws Exception;
 }
