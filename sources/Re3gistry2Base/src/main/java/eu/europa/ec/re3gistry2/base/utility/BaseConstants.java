@@ -180,9 +180,6 @@ public class BaseConstants {
     public static final String KEY_SOLR_ITEM_HREF_PREFIX = "value_href_";
     public static final String KEY_SOLR_ITEM_STATUS = "status_uri";
 
-    // Item status base uri property name
-    public static final String KEY_PROPERTY_STATUS_BASE_URI = "application.status.baseuri";
-
     /* - Session keys - */
     // Language session key
     public static final String KEY_SESSION_LANGUAGE = "lang";
@@ -757,10 +754,6 @@ public class BaseConstants {
 
     public String getKEY_PROPERTY_INPUT_SANITIZER_LEVEL_RELAXED() {
         return KEY_PROPERTY_INPUT_SANITIZER_LEVEL_RELAXED;
-    }
-
-    public String getKEY_PROPERTY_STATUS_BASE_URI() {
-        return KEY_PROPERTY_STATUS_BASE_URI;
     }
 
     public String getKEY_SESSION_LANGUAGE() {
