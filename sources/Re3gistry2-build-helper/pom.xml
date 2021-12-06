@@ -56,8 +56,15 @@
                 <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
                 <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>
                 <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
-                <application.rooturl>https://localhost/r3egistry2</application.rooturl> 
+                <application.rooturl>https://localhost/re3gistry2</application.rooturl> 
 				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <mail.smtp.host>example-smtp.eu</mail.smtp.host>
+                <mail.smtp.port>25</mail.smtp.port>
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
+                <mail.user></mail.user>
+                <mail.password></mail.password>
+                <mail.sender>sender@example.eu</mail.sender>
 				<web.session.cookie.secure>true</web.session.cookie.secure>
             </properties>
         </profile>        
@@ -74,6 +81,13 @@
                 <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
                 <application.rooturl>https://registry-test.eu/re3gistry2</application.rooturl>
                 <application.solr.isactive>false</application.solr.isactive>        
+                <mail.smtp.host>example-smtp.eu</mail.smtp.host>
+                <mail.smtp.port>25</mail.smtp.port>
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
+                <mail.user></mail.user>
+                <mail.password></mail.password>
+                <mail.sender>sender@example.eu</mail.sender>
                 <web.session.cookie.secure>true</web.session.cookie.secure>
             </properties>
         </profile>     
