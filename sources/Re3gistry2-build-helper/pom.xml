@@ -14,6 +14,7 @@
         <persistence.unitname>Re3gistry2</persistence.unitname>
         <persistence.transactiontpye>RESOURCE_LOCAL</persistence.transactiontpye>        
         <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+        <persistence.jdbc.datasource>org.postgresql.jdbc2.optional.SimpleDataSource</persistence.jdbc.datasource>
         <persistence.eclipselink.ddl-generation>none</persistence.eclipselink.ddl-generation>
         <persistence.eclipselink.logging.level>CONFIG</persistence.eclipselink.logging.level>
         <persistence.eclipselink.logging.parameters>false</persistence.eclipselink.logging.parameters>
