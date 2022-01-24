@@ -56,7 +56,6 @@ public class CacheAll implements Runnable {
             System.out.println("---[ STARTING CACHE ALL]--- @ " + new Date());
 
             RegLanguagecode masterLanguage = languageManager.getMasterLanguage();
-            //List<RegLanguagecode> availableLanguages = languageManager.getAll();
 
             // Getting all ItemClasses
             List<RegItemclass> itemclassList = regItemclassManager.getAlltemclassOrderAscByDataprocedureorder();

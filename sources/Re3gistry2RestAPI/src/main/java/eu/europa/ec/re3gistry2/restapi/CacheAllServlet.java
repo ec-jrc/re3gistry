@@ -71,7 +71,7 @@ public class CacheAllServlet extends HttpServlet {
             EntityManager em = this.emf.createEntityManager();
 
             RegLanguagecodeManager languageManager = new RegLanguagecodeManager(em);
-            List<RegLanguagecode> availableLanguages = languageManager.getAll();
+            List<RegLanguagecode> availableLanguages = languageManager.getAllActive();
 
             ExecutorService executor = Executors.newFixedThreadPool(availableLanguages.size());
 
