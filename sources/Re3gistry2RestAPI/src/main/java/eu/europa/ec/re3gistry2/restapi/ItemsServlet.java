@@ -102,17 +102,6 @@ public class ItemsServlet extends HttpServlet {
             String format = RequestUtil.getParamTrimmed(req, "format", null);
             uri = removeTrailingSlashes(uri);
 
-            if (uri != null) {
-                int slash = uri.lastIndexOf('/');
-                String localid = uri.substring(slash + 1);
-                int count = countOccurance(uri, localid);
-
-                if (count == 2) {
-                    int start = uri.lastIndexOf(localid);
-                    uri = uri.substring(0, start - 1);
-                }
-            }
-
             Predicate<Item> typeFilter = getTypeFilter(path);
             Formatter formatter = formatters.get(format);
 
