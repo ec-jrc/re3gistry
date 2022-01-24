@@ -28,12 +28,11 @@ package eu.europa.ec.re3gistry2.restapi.format;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.model.ContainedItem;
-import eu.europa.ec.re3gistry2.restapi.model.Item;
-import eu.europa.ec.re3gistry2.restapi.model.ItemRef;
-import eu.europa.ec.re3gistry2.restapi.model.LocalizedProperty;
-import eu.europa.ec.re3gistry2.restapi.model.VersionInformation;
-import eu.europa.ec.re3gistry2.restapi.util.DateUtil;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemRef;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.restapi.util.IndentingXMLStreamWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -216,22 +215,16 @@ public class XMLFormatter implements Formatter {
     }
 
     private void writeDate(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
-        String convertedInsertDate = DateUtil.convertDate(item.getInsertdate());
-        if (convertedInsertDate != null) {
-            writeEmptyElement(xml, "created", convertedInsertDate);
-        }
+        writeEmptyElement(xml, "created", item.getInsertdate());
 
         if (item.getEditdate() != null) {
-            String convertedEditDate = DateUtil.convertDate(item.getEditdate());
-            if (convertedEditDate != null) {
-                writeEmptyElement(xml, "issued", convertedEditDate);
-            }
+            writeEmptyElement(xml, "issued", item.getEditdate());
         }
     }
 
     private void writeFields(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
-        List<LocalizedProperty> maybeDefinition = item.getProperties();
-        for (LocalizedProperty localizedProperty : maybeDefinition) {
+        List<LocalizedProperty> localizedProperties = item.getProperties();
+        for (LocalizedProperty localizedProperty : localizedProperties) {
 
             String lang = localizedProperty.getLang();
             if (!localizedProperty.getValues().isEmpty()) {
@@ -239,48 +232,48 @@ public class XMLFormatter implements Formatter {
                 String href = localizedProperty.getValues().get(0).getHref();
 
                 String fieldName = localizedProperty.getLabel().replace("-item", "");
+                String fieldLocalId = localizedProperty.getId();
+//                String localNameLowerCase = fieldName.toLowerCase();
 
-                String localNameLowerCase = fieldName.toLowerCase();
-
-                if (fieldName != null && "contactpoint".equals(localNameLowerCase)) {
+                if (fieldName != null && "contactpoint".equals(fieldLocalId)) {
                     xml.writeStartElement("contactPoint");
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                     writeEmptyElement(xml, "email", href);
                     xml.writeEndElement();
-                } else if (fieldName != null && "license".equals(localNameLowerCase)) {
+                } else if (fieldName != null && "license".equals(fieldLocalId)) {
                     xml.writeStartElement("license");
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                     writeEmptyElement(xml, "uri", href);
                     xml.writeEndElement();
-                } else if (fieldName != null && "governance-level".equals(localNameLowerCase)) {
+                } else if (fieldName != null && "governance-level".equals(fieldLocalId)) {
                     xml.writeStartElement("governance-level");
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                     writeEmptyElement(xml, "uri", href);
                     xml.writeEndElement();
-                } else if (fieldName != null && "collection".equals(localNameLowerCase)) {
+                } else if (fieldName != null && "collection".equals(fieldLocalId)) {
                     xml.writeStartElement("collection");
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                     writeEmptyElement(xml, "uri", href);
                     xml.writeEndElement();
-                } else if (fieldName != null && "successor".equals(localNameLowerCase)) {
+                } else if (fieldName != null && "successor".equals(fieldLocalId)) {
                     xml.writeStartElement("successor");
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                     writeEmptyElement(xml, "uri", href);
                     xml.writeEndElement();
-                } else if (fieldName != null && "predecessor".equals(localNameLowerCase)) {
+                } else if (fieldName != null && "predecessor".equals(fieldLocalId)) {
                     xml.writeStartElement("predecessor");
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                     writeEmptyElement(xml, "uri", href);
                     xml.writeEndElement();
-                } else if (fieldName != null && "status".equals(localNameLowerCase)) {
-                    xml.writeStartElement(localNameLowerCase);
+                } else if (fieldName != null && "status".equals(fieldLocalId)) {
+                    xml.writeStartElement(fieldLocalId);
                     xml.writeAttribute(NS_XML, "id", href);
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                     xml.writeEndElement();
-                } else if (fieldName != null && ("annex".equals(localNameLowerCase) || "themenumber".equals(localNameLowerCase))) {
-                    writeEmptyElement(xml, localNameLowerCase, value);
+                } else if (fieldName != null && ("annex".equals(fieldLocalId) || "themenumber".equals(fieldLocalId))) {
+                    writeEmptyElement(xml, fieldLocalId, value);
                 } else {
-                    writeSimpleElementWithAttribute(xml, localNameLowerCase, NS_XML, "lang", lang, value);
+                    writeSimpleElementWithAttribute(xml, fieldLocalId, NS_XML, "lang", lang, value);
                 }
 
             }

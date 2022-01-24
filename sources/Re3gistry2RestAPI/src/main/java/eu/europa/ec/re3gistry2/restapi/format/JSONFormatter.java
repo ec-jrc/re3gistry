@@ -26,6 +26,8 @@
  */
 package eu.europa.ec.re3gistry2.restapi.format;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.OutputStream;
@@ -33,12 +35,11 @@ import java.io.OutputStream;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.model.ContainedItem;
-import eu.europa.ec.re3gistry2.restapi.model.Item;
-import eu.europa.ec.re3gistry2.restapi.model.ItemRef;
-import eu.europa.ec.re3gistry2.restapi.model.LocalizedProperty;
-import eu.europa.ec.re3gistry2.restapi.model.VersionInformation;
-import eu.europa.ec.re3gistry2.restapi.util.DateUtil;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemRef;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Optional;
@@ -185,6 +186,7 @@ public class JSONFormatter implements Formatter {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 
         osw.write(mapper.writeValueAsString(regiItemJSONObject));
         osw.flush();
@@ -207,16 +209,10 @@ public class JSONFormatter implements Formatter {
     }
 
     private void writeDate(JSONObject regItemJsonObject, ContainedItem item) {
-        String convertedInsertDate = DateUtil.convertDate(item.getInsertdate());
-        if (convertedInsertDate != null) {
-            regItemJsonObject.put("created", convertedInsertDate);
-        }
+        regItemJsonObject.put("created", item.getInsertdate());
 
         if (item.getEditdate() != null) {
-            String convertedEditDate = DateUtil.convertDate(item.getEditdate());
-            if (convertedEditDate != null) {
-                regItemJsonObject.put("issued", convertedEditDate);
-            }
+            regItemJsonObject.put("issued", item.getEditdate());
         }
     }
 
@@ -239,28 +235,27 @@ public class JSONFormatter implements Formatter {
     }
 
     private void writeFields(JSONObject regItemJsonObject, ContainedItem item) {
-        List<LocalizedProperty> maybeDefinition = item.getProperties();
-        maybeDefinition.forEach((localizedProperty) -> {
+        List<LocalizedProperty> localizedProperties = item.getProperties();
+        localizedProperties.forEach((localizedProperty) -> {
             String lang = localizedProperty.getLang();
             if (!localizedProperty.getValues().isEmpty()) {
                 String value = localizedProperty.getValues().get(0).getValue();
                 String href = localizedProperty.getValues().get(0).getHref();
 
                 String fieldName = localizedProperty.getLabel().replace("-item", "");
+                String fieldLocalId = localizedProperty.getId();
 
-                String localNameLowerCase = fieldName.toLowerCase();
-
-                if (fieldName != null && "contactpoint".equals(localNameLowerCase)) {
+                if (fieldName != null && "contactpoint".equals(fieldLocalId)) {
                     JSONObject json = new JSONObject();
                     json.put("label", value);
                     json.put("email", href);
                     regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "license".equals(localNameLowerCase)) {
+                } else if (fieldName != null && "license".equals(fieldLocalId)) {
                     JSONObject json = new JSONObject();
                     json.put("label", value);
                     json.put("uri", href);
                     regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "governance-level".equals(localNameLowerCase)) {
+                } else if (fieldName != null && "governance-level".equals(fieldLocalId)) {
                     JSONObject labelJson = new JSONObject();
                     labelJson.put("lang", item.getLanguage());
                     labelJson.put("text", value);
@@ -270,7 +265,7 @@ public class JSONFormatter implements Formatter {
                     json.put("uri", href);
 
                     regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "status".equals(localNameLowerCase)) {
+                } else if (fieldName != null && "status".equals(fieldLocalId)) {
                     String itemClassName = item.getItemclass().getId();
                     JSONObject labelJson = new JSONObject();
                     labelJson.put("lang", item.getLanguage());
@@ -281,8 +276,8 @@ public class JSONFormatter implements Formatter {
                     json.put("id", href);
 
                     regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && ("annex".equals(localNameLowerCase) || "themenumber".equals(localNameLowerCase))) {
-                    regItemJsonObject.put(localNameLowerCase, value);
+                } else if (fieldName != null && ("annex".equals(fieldLocalId) || "themenumber".equals(fieldLocalId))) {
+                    regItemJsonObject.put(fieldLocalId, value);
                 } else if (!href.isEmpty() && !value.isEmpty()) {
                     JSONObject labelJson = new JSONObject();
                     labelJson.put("lang", item.getLanguage());
@@ -298,7 +293,7 @@ public class JSONFormatter implements Formatter {
                     labelJson.put("lang", lang);
                     labelJson.put("text", value);
 
-                    regItemJsonObject.put(localNameLowerCase, labelJson);
+                    regItemJsonObject.put(fieldLocalId, labelJson);
                 }
             }
         });
