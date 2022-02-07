@@ -54,6 +54,3 @@ Use the [the issue tracker](https://github.com/ec-jrc/re3gistry/issues) to:
 * start a discussion or raise a question
 
 ## Missing features
-
-* Cache of the elements in the dropdowns of the application.
-* Improvements on the cache of the data API.
