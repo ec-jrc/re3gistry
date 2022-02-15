@@ -113,6 +113,7 @@ public class RegistryManagerUsersAdd extends HttpServlet {
             bytes = ssoReference.getBytes(StandardCharsets.ISO_8859_1);
             ssoReference = new String(bytes, StandardCharsets.UTF_8);
             ssoReference = InputSanitizerHelper.sanitizeInput(ssoReference);
+            email = email.toLowerCase();
         }
 
         String languageUUID = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
