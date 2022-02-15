@@ -224,7 +224,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                     if (i != 0) {
                         outs += ",";
                     }
-                    outs += "[\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + tmpRegItem.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalozations.get(0).getValue()) + "</a>\"]";
+                    outs += "[\"<a href=\\\"./"+WebConstants.PAGE_URINAME_BROWSE+"?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + tmpRegItem.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalozations.get(0).getValue()) + "</a>\"]";
 
                     // It the contained itemclass is just one
                 } else {
@@ -253,7 +253,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                 }
 
                                 // There is only one localization for the registry
-                                outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
+                                outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
 
                                 j++;
                             } else if (tmpRegFieldmapping.getRegField().getRegFieldtype().getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_REGISTER)) {
@@ -273,7 +273,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                     }
 
                                     // There is only one localization for the registry
-                                    outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
+                                    outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
 
                                 } else {
                                     if (j != 0) {
@@ -299,7 +299,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                     }
 
                                     // There is only one localization for the registry
-                                    outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
+                                    outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
 
                                 } else {
                                     if (j != 0) {
@@ -331,7 +331,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                         if (k != 0) {
                                             outs += ",";
                                         }
-                                        outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
+                                        outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
                                         k++;
                                     }
                                     // Handling the multivalued fields
@@ -368,7 +368,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                         if (k != 0) {
                                             outs += ",";
                                         }
-                                        outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
+                                        outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
                                         k++;
                                     }
                                     // Handling the multivalued fields
@@ -405,7 +405,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                         if (k != 0) {
                                             outs += ",";
                                         }
-                                        outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
+                                        outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalizations.get(0).getValue()) + " </a>\"";
                                         k++;
                                     }
                                     // Handling the multivalued fields
@@ -490,7 +490,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                         if (tmpRegLocalization.getValue() != null) {
                                             // If the field is a title, put the link to the item
                                             if (tmpRegFieldmapping.getRegField().getIstitle()) {
-                                                outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + tmpRegItem.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalization.getValue()) + "</a>\"";
+                                                outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + tmpRegItem.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalization.getValue()) + "</a>\"";
                                             } else {
                                                 outs += "\"" + StringEscapeUtils.escapeJson(tmpRegLocalization.getValue()) + "\"";
                                             }
@@ -512,7 +512,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                             }
 
                                             for (RegLocalization regLocalizationTmp : regLocalizationTmps) {
-                                                outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
+                                                outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
                                             }
                                         } else {
                                             // Check if there is the localization (relationreference) in the master language
@@ -537,7 +537,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                                     }
 
                                                     for (RegLocalization regLocalizationTmp : regLocalizationTmps) {
-                                                        outs += "\"<a href=\\\"./browse?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
+                                                        outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
                                                     }
                                                 }
                                             }

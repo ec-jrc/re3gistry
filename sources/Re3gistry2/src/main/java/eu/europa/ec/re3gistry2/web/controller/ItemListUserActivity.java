@@ -76,12 +76,12 @@ public class ItemListUserActivity extends HttpServlet {
         String sStart = request.getParameter(BaseConstants.KEY_REQUEST_DT_START);
         String sLength = request.getParameter(BaseConstants.KEY_REQUEST_DT_LENGTH);
         String sDraw = request.getParameter(BaseConstants.KEY_REQUEST_DT_DRAW);
-        
+
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
         sStart = (sStart != null) ? InputSanitizerHelper.sanitizeInput(sStart) : null;
         sLength = (sLength != null) ? InputSanitizerHelper.sanitizeInput(sLength) : null;
         sDraw = (sDraw != null) ? InputSanitizerHelper.sanitizeInput(sDraw) : null;
-        
+
         int start;
         int length;
         int draw;
@@ -128,8 +128,7 @@ public class ItemListUserActivity extends HttpServlet {
         // Getting the item by user
         List<RegItemproposed> regItemProposeds = regItemproposedManager.getAll(regUser, start, length);
 
-        int totalCount = 0;
-        totalCount = regItemproposedManager.countAll(regUser);
+        int totalCount = regItemproposedManager.countAll(regUser);
 
         int i = 0;
         for (RegItemproposed tmpRegitemproposed : regItemProposeds) {
@@ -140,7 +139,7 @@ public class ItemListUserActivity extends HttpServlet {
 
             RegField regLabel = regFieldManager.getTitleRegField();
             List<RegLocalizationproposed> regLocalizationproposeds = regLocalizationproposedManager.getAll(regLabel, tmpRegitemproposed, regLanguagecode);
-            if(regLocalizationproposeds.isEmpty()){
+            if (regLocalizationproposeds.isEmpty()) {
                 regLocalizationproposeds = regLocalizationproposedManager.getAll(regLabel, tmpRegitemproposed, masterLanguage);
             }
 

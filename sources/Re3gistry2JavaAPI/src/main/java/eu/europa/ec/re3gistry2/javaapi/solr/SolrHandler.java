@@ -59,14 +59,15 @@ import org.apache.solr.common.SolrInputDocument;
 
 public class SolrHandler {
 
-    public static boolean indexComplete() {
+    public static void indexComplete() throws Exception {
 
         // Init logger
         Logger logger = Configuration.getInstance().getLogger();
 
         // Do not run 2 complete Solr export together
         if (checkSolrCompleteIndexinglRunning()) {
-            return false;
+//            return false;
+            throw new Exception("The SOLR INDEXING is still running.");
         }
 
         try {
@@ -75,7 +76,8 @@ public class SolrHandler {
             SolrClient solrClient = getSolrClient();
 
             if (solrClient == null) {
-                return false;
+//                return false;
+                throw new Exception("The SOLR CLIENT is not properly setted.");
             }
 
             // Getting the DB manager
@@ -104,12 +106,12 @@ public class SolrHandler {
             // Removing lock for other Solr complete index requests
             deleteSolrCompleteIndexinglRunningFile();
 
-            return true;
-
+//            return true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             deleteSolrCompleteIndexinglRunningFile();
-            return false;
+//            return false;
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -163,7 +165,7 @@ public class SolrHandler {
 
             // Checking if Solr is active in the system
             if (!isSolrActive.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE) || solrUrl == null || solrUrl.length() == 0 || solrCoreFields == null || solrCoreFields.length() == 0) {
-              logger.info("Solr is not active in the system");
+                logger.info("Solr is not active in the system");
                 return null;
             }
 
@@ -367,7 +369,9 @@ public class SolrHandler {
         // Setting the item's status
         Properties properties = Configuration.getInstance().getProperties();
         String statusBaseUri = regItem.getRegStatus().getRegStatusgroup().getBaseuri();
-        document.setField(BaseConstants.KEY_SOLR_ITEM_STATUS, statusBaseUri + "/" + regItem.getRegStatus().getLocalid());
+
+//        document.setField(BaseConstants.KEY_SOLR_ITEM_STATUS, statusBaseUri + "/" + regItem.getRegStatus().getLocalid());
+        document.setField(BaseConstants.KEY_SOLR_ITEM_STATUS, regItem.getRegStatus().getLocalid());
 
         // Getting & setting the registry
         String registrylocalid = "";
@@ -461,20 +465,19 @@ public class SolrHandler {
         // #--- Creating dynamic fields ---# //
         // Listing the RegFields for the current RegItem
         List<RegFieldmapping> regFieldmappings = regFieldmappingManager.getAll(regItem.getRegItemclass());
-        
+
         // Getting the list of reg fields id to be indexed in solr      
         String fieldToIndexLocalId_string = properties.getProperty(BaseConstants.KEY_PROPERTY_SOLR_FILEDTOINDEX_LOCALID);
-        String [] fieldToIndexLocalIds_array = fieldToIndexLocalId_string.split(",");
+        String[] fieldToIndexLocalIds_array = fieldToIndexLocalId_string.split(",");
         HashMap<String, String> fieldToIndexLocalIds = new HashMap<>();
         for (String tmp : fieldToIndexLocalIds_array) {
             fieldToIndexLocalIds.put(tmp, tmp);
         }
-        
 
         // Finding the localization for each RegField of the current RegItem
         for (RegFieldmapping regFiledmapping : regFieldmappings) {
             List<RegLocalization> regLocalizations = regLocalizationManager.getAll(regFiledmapping.getRegField(), regItem);
-            
+
             // Check if the reg field needs to be indexed
             if (fieldToIndexLocalIds.containsKey(regFiledmapping.getRegField().getLocalid())) {
 
@@ -532,51 +535,50 @@ public class SolrHandler {
 
     public static boolean checkSolrCompleteIndexinglRunning() {
         boolean running = false;
-        File f;
-        f = new File(Configuration.getInstance().getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SOLR_COMPLETE_INDEXING_RUNNING);
+        File f = new File(Configuration.getInstance().getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SOLR_COMPLETE_INDEXING_RUNNING);
         Configuration.getInstance().getLogger().trace("Checking for existence of file " + f.getAbsolutePath());
         try {
             if (f.exists() && !f.isDirectory()) {
                 running = true;
             }
-  
+
         } catch (Exception e) {
-          Configuration.getInstance().getLogger().error("Error during checking of " + f.getAbsolutePath() + ": " + e.getMessage(), e);
+            Configuration.getInstance().getLogger().error("Error during checking of " + f.getAbsolutePath() + ": " + e.getMessage(), e);
         }
         return running;
     }
 
     private static void createSolrCompleteIndexinglRunningFile() throws Exception {
-      String solrCompleteIndexingRunningPath = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SOLR_COMPLETE_INDEXING_RUNNING;
-      Configuration.getInstance().getLogger().trace("Creating file " + solrCompleteIndexingRunningPath);
-      File solrCompleteIndexingRunningFile = new File(solrCompleteIndexingRunningPath);
-      solrCompleteIndexingRunningFile.getParentFile().mkdirs();
-      try {
+        String solrCompleteIndexingRunningPath = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SOLR_COMPLETE_INDEXING_RUNNING;
+        Configuration.getInstance().getLogger().trace("Creating file " + solrCompleteIndexingRunningPath);
+        File solrCompleteIndexingRunningFile = new File(solrCompleteIndexingRunningPath);
+        solrCompleteIndexingRunningFile.getParentFile().mkdirs();
+        try {
 
-          boolean success = solrCompleteIndexingRunningFile.createNewFile();
+            boolean success = solrCompleteIndexingRunningFile.createNewFile();
 
-          if (!success) {
-            Configuration.getInstance().getLogger().error("Could not create file " + solrCompleteIndexingRunningFile);
-          }
+            if (!success) {
+                Configuration.getInstance().getLogger().error("Could not create file " + solrCompleteIndexingRunningFile);
+            }
 
-      } catch (IOException ex) {
-          Configuration.getInstance().getLogger().error("Could not create file " + solrCompleteIndexingRunningFile + ": " + ex.getMessage(), ex);
-      }
-  }
+        } catch (IOException ex) {
+            Configuration.getInstance().getLogger().error("Could not create file " + solrCompleteIndexingRunningFile + ": " + ex.getMessage(), ex);
+        }
+    }
 
     private static void deleteSolrCompleteIndexinglRunningFile() {
-      String solrCompleteIndexingRunningFile = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SOLR_COMPLETE_INDEXING_RUNNING;
-      Configuration.getInstance().getLogger().trace("Deleting file " + solrCompleteIndexingRunningFile);
-      try {
-          File file = new File(solrCompleteIndexingRunningFile);
+        String solrCompleteIndexingRunningFile = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_SOLR_COMPLETE_INDEXING_RUNNING;
+        Configuration.getInstance().getLogger().trace("Deleting file " + solrCompleteIndexingRunningFile);
+        try {
+            File file = new File(solrCompleteIndexingRunningFile);
 
-          boolean success = file.delete();
+            boolean success = file.delete();
 
-          if (!success) {
-            Configuration.getInstance().getLogger().error("Could not delete file " + solrCompleteIndexingRunningFile);
-          }
-      } catch (Exception ex) {
-        Configuration.getInstance().getLogger().error("Could not delete file " + solrCompleteIndexingRunningFile + ": " + ex.getMessage(), ex);
-      }
+            if (!success) {
+                Configuration.getInstance().getLogger().error("Could not delete file " + solrCompleteIndexingRunningFile);
+            }
+        } catch (Exception ex) {
+            Configuration.getInstance().getLogger().error("Could not delete file " + solrCompleteIndexingRunningFile + ": " + ex.getMessage(), ex);
+        }
     }
 }
