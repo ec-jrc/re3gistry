@@ -92,11 +92,13 @@ public class XMLFormatter implements Formatter {
 
         xml.writeAttribute("xmlns", XSISCHEMALOCATION, "xsi", XSISCHEMALOCATION);
 //        xml.writeAttribute(item.getItemclass().getId(), "xmlns", item.getUri());
-        xml.writeAttribute(NS_XML, "xmlns", item.getUri());
-        String schemaLocation = "http://inspire.ec.europa.eu/registry http://inspire.ec.europa.eu/draft-schemas/registry/2.0/registry.xsd";
+//        xml.writeAttribute("xmlns", item.getUri());
+//        xml.writeAttribute(NS_XML, "xmlns", item.getUri());
+        String schemaLocation = "http://inspire.ec.europa.eu/registry http://inspire.ec.europa.eu/draft-schemas/registry/2.0/"+item.getType()+".xsd";
         xml.writeAttribute("xsi", XSISCHEMALOCATION, "schemaLocation", schemaLocation);
 //        xml.writeAttribute(item.getItemclass().getId(), "id", item.getUri());
-        xml.writeAttribute(NS_XML, "id", item.getUri());
+        xml.writeAttribute("id", item.getUri());
+//        xml.writeAttribute(NS_XML, "id", item.getUri());
 
         return xml;
     }
@@ -122,7 +124,8 @@ public class XMLFormatter implements Formatter {
 
     private void writeRegisterShortVersion(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
         xml.writeStartElement("register");
-        xml.writeAttribute(NS_XML, "id", item.getUri());
+        xml.writeAttribute("id", item.getUri());
+//        xml.writeAttribute(NS_XML, "id", item.getUri());
 
         writeFields(xml, item);
         writeRegistryAndRegister(xml, item);
@@ -152,7 +155,8 @@ public class XMLFormatter implements Formatter {
 
     private void writeItemShortVersion(XMLStreamWriter xml, ContainedItem item, String mainElementName) throws XMLStreamException {
         xml.writeStartElement(mainElementName.toLowerCase());
-        xml.writeAttribute(NS_XML, "id", item.getUri());
+        xml.writeAttribute("id", item.getUri());
+//        xml.writeAttribute(NS_XML, "id", item.getUri());
 
         writeLanguage(xml);
         writeVersions(xml, item);
@@ -267,7 +271,8 @@ public class XMLFormatter implements Formatter {
                     xml.writeEndElement();
                 } else if (fieldName != null && "status".equals(fieldLocalId)) {
                     xml.writeStartElement(fieldLocalId);
-                    xml.writeAttribute(NS_XML, "id", href);
+                    xml.writeAttribute("id", href);
+//                    xml.writeAttribute(NS_XML, "id", href);
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                     xml.writeEndElement();
                 } else if (fieldName != null && ("annex".equals(fieldLocalId) || "themenumber".equals(fieldLocalId))) {
@@ -309,7 +314,8 @@ public class XMLFormatter implements Formatter {
             default:
                 String itemClassName = item.getItemclass().getId();
                 xml.writeStartElement("itemclass");
-                xml.writeAttribute(NS_XML, "uriname", itemClassName);
+                xml.writeAttribute("uriname", itemClassName);
+//                xml.writeAttribute(NS_XML, "uriname", itemClassName);
                 writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", item.getLanguage(), itemClassName);
                 xml.writeEndElement();
 
@@ -323,17 +329,20 @@ public class XMLFormatter implements Formatter {
                 break;
             case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
                 xml.writeStartElement("registry");
-                xml.writeAttribute(NS_XML, "id", item.getRegistry().getUri());
+                xml.writeAttribute("id", item.getRegistry().getUri());
+//                xml.writeAttribute(NS_XML, "id", item.getRegistry().getUri());
                 writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", item.getLanguage(), item.getRegistry().getUri());
                 xml.writeEndElement();
                 break;
             default:
                 xml.writeStartElement("registry");
-                xml.writeAttribute(NS_XML, "id", item.getRegistry().getUri());
+                xml.writeAttribute("id", item.getRegistry().getUri());
+//                xml.writeAttribute(NS_XML, "id", item.getRegistry().getUri());
                 writeTitle(xml, item.getRegistry());
 
                 xml.writeStartElement("register");
-                xml.writeAttribute(NS_XML, "id", item.getRegister().getUri());
+                xml.writeAttribute("id", item.getRegister().getUri());
+//                xml.writeAttribute(NS_XML, "id", item.getRegister().getUri());
                 writeTitle(xml, item.getRegistry());
 
                 xml.writeEndElement();
@@ -362,7 +371,8 @@ public class XMLFormatter implements Formatter {
 
     private void writeSimpleElementWithAttribute(XMLStreamWriter xml, String localName, String nsAttr, String attrKey, String attrValue, String value) throws XMLStreamException {
         xml.writeStartElement(localName);
-        xml.writeAttribute(nsAttr, attrKey, attrValue);
+        xml.writeAttribute(attrKey, attrValue);
+//        xml.writeAttribute(nsAttr, attrKey, attrValue);
         xml.writeCharacters(value);
         xml.writeEndElement();
     }

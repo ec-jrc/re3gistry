@@ -36,6 +36,9 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRoleManager;
+import eu.europa.ec.re3gistry2.javaapi.cache.EhCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.RecacheItems;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegActionHandler;
 import eu.europa.ec.re3gistry2.model.RegAction;
 import eu.europa.ec.re3gistry2.model.RegGroup;
@@ -70,6 +73,9 @@ public class RegistryManager extends HttpServlet {
 
         // Setup the entity manager
         EntityManager entityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
+
+        // Init logger
+        Logger logger = Configuration.getInstance().getLogger();
 
         // Getting the current user
         RegUser regUser = (RegUser) request.getAttribute(BaseConstants.KEY_REQUEST_REGUSER);
@@ -174,7 +180,16 @@ public class RegistryManager extends HttpServlet {
                                 // Getting the list of RegItem contained in the action
                                 regItems = regItemManager.getAll(regAction);
                                 if (!regItems.isEmpty()) {
+                                    //update RSS
                                     UpdateRSS.updateRSS(regAction, regItems);
+                                    //update CACHE
+                                    ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
+                                    if (cache == null) {
+                                        cache = new EhCache();
+                                        request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
+                                    }
+                                    RecacheItems recacheItems = new RecacheItems(entityManager, cache, logger, regItems);
+                                    recacheItems.run();
                                 }
                                 break;
                             default:

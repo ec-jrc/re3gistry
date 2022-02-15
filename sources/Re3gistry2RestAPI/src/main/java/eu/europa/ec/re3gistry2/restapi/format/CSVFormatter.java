@@ -26,14 +26,13 @@
  */
 package eu.europa.ec.re3gistry2.restapi.format;
 
-import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
 import eu.europa.ec.re3gistry2.model.RegFieldmapping;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.model.ContainedItem;
-import eu.europa.ec.re3gistry2.restapi.model.Item;
-import eu.europa.ec.re3gistry2.restapi.model.LocalizedProperty;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;

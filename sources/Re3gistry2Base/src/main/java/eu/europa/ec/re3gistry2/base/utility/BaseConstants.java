@@ -28,6 +28,7 @@ public class BaseConstants {
     /* - Generic keys - */
     // Appname
     public static final String KEY_APP_NAME = "Re3gistry2";
+
     // Locked Request referer key
     public static final String KEY_CHANGE_LANGUAGE_LOCKED_REFERRER = "webgate.ec.europa.eu";
     // Boolean string values
@@ -35,7 +36,7 @@ public class BaseConstants {
     public static final String KEY_BOOLEAN_STRING_FALSE = "false";
     // Latest version for new items
     public static final int KEY_LATEST_VERSION = 0;
-    
+
     public static final String KEY_STANDARD_DATEFORMAT = "yyyy-MM-dd";
 
     /* - Files and folders - */
@@ -58,6 +59,7 @@ public class BaseConstants {
     public static final String KEY_FILE_NAME_SYSTEMINSTALLING = "system.installing";
 
     public static final String KEY_FILE_NAME_SOLR_COMPLETE_INDEXING_RUNNING = "solr_complete_indexing.running";
+    public static final String KEY_FILE_NAME_CACHEALL_COMPLETE_RUNNING = "cacheall_complete.running";
 
     /* - Properties - */
     // Persistence unit name
@@ -84,6 +86,8 @@ public class BaseConstants {
     public static final String KEY_PROPERTY_BASESTATUSGROUP = "application.status.maingroup";
     public static final String KEY_PROPERTY_DATEFORMAT = "application.dateformat";
 
+    public static final String ATTRIBUTE_CACHE_KEY = "re3gistry-rest-api-cache";
+
     /**
      * Mail keys
      */
@@ -97,7 +101,9 @@ public class BaseConstants {
     public static final String KEY_MAIL_SENDER = "mail.sender";
     public static final String KEY_MAIL_APPLICATION_ROOTURL = "application.rooturl";
     public static final String KEY_RELEASENOTE_RSS_APPLICATION = "application.releasenote.rss.path";
-
+    public static final String KEY_TEXT_BANNER_APPLICATION = "application.banner";
+    public static final String KEY_PRIVACY_APPLICATION = "application.privacy";
+    
     /* Mail Subjects  and body */
     public static final String KEY_EMAIL_SUBJECT_SUCCESS = "mail.text.subject.success";
     public static final String KEY_EMAIL_BODY_SUCCESS = "mail.text.body.success";
@@ -108,6 +114,16 @@ public class BaseConstants {
     public static final String KEY_EMAIL_BODY_ECAS_NEW_REGISTRATION = "mail.text.error.ecas.newregistration";
     public static final String KEY_EMAIL_SUBJECT_RESETPASSWORD = "mail.text.subject.resetpassword.registration";
     public static final String KEY_EMAIL_BODY_RESETPASSWORD = "mail.text.error.resetpassword.registration";
+
+    public static final String KEY_EMAIL_SUBJECT_SOLR_SUCCESS = "mail.text.subject.solr.success";
+    public static final String KEY_EMAIL_BODY_SOLR_SUCCESS = "mail.text.body.solr.success";
+    public static final String KEY_EMAIL_SUBJECT_SOLR_ERROR = "mail.text.subject.solr.error";
+    public static final String KEY_EMAIL_BODY_SOLR_ERROR = "mail.text.body.solr.error";
+    public static final String KEY_EMAIL_SUBJECT_CACHE_SUCCESS = "mail.text.subject.cache.success";
+    public static final String KEY_EMAIL_BODY_CACHE_SUCCESS = "mail.text.body.cache.success";
+    public static final String KEY_EMAIL_SUBJECT_CACHE_ERROR = "mail.text.subject.cache.error";
+    public static final String KEY_EMAIL_BODY_CACHE_ERROR = "mail.text.body.cache.error";
+
     /**
      * mail subject and body bulk import
      */
@@ -374,6 +390,7 @@ public class BaseConstants {
     public static final String KEY_REQUEST_RESULT = "requestResult";
     public static final String KEY_REQUEST_REGISTRY_CONTENT_SUMMARY = "registryContentSummary";
     public static final String KEY_REQUEST_STARTINDEX = "startIndex";
+    public static final String KEY_REQUEST_STARTCACHING = "startCaching";
 
     /* - Keys for naming the form fields - */
     public static final String KEY_FORM_FIELD_NAME_HREF_SUFFIX = "__href";
@@ -576,13 +593,13 @@ public class BaseConstants {
 
     /* - Operation success - */
     public static final String KEY_OPERATION_SUCCESS = "operation.success";
-    
+
     /* Re3gistry2 rest API keys*/
     public static final String KEY_ALLOW_NULL_FIELDS = "application.returnnullfields";
     public static final String KEY_DISK_CACHE_PATH = "application.cache.disk.path";
     public static final String KEY_DISK_CACHE_MAXIMUM_SPACE = "application.cache.disk.maximum.space";
     public static final String KEY_CACHE_NAME_UUID = "items-by-uuid";
-    public static final String KEY_CACHE_NAME_URL = "items-by-url";    
+    public static final String KEY_CACHE_NAME_URL = "items-by-url";
 
     public String getKEY_APP_NAME() {
         return KEY_APP_NAME;

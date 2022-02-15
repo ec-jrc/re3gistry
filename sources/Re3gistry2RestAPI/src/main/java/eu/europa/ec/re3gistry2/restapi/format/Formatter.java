@@ -29,7 +29,7 @@ package eu.europa.ec.re3gistry2.restapi.format;
 import java.io.OutputStream;
 
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
 
 public interface Formatter {
 

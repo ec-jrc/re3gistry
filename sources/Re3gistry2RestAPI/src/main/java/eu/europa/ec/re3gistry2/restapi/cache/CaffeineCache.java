@@ -32,8 +32,8 @@ import java.util.Set;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-
-import eu.europa.ec.re3gistry2.restapi.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
 
 public class CaffeineCache implements ItemCache {
 

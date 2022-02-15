@@ -24,39 +24,58 @@
  *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  *  * for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.restapi.format;
+package eu.europa.ec.re3gistry2.javaapi.cache.model;
 
-import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+public class LocalizedProperty implements Serializable{
 
-import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+    private final String lang;
+    private final String id;
+    private final String istitle;
+    private final String label;
+    private final List<LocalizedPropertyValue> values;
+    private final int order;
+    private final String tablevisible;
 
-public class JSONInternalFormatter implements Formatter {
-
-    public static final ObjectMapper OM = new ObjectMapper();
-
-    static {
-        OM.enable(SerializationFeature.INDENT_OUTPUT);
-        OM.setSerializationInclusion(Include.NON_NULL);
+    public LocalizedProperty(String lang, String id, boolean istitle,
+            String label, List<LocalizedPropertyValue> values, int order, boolean tablevisible) {
+        this.lang = lang;
+        this.id = id;
+        this.istitle = istitle ? "true" : null;
+        this.label = label;
+        this.values = values;
+        this.order = order;
+        this.tablevisible = tablevisible ? "true" : "null";
     }
 
-    @Override
-    public String getFormatName() {
-        return "jsonc";
+    public String getLang() {
+        return lang;
     }
 
-    @Override
-    public String getContentType() {
-        return "application/json";
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public void write(Item item, RegLanguagecode language, OutputStream out) throws Exception {
-        OM.writeValue(out, item);
+    public String getIstitle() {
+        return istitle;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public List<LocalizedPropertyValue> getValues() {
+        return values;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public String getTablevisible() {
+        return tablevisible;
     }
 
 }

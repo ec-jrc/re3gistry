@@ -10,7 +10,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <servlet.version>2.5</servlet.version>
-        <jackson.version>2.12.2</jackson.version>
+        <jackson.version>2.13.0</jackson.version>
         <caffeine.version>2.7.0</caffeine.version>
     </properties>    
     <parent>
@@ -23,6 +23,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Re3gistry2Base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Re3gistry2JavaAPI</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -52,16 +57,10 @@
             <version>1.1.1</version>
         </dependency>
         
-        
-        <dependency>
+         <dependency>
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
             <version>1.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>3.9.0</version>
         </dependency>
         
     </dependencies>

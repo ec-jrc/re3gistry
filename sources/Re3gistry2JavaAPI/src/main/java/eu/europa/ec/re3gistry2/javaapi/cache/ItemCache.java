@@ -24,39 +24,22 @@
  *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  *  * for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.restapi.format;
+package eu.europa.ec.re3gistry2.javaapi.cache;
 
-import java.io.OutputStream;
+import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
-import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
 
-public class JSONInternalFormatter implements Formatter {
+public interface ItemCache {
 
-    public static final ObjectMapper OM = new ObjectMapper();
+    public Set<String> getLanguages();
 
-    static {
-        OM.enable(SerializationFeature.INDENT_OUTPUT);
-        OM.setSerializationInclusion(Include.NON_NULL);
-    }
+    public Item getByUuid(String language, String uuid);
+    public Item getByUrl(String language, String url);
 
-    @Override
-    public String getFormatName() {
-        return "jsonc";
-    }
+    public void add(String language, Item item);
 
-    @Override
-    public String getContentType() {
-        return "application/json";
-    }
-
-    @Override
-    public void write(Item item, RegLanguagecode language, OutputStream out) throws Exception {
-        OM.writeValue(out, item);
-    }
+    public void remove(String language, String uuid);
+    public void removeAll();
 
 }

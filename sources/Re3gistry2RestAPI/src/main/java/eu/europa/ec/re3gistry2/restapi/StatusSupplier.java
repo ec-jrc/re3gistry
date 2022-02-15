@@ -42,11 +42,13 @@ import eu.europa.ec.re3gistry2.model.RegLocalization;
 import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegStatusgroup;
 import eu.europa.ec.re3gistry2.model.RegStatuslocalization;
-import eu.europa.ec.re3gistry2.restapi.model.LocalizedProperty;
-import eu.europa.ec.re3gistry2.restapi.model.ContainedItem;
-import eu.europa.ec.re3gistry2.restapi.model.Item;
-import eu.europa.ec.re3gistry2.restapi.model.ItemRef;
-import eu.europa.ec.re3gistry2.restapi.model.LocalizedPropertyValue;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemRef;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -155,8 +157,9 @@ public class StatusSupplier {
         }
         setProperties(regStatusLocalization, language, localid, item);
 
-        item.setInsertdate(regStatus.getInsertdate());
-        item.setEditdate(regStatus.getEditdate());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+        item.setInsertdate(df.format(item.getInsertdate()));
+        item.setEditdate(df.format(item.getEditdate()));
         item.setLanguage(languageCode.getIso6391code());
 
         return item;
@@ -238,8 +241,11 @@ public class StatusSupplier {
 
         setProperties(regStatusLocalization, language, localid, item);
 
-        item.setInsertdate(regStatusgroup.getInsertdate());
-        item.setEditdate(regStatusgroup.getEditdate());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+        item.setInsertdate(df.format(regStatusgroup.getInsertdate()));
+        if (regStatusgroup.getEditdate() != null) {
+            item.setEditdate(df.format(regStatusgroup.getEditdate()));
+        }
         item.setLanguage(languageCode.getIso6391code());
 
         return item;

@@ -37,7 +37,7 @@ import eu.europa.ec.re3gistry2.restapi.ApiError;
 import eu.europa.ec.re3gistry2.restapi.ApiResponse;
 import eu.europa.ec.re3gistry2.restapi.format.Formatter;
 import eu.europa.ec.re3gistry2.restapi.format.JSONInternalFormatter;
-import eu.europa.ec.re3gistry2.restapi.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
 
 public class ResponseUtil {
 

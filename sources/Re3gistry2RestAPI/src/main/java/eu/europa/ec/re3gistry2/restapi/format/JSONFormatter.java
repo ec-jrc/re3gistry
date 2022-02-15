@@ -131,13 +131,22 @@ public class JSONFormatter implements Formatter {
 
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             JSONObject containedItemsJSON = new JSONObject();
+            int index = 0;
             for (ContainedItem ci : item.getContainedItems()) {
-                regItemJsonObject.put("value", writeItemShortVersion(containedItemsJSON, ci));
+                JSONObject itemJSON = new JSONObject();
+                JSONObject valueJSON = new JSONObject();
+                itemJSON.put("value", writeItemShortVersion(valueJSON, ci));
+                containedItemsJSON.put(String.valueOf(index), itemJSON);
+                index++;
 
                 if (ci.isHasCollection()) {
                     if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
                         for (ContainedItem c : ci.getContainedItems()) {
-                            regItemJsonObject.put(ci.getItemclass().getId().toLowerCase(), writeItemShortVersion(containedItemsJSON, c));
+                            JSONObject containedJSON = new JSONObject();
+                            JSONObject containedvalueJSON = new JSONObject();
+                            containedJSON.put(ci.getItemclass().getId().toLowerCase(), writeItemShortVersion(containedvalueJSON, c));
+                            containedItemsJSON.put(String.valueOf(index), containedJSON);
+                            index++;
                         }
                     }
                 }

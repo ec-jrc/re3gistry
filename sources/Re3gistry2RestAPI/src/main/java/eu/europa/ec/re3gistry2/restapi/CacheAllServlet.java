@@ -26,6 +26,7 @@
  */
 package eu.europa.ec.re3gistry2.restapi;
 
+import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -39,8 +40,7 @@ import org.apache.logging.log4j.Logger;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.cache.CacheAll;
-import eu.europa.ec.re3gistry2.restapi.cache.ItemCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,19 +48,21 @@ import java.util.concurrent.Future;
 
 public class CacheAllServlet extends HttpServlet {
 
-    private static final Logger LOG = LogManager.getLogger(CacheAllServlet.class.getName());
+    private static final Logger LOG = LogManager.getLogger(CacheServlet.class.getName());
     private static final long serialVersionUID = 1L;
 
     private EntityManagerFactory emf;
     private ItemCache cache;
+    private Logger logger;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         try {
             this.emf = PersistenceFactory.getEntityManagerFactory();
-            this.cache = (ItemCache) config.getServletContext().getAttribute(CacheServlet.ATTRIBUTE_CACHE_KEY);
+            this.cache = (ItemCache) config.getServletContext().getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
+            this.logger = LogManager.getLogger("Re3gistry2");
         } catch (Exception e) {
-            LOG.error("Unexpected exception occured: cannot load the configuration system", e);
+            this.logger.error("Unexpected exception occured: cannot load the configuration system", e);
         }
     }
 
@@ -75,12 +77,9 @@ public class CacheAllServlet extends HttpServlet {
 
             ExecutorService executor = Executors.newFixedThreadPool(availableLanguages.size());
 
-            for (RegLanguagecode languageCode : availableLanguages) {
-                Future result = executor.submit(new CacheAll(this.emf, this.cache, LOG, languageCode));
-            }
+            Future result = executor.submit(new CacheAllRunnable(em, this.cache, this.logger, req));
             executor.shutdown();
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
         }
     }
 }

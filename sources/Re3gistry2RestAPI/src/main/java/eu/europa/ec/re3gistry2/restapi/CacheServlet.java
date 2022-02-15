@@ -26,6 +26,7 @@
  */
 package eu.europa.ec.re3gistry2.restapi;
 
+import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import java.io.IOException;
 
 import javax.servlet.ServletConfig;
@@ -34,9 +35,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//import eu.europa.ec.re3gistry2.restapi.cache.CaffeineCache;
-import eu.europa.ec.re3gistry2.restapi.cache.EhCache;
-import eu.europa.ec.re3gistry2.restapi.cache.ItemCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.EhCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
 import org.apache.logging.log4j.LogManager;
@@ -44,8 +44,7 @@ import org.apache.logging.log4j.Logger;
 
 public class CacheServlet extends HttpServlet {
 
-    static final String ATTRIBUTE_CACHE_KEY = "re3gistry-rest-api-cache";
-    private static final Logger LOG = LogManager.getLogger(CacheServlet.class.getName());
+    private static final Logger LOG = LogManager.getLogger(ItemsServlet.class.getName());
     private static final long serialVersionUID = 1L;
 
     private static ItemCache cache;
@@ -53,7 +52,7 @@ public class CacheServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         //this.cache = new CaffeineCache();
         this.cache = new EhCache();
-        config.getServletContext().setAttribute(ATTRIBUTE_CACHE_KEY, cache);
+        config.getServletContext().setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
     }
 
     @Override

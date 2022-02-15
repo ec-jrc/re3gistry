@@ -21,42 +21,26 @@
  *  *
  *  * This work was supported by the Interoperability solutions for public
  *  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
- *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
+ *  * through Action 2016.10: European Location Interoperability Solutions
  *  * for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.restapi.format;
+package eu.europa.ec.re3gistry2.javaapi.cache.model;
 
-import java.io.OutputStream;
+import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+/**
+ * ContainedItem information
+ */
+public class BasicContainedItem implements Serializable{
 
-import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+    private String uri;
 
-public class JSONInternalFormatter implements Formatter {
-
-    public static final ObjectMapper OM = new ObjectMapper();
-
-    static {
-        OM.enable(SerializationFeature.INDENT_OUTPUT);
-        OM.setSerializationInclusion(Include.NON_NULL);
+    public String getUri() {
+        return uri;
     }
 
-    @Override
-    public String getFormatName() {
-        return "jsonc";
-    }
-
-    @Override
-    public String getContentType() {
-        return "application/json";
-    }
-
-    @Override
-    public void write(Item item, RegLanguagecode language, OutputStream out) throws Exception {
-        OM.writeValue(out, item);
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
 }

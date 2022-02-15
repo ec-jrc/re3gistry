@@ -45,7 +45,9 @@ import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.cache.ItemCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemHistorySupplier;
+import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemSupplier;
 import eu.europa.ec.re3gistry2.restapi.format.CSVFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.Formatter;
 import eu.europa.ec.re3gistry2.restapi.format.ISO19135Formatter;
@@ -54,8 +56,8 @@ import eu.europa.ec.re3gistry2.restapi.format.JSONInternalFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.RDFFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.RORFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.XMLFormatter;
-import eu.europa.ec.re3gistry2.restapi.model.Item;
-import eu.europa.ec.re3gistry2.restapi.util.NoVersionException;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.util.NoVersionException;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
 
@@ -72,7 +74,7 @@ public class ItemsServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         try {
             this.emf = PersistenceFactory.getEntityManagerFactory();
-            this.cache = (ItemCache) config.getServletContext().getAttribute(CacheServlet.ATTRIBUTE_CACHE_KEY);
+            this.cache = (ItemCache) config.getServletContext().getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
             this.formatters = new HashMap<>();
 
             addFormatter(new JSONInternalFormatter());
@@ -101,6 +103,17 @@ public class ItemsServlet extends HttpServlet {
             String uri = RequestUtil.getParamTrimmed(req, "uri", null);
             String format = RequestUtil.getParamTrimmed(req, "format", null);
             uri = removeTrailingSlashes(uri);
+
+//            if (uri != null) {
+//                int slash = uri.lastIndexOf('/');
+//                String localid = uri.substring(slash + 1);
+//                int count = countOccurance(uri, localid);
+//
+//                if (count == 2) {
+//                    int start = uri.lastIndexOf(localid);
+//                    uri = uri.substring(0, start - 1);
+//                }
+//            }
 
             Predicate<Item> typeFilter = getTypeFilter(path);
             Formatter formatter = formatters.get(format);

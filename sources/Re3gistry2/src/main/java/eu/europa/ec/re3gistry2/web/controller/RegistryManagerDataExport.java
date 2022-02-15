@@ -26,23 +26,33 @@ package eu.europa.ec.re3gistry2.web.controller;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.InputSanitizerHelper;
+import eu.europa.ec.re3gistry2.base.utility.MailManager;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.base.utility.UserHelper;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemRegGroupRegRoleMappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
+import eu.europa.ec.re3gistry2.javaapi.cache.CacheAll;
+import eu.europa.ec.re3gistry2.javaapi.cache.EhCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
 import eu.europa.ec.re3gistry2.javaapi.solr.SolrHandler;
+import eu.europa.ec.re3gistry2.migration.manager.MigrationManager;
 import eu.europa.ec.re3gistry2.model.RegGroup;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.Logger;
 
 @WebServlet(WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT)
@@ -65,6 +75,7 @@ public class RegistryManagerDataExport extends HttpServlet {
 
         // Getting form parameter
         String startIndex = request.getParameter(BaseConstants.KEY_REQUEST_STARTINDEX);
+        String startCaching = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING);
 
         // Getting request parameter
         String regUserDetailUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERDETAIL_UUID);
@@ -73,6 +84,7 @@ public class RegistryManagerDataExport extends HttpServlet {
         String actionType = request.getParameter(BaseConstants.KEY_REQUEST_ACTIONTYPE);
 
         startIndex = (startIndex != null) ? InputSanitizerHelper.sanitizeInput(startIndex) : null;
+        startCaching = (startCaching != null) ? InputSanitizerHelper.sanitizeInput(startCaching) : null;
         regUserDetailUUID = (regUserDetailUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserDetailUUID) : null;
         regUserRegGroupMappingUUID = (regUserRegGroupMappingUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserRegGroupMappingUUID) : null;
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
@@ -106,11 +118,52 @@ public class RegistryManagerDataExport extends HttpServlet {
         boolean permissionManageSystem = UserHelper.checkGenericAction(actionManageSystem, currentUserGroupsMap, regItemRegGroupRegRoleMappingManager);
 
         if (permissionManageSystem) {
-
+            ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
             if (startIndex != null && startIndex.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
                 // This is a save request
 
-                boolean result = SolrHandler.indexComplete();
+                String subject;
+                String body;
+                boolean result;
+                try {
+                    SolrHandler.indexComplete();
+                    subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_SOLR_SUCCESS);
+                    body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_SOLR_SUCCESS);
+                    result = true;
+                } catch (Exception e) {
+                    subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_SOLR_ERROR);
+                    body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_SOLR_ERROR) + e.getMessage();
+                    result = false;
+                }
+                sendMail(request, subject, body);
+
+                request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
+            } else if (startCaching != null && startCaching.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+                // This is a save request
+
+                ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
+                if (cache == null) {
+                    cache = new EhCache();
+                    request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
+                }
+                cache.removeAll();
+
+                String subject;
+                String body;
+                CacheAll cacheall = new CacheAll(entityManager, cache, request);
+                boolean result;
+
+                try {
+                    cacheall.run();
+                    subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_CACHE_SUCCESS);
+                    body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_CACHE_SUCCESS);
+                    result = true;
+                } catch (Exception e) {
+                    subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_CACHE_ERROR);
+                    body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_CACHE_ERROR);
+                    result = false;
+                }
+                sendMail(request, subject, body);
 
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
             }
@@ -150,4 +203,22 @@ public class RegistryManagerDataExport extends HttpServlet {
             logger.error(ex.getMessage(), ex);
         }
     }
+
+    public void sendMail(HttpServletRequest request, String subject, String body) throws Exception {
+        /**
+         * get the user from the session
+         */
+        HttpSession session = request.getSession();
+        RegUser currentRegUser = (RegUser) session.getAttribute(BaseConstants.KEY_SESSION_USER);
+        /**
+         * send email
+         */
+        String recipientString = currentRegUser.getEmail();
+        InternetAddress[] recipient = {
+            new InternetAddress(recipientString)
+        };
+
+        MailManager.sendMail(recipient, subject, body);
+    }
+
 }

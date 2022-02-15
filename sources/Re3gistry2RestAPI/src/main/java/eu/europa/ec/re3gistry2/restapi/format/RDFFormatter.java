@@ -39,13 +39,12 @@ import javax.xml.stream.XMLStreamWriter;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.model.BasicContainedItem;
-import eu.europa.ec.re3gistry2.restapi.model.ContainedItem;
-import eu.europa.ec.re3gistry2.restapi.model.Item;
-import eu.europa.ec.re3gistry2.restapi.model.LocalizedProperty;
-import eu.europa.ec.re3gistry2.restapi.model.VersionInformation;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.restapi.util.AvailableFormatsUtil;
-import eu.europa.ec.re3gistry2.restapi.util.DateUtil;
 import eu.europa.ec.re3gistry2.restapi.util.IndentingXMLStreamWriter;
 import java.util.List;
 
@@ -113,7 +112,7 @@ public class RDFFormatter implements Formatter {
 
     @Override
     public void write(Item item, RegLanguagecode lang, OutputStream out) throws Exception {
-        XMLStreamWriter xml = getXMLWriter(out, RDF, "RDF"); 
+        XMLStreamWriter xml = getXMLWriter(out, RDF, "RDF");
         this.languageFile = lang;
 
         switch (item.getType()) {
@@ -334,16 +333,10 @@ public class RDFFormatter implements Formatter {
     }
 
     private void writeDate(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
-        String convertedInsertDate = DateUtil.convertDate(item.getInsertdate());
-        if (convertedInsertDate != null) {
-            writeSimpleElement(xml, DCT, "created", RDF, "datatype", "http://www.w3.org/2001/XMLSchema#date", convertedInsertDate);
-        }
+        writeSimpleElement(xml, DCT, "created", RDF, "datatype", "http://www.w3.org/2001/XMLSchema#date", item.getInsertdate());
 
         if (item.getEditdate() != null) {
-            String convertedEditDate = DateUtil.convertDate(item.getEditdate());
-            if (convertedEditDate != null) {
-                writeSimpleElement(xml, DCT, "issued", RDF, "datatype", "http://www.w3.org/2001/XMLSchema#date", convertedEditDate);
-            }
+            writeSimpleElement(xml, DCT, "issued", RDF, "datatype", "http://www.w3.org/2001/XMLSchema#date", item.getEditdate());
         }
     }
 
