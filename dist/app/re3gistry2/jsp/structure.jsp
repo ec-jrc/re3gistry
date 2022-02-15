@@ -126,7 +126,7 @@
                                     <a class="text-success" href=".<%=WebConstants.PAGE_URINAME_ADDITEMCLASS%>?${constants.KEY_REQUEST_ITEMCLASSUUID}=<%=tmpRegItemclass.getUuid()%>&${constants.KEY_REQUEST_LANGUAGEUUID}=${currentLanguage.uuid}"><i class="fas fa-plus" title="${localization.getString("label.addchilditemitemclass")}"></i></a>
                                         <% }%>
                                     <a class="edit-itemclass text-primary" data-<%=BaseConstants.KEY_FORM_FIELD_NAME_DATA_ITEMCLASSUUID%>=<%=tmpRegItemclass.getUuid()%> href="#"><i class="far fa-edit" title="${localization.getString("label.edit")}"></i></a>
-                                    <a class="text-danger btn-approve-action btn-reg-action" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=<%=tmpRegItemclass.getUuid()%>&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i></a>
+                                    <a class="text-danger btn-approve-action btn-reg-action" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_URINAME_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=<%=tmpRegItemclass.getUuid()%>&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i></a>
                                 </li>
                                 <% } %>
                             </ul>
@@ -180,12 +180,12 @@
             if ($(diff[0].node).data('<%=WebConstants.DATA_PARAMETER_PARENTITEMCLASSPROCEDUREORDER%>') < diff[0].newPosition) {
             //Updating the dragged item
             $.ajax({
-            url: ".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=" + $(diff[0].node).data('<%=WebConstants.DATA_PARAMETER_ITEMCLASSUUID%>') + "&<%=BaseConstants.KEY_REQUEST_NEWPOSITION%>=" + diff[0].newPosition
+            url: ".<%=WebConstants.PAGE_URINAME_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=" + $(diff[0].node).data('<%=WebConstants.DATA_PARAMETER_ITEMCLASSUUID%>') + "&<%=BaseConstants.KEY_REQUEST_NEWPOSITION%>=" + diff[0].newPosition
             }).done(function () {
             });
                     //Updating the substituted item
                     $.ajax({
-                    url: ".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=" + $(diff[1].node).data('<%=WebConstants.DATA_PARAMETER_ITEMCLASSUUID%>') + "&<%=BaseConstants.KEY_REQUEST_NEWPOSITION%>=" + diff[1].newPosition
+                    url: ".<%=WebConstants.PAGE_URINAME_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=" + $(diff[1].node).data('<%=WebConstants.DATA_PARAMETER_ITEMCLASSUUID%>') + "&<%=BaseConstants.KEY_REQUEST_NEWPOSITION%>=" + diff[1].newPosition
                     }).done(function () {
             $(".alert-wrong-order").removeClass("hidden");
             });

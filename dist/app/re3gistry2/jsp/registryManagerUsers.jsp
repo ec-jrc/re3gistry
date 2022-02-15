@@ -23,6 +23,7 @@
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
 --%>
+<%@page import="java.util.Properties"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping"%>
 <%@page import="java.util.Set"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegLocalizationhistory"%>
@@ -151,7 +152,13 @@
                 <thead>
                     <tr>
                         <th>${localization.getString("label.name")}</th>
+                            <%
+                                final Properties properties = Configuration.getInstance().getProperties();
+                                String privacy = properties.getProperty(BaseConstants.KEY_PRIVACY_APPLICATION);
+                                if (privacy != null && privacy.equals("ON")) {
+                            %>
                         <th>${localization.getString("label.email")}</th>
+                            <%}%>
                         <th>${localization.getString("label.status")}</th>
                         <th>${localization.getString("label.insertdate")}</th>
                     </tr>
@@ -162,7 +169,11 @@
                     %>
                     <tr>
                         <td><a href="?<%=BaseConstants.KEY_REQUEST_USERDETAIL_UUID%>=<%=tmp.getUuid()%>"><%=tmp.getName()%></a></td>                    
+                            <%
+                                if (privacy != null && privacy.equals("ON")) {
+                            %>
                         <td><%=tmp.getEmail()%></td>
+                        <%}%>
                         <td><%=(tmp.getEnabled()) ? systemLocalization.getString("label.enabled") : systemLocalization.getString("label.disabled")%></td>
                         <td><%=dt.format(tmp.getInsertdate())%></td>
                     </tr> 
@@ -179,9 +190,9 @@
                 if (regUserDetail != null) {
             %>
             <form id="editing-form" method="post"  accept-charset="UTF-8" data-toggle="validator" role="form">
-                
+
                 <input type="hidden" name="csrfPreventionSalt" value="${csrfPreventionSalt}"/>
-                
+
                 <input type="hidden" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_USERUUID%>" value="<%=regUserDetail.getUuid()%>" />
                 <input type="hidden" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_SUBMITACTION%>" value="true" />
 
@@ -198,6 +209,12 @@
                 </div>                      
 
                 <%
+                    final Properties properties = Configuration.getInstance().getProperties();
+                    String privacy = properties.getProperty(BaseConstants.KEY_PRIVACY_APPLICATION);
+                    if (privacy != null && privacy.equals("ON")) {
+                %>
+
+                <%
                     // The SSO Reference is displayed only in case of Login type ECAS
                     if (regUserDetail.getSsoreference() != null && configuration.getProperties().getProperty("application.login.type").equals(BaseConstants.KEY_PROPERTY_LOGIN_TYPE_ECAS)) {
                 %>
@@ -208,10 +225,14 @@
                 <%
                     }
                 %>
+
                 <div class="row">
                     <label class="col-sm-4">${localization.getString('label.email')}</label>
                     <div class="col-sm-8"><%= (regUserDetail.getEmail() != null) ? regUserDetail.getEmail() : ""%></div>
                 </div>
+                <%
+                    }
+                %>
                 <div class="row">
                     <label class="col-sm-4">${localization.getString('label.insertdate')}</label>
                     <div class="col-sm-8"><%= (regUserDetail.getInsertdate() != null) ? dt.format(regUserDetail.getInsertdate()) : ""%></div>
@@ -303,7 +324,7 @@
                     %>
                     <tr>
                         <td><input class="cbUpdate" data-<%=BaseConstants.KEY_REQUEST_USERGROUPMAPPING_UUID%>="<%=foundUuid%>" data-<%=BaseConstants.KEY_REQUEST_USERDETAIL_UUID%>=<%=regUserDetail.getUuid()%> data-<%=BaseConstants.KEY_REQUEST_GROUP_UUID%>="<%=tmp.getUuid()%>" type="checkbox" <%=(found) ? "checked=\"checked\"" : ""%> /></td>
-                        <td><a href="?<%=BaseConstants.KEY_REQUEST_GROUP_UUID%>=<%=tmp.getUuid()%>"><%=tmp.getName()%></a></td>                    
+                        <td><a href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_GROUPS%>?<%=BaseConstants.KEY_REQUEST_GROUP_UUID%>=<%=tmp.getUuid()%>"><%=tmp.getName()%></a></td>                    
                     </tr> 
                     <%
                         }

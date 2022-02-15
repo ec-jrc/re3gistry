@@ -40,7 +40,7 @@
             </div>
             <div class="modal-footer">
                 <div class="col-md-6 offset-md-6">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">${localization.getString("label.sessionexpiring.close")}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

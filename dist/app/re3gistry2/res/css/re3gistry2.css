@@ -266,8 +266,9 @@ a.disabled {
   width: 100%; }
 
 /* Data table customization */
-.dataTable {
-  min-width: 500px; }
+/*.dataTable {
+  min-width: 500px; 
+}*/
 
 .dataTable a, .dataTable td {
   word-wrap: break-word; }
@@ -679,3 +680,20 @@ div.dataTables_wrapper div.dataTables_processing {
 @media (min-width: 1200px) {
   .input-group .cke {
     width: 94%; } }
+
+.ft3 a:link, footer a:visited, footer a:focus, footer a:active {
+    color: #fff;
+}
+
+.hb3 {
+    background-color: #343a40;
+}
+.hb2 {
+    background-color: #6c757d;
+}
+.ft1 {
+    background-color: #343a40;
+}
+.ft2 {
+    background-color: #6c757d;
+}

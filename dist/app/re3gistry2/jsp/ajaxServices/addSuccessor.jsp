@@ -27,7 +27,6 @@
 <%@page import="eu.europa.ec.re3gistry2.model.RegLocalization"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegLanguagecode"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegField"%>
-<%@page import="eu.europa.ec.re3gistry2.crudimplementation.RegStatuslocalizationManager"%>
 <%@page import="eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager"%>
 <%@page import="javax.persistence.EntityManager"%>
 <%@page import="eu.europa.ec.re3gistry2.base.utility.PersistenceFactory"%>
@@ -46,8 +45,7 @@
     // Init managers
     RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
     RegFieldManager regFieldManager = new RegFieldManager(entityManager);
-    RegStatuslocalizationManager regStatuslocalizationManager = new RegStatuslocalizationManager(entityManager);
-    
+
     RegField regFieldLabel = regFieldManager.getTitleRegField();
 
     RegItem regItem = (RegItem) request.getAttribute(BaseConstants.KEY_REQUEST_REGITEM);
@@ -63,11 +61,11 @@
     <input type="hidden" name="<%=BaseConstants.KEY_REQUEST_NEWSTATUSLOCALID%>" value="<%=newRegStatus.getLocalid()%>" />
     <input type="hidden" name="<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID%>" value="<%=currentLanguage.getUuid()%>" />    
     <div class="modal-header">
-        ${localization.getString("label.changestatus")}: <%= regStatuslocalizationManager.get(newRegStatus, currentLanguage).getLabel() %>.
+        You are about to change the status to: <%=newRegStatus.getLocalid()%>.
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label for="successor">${localization.getString("label.selectsuccesor")}:</label>
+            <label for="successor">Select successor(s):</label>
             <select class="selectpicker form-control" name="<%=BaseConstants.KEY_REQUEST_SUCCESSORS%>" multiple data-live-search="true">
                 <% for (RegItem tmp : regItems) {
                         List<RegLocalization> tmpLoc = regLocalizationManager.getAll(regFieldLabel, tmp, currentLanguage);
@@ -81,10 +79,10 @@
     </div>
     <div class="modal-footer">
         <div class="col-sm-6">
-            <button type="button" class="btn btn-secondary width100" data-dismiss="modal"><i class="fas fa-ban"></i> ${localization.getString("label.close")}</button>
+            <button type="button" class="btn btn-secondary width100" data-dismiss="modal"><i class="fas fa-ban"></i> Close</button>
         </div>
         <div class="col-sm-6">
-            <button type="submit" class="btn btn-primary width100 d-none" id="saveSuccessor"><i class="far fa-save"></i> ${localization.getString("label.savechanges")}</button>
+            <button type="submit" class="btn btn-primary width100 d-none" id="saveSuccessor"><i class="far fa-save"></i> Save changes</button>
         </div>
     </div>
 </form>
