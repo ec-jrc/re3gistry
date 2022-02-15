@@ -46,7 +46,7 @@ public class WebConstants {
     public static final String PAGE_URINAME_COMMONJS = "/common";
     public static final String PAGE_PATH_COMMONJS = "/dynamicJs";
 
-    public static final String PAGE_URINAME_INDEX = "/index";
+    public static final String PAGE_URINAME_INDEX = "/admin";
     public static final String PAGE_PATH_INDEX = "";
 
     public static final String PAGE_URINAME_LOGIN = "/login";
@@ -58,7 +58,7 @@ public class WebConstants {
     public static final String PAGE_URINAME_LOGOUT = "/logout";
     public static final String PAGE_PATH_LOGOUT = "";
 
-    public static final String PAGE_URINAME_BROWSE = "/browse";
+    public static final String PAGE_URINAME_BROWSE = "/content";
     public static final String PAGE_PATH_BROWSE = "";
 
     public static final String PAGE_URINAME_BROWSE_NEWITEMPROPOSED = "/browseNew";
@@ -88,7 +88,7 @@ public class WebConstants {
     public static final String PAGE_URINAME_ADDFIELDVALUE = "/addFieldValue";
     public static final String PAGE_PATH_ADDFIELDVALUE = "/ajaxServices";
 
-    public static final String PAGE_URINAME_ITEMCLASS = "/itemclass";
+    public static final String PAGE_URINAME_ITEMCLASS = "/structure";
     public static final String PAGE_PATH_ITEMCLASS = "";
 
     public static final String PAGE_URINAME_ADDITEM = "/addItem";
@@ -192,6 +192,12 @@ public class WebConstants {
     
     public static final String PAGE_URINAME_STATUS = "/status";
     public static final String PAGE_PATH_STATUS = "";
+    
+    
+    public static final String KEY_API_CONTEXT_NAME = "/re3gistry2restapi";
+    public static final String KEY_PATH_API_CONTEXT_NAME = "";
+    public static final String KEY_CACHEALL_NAME = "/cacheall";
+    public static final String KEY_PATH_CACHEALL_NAME = "";
 
     // Data parameters
     public static final String DATA_PARAMETER_ACTIONUUID = "actionuuid";
