@@ -41,13 +41,19 @@ div.overlay-loader .load-feedback{
 }
 
 .custom-spinner {
-  animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
-.overflowauto{
-    overflow: auto;
+.dataTable{
+    width: 100%;
+}
+[type="search"] {
+    width: 85%;
+}
+.ecl-pagination__item {
+    display: block;
 }

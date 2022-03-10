@@ -26,6 +26,8 @@
  */
 package eu.europa.ec.re3gistry2.restapi;
 
+import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
+import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
@@ -157,9 +159,14 @@ public class StatusSupplier {
         }
         setProperties(regStatusLocalization, language, localid, item);
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
-        item.setInsertdate(df.format(item.getInsertdate()));
-        item.setEditdate(df.format(item.getEditdate()));
+        String dateformat = Configuration.getInstance().getProperties().getProperty(BaseConstants.KEY_PROPERTY_DATEFORMAT, BaseConstants.KEY_STANDARD_DATEFORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateformat);
+        if (item.getInsertdate() != null) {
+            item.setInsertdate(sdf.format(item.getInsertdate()));
+        }
+        if (item.getEditdate() != null) {
+            item.setEditdate(sdf.format(item.getEditdate()));
+        }
         item.setLanguage(languageCode.getIso6391code());
 
         return item;

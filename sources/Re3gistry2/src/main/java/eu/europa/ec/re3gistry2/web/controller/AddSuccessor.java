@@ -70,7 +70,7 @@ public class AddSuccessor extends HttpServlet {
         RegItem regItem = regItemManager.get(itemUuid);
 
         // Get all the RegItems in the same RegItemclass of the current item
-        List<RegItem> regItems = regItemManager.getAll(regItem.getRegItemclass());
+        List<RegItem> regItems = regItemManager.getAllValid(regItem.getRegItemclass());
 
         // Remove the current RegItem
         regItems.remove(regItem);

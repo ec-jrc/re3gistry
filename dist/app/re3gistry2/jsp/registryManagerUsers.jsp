@@ -155,7 +155,7 @@
                             <%
                                 final Properties properties = Configuration.getInstance().getProperties();
                                 String privacy = properties.getProperty(BaseConstants.KEY_PRIVACY_APPLICATION);
-                                if (privacy != null && privacy.equals("ON")) {
+                                if (privacy == null || (privacy != null && !privacy.equals("ON"))) {
                             %>
                         <th>${localization.getString("label.email")}</th>
                             <%}%>
@@ -170,7 +170,7 @@
                     <tr>
                         <td><a href="?<%=BaseConstants.KEY_REQUEST_USERDETAIL_UUID%>=<%=tmp.getUuid()%>"><%=tmp.getName()%></a></td>                    
                             <%
-                                if (privacy != null && privacy.equals("ON")) {
+                               if (privacy == null || (privacy != null && !privacy.equals("ON"))) {
                             %>
                         <td><%=tmp.getEmail()%></td>
                         <%}%>
@@ -211,7 +211,7 @@
                 <%
                     final Properties properties = Configuration.getInstance().getProperties();
                     String privacy = properties.getProperty(BaseConstants.KEY_PRIVACY_APPLICATION);
-                    if (privacy != null && privacy.equals("ON")) {
+                    if (privacy == null || (privacy != null && !privacy.equals("ON"))) {
                 %>
 
                 <%

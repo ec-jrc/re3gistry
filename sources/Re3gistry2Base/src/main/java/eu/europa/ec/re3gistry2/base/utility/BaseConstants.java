@@ -82,11 +82,16 @@ public class BaseConstants {
     public static final String KEY_PROPERTY_LOGIN_TYPE = "application.login.type";
     public static final String KEY_PROPERTY_LOGIN_TYPE_SHIRO = "SHIRO";
     public static final String KEY_PROPERTY_LOGIN_TYPE_ECAS = "ECAS";
+    
+    public static final String KEY_PROPERTY_INTERFACE_TYPE = "application.selected.interface";
+    public static final String KEY_PROPERTY_INTERFACE_NEUTRAL_TYPE = "neutral";
+    public static final String KEY_PROPERTY_INTERFACE_ECL_TYPE = "ecl";
 
     public static final String KEY_PROPERTY_BASESTATUSGROUP = "application.status.maingroup";
     public static final String KEY_PROPERTY_DATEFORMAT = "application.dateformat";
 
     public static final String ATTRIBUTE_CACHE_KEY = "re3gistry-rest-api-cache";
+    public static final String ATTRIBUTE_CACHE_QUEUE_KEY = "re3gistry-rest-api-cache-queue";
 
     /**
      * Mail keys
@@ -103,6 +108,10 @@ public class BaseConstants {
     public static final String KEY_RELEASENOTE_RSS_APPLICATION = "application.releasenote.rss.path";
     public static final String KEY_TEXT_BANNER_APPLICATION = "application.banner";
     public static final String KEY_PRIVACY_APPLICATION = "application.privacy";
+
+    public static final String KEY_SELECTED_INTERFACE = "application.selected.interface";
+    public static final String KEY_SELECTED_INTERFACE_ECL = "ecl";
+    public static final String KEY_SELECTED_INTERFACE_NEUTRAL = "neutral";
     
     /* Mail Subjects  and body */
     public static final String KEY_EMAIL_SUBJECT_SUCCESS = "mail.text.subject.success";
@@ -391,6 +400,8 @@ public class BaseConstants {
     public static final String KEY_REQUEST_REGISTRY_CONTENT_SUMMARY = "registryContentSummary";
     public static final String KEY_REQUEST_STARTINDEX = "startIndex";
     public static final String KEY_REQUEST_STARTCACHING = "startCaching";
+    public static final String KEY_REQUEST_STARTCACHING_MASTERLANGUAGE = "startCachingMasterLanguage";
+    public static final String KEY_REQUEST_REMOVECACHING = "removeCaching";
 
     /* - Keys for naming the form fields - */
     public static final String KEY_FORM_FIELD_NAME_HREF_SUFFIX = "__href";
@@ -593,6 +604,8 @@ public class BaseConstants {
 
     /* - Operation success - */
     public static final String KEY_OPERATION_SUCCESS = "operation.success";
+    public static final String KEY_OPERATION_CACHE_ISRUNNING = "operation.cacheinprogress";
+    public static final String KEY_OPERATION_REMOVE_CACHE_SUCCESS = "operation.remove.cache.success";
 
     /* Re3gistry2 rest API keys*/
     public static final String KEY_ALLOW_NULL_FIELDS = "application.returnnullfields";

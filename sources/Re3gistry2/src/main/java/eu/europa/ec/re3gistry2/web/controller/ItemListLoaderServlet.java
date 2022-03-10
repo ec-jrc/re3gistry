@@ -166,7 +166,7 @@ public class ItemListLoaderServlet extends HttpServlet {
         // Listing the RegFields for the current RegItem
         List<RegFieldmapping> regFieldmappings;
 
-        // #--- Creating the list of contained items (if needed) ---# //
+        // #--- Creating the list of Available items (if needed) ---# //
         int totalCount = 0;
         List<RegItem> containedRegItems = null;
         List<RegItemclass> regItemclasses = regItemclassManager.getChildItemclass(regItem.getRegItemclass());
@@ -205,7 +205,7 @@ public class ItemListLoaderServlet extends HttpServlet {
 
         if (containedRegItems != null && !containedRegItems.isEmpty()) {
 
-            // Getting the field list for the contained items
+            // Getting the field list for the Available items
             regFieldmappings = regFieldmappingManager.getAll(regItemclasses.get(0));
 
             // Showing the table contents

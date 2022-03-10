@@ -23,7 +23,7 @@
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
 --%>
-<%@page import="eu.europa.ec.re3gistry2.javaapi.cache.CacheAll"%>
+<%@page import="eu.europa.ec.re3gistry2.javaapi.cache.CacheHelper"%>
 <%@page import="eu.europa.ec.re3gistry2.javaapi.solr.SolrHandler"%>
 <%@page import="java.util.Properties"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping"%>
@@ -96,6 +96,18 @@
             </div>
 
             <%
+                String operationSuccess = (String) request.getAttribute(BaseConstants.KEY_REQUEST_RESULT_MESSAGE);
+                if (operationSuccess != null) {
+            %>
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <%=operationSuccess%>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <%
+                }
+            %>
+
+            <%
                 // Getting the configuration
                 Properties properties = Configuration.getInstance().getProperties();
                 String isSolrActive = properties.getProperty(BaseConstants.KEY_PROPERTY_SOLR_ACTIVE);
@@ -132,7 +144,7 @@
             %>
 
             <%
-                String buttonCacheDisabled = (CacheAll.checkCacheCompleteRunning()) ? " disabled" : "";
+                String buttonCacheDisabled = (CacheHelper.checkCacheCompleteRunning()) ? " disabled" : "";
             %>
             <div class="card mt-3 none">
                 <div class="card-header">
@@ -141,18 +153,30 @@
                 <div class="card-body">
                     <h5 class="card-title"></h5>
                     <p class="card-text">${localization.getString("label.cachingdescription")}</p>
-                    <% if (CacheAll.checkCacheCompleteRunning()) { %>
+                    <% if (CacheHelper.checkCacheCompleteRunning()) { %>
                     <p class="card-text mt-3 alert alert-warning">${localization.getString("label.cacheallrunning")}</p>
                     <% } else {%>
-                    <a id="startCaching" class="btn btn-success btn-md<%=buttonCacheDisabled%>" href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing")}</a>
-                    <script>
-                        $('#startCaching').on('click', function () {
-                            $(this).addClass('disabled');
-                            setTimeout(function () {
-                                location.reload();
-                            }, 3000);
-                        });
-                    </script>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <a id="startCachingMasterLanguage" class="buttoncache btn btn-warning width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING_MASTERLANGUAGE%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing.masterlanguage")}</a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a id="startCaching" class="buttoncache btn btn-success width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing")}</a>
+                        </div>
+                        <script>
+                            $(".buttoncache").on('click', function () {
+                                //                        $('#startCaching').on('click', function () {
+                                $(".buttoncache").addClass('disabled');
+                                //                            $(this).addClass('disabled');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 3000);
+                            });
+                        </script>
+                        <div class="col-sm-4">
+                            <a id="removeCaching" class="buttoncache btn btn-danger width100" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_REMOVECACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.removecache")}</a>
+                        </div>
+                    </div>
                     <% }%>
                 </div>
             </div>
@@ -168,9 +192,9 @@
 
         <script>
             <%-- Init the confirm message --%>
-                        $('[data-toggle=confirmation]').confirmation({
-                            rootSelector: '[data-toggle=confirmation]'
-                        });
+                            $('[data-toggle=confirmation]').confirmation({
+                                rootSelector: '[data-toggle=confirmation]'
+                            });
         </script>
 
     </body>

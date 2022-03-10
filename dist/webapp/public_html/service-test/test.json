@@ -1,0 +1,531 @@
+{
+    "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel",
+    "version": {
+        "number": "3",
+        "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel:3"
+    },
+    "versionHistory": [
+        {
+            "number": "1",
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel:1"
+        }, {
+            "number": "2",
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel:2"
+        }
+    ],
+    "language": "en",
+    "type": "item",
+    "itemclass": {
+        "id": "CodeList"
+    },
+    "registry": {
+        "uri": "http://inspire.ec.europa.eu/registry",
+        "properties": [
+            {
+                "lang": "en",
+                "id": "label",
+                "istitle": "true",
+                "label": "Label",
+                "values": [
+                    {
+                        "value": "INSPIRE registry",
+                        "href": ""
+                    }
+                ],
+                "order": "1"   
+            }
+        ]
+    },
+    "register": {
+        "uri": "http://inspire.ec.europa.eu/codelist",
+        "properties": [
+            {
+                "lang": "en",
+                "id": "label",
+                "istitle": "true",
+                "label": "Label",
+                "values": [
+                    {
+                        "value": "INSPIRE code list register",
+                        "href": ""
+                    }
+                ],
+                "order": "1"   
+            }
+        ]
+    },
+    "properties": [
+        {
+            "lang": "en",
+            "id": "label",
+            "istitle": "true",
+            "label": "Label",
+            "values": [
+                {
+                    "value": "Administrative Hierarchy Level",
+                    "href": ""
+                }
+            ],
+            "href": "",
+            "order": "1"   
+        },
+        {
+            "lang": "en",
+            "id": "GovernanceLevel",
+            "label": "Governance Level",
+            "values": [
+                {
+                    "value": "Legal (EU)",
+                    "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                }
+            ],
+            "order": "3"   
+        },
+        {
+            "lang": "en",
+            "id": "status",
+            "label": "Status",
+            "values": [
+                {
+                    "value": "Valid",
+                    "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                }
+            ],
+            "order": "4"   
+        },
+        {
+            "lang": "en",
+            "id": "theme",
+            "label": "Theme",
+            "values": [
+                {
+                    "value": "Administrative units",
+                    "href": "http://inspire.ec.europa.eu/theme/au"
+                },
+                {
+                    "value": "Administrative units",
+                    "href": "http://inspire.ec.europa.eu/theme/au"
+                }
+            ],
+            "order": "5"   
+        },
+        {
+            "lang": "en",
+            "id": "applicationschema",
+            "label": "Application schema",
+            "values": [
+                {
+                    "value": "Administrative units",
+                    "href": "http://inspire.ec.europa.eu/applicationschema/au"
+                }
+            ],
+            "order": "6"   
+        },
+        {
+            "lang": "en",
+            "id": "extensibility",
+            "label": "Extensibility",
+            "values": [
+                {
+                    "value": "Not extensible",
+                    "href": "http://inspire.ec.europa.eu/registry/extensibility/none"
+                }
+            ],
+            "order": "7"   
+        },
+        {
+            "lang": "en",
+            "id": "definition",
+            "label": "Definition",
+            "values": [
+                {
+                    "value": "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities.",
+                    "href": ""
+                }
+            ],
+            "order": "2"    
+        }
+    ],       
+    "containedItems": [ 
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/1stOrder",
+            "language": "en",
+            "type": "item",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "1st order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/2ndOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "2nd order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/3rdOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "3rd order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/4thOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "4th order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        },
+                        {
+                            "value": "Legal (EU) - Test",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal-test"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        }
+    ],
+    "narrower": [
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/1stOrder",
+            "language": "en",
+            "type": "item",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "1st order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/2ndOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "2nd order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/3rdOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "3rd order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/4thOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "4th order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        },
+                        {
+                            "value": "Legal (EU) - Test",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal-test"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        }
+    ]
+}

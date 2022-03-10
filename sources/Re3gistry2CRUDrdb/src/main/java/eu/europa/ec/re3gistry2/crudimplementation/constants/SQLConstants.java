@@ -62,6 +62,7 @@ public class SQLConstants {
     public static final String SQL_GET_REGITEM_BY_REGITEMCLASSTYPE = "SELECT r FROM RegItem r JOIN r.regItemclass i WHERE i.regItemclasstype = :regItemclasstype";
     public static final String SQL_GET_REGITEM_BY_REGITEMCLASSTYPE_ACTIVE = "SELECT r FROM RegItem r JOIN r.regItemclass i WHERE i.regItemclasstype = :regItemclasstype AND i.active = TRUE";
     public static final String SQL_GET_REGITEM_BY_REGITEMCLASS = "SELECT r FROM RegItem r WHERE r.regItemclass = :regItemclass";
+    public static final String SQL_GET_REGITEM_BY_REGITEMCLASS_AND_STATUS = "SELECT r FROM RegItem r WHERE r.regItemclass = :regItemclass AND r.regStatus = :regStatus";
 
     public static final String SQL_GET_REGITEM_BY_REGITEMCLASSES = "SELECT r FROM RegItem r WHERE r.regItemclass IN :regItemclasses ORDER BY r.localid";
     public static final String SQL_GET_REGITEM_BY_REGITEMCLASSES_COUNT = "SELECT count(r) FROM RegItem r WHERE r.regItemclass IN :regItemclasses";

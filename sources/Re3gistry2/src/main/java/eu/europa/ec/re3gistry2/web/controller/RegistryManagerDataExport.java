@@ -76,6 +76,8 @@ public class RegistryManagerDataExport extends HttpServlet {
         // Getting form parameter
         String startIndex = request.getParameter(BaseConstants.KEY_REQUEST_STARTINDEX);
         String startCaching = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING);
+        String startCachingMasterLanguage = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING_MASTERLANGUAGE);
+        String removeCaching = request.getParameter(BaseConstants.KEY_REQUEST_REMOVECACHING);
 
         // Getting request parameter
         String regUserDetailUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERDETAIL_UUID);
@@ -85,6 +87,7 @@ public class RegistryManagerDataExport extends HttpServlet {
 
         startIndex = (startIndex != null) ? InputSanitizerHelper.sanitizeInput(startIndex) : null;
         startCaching = (startCaching != null) ? InputSanitizerHelper.sanitizeInput(startCaching) : null;
+        startCachingMasterLanguage = (startCachingMasterLanguage != null) ? InputSanitizerHelper.sanitizeInput(startCachingMasterLanguage) : null;
         regUserDetailUUID = (regUserDetailUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserDetailUUID) : null;
         regUserRegGroupMappingUUID = (regUserRegGroupMappingUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserRegGroupMappingUUID) : null;
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
@@ -138,7 +141,8 @@ public class RegistryManagerDataExport extends HttpServlet {
                 sendMail(request, subject, body);
 
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
-            } else if (startCaching != null && startCaching.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+            } else if ((startCaching != null && startCaching.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE))
+                    || (startCachingMasterLanguage != null && startCachingMasterLanguage.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE))) {
                 // This is a save request
 
                 ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
@@ -146,11 +150,16 @@ public class RegistryManagerDataExport extends HttpServlet {
                     cache = new EhCache();
                     request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
                 }
-                cache.removeAll();
+//                cache.removeAll();
 
                 String subject;
                 String body;
-                CacheAll cacheall = new CacheAll(entityManager, cache, request);
+                CacheAll cacheall;
+                if (startCaching != null) {
+                    cacheall = new CacheAll(entityManager, cache, null);
+                } else {
+                    cacheall = new CacheAll(entityManager, cache, regLanguagecodeManager.getMasterLanguage());
+                }
                 boolean result;
 
                 try {
@@ -166,6 +175,25 @@ public class RegistryManagerDataExport extends HttpServlet {
                 sendMail(request, subject, body);
 
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
+            } else if (removeCaching != null && removeCaching.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+                ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
+                if (cache == null) {
+                    cache = new EhCache();
+                    request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
+                }
+                boolean result;
+                try {
+                    cache.removeAll();
+                    result = true;
+                } catch (Exception e) {
+                    result = false;
+                }
+                request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
+
+                String operationResult = systemLocalization.getString(BaseConstants.KEY_OPERATION_REMOVE_CACHE_SUCCESS);
+                // Setting the operation success attribute
+                request.setAttribute(BaseConstants.KEY_REQUEST_RESULT_MESSAGE, operationResult);
+
             }
 
             // This is a view request

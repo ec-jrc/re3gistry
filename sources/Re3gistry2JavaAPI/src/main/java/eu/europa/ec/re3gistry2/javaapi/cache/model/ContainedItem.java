@@ -78,7 +78,7 @@ public class ContainedItem extends BasicContainedItem implements Serializable {
     }
 
     public String getUri() {
-        return uri;
+        return uri.replace("\\/", "/");
     }
 
     public void setUri(String uri) {

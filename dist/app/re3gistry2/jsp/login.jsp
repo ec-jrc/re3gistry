@@ -95,7 +95,7 @@
                 <%-- SHIRO --%>
                 <c:when test="${properties['application.login.type'] == 'SHIRO'}">                    
                     <div class="col-2 mt-4"><a></a></div>
-                    <div class="col-8 card card-login mx-auto mt-4">
+                    <div class="col-8 card mx-auto mt-4">
                         <form name="loginform" method="post" accept-charset="UTF-8" data-toggle="validator">
                             <fieldset class="align-items-center">
                                 <input type="hidden" name="csrfPreventionSalt" value="${csrfPreventionSalt}"/>

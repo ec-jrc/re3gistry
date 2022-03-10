@@ -36,6 +36,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRoleManager;
+import eu.europa.ec.re3gistry2.javaapi.cache.CacheHelper;
 import eu.europa.ec.re3gistry2.javaapi.cache.EhCache;
 import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
 import eu.europa.ec.re3gistry2.javaapi.cache.RecacheItems;
@@ -53,7 +54,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -177,17 +181,18 @@ public class RegisterManager extends HttpServlet {
                             case BaseConstants.KEY_STATUS_LOCALID_PUBLISHED:
                                 // Getting the list of RegItem contained in the action
                                 regItems = regItemManager.getAll(regAction);
-                                if (!regItems.isEmpty()) {
+                                if (formSubmitAction != null && !regItems.isEmpty()) {
                                     //update RSS
                                     UpdateRSS.updateRSS(regAction, regItems);
+                                    
                                     //update CACHE
-                                    ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
-                                    if (cache == null) {
-                                        cache = new EhCache();
-                                        request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
-                                    }
-                                    RecacheItems recacheItems = new RecacheItems(entityManager, cache, logger, regItems);
-                                    recacheItems.run();
+                                    RecacheItems recacheItems = new RecacheItems(entityManager, request, regItems);
+                                    recacheItems.start();
+
+                                    ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
+                                    String operationResult = systemLocalization.getString(BaseConstants.KEY_OPERATION_CACHE_ISRUNNING);
+                                    // Setting the operation success attribute
+                                    request.setAttribute(BaseConstants.KEY_REQUEST_RESULT_MESSAGE, operationResult);
                                 }
                                 break;
                             default:

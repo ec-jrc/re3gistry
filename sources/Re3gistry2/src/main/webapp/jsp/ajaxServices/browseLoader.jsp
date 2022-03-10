@@ -588,9 +588,9 @@
 
 <hr/>
 
-<%-- ## Creating the contained items list (if available) ## --%>
+<%-- ## Creating the Available items list (if available) ## --%>
 <%
-// Checking if the item can have contained items (if the itemclass has child)
+// Checking if the item can have Available items (if the itemclass has child)
     List<RegItemclass> regItemclasses = regItemclassManager.getChildItemclass(regItem.getRegItemclass());
     if (regItemclasses.size() > 0) {
 
@@ -706,7 +706,7 @@
 <table id="list-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
     <thead>
         <tr>
-            <%  // If there are more than one "contained item class", load just the label of the contained items (registers)    
+            <%  // If there are more than one "contained item class", load just the label of the Available items (registers)    
                 if (regItemclasses.size() > 1) {
                     RegLocalization fieldLocalization;
                     try {
@@ -721,7 +721,7 @@
                         %><th><div class="d-flex"><div class="mt-2"><%=fieldLocalization.getValue()%></div></div><%
                             }
                         } else {
-                            // Getting the field list for the contained items
+                            // Getting the field list for the Available items
                             RegFieldmappingManager regFieldmappingManager = new RegFieldmappingManager(entityManager);
                             regFieldmappings = regFieldmappingManager.getAll(regItemclasses.get(0));
 
@@ -760,7 +760,7 @@
     <table id="proposed-list-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <%  // If there are more than one "contained item class", load just the label of the contained items (registers)    
+                <%  // If there are more than one "contained item class", load just the label of the Available items (registers)    
                     if (regItemclasses.size() > 1) {
                         RegLocalization fieldLocalization;
                         try {
@@ -771,7 +771,7 @@
                         }
                 %><th><%=fieldLocalization.getValue()%></th><%
                 } else {
-                    // Getting the field list for the contained items
+                    // Getting the field list for the Available items
                     RegFieldmappingManager regFieldmappingManager = new RegFieldmappingManager(entityManager);
                     regFieldmappings = regFieldmappingManager.getAll(regItemclasses.get(0));
 
@@ -799,7 +799,7 @@
 </div>
 
 <%
-    // If the item cannot have contained items (the itemclass has no child), a message is shown
+    // If the item cannot have Available items (the itemclass has no child), a message is shown
 } else {
     if (permissionItemProposal || permissionItemRegisterRegistry || permissionRegisterRegistry) {
         if (regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) {
@@ -850,7 +850,7 @@
     <table id="children-list-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <%                // Getting the field list for the contained items
+                <%                // Getting the field list for the Available items
                     RegFieldmappingManager regFieldmappingManager = new RegFieldmappingManager(entityManager);
                     regFieldmappings = regFieldmappingManager.getAll(regItem.getRegItemclass());
                     int fieldToShow = 0;

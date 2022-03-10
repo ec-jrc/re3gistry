@@ -14,10 +14,14 @@
         <persistence.unitname>Re3gistry2</persistence.unitname>
         <persistence.transactiontpye>RESOURCE_LOCAL</persistence.transactiontpye>        
         <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
-        <persistence.eclipselink.ddl-generation>none</persistence.eclipselink.ddl-generation>
-        <persistence.eclipselink.logging.level>CONFIG</persistence.eclipselink.logging.level>
-        <persistence.eclipselink.logging.parameters>false</persistence.eclipselink.logging.parameters>
+        <persistence.eclipselink.ddl-generation>create-tables</persistence.eclipselink.ddl-generation>
         <persistence.dependency.postgres.version>9.4.1212</persistence.dependency.postgres.version>
+        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+        <!--<sonar.host.url>https://webgate.ec.europa.eu/CITnet/sonarqube</sonar.host.url>
+        <sonar.projectKey>INSPIRERGD-RE3GISTRY2</sonar.projectKey>
+        <sonar.login>3b9166b7f1863fea52d45a1a44271a32d1d06c50</sonar.login>
+        <sonar.modules>../Re3gistry2Model,../Re3gistry2CRUDinterface,../Re3gistry2CRUDrdb,../Re3gistry2Base,../Re3gistry2JavaAPI,../Re3gistry2Migration,../Re3gistry2DataCache,../Re3gistry2RestAPI,../Re3gistry2</sonar.modules>
+        -->
         <analytics.id></analytics.id>
         <analytics.url></analytics.url>
         <header.message.class></header.message.class>
@@ -32,8 +36,32 @@
         <application.solr.url>http://localhost:8983/solr/</application.solr.url>
         <application.solr.core>re3gistry2</application.solr.core>
         <application.solr.isactive>true</application.solr.isactive>
-        <application.solr.version>8.0.0</application.solr.version>
+        
+        <application.login.provider>SHIRO</application.login.provider>
+        
+        <sonar.projectKey>INSPIRERGD-RE3GISTRY2</sonar.projectKey>
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
     </properties>
+    <distributionManagement>
+        <repository>
+            <id>vap-sdi-ci.archiva.internal</id>
+            <name>Internal Release Repository</name>
+            <url>http://vap-sdi-ci.jrc.it/archiva/repository/internal/</url>
+        </repository>
+        <snapshotRepository>
+            <id>vap-sdi-ci.archiva.snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>http://vap-sdi-ci.jrc.it/archiva/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>ecas-maven-repo</id>  
+            <!--the CITNet repository with the ECAS client jar--> 
+            <!--<url>https://webgate.ec.europa.eu/CITnet/nexus/content/repositories/ecas</url>-->
+            <url>https://citnet.tech.ec.europa.eu/CITnet/nexus/content/repositories/ecas</url>
+        </repository>
+    </repositories>
     <modules>
         <module>../Re3gistry2Model</module>
         <module>../Re3gistry2CRUDinterface</module>
@@ -43,58 +71,138 @@
         <module>../Re3gistry2Migration</module>
         <module>../Re3gistry2RestAPI</module>
         <module>../Re3gistry2</module>
-    </modules>
+    </modules>    
     <profiles>        
-        <!-- Development profile --> 
+        <!-- Developmensts profile --> 
         <profile>
-            <id>developer-example-profile</id>                   
+<!--            Host: psql-srv3.jrc.it
+                Host: pgsql-srv3.jrc.it
+            User: re3gistrydev
+            Pass: ajaeGhoay7er-->
+            <id>epuread</id>            
             <properties>
-                <persistence.db.address>DB_ADDRESS</persistence.db.address>
+                <profile.id>epuread</profile.id>
+                 <persistence.db.address>pgsql-srv3.jrc.org</persistence.db.address>
                 <persistence.db.port>5432</persistence.db.port>                
-                <persistence.db.name>re3gistry2_dev</persistence.db.name>
+                <persistence.db.name>b6re3gistry2sandbox</persistence.db.name>
                 <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
-                <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
-                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>
-                <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
-                <application.rooturl>https://localhost/re3gistry2</application.rooturl> 
-                <mail.smtp.host>example-smtp.eu</mail.smtp.host>
-                <mail.smtp.port>25</mail.smtp.port>
-                <mail.smtp.auth>false</mail.smtp.auth>
-                <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
-                <mail.user></mail.user>
-                <mail.password></mail.password>
-                <mail.sender>sender@example.eu</mail.sender>
-                <web.session.cookie.secure>true</web.session.cookie.secure>
-				<application.cache.disk.path>/path/to/cache</application.cache.disk.path>
-				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <persistence.jdbc.username>b6re3gistry2sandbox</persistence.jdbc.username>
+                <persistence.jdbc.password>Gah6Que8eeng</persistence.jdbc.password>
+                <application.login.provider>SHIRO</application.login.provider>
+                <application.rooturl>http://testinspire.ec.europa.eu/re3gistry</application.rooturl>
+                <ecas.filter.serverName>testinspire.ec.europa.eu</ecas.filter.serverName>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[This is the <strong>local environment</strong> of the Re3gistry 2 software <br/> If you would like to participate to the testing send an email to JRC-INSPIRE-SUPPORT@ec.europa.eu <br/> Link to the <a class="ecl-link" href="https://testinspire.ec.europa.eu/registry">Re3gistry - localhost Instance - frontend view</a>]]></header.message.text>               
+                <application.cache.disk.path>E:/Dev/ehcache</application.cache.disk.path>
+                <application.releasenote.rss.path>E:/Dev/ehcache/rss</application.releasenote.rss.path>
+                <application.logging.path>E:/Dev/ehcache/registrylogger.log</application.logging.path>
                 <application.privacy>OFF</application.privacy>
+                <application.selected.interface>ecl</application.selected.interface>
             </properties>
-        </profile>        
-        <!-- Server profile -->
-        <profile>
-            <id>server-example-profile</id>                      
-            <properties>            
-                <persistence.db.address>DB_ADDRESS</persistence.db.address>
+            
+            <!--sandbox-->
+<!--            <properties>  
+                <profile.id>epuread</profile.id>          
+                <persistence.db.address>pgsql-srv3.jrc.org</persistence.db.address>
                 <persistence.db.port>5432</persistence.db.port>                
-                <persistence.db.name>re3gistry2_srv</persistence.db.name>
+                <persistence.db.name>b6re3gistry2sandbox</persistence.db.name>
                 <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
-                <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
-                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>            
-                <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
-                <application.rooturl>https://registry-test.eu/re3gistry2</application.rooturl>
-                <application.solr.isactive>false</application.solr.isactive>        
-                <mail.smtp.host>example-smtp.eu</mail.smtp.host>
-                <mail.smtp.port>25</mail.smtp.port>
-                <mail.smtp.auth>false</mail.smtp.auth>
-                <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
-                <mail.user></mail.user>
-                <mail.password></mail.password>
-                <mail.sender>sender@example.eu</mail.sender>
-                <web.session.cookie.secure>true</web.session.cookie.secure>
-				<application.cache.disk.path>/path/to/cache</application.cache.disk.path>
-				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <persistence.jdbc.username>b6re3gistry2sandbox</persistence.jdbc.username>
+                <persistence.jdbc.password>Gah6Que8eeng</persistence.jdbc.password>
+                <analytics.id></analytics.id>
+                <analytics.url></analytics.url>
+                <application.login.provider>ECAS</application.login.provider>
+                <application.rooturl>https://inspire-sandbox.jrc.ec.europa.eu/re3gistry</application.rooturl>
+                <ecas.filter.serverName>inspire-sandbox.jrc.ec.europa.eu</ecas.filter.serverName>
+                <ecas.filter.serverPort>80</ecas.filter.serverPort>
+                <ecas.filter.serverContextPath>/re3gistry</ecas.filter.serverContextPath>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[Re3gistry - sandboxing instance - admin view <br/>Access the frontend Re3gisty instance <a class="ecl-link" href="https://inspire-sandbox.jrc.ec.europa.eu/registry">here</a><br/>You can test the Re3gistry sandbox by letting us know at [mailto]JRC-INSPIRE-SUPPORT@ec.europa.eu]]></header.message.text>               
+                <application.cache.disk.path>/opt/re3gistry2-ehcache</application.cache.disk.path>      
+                <application.releasenote.rss.path>/var/www/inspire-sandbox.jrc.ec.europa.eu/public_html/registry</application.releasenote.rss.path>
+                <application.solr.isactive>true</application.solr.isactive>
                 <application.privacy>ON</application.privacy>
+                <application.selected.interface>neutral</application.selected.interface>
+            </properties>-->
+        </profile>
+        
+        <profile>
+            <id>sandbox</id>                      
+            <properties>            
+                <persistence.db.address>pgsql-srv3.jrc.org</persistence.db.address>
+                <persistence.db.port>5432</persistence.db.port>                
+                <persistence.db.name>b6re3gistry2sandbox</persistence.db.name>
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
+                <persistence.jdbc.username>b6re3gistry2sandbox</persistence.jdbc.username>
+                <persistence.jdbc.password>Gah6Que8eeng</persistence.jdbc.password>
+                <analytics.id></analytics.id>
+                <analytics.url></analytics.url>
+                <application.login.provider>ECAS</application.login.provider>
+                <application.rooturl>https://inspire-sandbox.jrc.ec.europa.eu/re3gistry2</application.rooturl>
+                <ecas.filter.serverName>inspire-sandbox.jrc.ec.europa.eu</ecas.filter.serverName>
+                <ecas.filter.serverPort>80</ecas.filter.serverPort>
+                <ecas.filter.serverContextPath>/re3gistry</ecas.filter.serverContextPath>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[Re3gistry - sandboxing instance - admin view <br/>Access the frontend Re3gisty instance <a class="ecl-link" href="https://inspire-sandbox.jrc.ec.europa.eu/registry">here</a><br/>You can test the Re3gistry sandbox by letting us know at [mailto]JRC-INSPIRE-SUPPORT@ec.europa.eu]]></header.message.text>               
+                <application.cache.disk.path>/opt/re3gistry2-ehcache</application.cache.disk.path>      
+                <application.releasenote.rss.path>/var/www/inspire-sandbox.jrc.ec.europa.eu/public_html/registry</application.releasenote.rss.path>
+                <application.solr.isactive>false</application.solr.isactive>
+                <application.privacy>ON</application.privacy>
+                <application.selected.interface>neutral</application.selected.interface>
             </properties>
-        </profile>     
+        </profile>
+        
+        <profile>
+            <id>int-i5-seville</id>                      
+            <properties>            
+<!--                <persistence.db.address>139.191.152.99</persistence.db.address>
+                <persistence.db.port>5432</persistence.db.port>                
+                <persistence.db.name>re3gistry_int</persistence.db.name>
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
+                <persistence.jdbc.username>re3user</persistence.jdbc.username>
+                <persistence.jdbc.password>fvbc78.9X</persistence.jdbc.password>
+                <analytics.id></analytics.id>
+                <analytics.url></analytics.url>
+                <application.login.provider>ECAS</application.login.provider>
+                <application.rooturl>https://re3gistry-int.jrc.es/re3gistry</application.rooturl>
+                <ecas.filter.serverName>re3gistry-int.jrc.es</ecas.filter.serverName>
+                <ecas.filter.serverPort>80</ecas.filter.serverPort>
+                <ecas.filter.serverContextPath>/re3gistry</ecas.filter.serverContextPath>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[<i class="fas fa-exclamation-triangle"></i> This is the <strong>development environment</strong> of the Re3gistry 2 software <br/> Link to the <a class="ecl-link" href="https://re3gistry-int.jrc.es/registry">Re3gistry - development Instance - frontend view]]></header.message.text>               
+                <application.cache.disk.path>/u01/resources/re3gistry</application.cache.disk.path>
+                <application.releasenote.rss.path>/var/www/registry/</application.releasenote.rss.path>
+                <application.solr.url>https://solr-int.jrc.es/solr/</application.solr.url>
+                <application.solr.core>re3gistry</application.solr.core>
+                <application.solr.isactive>true</application.solr.isactive> 
+                <application.selected.interface>ecl</application.selected.interface>    
+            </properties>
+        </profile>
+        <profile>
+            <id>pre-i5-seville</id>                      
+            <properties>            -->
+                <persistence.db.address>139.191.152.148</persistence.db.address>
+                <persistence.db.port>5432</persistence.db.port>                
+                <persistence.db.name>re3gistry_pre</persistence.db.name>
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
+                <persistence.jdbc.username>re3user_pre</persistence.jdbc.username>
+                <persistence.jdbc.password>change-me</persistence.jdbc.password>
+                <analytics.id></analytics.id>
+                <analytics.url></analytics.url>
+                <application.login.provider>ECAS</application.login.provider>
+                <application.rooturl>https://re3gistry-pre.jrc.es/re3gistry</application.rooturl>
+                <ecas.filter.serverName>re3gistry-pre.jrc.es/re3gistry</ecas.filter.serverName>
+                <ecas.filter.serverPort>80</ecas.filter.serverPort>
+                <ecas.filter.serverContextPath>/re3gistry</ecas.filter.serverContextPath>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[<i class="fas fa-exclamation-triangle"></i> This is the <strong>staging environment</strong> of the Re3gistry 2 software <br/> Link to the <a class="ecl-link" href="https://re3gistry-pre.jrc.es/registry">Re3gistry - staging Instance - frontend view]]></header.message.text>               
+                <application.cache.disk.path>/u01/resources/re3gistry</application.cache.disk.path>
+                <application.releasenote.rss.path>/var/www/registry/</application.releasenote.rss.path>
+                <application.solr.url>https://solr-pre.jrc.es/solr/</application.solr.url>
+                <application.solr.core>re3gistry</application.solr.core>
+                <application.solr.isactive>true</application.solr.isactive>   
+                <application.selected.interface>ecl</application.selected.interface>  
+            </properties>
+        </profile>    
     </profiles>
 </project>

@@ -34,7 +34,7 @@ public class CacheAllRunnable implements Runnable {
     public void run() {
 
         try {
-            CacheAll cacheAll = new CacheAll(em, cache, req);
+            CacheAll cacheAll = new CacheAll(em, cache, null);
             cacheAll.run();
         } catch (Exception e) {
             this.logger.error("Unexpected exception occured", e);

@@ -39,6 +39,7 @@ public interface IRegItemManager{
     public RegItem getByLocalidAndRegItemClass(String localid, RegItemclass regItemclass) throws Exception;
     public List<RegItem> getAll(RegItemclasstype regItemcalsstype) throws Exception;
     public List<RegItem> getAll(RegItemclass regItemcalss) throws Exception;
+    public List<RegItem> getAllValid(RegItemclass regItemcalss) throws Exception;
     public List<RegItem> getAll(List<RegItemclass> regItemcalsses, int start, int maxResults) throws Exception;
     public int countAll(List<RegItemclass> regItemcalsses) throws Exception;
     public List<RegItem> getAll(RegRelationpredicate regRelationpredicate, RegItem regItemObject, int start, int length) throws Exception;

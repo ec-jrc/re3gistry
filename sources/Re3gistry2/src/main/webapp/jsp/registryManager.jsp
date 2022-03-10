@@ -23,6 +23,9 @@
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
 --%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="eu.europa.ec.re3gistry2.javaapi.cache.CacheHelper"%>
 <%@page import="java.util.Set"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegLocalizationhistory"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegItem"%>
@@ -84,7 +87,7 @@
                 </div>
             </div>
 
-                <div class="mb-3">
+            <div class="mb-3">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="nav-item"><a class="nav-link active" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER%>" role="tab">${localization.getString("label.actions")}</a></li>
                     <li role="presentation" class="nav-item"><a class="nav-link" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_USERS%>" role="tab">${localization.getString("label.users")}</a></li>
@@ -94,13 +97,33 @@
             </div>    
 
             <%
+                String operationSuccess = (String) request.getAttribute(BaseConstants.KEY_REQUEST_RESULT_MESSAGE);
+                if (operationSuccess != null) {
+            %>
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <%=operationSuccess%>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <%
+                }
+            %>
+
+            <%
                 // Getting the list of action
                 RegAction regAction = (RegAction) request.getAttribute(BaseConstants.KEY_REQUEST_ACTION);
                 Set<RegAction> regActions = (Set<RegAction>) request.getAttribute(BaseConstants.KEY_REQUEST_ACTION_LIST);
 
                 if (regAction != null) {
             %>
-             <div class="row">
+            <div class="row">
+                <% if (CacheHelper.checkCacheCompleteRunning()) {
+                %>
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    ${localization.getString("label.cacheactionrunning")}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <%}%>
+
                 <div class="col-sm-9">
                     <h3>${localization.getString("label.actiondetails")}</h3>
                 </div>
@@ -178,9 +201,17 @@
                             %>
                             <%-- Action buttons --%>
                             <%if (showActionPublish) {%>
+                            <% if (!CacheHelper.checkCacheCompleteRunning()) {%>
                             <a href="?<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>=<%=tmp.getUuid()%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_SUBMITACTION%>=true" data-toggle="confirmation" data-title="${localization.getString("registrymanager.label.publish.confirm")}" data-placement="left" data-singleton="true" class="btn btn-sm btn-success btn-approve-action btn-reg-action" data-<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>="<%=tmp.getUuid()%>"><i class="fas fa-upload"></i> ${localization.getString("registrymanager.label.publish")}</a><br/>
+                            <%} else {%>
+                            <a href="?<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>=<%=tmp.getUuid()%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_SUBMITACTION%>=true" data-toggle="confirmation" data-title="${localization.getString("registrymanager.label.publish.confirm")}" data-placement="left" data-singleton="true" class="btn btn-sm btn-success btn-approve-action btn-reg-action disabled" data-<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>="<%=tmp.getUuid()%>"><i class="fas fa-upload"></i> ${localization.getString("registrymanager.label.publish")}</a><br/>                            
                             <%}%>
-
+                            <%}%>
+                            <script>
+                                setTimeout(function () {
+                                    location = ''
+                                }, 60 * 1000)
+                            </script>
                         </td>
                     </tr> 
                     <%
@@ -188,6 +219,7 @@
                     %>    
                 </tbody>
             </table>
+
             <%
             } else {
             %><p>${localization.getString("label.noaction")}</p><%
@@ -330,7 +362,7 @@
                                 }
                     %>
                     <tr>
-                        <td><a href=".<%=WebConstants.PAGE_URINAME_BROWSE%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=relatedItemUuid%>&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID%>=<%= tmpLocalizationproposed.getRegLanguagecode().getIso6391code() %>"><%=tmpLocalizationproposed.getValue()%></a><%= (newItem) ? " (" + systemLocalization.getString("label.new") + ")" : ""%></td>
+                        <td><a href=".<%=WebConstants.PAGE_URINAME_BROWSE%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=relatedItemUuid%>&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID%>=<%= tmpLocalizationproposed.getRegLanguagecode().getIso6391code()%>"><%=tmpLocalizationproposed.getValue()%></a><%= (newItem) ? " (" + systemLocalization.getString("label.new") + ")" : ""%></td>
                         <td><%=tmpLocalizationproposed.getRegLanguagecode().getIso6391code()%></td>
                         <td><%
                             RegStatuslocalizationManager regStatusLocalizationManager = new RegStatuslocalizationManager(entityManager);
@@ -427,7 +459,7 @@
                             List<RegLocalization> regLocalizations = null;
                             try {
                                 regLocalizations = regLocalizationManager.getAll(regFieldTitle, tmp, regAction);
-                                if(regLocalizations.isEmpty()){
+                                if (regLocalizations.isEmpty()) {
                                     regLocalizations = regLocalizationManager.getAll(regFieldTitle, tmp, masterLanguage);
                                 }
                             } catch (Exception e) {
@@ -444,7 +476,7 @@
                                         && !tmp.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_INVALID)
                                         && !tmp.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_RETIRED))) {%>
                     <tr>
-                        <td><a href=".<%=WebConstants.PAGE_URINAME_BROWSE%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=tmp.getUuid()%>&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID%>=<%=tmpLocalization.getRegLanguagecode().getIso6391code() %>"><%=tmpLocalization.getValue()%></a><%= (newItem) ? " (" + systemLocalization.getString("label.new") + ")" : ""%></td>
+                        <td><a href=".<%=WebConstants.PAGE_URINAME_BROWSE%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=tmp.getUuid()%>&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID%>=<%=tmpLocalization.getRegLanguagecode().getIso6391code()%>"><%=tmpLocalization.getValue()%></a><%= (newItem) ? " (" + systemLocalization.getString("label.new") + ")" : ""%></td>
                         <td><%=tmpLocalization.getRegLanguagecode().getIso6391code()%></td>
                         <td><%
                             RegStatuslocalizationManager regStatusLocalizationManager = new RegStatuslocalizationManager(entityManager);
@@ -476,23 +508,23 @@
 
         <script>
             <%-- Init the confirm message --%>
-            $('[data-toggle=confirmation]').confirmation({
-                rootSelector: '[data-toggle=confirmation]'
-            });
-            
+                                $('[data-toggle=confirmation]').confirmation({
+                                    rootSelector: '[data-toggle=confirmation]'
+                                });
+
             <%-- Init the data tables --%>
-            $(function () {
+                                $(function () {
             <% if (regAction == null) { %>
-                $('#list-table').DataTable({
-                    "dom": '<"top">rt<"bottom"lip><"clear">',
-                    "order": [[5, "desc"], [1, "desc"]]
-                });
+                                    $('#list-table').DataTable({
+                                        "dom": '<"top">rt<"bottom"lip><"clear">',
+                                        "order": [[5, "desc"], [1, "desc"]]
+                                    });
             <% }%>
-                $('#item-list').DataTable({
-                    "dom": '<"top">rt<"bottom"lip><"clear">',
-                    "order": [[0, "desc"]]
-                });
-            });
+                                    $('#item-list').DataTable({
+                                        "dom": '<"top">rt<"bottom"lip><"clear">',
+                                        "order": [[0, "desc"]]
+                                    });
+                                });
         </script>
 
     </body>

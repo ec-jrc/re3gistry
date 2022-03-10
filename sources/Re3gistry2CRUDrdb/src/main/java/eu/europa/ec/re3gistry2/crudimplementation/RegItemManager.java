@@ -244,7 +244,6 @@ public class RegItemManager implements IRegItemManager {
      */
     @Override
     public List<RegItem> getAll(RegItemclass regItemcalss) throws Exception {
-
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_BY_REGITEMCLASS);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
@@ -547,6 +546,19 @@ public class RegItemManager implements IRegItemManager {
             return null;
         }
         return (List<String>) q.getResultList();
+    }
+
+    @Override
+    public List<RegItem> getAllValid(RegItemclass regItemcalss) throws Exception {
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_BY_REGITEMCLASS_AND_STATUS);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
+        
+        RegStatusManager regStatusManager = new RegStatusManager(em);
+        RegStatus statusValid = regStatusManager.findByLocalid("valid");
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGSTATUS, statusValid);
+
+        return (List<RegItem>) q.getResultList();
     }
 
 }
