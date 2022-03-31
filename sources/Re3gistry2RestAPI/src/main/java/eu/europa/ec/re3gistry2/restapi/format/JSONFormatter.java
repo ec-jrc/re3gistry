@@ -257,17 +257,17 @@ public class JSONFormatter implements Formatter {
                 String fieldName = localizedProperty.getLabel().replace("-item", "");
                 String fieldLocalId = localizedProperty.getId();
 
-                if (fieldName != null && "contactpoint".equals(fieldLocalId)) {
+                if (fieldName != null && "contactpoint".equals(fieldLocalId.toLowerCase())) {
                     JSONObject json = createOrderedJSONObject();
                     json.put("label", value);
                     json.put("email", href);
                     regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "license".equals(fieldLocalId)) {
+                } else if (fieldName != null && "license".equals(fieldLocalId.toLowerCase())) {
                     JSONObject json = createOrderedJSONObject();
                     json.put("label", value);
                     json.put("uri", href);
                     regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "governance-level".equals(fieldLocalId)) {
+                } else if (fieldName != null && "governance-level".equals(fieldLocalId.toLowerCase())) {
                     JSONObject labelJson = createOrderedJSONObject();
                     labelJson.put("lang", item.getLanguage());
                     labelJson.put("text", value);
@@ -277,7 +277,7 @@ public class JSONFormatter implements Formatter {
                     json.put("uri", href);
 
                     regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "status".equals(fieldLocalId)) {
+                } else if (fieldName != null && "status".equals(fieldLocalId.toLowerCase())) {
                     String itemClassName = item.getItemclass().getId();
                     JSONObject labelJson = createOrderedJSONObject();
                     labelJson.put("lang", item.getLanguage());
@@ -288,7 +288,7 @@ public class JSONFormatter implements Formatter {
                     json.put("id", href);
 
                     regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && ("annex".equals(fieldLocalId) || "themenumber".equals(fieldLocalId))) {
+                } else if (fieldName != null && ("annex".equals(fieldLocalId.toLowerCase()) || "themenumber".equals(fieldLocalId.toLowerCase()))) {
                     regItemJsonObject.put(fieldLocalId, value);
                 } else if (!href.isEmpty() && !value.isEmpty()) {
                     JSONObject labelJson = createOrderedJSONObject();
