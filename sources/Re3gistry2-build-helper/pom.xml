@@ -65,8 +65,8 @@
                 <mail.password></mail.password>
                 <mail.sender>sender@example.eu</mail.sender>
                 <web.session.cookie.secure>true</web.session.cookie.secure>
-				<application.cache.disk.path>/path/to/cache</application.cache.disk.path>
-				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <application.cache.disk.path>/path/to/cache</application.cache.disk.path>
+                <application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
                 <application.privacy>OFF</application.privacy>
             </properties>
         </profile>        
@@ -91,8 +91,8 @@
                 <mail.password></mail.password>
                 <mail.sender>sender@example.eu</mail.sender>
                 <web.session.cookie.secure>true</web.session.cookie.secure>
-				<application.cache.disk.path>/path/to/cache</application.cache.disk.path>
-				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <application.cache.disk.path>/path/to/cache</application.cache.disk.path>
+                <application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
                 <application.privacy>ON</application.privacy>
             </properties>
         </profile>     

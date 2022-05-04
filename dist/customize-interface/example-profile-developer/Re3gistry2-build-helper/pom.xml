@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>eu.europa.ec</groupId>
+    <artifactId>Re3gistry2-build-helper</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+    <name>Re3gistry2-build-helper</name>
+    <properties>
+        <war.target.name>re3gistry2</war.target.name>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <persistence.unitname>Re3gistry2</persistence.unitname>
+        <persistence.transactiontpye>RESOURCE_LOCAL</persistence.transactiontpye>        
+        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+        <persistence.eclipselink.ddl-generation>create-tables</persistence.eclipselink.ddl-generation>
+        <persistence.dependency.postgres.version>9.4.1212</persistence.dependency.postgres.version>
+        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+        <analytics.id></analytics.id>
+        <analytics.url></analytics.url>
+        <header.message.class></header.message.class>
+        <header.message.text></header.message.text>
+        <application.rooturl>http://localhost:8080/registry/</application.rooturl>
+        <!-- ECAS config -->
+        <!-- hint: it should match the application.hostname property -->
+        <ecas.filter.serverName>localhost</ecas.filter.serverName>
+        <ecas.filter.serverPort>8080</ecas.filter.serverPort>
+        <!-- useful in case of reverse proxy configuration, it should match application.rootURL -->
+        <ecas.filter.serverContextPath>/re3gistry2</ecas.filter.serverContextPath>
+        <application.solr.url>http://localhost:8983/solr/</application.solr.url>
+        <application.solr.core>re3gistry2</application.solr.core>
+        <application.solr.isactive>true</application.solr.isactive>
+        
+        <application.login.provider>SHIRO</application.login.provider>
+        
+        <sonar.projectKey>INSPIRERGD-RE3GISTRY2</sonar.projectKey>
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+    </properties>
+    <distributionManagement>
+        <repository>
+            <id>vap-sdi-ci.archiva.internal</id>
+            <name>Internal Release Repository</name>
+            <url>http://vap-sdi-ci.jrc.it/archiva/repository/internal/</url>
+        </repository>
+        <snapshotRepository>
+            <id>vap-sdi-ci.archiva.snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>http://vap-sdi-ci.jrc.it/archiva/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>ecas-maven-repo</id>  
+            <url>https://citnet.tech.ec.europa.eu/CITnet/nexus/content/repositories/ecas</url>
+        </repository>
+    </repositories>
+    <modules>
+        <module>../Re3gistry2Model</module>
+        <module>../Re3gistry2CRUDinterface</module>
+        <module>../Re3gistry2CRUDrdb</module>
+        <module>../Re3gistry2Base</module>
+        <module>../Re3gistry2JavaAPI</module>
+        <module>../Re3gistry2Migration</module>
+        <module>../Re3gistry2RestAPI</module>
+        <module>../Re3gistry2</module>
+    </modules>    
+    <profiles>        
+        <!-- Developmensts profile --> 
+        <profile>
+            <id>CHANGE_PROFILE_NAME</id>            
+            <properties>
+                <profile.id>CHANGE_PROFILE_NAME</profile.id>
+                <persistence.db.port>5432</persistence.db.port>                
+                <persistence.db.address>CHANGE_DATABASE_ADDRESS</persistence.db.address>
+                <persistence.db.name>CHANGE_DATABASE_NAME</persistence.db.name>
+                <persistence.jdbc.username>CHANGE_USERNAME</persistence.jdbc.username>
+                <persistence.jdbc.password>CHANGE_PASSWORD</persistence.jdbc.password>
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
+                <application.login.provider>SHIRO</application.login.provider>
+                <application.rooturl>http://test.com/re3gistry</application.rooturl>
+                <ecas.filter.serverName>test.com</ecas.filter.serverName>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[This is the <strong>local environment</strong> of the Re3gistry 2 software <br/> ]]></header.message.text>               
+                <application.cache.disk.path>CHANGE_CACHE_PATH</application.cache.disk.path>
+                <application.releasenote.rss.path>CHANGE_RSS_PATH</application.releasenote.rss.path>
+                <application.logging.path>CHANGE_LOGGING_PATH</application.logging.path>
+                <application.privacy>OFF</application.privacy>
+            </properties>
+        </profile>
+           
+    </profiles>
+</project>

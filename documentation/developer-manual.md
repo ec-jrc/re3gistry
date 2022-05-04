@@ -118,3 +118,7 @@ In the pom.xml of this module, you can find 2 example profile, one for local dev
 
 **Notes**
 Some of these modules are depending ones by others. You can check all the structures and dependencies having a look at the pom.xml file.
+
+
+### How to customize GitHub to use your own files
+Please check the folder "dist\customize-interface\example-profile-developer". Here you will find a script to be run after the customization of your own paths to your local repository of the project and you own customize files: such as footer, header, configurations. Once the script has copied all the files into your own repository you can start using the system already containing your own customize interface.

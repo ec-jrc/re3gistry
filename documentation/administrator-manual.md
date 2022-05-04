@@ -47,7 +47,9 @@ The [distribution folder](../dist/) contains all the file required for the Re3gi
 
 The "app" folder contains the Registry 2 main application and the related Re3gistry 2 rest API application.
 
-The "webapp" folder contains an example web app that can be used to create the public service front-end. 
+The "webapp" folder contains an example web app that can be used to create the public service front-end.
+
+The "customize-interface" folder contains a profile example for the admin to be used to customize the interface. After changing the paths in the script and after a fist run the GitHub project will become personalized with your own footer, header, configurations.   
 
 The "db-script" folder contains the database initialization script.
 

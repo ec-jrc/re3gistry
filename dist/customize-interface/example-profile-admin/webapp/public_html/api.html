@@ -1,0 +1,460 @@
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <title>Registry</title>
+        <meta content="width=device-width,initial-scale=1" name="viewport" />
+        <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+        <script>
+            var cl = document.querySelector('html').classList;
+            cl.remove('no-js');
+            cl.add('has-js');
+        </script>
+        <link
+            rel="stylesheet"
+            href="/registry/js-ecl-v2/package/dist/styles/ecl-ec-preset-website.css"
+            crossorigin="anonymous"
+            media="screen"
+            />
+        <link
+            rel="stylesheet"
+            href="/registry/js-ecl-v2/package/dist/styles/ecl-ec-preset-website-print.css"
+            crossorigin="anonymous"
+            media="print"
+            />
+
+        <link
+            rel="stylesheet"
+            href="/registry/libs/DataTables_v1.10.20/css/jquery.dataTables.min.css"
+            />
+
+        <link
+            rel="stylesheet"
+            href="/registry/css/style_netrual.css"
+            />
+
+        <script src="https://inspire.ec.europa.eu/cdn/1.0/js/jquery.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
+        <script type="application/json">
+            {
+            "utility" : "cck",
+            "url": {
+            "en": "https://my.ec.europa.eu/cookie-policy_en"
+            }
+            }
+        </script>
+
+        <script src="/registry/conf/conf.js"></script>
+        <script src="/registry/js-ecl-v2/app_api.js" defer></script>-->
+
+        <script src="/registry/libs/DataTables_v1.10.20/js/jquery.dataTables.min.js" defer></script>
+
+    </head>
+    <body>
+
+        <!--just for sandbox-integration-preproduction-->
+        <div class="ecl-message ecl-message--info" style="padding-bottom: 0.1em; padding-top: 0.5em" data-ecl-message="" role="alert" data-ecl-auto-init="Message">
+            <div class="ecl-message__content" style="text-align: center">
+                <div class="ecl-message__title" style="max-width: 100%">Re3gistry – sandboxing Instance – frontend view</div>
+                <div class="ecl-message__title" style="max-width: 100%">Access the admin panel <a class="ecl-link" href="https://inspire-sandbox.jrc.ec.europa.eu/re3gistry">here</a></div>
+            </div>
+        </div>
+
+        <header class="ecl-site-header" data-ecl-site-header="true" data-ecl-auto-init="SiteHeader">
+            <div class="ecl-site-header__container ecl-container">
+                <div class="ecl-site-header__banner">
+                    <a data-i18n-link="l-ec-website" class="ecl-link ecl-link--standalone" href="https://inspire-sandbox.jrc.ec.europa.eu/registry"
+                       aria-label="European Commission">
+                        <img class="mb-2" src="/registry/ecl-v2/static/logo/logo-1.png" alt="" width="50%" height="50%">
+                    </a>
+                    <div class="ecl-site-header__selector"><a class="ecl-link ecl-link--standalone ecl-site-header__selector-link"
+                                                              href="#" data-ecl-language-selector="true">English<span class="ecl-site-header__language-icon"><svg
+                                    focusable="false" aria-hidden="true" class="ecl-icon ecl-icon--m">
+                                <use xlink:href="/registry/ecl-v2/static/media/icons.svg#general--language"></use>
+                                </svg><span class="ecl-site-header__language-code">en</span></span></a>
+                        <div hidden="" class="ecl-language-list ecl-language-list--overlay" aria-labelledby="ecl-language-list__title"
+                             role="dialog" data-ecl-language-list-overlay="true">
+                            <div class="ecl-language-list__container ecl-container">
+                                <div class="ecl-row">
+                                    <div class="ecl-language-list__close ecl-col-12 ecl-col-lg-8 ecl-offset-lg-2"><button
+                                            data-ecl-language-list-close="true" type="submit"
+                                            class="ecl-language-list__close-button ecl-button ecl-button--ghost"><span
+                                                class="ecl-button__container"><span class="ecl-button__label" data-ecl-label="true" data-i18n="c-close">Close</span><svg
+                                                    focusable="false" aria-hidden="true" data-ecl-icon="true"
+                                                    class="ecl-button__icon ecl-button__icon--after ecl-icon ecl-icon--s">
+                                                <use xlink:href="/registry/ecl-v2/static/media/icons.svg#ui--close"></use>
+                                                </svg></span></button></div>
+                                    <div class="ecl-language-list__title ecl-col-12 ecl-col-lg-8 ecl-offset-lg-2"
+                                         id="ecl-language-list__title"><svg focusable="false" aria-hidden="true"
+                                                                       class="ecl-language-list__title-icon ecl-icon ecl-icon--m">
+                                        <use xlink:href="/registry/ecl-v2/static/media/icons.svg#general--generic-lang"></use>
+                                        </svg>Select your language</div>
+                                </div>
+                                <div class="ecl-row">
+                                    <div class="ecl-language-list__column ecl-col-12 ecl-col-lg-4 ecl-offset-lg-2">
+                                        <ul class="ecl-language-list__list">
+                                            <li class="ecl-language-list__item "><a lang="bg" hrefLang="bg" rel="alternate"
+                                                                                    href="#language_bg"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">български</a></li>
+                                            <li class="ecl-language-list__item "><a lang="es" hrefLang="es" rel="alternate"
+                                                                                    href="#language_es"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">español</a></li>
+                                            <li class="ecl-language-list__item "><a lang="cs" hrefLang="cs" rel="alternate"
+                                                                                    href="#language_cs"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">čeština</a></li>
+                                            <li class="ecl-language-list__item "><a lang="da" hrefLang="da" rel="alternate"
+                                                                                    href="#language_da"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">dansk</a></li>
+                                            <li class="ecl-language-list__item "><a lang="de" hrefLang="de" rel="alternate"
+                                                                                    href="#language_de"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">Deutsch</a></li>
+                                            <li class="ecl-language-list__item "><a lang="et" hrefLang="et" rel="alternate"
+                                                                                    href="#language_et"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">eesti</a></li>
+                                            <li class="ecl-language-list__item "><a lang="el" hrefLang="el" rel="alternate"
+                                                                                    href="#language_el"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">ελληνικά</a></li>
+                                            <li class="ecl-language-list__item ecl-language-list__item--is-active"><a lang="en" hrefLang="en"
+                                                                                                                      rel="alternate" href="#language_en"
+                                                                                                                      class="ecl-language-list__link ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-after"><span
+                                                        class="ecl-link__label">English</span> <svg focusable="false" aria-hidden="true"
+                                                        class="ecl-link__icon ecl-icon ecl-icon--xs">
+                                                    <use xlink:href="/registry/ecl-v2/static/media/icons.svg#ui--check"></use>
+                                                    </svg></a></li>
+                                            <li class="ecl-language-list__item "><a lang="fr" hrefLang="fr" rel="alternate"
+                                                                                    href="#language_fr"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">français</a></li>
+                                            <li class="ecl-language-list__item "><a lang="ga" hrefLang="ga" rel="alternate"
+                                                                                    href="#language_ga"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">Gaeilge</a></li>
+                                            <li class="ecl-language-list__item "><a lang="hr" hrefLang="hr" rel="alternate"
+                                                                                    href="#language_hr"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">hrvatski</a></li>
+                                            <li class="ecl-language-list__item "><a lang="it" hrefLang="it" rel="alternate"
+                                                                                    href="#language_it"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">italiano</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="ecl-language-list__column ecl-col-12 ecl-col-lg-4">
+                                        <ul class="ecl-language-list__list">
+                                            <li class="ecl-language-list__item "><a lang="lv" hrefLang="lv" rel="alternate"
+                                                                                    href="#language_lv"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">latviešu</a></li>
+                                            <li class="ecl-language-list__item "><a lang="lt" hrefLang="lt" rel="alternate"
+                                                                                    href="#language_lt"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">lietuvių</a></li>
+                                            <li class="ecl-language-list__item "><a lang="hu" hrefLang="hu" rel="alternate"
+                                                                                    href="#language_hu"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">magyar</a></li>
+                                            <li class="ecl-language-list__item "><a lang="mt" hrefLang="mt" rel="alternate"
+                                                                                    href="#language_mt"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">Malti</a></li>
+                                            <li class="ecl-language-list__item "><a lang="nl" hrefLang="nl" rel="alternate"
+                                                                                    href="#language_nl"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">Nederlands</a></li>
+                                            <li class="ecl-language-list__item "><a lang="pl" hrefLang="pl" rel="alternate"
+                                                                                    href="#language_pl"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">polski</a></li>
+                                            <li class="ecl-language-list__item "><a lang="pt" hrefLang="pt" rel="alternate"
+                                                                                    href="#language_pt"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">português</a></li>
+                                            <li class="ecl-language-list__item "><a lang="ro" hrefLang="ro" rel="alternate"
+                                                                                    href="#language_ro"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">română</a></li>
+                                            <li class="ecl-language-list__item "><a lang="sk" hrefLang="sk" rel="alternate"
+                                                                                    href="#language_sk"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">slovenčina</a></li>
+                                            <li class="ecl-language-list__item "><a lang="sl" hrefLang="sl" rel="alternate"
+                                                                                    href="#language_sl"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">slovenščina</a></li>
+                                            <li class="ecl-language-list__item "><a lang="fi" hrefLang="fi" rel="alternate"
+                                                                                    href="#language_fi"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">suomi</a></li>
+                                            <li class="ecl-language-list__item "><a lang="sv" hrefLang="sv" rel="alternate"
+                                                                                    href="#language_sv"
+                                                                                    class="ecl-language-list__link ecl-link ecl-link--standalone">svenska</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form class="ecl-site-header__search ecl-search-form" role="search">
+                    <div class="ecl-form-group ecl-form-group--text-input"><label class="ecl-search-form__label ecl-form-label"
+                                                                                  for="search-form" data-i18n="c-search">Search</label><input type="search" id="search-form"
+                                                                                  class="ecl-search-form__text-input ecl-text-input" /></div><button id="btn-search" aria-label="Search" type="submit"
+                                                                                       class="ecl-search-form__button ecl-button ecl-button--search"><span class="ecl-button__container"><span
+                                class="ecl-button__label" data-ecl-label="true" data-i18n="c-search">Search</span><svg focusable="false" aria-hidden="true"
+                                data-ecl-icon="true" class="ecl-button__icon ecl-button__icon--after ecl-icon ecl-icon--xs">
+                            <use xlink:href="/registry/ecl-v2/static/media/icons.svg#general--search"></use>
+                            </svg></span></button>
+                </form>
+            </div>
+        </header>
+
+        <div class="ecl-page-header" style="background-color: #343a40">
+            <div class="ecl-container">
+                <nav class="ecl-page-header__breadcrumb ecl-breadcrumb" aria-label="You are here:" data-ecl-breadcrumb="true">
+                    <ol class="ecl-breadcrumb__container" style="background-color: #343a40">
+                        <li class="ecl-breadcrumb__segment" data-ecl-breadcrumb-item="static" aria-hidden="false">
+                            <a href="https://inspire-sandbox.jrc.ec.europa.eu/registry" class="ecl-breadcrumb__link ecl-link ecl-link--standalone">
+                                Re3gistry sandbox
+                            </a>
+                            <svg focusable="false" aria-hidden="true" role="presentation" class="ecl-breadcrumb__icon ecl-icon ecl-icon--xs ecl-icon--rotate-90">
+                            <use xlink:href="//testinspire.ec.europa.eu/registry/ecl-v2/static/media/icons.svg#ui--corner-arrow"></use>
+                            </svg>
+                        </li>
+                        <li class="ecl-breadcrumb__segment ecl-breadcrumb__current-page" aria-current="page" data-ecl-breadcrumb-item="static" aria-hidden="false">API Documentation</li>
+                    </ol>
+                </nav>
+                <h1 class="ecl-page-header__title" data-i18n="s-site-title">Re3gistry sandbox</h1>
+            </div>
+        </div>
+
+        <main class="ecl-u-pv-xl">
+            <div class="ecl-container">
+                <div class="ecl-row">
+                    <div class="ecl-col-md-12">
+
+                        <h2 class="ecl-u-type-heading-2 ecl-u-mt-none ecl-u-mb-l" id="page-title">API Documentation</h2>
+
+                        <div class="ecl-row ecl-u-mt-m">
+                            <div class="ecl-col-sm-12 ecl-editor">
+                                <p class="ecl-card__description">
+                                    The content of the registry is available in different formats and languages.
+                                </p>
+                                <p class="ecl-card__description">
+                                    All the resources available in the registry can be accessed in a number of formats listed below.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="ecl-accordion2" data-ecl-accordion2="true">
+                            <div class="ecl-accordion2__item">
+                                <h3 class="ecl-accordion2__title"><button type="button" class="ecl-accordion2__toggle"
+                                                                          data-ecl-accordion2-toggle="true" aria-controls="accordion-example-content"><span
+                                            class="ecl-accordion2__toggle-flex"><svg focusable="false" aria-hidden="true" data-ecl-accordion2-icon="true"
+                                                                                 class="ecl-accordion2__toggle-icon ecl-icon ecl-icon--m">
+                                            <use xlink:href="/registry/ecl-v2/static/media/icons.svg#ui--plus"></use>
+                                            </svg><span class="ecl-accordion2__toggle-title">Formats</span></span></button></h3>
+                                <div class="ecl-accordion2__content" id="accordion-example-content" hidden="" role="region">
+
+                                    <ul class="ecl-unordered-list">
+                                        <li class="ecl-unordered-list__item">XML Registry - .xml</li>
+                                        <li class="ecl-unordered-list__item">XML ISO 19135 (beta) - .iso19135xml</li>
+                                        <li class="ecl-unordered-list__item">JSON - .json</li>
+                                        <li class="ecl-unordered-list__item">RDF/XML - .rdf</li>
+                                        <li class="ecl-unordered-list__item">CSV (beta) - .csv</li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="ecl-accordion2__item">
+                                <h3 class="ecl-accordion2__title"><button type="button" class="ecl-accordion2__toggle"
+                                                                          data-ecl-accordion2-toggle="true" aria-controls="accordion-example2-content"><span
+                                            class="ecl-accordion2__toggle-flex"><svg focusable="false" aria-hidden="true" data-ecl-accordion2-icon="true"
+                                                                                 class="ecl-accordion2__toggle-icon ecl-icon ecl-icon--m">
+                                            <use xlink:href="/registry/ecl-v2/static/media/icons.svg#ui--plus"></use>
+                                            </svg><span class="ecl-accordion2__toggle-title">The languages currently available are</span></span></button></h3>
+                                <div class="ecl-accordion2__content" id="accordion-example2-content" hidden="" role="region">
+
+                                    <div class="ecl-row">
+                                        <div class="ecl-col-lg-4 ecl-col-sm-12">
+                                            <ul class="ecl-unordered-list">
+                                                <li class="ecl-unordered-list__item">English - en</li>
+                                                <li class="ecl-unordered-list__item">Bulgarian - bg</li>
+                                                <li class="ecl-unordered-list__item">Czech - cs</li>
+                                                <li class="ecl-unordered-list__item">Croatian - hr</li>
+                                                <li class="ecl-unordered-list__item">Danish - da</li>
+                                                <li class="ecl-unordered-list__item">German - de</li>
+                                                <li class="ecl-unordered-list__item">Greek - el</li>
+                                                <li class="ecl-unordered-list__item">Spanish - es</li>
+                                            </ul>
+                                        </div>
+                                        <div class="ecl-col-lg-4 ecl-col-sm-12">
+                                            <ul class="ecl-unordered-list">
+                                                <li class="ecl-unordered-list__item">Estonian - et</li>
+                                                <li class="ecl-unordered-list__item">Finnish - fi</li>
+                                                <li class="ecl-unordered-list__item">French - fr</li>
+                                                <li class="ecl-unordered-list__item">Hungarian - hu</li>
+                                                <li class="ecl-unordered-list__item">Italian - it</li>
+                                                <li class="ecl-unordered-list__item">Lithuanian - lt</li>
+                                                <li class="ecl-unordered-list__item">Latvian - lv</li>
+                                                <li class="ecl-unordered-list__item">Maltese - mt</li>
+                                            </ul>
+                                        </div>
+                                        <div class="ecl-col-lg-4 ecl-col-sm-12">
+                                            <ul class="ecl-unordered-list">
+                                                <li class="ecl-unordered-list__item">Dutch - nl</li>
+                                                <li class="ecl-unordered-list__item">Polish - pl</li>
+                                                <li class="ecl-unordered-list__item">Portuguese - pt</li>
+                                                <li class="ecl-unordered-list__item">Romanian - ro</li>
+                                                <li class="ecl-unordered-list__item">Slovak - sk</li>
+                                                <li class="ecl-unordered-list__item">Slovenian - sl</li>
+                                                <li class="ecl-unordered-list__item">Swedish - sv</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <blockquote class="ecl-blockquote ecl-u-mt-m">
+                                        <p class="ecl-blockquote__body">
+                                            Some of the content is not yet available in all languages. Where this is the case, the English translation will be provided. The GUI translations are provisional and may be improved in future releases.
+                                        </p>
+                                        <footer class="ecl-blockquote__attribution"><cite class="ecl-blockquote__author">Note</cite></footer>
+                                    </blockquote>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="ecl-card__description ecl-u-mt-m">
+                            If you want to get the resource in a particular format or language you can:
+                        </p>
+                        <ul class="ecl-unordered-list">
+                            <li class="ecl-unordered-list__item">Use the language selector in the web interface;</li>
+                            <li class="ecl-unordered-list__item">Directly call the resources using its name.</li>
+                        </ul>
+
+                        <p class="ecl-u-type-heading-4 ecl-u-mt-l">
+                            Direct call
+                        </p>
+                        <p class="ecl-card__description ecl-u-mt-m">
+                            If you want to directly call the resources using its name you have to follow the naming convention explained in the example below:
+                        </p>
+
+                        <blockquote class="ecl-blockquote ecl-u-mt-m">
+                            <footer class="ecl-blockquote__attribution  ecl-u-mt-xs">
+                                <cite class="ecl-blockquote__author">http://{base_uri}/{register_uriname}/{register_uriname}.{language_code}.{format}</cite><br/>
+                                <cite class="ecl-blockquote__author ecl-u-mt-l">http://{base_uri}/{itemclass}/{itemclass}.{language_code}.{format}</cite><br/>
+                                <cite class="ecl-blockquote__author ecl-u-mt-l">http://{base_uri}/{itemclass_collection}/{collection_uriname}/{item_uriname}/{item_uriname}.{language_code}.{format}</cite>
+                            </footer>
+                        </blockquote>
+
+
+                        <p class="ecl-card__description ecl-u-mt-m">
+                            You can find the specific "language_code" and "format" in the list above (the codes are highlighted in bold).
+                        </p>
+
+                        <blockquote class="ecl-blockquote ecl-u-mt-m">
+                            <footer class="ecl-blockquote__attribution"><cite class="ecl-blockquote__author">Examples</cite></footer>
+                            <div class="ecl-blockquote__body">
+                                <ul class="ecl-unordered-list">
+                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/codelist/codelist.en.xml">/codelist/codelist.en.xml</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/AgeBy5YearsValue.fr.csv"> /codelist/AgeBy5YearsValue/AgeBy5YearsValue.fr.csv</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml">/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/applicationschema/applicationschema.it.xml">/applicationschema/applicationschema.it.xml</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/theme/mf/mf.ro.json">/theme/mf/mf.ro.json</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/document/SCDWHO">/document/SCDWHO/SCDWHO.es.rdf</a></li>
+                                </ul>
+                            </div>
+                        </blockquote>
+
+                        <p class="ecl-u-type-heading-4 ecl-u-mt-l">
+                            How to call the APIs
+                        </p>
+                        <p class="ecl-card__description ecl-u-mt-m">
+                            Each above links is calling the API in the following way:
+                        </p>
+                        <blockquote class="ecl-blockquote ecl-u-mt-m">
+                            <footer class="ecl-blockquote__attribution  ecl-u-mt-xs">
+                                <cite class="ecl-blockquote__author">https://{base_uri}/{register_uriname}/rest?uri=http://{base_uri}/{register_uriname}&format={format}&lang={language_code}</cite><br/>
+                                <cite class="ecl-blockquote__author ecl-u-mt-l">https://{base_uri}/{register_uriname}/rest?uri=http://{base_uri}/{itemclass}.&format={format}&lang={language_code}</cite><br/>
+                                <cite class="ecl-blockquote__author ecl-u-mt-l">https://{base_uri}/{register_uriname}/rest?uri=http://{base_uri}/{itemclass_collection}/{collection_uriname}/{item_uriname}&format={format}&lang={language_code}</cite>
+                            </footer>
+                        </blockquote>
+
+
+                        <p class="ecl-card__description ecl-u-mt-m">
+                            Let's consider the example above:
+                        </p>
+                        <p class="ecl-u-type-heading-5 ecl-u-mt-m">
+                            <a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml">https://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml</a>
+                        </p>
+                        <p class="ecl-card__description ecl-u-mt-m">
+                            this is calling the API in following way:
+                        </p>
+                        <p class="ecl-u-type-heading-5 ecl-u-mt-m">
+                            <a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/registry/rest?uri=http://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20&format=xml&lang=sl">https://inspire-sandbox.jrc.ec.europa.eu/registry/rest?uri=http://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20&format=xml&lang=sl</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="ecl-footer-core"  style="background-color: #343a40; margin-top: 15px">
+            <div class="ecl-container ecl-footer-standardised__container">
+                <section class="ecl-footer-core__section ecl-footer-core__section1">
+                    <a href="https://github.com/ec-jrc/re3gistry/releases"
+                       class="ecl-footer-core__title ecl-link ecl-link--standalone">Re3gistry version 2.3.0</a>
+                    <div class="ecl-footer-core__description"><a data-i18n-link="l-ec-website" class="ecl-link ecl-link--standalone" 
+                                                                 href="https://inspire-sandbox.jrc.ec.europa.eu/registry"
+                                                                 aria-label="European Commission">
+                            <img class="mt-2" src="/registry/ecl-v2/static/logo/logo-2.png" alt="" width="30%" height="50%">
+                        </a></div>
+                    <div class="ecl-footer-core__description">Reference codes management tool</div>
+                </section>
+                <div class="ecl-footer-standardised__section2">
+                    <section class="ecl-footer-standardised__section">
+                        <div class="ecl-footer-standardised__title ecl-footer-standardised__title--separator">About</div>
+                        <ul class="ecl-footer-standardised__list">
+                            <li class="ecl-footer-standardised__list-item"><a href="https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Re3gistry features</a></li>
+                            <li class="ecl-footer-standardised__list-item"><a href="https://github.com/ec-jrc/re3gistry/releases" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Get the code</a></li>
+                            <li class="ecl-footer-standardised__list-item"><a href="https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/best-practices-registers-and-registries" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Best practices</a></li>
+                        </ul>
+                    </section>
+                    <section class="ecl-footer-standardised__section">
+                        <div class="ecl-footer-standardised__title ecl-footer-standardised__title--separator">
+                            Re3gistry API
+                        </div>
+                        <ul class="ecl-footer-standardised__list ecl-footer-standardised__list--inline">
+                            <li class="ecl-footer-standardised__list-item"><a href="/registry/api.html" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Access API</a></li>
+                        </ul>
+                    </section>
+                </div>
+                <div class="ecl-footer-standardised__section3">
+                    <section class="ecl-footer-standardised__section">
+                        <div class="ecl-footer-standardised__title ecl-footer-standardised__title--separator">Documentation</div>
+                        <ul class="ecl-footer-standardised__list">
+                            <li class="ecl-footer-standardised__list-item"><a href="https://github.com/ec-jrc/re3gistry/blob/master/documentation/user-manual.md" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">User manual</a></li>
+                            <li class="ecl-footer-standardised__list-item"><a href="https://github.com/ec-jrc/re3gistry/blob/master/documentation/administrator-manual.md" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Administrator manual</a></li>
+                            <li class="ecl-footer-standardised__list-item"><a href="https://github.com/ec-jrc/re3gistry/blob/master/documentation/developer-manual.md" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Developer manual</a></li>
+                        </ul>
+                    </section>
+                    <section class="ecl-footer-standardised__section">
+                        <div class="ecl-footer-standardised__title ecl-footer-standardised__title--separator">Stay tuned</div>
+                        <ul class="ecl-footer-standardised__list">
+                            <li class="ecl-footer-standardised__list-item">
+                                <a href="/registry/release-note.xml" class="ecl-footer-standardised__link ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-before">
+                                    <svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs">
+                                    <use xlink:href="/registry/ecl-v2/static/media/icons.svg#branded--rss"></use>
+                                    </svg>&nbsp;<span class="ecl-link__label">Re3gistry sandbox RSS feed</span>
+                                </a>
+                            </li>   
+                            <li class="ecl-footer-standardised__list-item"><a href="https://github.com/ec-jrc/re3gistry" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Join the Re3gistry community</a></li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </footer>
+
+        <div class="overlay-loader">
+            <div class="load-feedback">
+                <svg focusable="false" aria-hidden="true" class="ecl-icon ecl-icon--m ecl-icon--inverted custom-spinner">
+                <use xlink:href="/registry/ecl-v2/static/media/icons.svg#general--spinner"></use>
+                </svg> <span class="ecl-u-type-m ecl-u-type-color-white">Loading ...</span>
+            </div>
+        </div>
+
+        <script
+            src="/registry/js-ecl-v2/package/dist/scripts/ecl-ec-preset-website.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <script>
+            ECL.autoInit();
+
+            var elt = document.querySelector('[data-ecl-accordion2]');
+            var accordion = new ECL.Accordion2(elt);
+            accordion.init();
+        </script>
+    </body>
+</html>
