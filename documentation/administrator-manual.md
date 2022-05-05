@@ -89,12 +89,13 @@ Make sure the tomcat instance is not running (stop it).
 To install the application, copy the content of the `dist/app` folder (customized following the steps presented in the previous section) in the `<tomcat-home>/webapp` folder.
 The tomcat webapp folder should have the following 2 folders:
 
-* `<tomcat-home>/webapp/re3gistry2`
-* `<tomcat-home>/webapp/re3gistry2restapi`
+* `<tomcat-home>/webapp/re3gistry2.war`
+* `<tomcat-home>/webapp/re3gistry2restapi.war`
 
 Important note: the folder `<tomcat-home>/webapp/re3gistry2/WEB-INF/classes/*configurations_files*` and `<tomcat-home>/webapp/re3gistry2restapi/WEB-INF/classes/*configurations_files*` needs to have write permission (the installation file is going to be written there).
 
 The last step is to start tomcat.
+If you wish you can run the customization script from `/dist/customize-interface\example-profile-admin` to have the interface that you want.
 
 ### Installation wizard
 
