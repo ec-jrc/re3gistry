@@ -23,7 +23,7 @@ To be able to know the status of each issue reported in the helpdesk (from the i
 The diagram below shows the full helpdesk management cycle for each issue, from the initial stage when it is opened to the final stage when it is closed.  Also includes and identifies the actions of the Re3gistry team.
 
 ```mermaid
-%%{init: {"themeVariables": { "nodeBorder" : "#004990",    "mainBkg" : "#c9d7e4",    "nodeTextColor" : "#000000",    "fontFamily": "arial",    "fontSize": "18px" }}}%%
+%%{init: {"themeVariables": { "nodeBorder" : "#004990",    "mainBkg" : "#ffffff",    "nodeTextColor" : "#000000",    "fontFamily": "arial",    "fontSize": "14px" }}}%%
 
 flowchart TD
 
@@ -123,4 +123,30 @@ feedbackUser ---> closeIssue
 
 # GitHub milestones
 
-To inform users in advance about when the solution to each issue will be included in the Production instance of the Re3gistry software, each issue is assigned to a specific milestone. Milestones are listed on [this page](https://github.com/ec-jrc/re3gistry/milestones) and their names have a 1:1 correspondence with the release versions of the Re3gistry software. The release schedule of the Re3gistry software, which lists the expected release dates for each specific version, is available [here](https://github.com/ec-jrc/re3gistry/tree/management-draft/release-strategy). Once a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones.
+To inform users in advance about when the solution to each issue will be included in the release of the Re3gistry software, each issue is assigned to a specific milestone. Milestones are listed on [this page](https://github.com/ec-jrc/re3gistry/milestones). The release schedule of the Re3gistry software, which lists the expected release dates for each specific version, is available [here](https://github.com/ec-jrc/re3gistry/tree/management-draft/release-strategy). Once a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones.
+
+Schedule of next Major and Minor releases of the Re3gistry software. Plan for 2022-2024:
+
+- Minor release: June 2022 (v2.3.3 6/2022)
+- Major release: September 2022 (v2.4.0 09/2022)
+  - Minor release: December 2022 (v2.4.1 12/2022)
+  - Minor release: March 2023 (v2.4.2 3/2023)
+  - Minor release: June 2023 (v2.4.3 6/2023)
+- Major release: September 2023 (v2.5.0 09/2023)
+  - Minor release: December 2023 (v2.5.1 12/2023)
+  - Minor release: March 2024 (v2.5.2 3/2024)
+  - Minor release: June 2024 (v2.5.3 6/2024)
+- Major release: September 2024 (v2.6.0 09/2024)
+  - Minor release: December 2024 (v2.6.1 12/2024)
+
+Schedule of next Major and Minor releases of the Register Federation Tool (RTF). Plan for 2022-2024:
+
+- Major release: November 2022 (0.1.0)
+  - Minor release: February 2022 (0.1.1)
+  - Minor release: May 2023 (0.1.2)
+  - Minor release: August 2023 (0.1.3)
+- Major release: November 2023 (0.2.0)
+  - Minor release: February 2024 (0.2.1)
+  - Minor release: May 2024 (0.2.2)
+  - Minor release: August 2024 0.2.3)
+- Major release: November 2024 (0.3.0)
