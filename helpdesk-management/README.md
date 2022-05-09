@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The establishment of proper communication with the Re3gistry community is a key asset for the operation, maintenance and update of the Re3gistry software. The helpdesk of the [Re3gistry](https://github.com/ec-jrc/re3gistry/issues) is the core of the communication strategy since it is the platform where users can report bugs, propose new features and start discussions on the Re3gistry software. The objective of this document is to illustrate the systematic workflow adopted by the Re3gistry team to organize, address and manage the issues reported by users in the Re3gistry helpdesk.
+The establishment of proper communication with the Re3gistry community is a key asset for the operation, maintenance and update of the Re3gistry software. The [helpdesk of the Re3gistry](https://github.com/ec-jrc/re3gistry/issues) is the core of the communication strategy since it is the platform where users can report bugs, propose new features and start discussions on the Re3gistry software. The objective of this document is to illustrate the systematic workflow adopted by the Re3gistry team to organize, address and manage the issues reported by users in the Re3gistry helpdesk.
 
 ## Helpdesk management workflow
 
@@ -10,10 +10,8 @@ The helpdesk management workflow defines the actions performed by the Re3gistry 
 
 ### GitHub labels
 
-To be able to know the status of each issue reported in the helpdesk (from the initial assessment to the final implementation of a solution for it), a number of labels are used. These are listed on [this page](https://github.com/ec-jrc/re3gistry/issues/labels) and are described in more detail below in the chronological order in which they are used while managing each 
+To be able to know the status of each issue reported in the helpdesk (from the initial assessment to the final implementation of a solution for it), a number of labels are used. These are listed on [this page](https://github.com/ec-jrc/re3gistry/issues/labels) and are described in more detail below in the chronological order in which they are used while managing each Re3gistry issue:
 
-
-Validator issue:
 - **_question_**: In case the issue requires further information from the user, the Re3gistry Team asks the user to provide it in the issue.
 - **_under analysis_**: This label is assigned after the issue has been opened, and indicates that the Re3gistry Team is performing a first analysis to figure out what is the problem and how to address it; in case this requires further information from the user, the Re3gistry Team asks the user to provide it in the issue discussion.
 - **_bug_**: This label is assigned when something isn’t working. The main purpose of this label is to obtain info about the typology of the issues and include this in reports.
