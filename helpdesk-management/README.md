@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The establishment of proper communication with the Re3gistry community is a key asset for the operation, maintenance and update of the Re3gistry software. The helpdesk of the Re3gistry is the core of the communication strategy since it is the platform where users can report bugs, propose new features and start discussions on the Re3gistry software. The objective of this document is to illustrate the systematic workflow adopted by the Re3gistry team to organize, address and manage the issues reported by users in the Re3gistry helpdesk.
+The establishment of proper communication with the Re3gistry community is a key asset for the operation, maintenance and update of the Re3gistry software. The helpdesk of the [Re3gistry](https://github.com/ec-jrc/re3gistry/issues) is the core of the communication strategy since it is the platform where users can report bugs, propose new features and start discussions on the Re3gistry software. The objective of this document is to illustrate the systematic workflow adopted by the Re3gistry team to organize, address and manage the issues reported by users in the Re3gistry helpdesk.
 
 ## Helpdesk management workflow
 
@@ -10,21 +10,19 @@ The helpdesk management workflow defines the actions performed by the Re3gistry 
 
 ### GitHub labels
 
-To be able to know the status of each issue reported in the helpdesk (from the initial assessment to the final implementation of a solution for it), a number of labels are used. These are listed on this page (link a la página de labels) and are described in more detail below in the chronological order in which they are used while managing each 
-
+To be able to know the status of each issue reported in the helpdesk (from the initial assessment to the final implementation of a solution for it), a number of labels are used. These are listed on [this page](https://github.com/ec-jrc/re3gistry/issues/labels) and are described in more detail below in the chronological order in which they are used while managing each 
 
 
 Validator issue:
+- **_question_**: In case the issue requires further information from the user, the Re3gistry Team asks the user to provide it in the issue.
+- **_under analysis_**: This label is assigned after the issue has been opened, and indicates that the Re3gistry Team is performing a first analysis to figure out what is the problem and how to address it; in case this requires further information from the user, the Re3gistry Team asks the user to provide it in the issue discussion.
+- **_bug_**: This label is assigned when something isn’t working. The main purpose of this label is to obtain info about the typology of the issues and include this in reports.
+- **_enhancement_**: This label is assigned when is a new feature or request. As well as bug label, the purpose of this label is to extract information for reports.
+- **_under development_**: in case the initial analysis reveals that a change in the Re3gistry software is needed, this label is assigned to the issue to indicate that the Re3gistry team is developing a solution for the problem reported.
+- **_ready for testing_**: The solution is ready to test.
+- **_solved_**: After the issue is internally tested and confirmed that it works, this label is assigned.
 
-- under analysis: this label is assigned after the issue has been opened, and indicates that the Re3gistry Team is performing a first analysis to figure out what is the problem and how to address it; in case this requires further information from the user, the Re3gistry Team asks the user to provide it in the issue discussion.
-question: In case the issue requires further information from the user, the INSPIRE Registry Team asks the user to provide it in the issue.
-- bug: This label is assigned when something isn’t working. The main purpose of this label is to obtain info about the typology of the issues and include this in reports.
-- enhancement: This label is assigned when is a new feature or request. As well as bug label, the purpose of this label is to extract information for reports.
-- under development: in case the initial analysis reveals that a change in the Re3gistry software is needed, this label is assigned to the issue to indicate that the Re3gistry team is developing a solution for the problem reported.
-- ready for testing: [TODO]
-- solved: If the change proposal does not need the Control body approval, the INSPIRE Registry Team will proceed to implement the proposal and will label the issue as solved (aqui hasta que la issue este solventada no deberiamos poner otro status para que el usuario sepa que estamos trabajando en ello?)
-- Requires change in TG: Finally, when the change, approved by the Control body, affects the technical guideline, the issue will be labelled in order to be taken into account in the technical-guidelines helpdesk.
-The diagram below shows the full helpdesk management cycle for each issue, from the initial stage when it is opened to the final stage when it is closed.  Also includes and identifies the actions of the INSPIRE Registry team.
+The diagram below shows the full helpdesk management cycle for each issue, from the initial stage when it is opened to the final stage when it is closed.  Also includes and identifies the actions of the Re3gistry team.
 
 ```mermaid
 flowchart TD
