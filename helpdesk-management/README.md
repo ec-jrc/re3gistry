@@ -23,7 +23,7 @@ To be able to know the status of each issue reported in the helpdesk (from the i
 The diagram below shows the full helpdesk management cycle for each issue, from the initial stage when it is opened to the final stage when it is closed.  Also includes and identifies the actions of the Re3gistry team.
 
 ```mermaid
-%%{init: {"themeVariables": { "nodeBorder" : "#004990",    "mainBkg" : "#ffffff",    "nodeTextColor" : "#000000",    "fontFamily": "arial",    "fontSize": "14px" }}}%%
+%%{init: {"themeVariables": {"fontSize": "14px" }}}%%
 
 flowchart TD
 
@@ -32,7 +32,7 @@ newIssue("New issue")
 
 %% SET LABEL UNDER ANALYSIS [NODE]
 labelUnderAnalysis("Set label under analysis")
-style labelUnderAnalysis fill: #006b75
+style labelUnderAnalysis stroke-width:4px,stroke:#006b75
 
 %% ANALYZE ISSUE [NODE]
 analyzeIssue("Analyze issue")
@@ -42,7 +42,7 @@ rhombusMoreInfo{"More \n information \n is needed"}
 
 %% SET LABEL QUESTION [NODE]
 labelQuestion("Set label question")
-style labelQuestion fill: #d876e3, color:red;
+style labelQuestion stroke-width:4px,stroke:#d876e3
 
 %% PROVIDE INFORMATION [NODE]
 provideInformation("Provide information")
@@ -61,11 +61,11 @@ feedbackUser("Give feedback to the user")
 
 %% CLASSIFY THE ISSUE ... [NODE]
 classifyIssue("Classify the issue - Set label bug / enhancement")
-style classifyIssue stroke: #ed7d31, stroke-width:3px
+style classifyIssue stroke-width:4px,stroke:#ed7d31
 
 %% SET LABEL UNDER DEVELOPMENT [NODE]
 labelUnderDev("Set label under development")
-style labelUnderDev fill: #8746b5
+style labelUnderDev stroke-width:4px,stroke:#8746b5
 
 %% ASSIGN DEVELOPER [NODE]
 assignDev("Assign developer")
@@ -75,14 +75,14 @@ develop("Develop")
 
 %% SET LABEL READY FOR TESTING VALIDATE INTERNALLY [NODE]
 labelTesting("Set label ready for testing \n validate internally")
-style labelTesting fill: #a5d1f7
+style labelTesting stroke-width:4px,stroke:#a5d1f7
 
 %% SOLUTION IS VALID? [RHOMBUS]
 rhombusValidSol{"Solution \n is valid?"}
 
 %% SET LABEL SOLVED [NODE]
 labelSolved("Set label solved")
-style labelSolved fill: #8ef984
+style labelSolved stroke-width:4px,stroke:#8ef984
 
 %% ASSIGN MILESTONE [NODE]
 assignMilestone("Assign milestone")
