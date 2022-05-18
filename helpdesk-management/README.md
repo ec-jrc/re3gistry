@@ -8,6 +8,8 @@ The establishment of proper communication with the Re3gistry community is a key 
 
 The helpdesk management workflow defines the actions performed by the Re3gistry team to address and solve the problems reported by the users of the Re3gistry software. The workflow makes use of a number of GitHub artefacts: labels, milestones, status and the project boards.
 
+A set of [issue forms](<https://github.com/ec-jrc/re3gistry/tree/master/.github/ISSUE_TEMPLATE>) has been created to help the user to select the appropriate type of template for its issue. These forms will help the user to properly fill the issue with all the information required. A label or an assignation to a specific user will be also applied automatically depending on the configuration of each form.
+
 ### GitHub labels
 
 To be able to know the status of each issue reported in the helpdesk (from the initial assessment to the final implementation of a solution for it), a number of labels are used. These are listed on [this page](https://github.com/ec-jrc/re3gistry/issues/labels) and are described in more detail below in the chronological order in which they are used while managing each Re3gistry issue:
@@ -31,7 +33,7 @@ flowchart TD
 newIssue("New issue")
 
 %% SET LABEL UNDER ANALYSIS [NODE]
-labelUnderAnalysis("Set label under analysis")
+labelUnderAnalysis("Set label 'under analysis'")
 style labelUnderAnalysis stroke-width:4px,stroke:#006b75
 
 %% ANALYZE ISSUE [NODE]
@@ -41,7 +43,7 @@ analyzeIssue("Analyze issue")
 rhombusMoreInfo{"More \n information \n is needed"}
 
 %% SET LABEL QUESTION [NODE]
-labelQuestion("Set label question")
+labelQuestion("Set label 'question'")
 style labelQuestion stroke-width:4px,stroke:#d876e3
 
 %% PROVIDE INFORMATION [NODE]
@@ -60,11 +62,11 @@ correctRepository("Transfer the issue to the correct repository")
 feedbackUser("Give feedback to the user")
 
 %% CLASSIFY THE ISSUE ... [NODE]
-classifyIssue("Classify the issue - Set label bug / enhancement")
+classifyIssue("Classify the issue - Set label 'bug' / 'enhancement'")
 style classifyIssue stroke-width:4px,stroke:#ed7d31
 
 %% SET LABEL UNDER DEVELOPMENT [NODE]
-labelUnderDev("Set label under development")
+labelUnderDev("Set label 'under development'")
 style labelUnderDev stroke-width:4px,stroke:#8746b5
 
 %% ASSIGN DEVELOPER [NODE]
@@ -74,14 +76,14 @@ assignDev("Assign developer")
 develop("Develop")
 
 %% SET LABEL READY FOR TESTING VALIDATE INTERNALLY [NODE]
-labelTesting("Set label ready for testing \n validate internally")
+labelTesting("Set label 'ready for testing' \n validate internally")
 style labelTesting stroke-width:4px,stroke:#a5d1f7
 
 %% SOLUTION IS VALID? [RHOMBUS]
 rhombusValidSol{"Solution \n is valid?"}
 
 %% SET LABEL SOLVED [NODE]
-labelSolved("Set label solved")
+labelSolved("Set label 'solved'")
 style labelSolved stroke-width:4px,stroke:#8ef984
 
 %% ASSIGN MILESTONE [NODE]
