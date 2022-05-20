@@ -22,9 +22,9 @@ A summary of some of the technologies used to implement the software is presente
 * Middle-ware: EclipseLink (tested with PostgreSQL)
 * Authentication: Apache Shiro
 * Front-end languages and components:
-    * HTML 5
-    * jQuery 3.x
-    * Bootstrap 4.x
+  * HTML 5
+  * jQuery 3.x
+  * Bootstrap 4.x
 
 ### Initialization of the project
 
@@ -36,7 +36,8 @@ To initialize the local maven repository, the first step to do is to launch the 
 The following sections are providing a description of each module and its functionalities. The details of each class can be found directly inline in the code.
 
 ### Re3gistry2 Base
-This module contains all the common utility to be used in the application. Examples of "utility" are: Mailing system, String functionalities, etc.   
+
+This module contains all the common utility to be used in the application. Examples of "utility" are: Mailing system, String functionalities, etc.
 
 The Java sources contained in this module are subdivided in 3 different packages:
 
@@ -45,6 +46,7 @@ The Java sources contained in this module are subdivided in 3 different packages
 * eu.europa.ec.re3gistry2.base.utility.localization: this package contains the object and the managers that are handling the localization system.
 
 ### Re3gistry2 Model
+
 This module contains the data model as Java Object. The database model is reflected in the Java Object model using Eclipse-link (JPA).
 
 The Java sources contained in this module are subdivided in 3 different packages:
@@ -54,6 +56,7 @@ The Java sources contained in this module are subdivided in 3 different packages
 * eu.europa.ec.re3gistry2.model.uuidhandlers: this package contains all the classes that are managing the creation of the uuid related to each specific object of the model.
 
 ### Re3gistry2 CRUD interface
+
 The interfaces has been introduced to give the possibility to extend the application to many persistence layer. It defines all the methods that a driver for a specific persistence layer has to implement. An example could be to have an implementation for the Relational Databases, another for SPARQL, etc.
 
 The Java sources contained in this module are subdivided in 1 package:
@@ -61,6 +64,7 @@ The Java sources contained in this module are subdivided in 1 package:
 * eu.europa.ec.re3gistry2.crudinterface: all the interface for the classes needed to access the persistence layer are available in this package.
 
 ### Re3gistry2 CRUD RDB
+
 This module is the driver for the Relational Database persistence layer . It is implementing all the methods required by the related interface.
 
 The Java sources contained in this module are subdivided in 2 different packages:
@@ -69,6 +73,7 @@ The Java sources contained in this module are subdivided in 2 different packages
 * eu.europa.ec.re3gistry2.crudimplementation.constants: this package contains the constants used by the above mentioned classes
 
 ### Re3gistry2 Java API
+
 The Java API modules is handling the write logic and operations (create, update, delete) to the system, using the driver implemented (in this case the Re3gistry CRUD rdb).
 
 The Java sources contained in this module are subdivided in 3 different packages:
@@ -78,6 +83,7 @@ The Java sources contained in this module are subdivided in 3 different packages
 * eu.europa.ec.re3gistry2.javaapi.solr: the handler of the actions to store the data in the Solr engine are available in this package.
 
 ### Re3gistry2 Migration
+
 The migration module takes the data from the old data model and migrate them to the new model. At the installation of the system the user is asked to choose between having a clean system installation or to import all the data that are available from an older version of the software.
 
 The Java sources contained in this module are subdivided in 4 different packages:
@@ -88,6 +94,7 @@ The Java sources contained in this module are subdivided in 4 different packages
 * eu.europa.ec.re3gistry2.migration.utility: this package contains the utility that are used by the migration system, like the constants, the tools to calculate the statistics of the items to be migrated, etc.
 
 ### Re3gistry2 REST API
+
 This module provides APIs to access the data of the registry in different formats and languages.
 
 This is a web application that expose the RESTful APIs to the web.
@@ -99,6 +106,7 @@ The Java sources contained in this module are subdivided in 4 different packages
 * eu.europa.ec.re3gistry2.restapi.util: this package is containing the different utilities used by the API system.
 
 ### Re3gistry2 Service Web-app
+
 This is the web-app to provide the service front-end. The web-app is developed in HTML 5, using Boostrap 4.x as UI library.
 
 All the JSPs, representing the "view" layer, have their respective "control layer" in the source packages.
@@ -113,12 +121,32 @@ Some common files, reused in different JSPs, such as the Header and the footer, 
 * eu.europa.ec.re3gistry2.web.utility.jsp: this package contains the utilities that are used in the JSP pages such as common HTML pieces calculated based on some parameters, or some checks done at JSP level.
 
 ### Re3gistry2 build helper
+
 The Re3gistry2-build-helper module is an helper for the build operation (it allows to launch the build operation just on one place instead building each module one by one).
 In the pom.xml of this module, you can find 2 example profile, one for local development and one for server deployment. 
 
 **Notes**
 Some of these modules are depending ones by others. You can check all the structures and dependencies having a look at the pom.xml file.
 
+### Architecture
+
+The follows diagrams will help you to see the general architecture of this application.
+
+Frontend architecture:
+![Frontend architecture](images/architecture-frontend.png)
+
+Full application workflow
+![Full application workflow](images/architecture-full-application-workflow.png)
+
+Managament
+![Management](images/architecture-management.png)
+
+RestAPI
+![RestAPI](images/architecture-restapi.png)
+
+Roles
+![Roles](images/architecture-roles-diagram.png)
 
 ### How to customize GitHub to use your own files
+
 Please check the folder "dist\customize-interface\example-profile-developer". Here you will find a script to be run after the customization of your own paths to your local repository of the project and you own customize files: such as footer, header, configurations. Once the script has copied all the files into your own repository you can start using the system already containing your own customize interface.
