@@ -16,8 +16,8 @@ To be able to know the status of each issue reported in the helpdesk (from the i
 
 - **_question_**: In case the issue requires further information from the user, the Re3gistry Team asks the user to provide it in the issue.
 - **_under analysis_**: This label is assigned after the issue has been opened, and indicates that the Re3gistry Team is performing a first analysis to figure out what is the problem and how to address it; in case this requires further information from the user, the Re3gistry Team asks the user to provide it in the issue discussion.
-- **_bug_**: This label is assigned when something isn’t working. The main purpose of this label is to obtain info about the typology of the issues and include this in reports.
-- **_enhancement_**: This label is assigned when is a new feature or request. As well as bug label, the purpose of this label is to extract information for reports.
+- **_type:bug_**: This label is assigned when something isn’t working. The main purpose of this label is to obtain info about the typology of the issues and include this in reports.
+- **_type:enhancement_**: This label is assigned when is a new feature or request. As well as bug label, the purpose of this label is to extract information for reports.
 - **_under development_**: in case the initial analysis reveals that a change in the Re3gistry software is needed, this label is assigned to the issue to indicate that the Re3gistry team is developing a solution for the problem reported.
 - **_ready for testing_**: The solution is ready to test.
 - **_solved_**: After the issue is internally tested and confirmed that it works, this label is assigned.
@@ -62,7 +62,7 @@ correctRepository("Transfer the issue to the correct repository")
 feedbackUser("Give feedback to the user")
 
 %% CLASSIFY THE ISSUE ... [NODE]
-classifyIssue("Classify the issue - Set label 'bug' / 'enhancement'")
+classifyIssue("Classify the issue - Set label 'type:bug' / 'type:enhancement'")
 style classifyIssue stroke-width:4px,stroke:#ed7d31
 
 %% SET LABEL UNDER DEVELOPMENT [NODE]
