@@ -68,6 +68,7 @@ import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemproposedRegGroupRegRole
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemproposedUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegLocalizationproposedUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegRelationproposedUuidHelper;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -1198,7 +1199,7 @@ public class RegItemproposedHandler {
             String value = values[0];
 
             // Handling charset            
-            byte[] bytes = value.getBytes(StandardCharsets.ISO_8859_1);
+            byte[] bytes = value.getBytes(Charset.defaultCharset());
             value = new String(bytes, StandardCharsets.UTF_8);
 
             // !!! Sanitizing form input

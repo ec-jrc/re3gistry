@@ -44,6 +44,7 @@ import eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegUserRegGroupMappingUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegUserUuidHelper;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Date;
@@ -100,17 +101,17 @@ public class RegistryManagerUsersAdd extends HttpServlet {
         // Handling charset for the textual contents
         byte[] bytes;
         if (name!=null) {
-            bytes = name.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = name.getBytes(Charset.defaultCharset());
             name = new String(bytes, StandardCharsets.UTF_8);
             name = InputSanitizerHelper.sanitizeInput(name);
         }
         if (email!=null) {
-            bytes = email.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = email.getBytes(Charset.defaultCharset());
             email = new String(bytes, StandardCharsets.UTF_8);
             email = InputSanitizerHelper.sanitizeInput(email);
         }
         if (ssoReference!=null) {
-            bytes = ssoReference.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = ssoReference.getBytes(Charset.defaultCharset());
             ssoReference = new String(bytes, StandardCharsets.UTF_8);
             ssoReference = InputSanitizerHelper.sanitizeInput(ssoReference);
             email = email.toLowerCase();

@@ -43,6 +43,7 @@ import eu.europa.ec.re3gistry2.javaapi.handler.RegItemproposedHandler;
 import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -111,12 +112,12 @@ public class AddRegister extends HttpServlet {
         // Handling charset for the textual contents
         byte[] bytes;
         if (formLabel!=null) {
-            bytes = formLabel.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formLabel.getBytes(Charset.defaultCharset());
             formLabel = new String(bytes, StandardCharsets.UTF_8);
             formLabel = InputSanitizerHelper.sanitizeInput(formLabel);
         }
         if (formContentsummary!=null) {
-            bytes = formContentsummary.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formContentsummary.getBytes(Charset.defaultCharset());
             formContentsummary = new String(bytes, StandardCharsets.UTF_8);
             formContentsummary = InputSanitizerHelper.sanitizeInput(formContentsummary);
         }

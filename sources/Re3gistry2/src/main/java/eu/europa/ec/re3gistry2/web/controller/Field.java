@@ -42,6 +42,7 @@ import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +104,7 @@ public class Field extends HttpServlet {
         // Handling charset for the textual contents
         byte[] bytes;
         if (formValue!=null) {
-            bytes = formValue.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formValue.getBytes(Charset.defaultCharset());
             formValue = new String(bytes, StandardCharsets.UTF_8);
             formValue = InputSanitizerHelper.sanitizeInput(formValue);
         }        

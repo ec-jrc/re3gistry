@@ -47,6 +47,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,12 +105,12 @@ public class ControlBody extends HttpServlet {
         // Handling charset for the textual contents
         byte[] bytes;
         if (formIssueReference != null) {
-            bytes = formIssueReference.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formIssueReference.getBytes(Charset.defaultCharset());
             formIssueReference = new String(bytes, StandardCharsets.UTF_8);
             formIssueReference = InputSanitizerHelper.sanitizeInput(formIssueReference);
         }
         if (formComments != null) {
-            bytes = formComments.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formComments.getBytes(Charset.defaultCharset());
             formComments = new String(bytes, StandardCharsets.UTF_8);
             formComments = InputSanitizerHelper.sanitizeInput(formComments);
         }

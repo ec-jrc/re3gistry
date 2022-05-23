@@ -37,6 +37,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegGroupUuidHelper;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -85,17 +86,17 @@ public class RegistryManagerGroupsAdd extends HttpServlet {
         // Handling charset for the textual contents
         byte[] bytes;
         if (name!=null) {
-            bytes = name.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = name.getBytes(Charset.defaultCharset());
             name = new String(bytes, StandardCharsets.UTF_8);
             name = InputSanitizerHelper.sanitizeInput(name);
         }
         if (email!=null) {
-            bytes = email.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = email.getBytes(Charset.defaultCharset());
             email = new String(bytes, StandardCharsets.UTF_8);
             email = InputSanitizerHelper.sanitizeInput(email);
         }
         if (website!=null) {
-            bytes = website.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = website.getBytes(Charset.defaultCharset());
             website = new String(bytes, StandardCharsets.UTF_8);
             website = InputSanitizerHelper.sanitizeInput(website);
         }

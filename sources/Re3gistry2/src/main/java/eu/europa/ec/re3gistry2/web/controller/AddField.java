@@ -43,6 +43,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationManager;
 import eu.europa.ec.re3gistry2.model.RegField;
 import eu.europa.ec.re3gistry2.model.RegLocalization;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +103,7 @@ public class AddField extends HttpServlet {
         // Handling charset for the textual contents
         byte[] bytes;
         if (formLabel!=null) {
-            bytes = formLabel.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formLabel.getBytes(Charset.defaultCharset());
             formLabel = new String(bytes, StandardCharsets.UTF_8);
             formLabel = InputSanitizerHelper.sanitizeInput(formLabel);
         }

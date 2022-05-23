@@ -49,6 +49,7 @@ import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,22 +108,22 @@ public class SubmittingOrganisations extends HttpServlet {
         // Handling charset for the textual contents
         byte[] bytes;
         if (formUpdateLabelAction != null) {
-            bytes = formUpdateLabelAction.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formUpdateLabelAction.getBytes(Charset.defaultCharset());
             formUpdateLabelAction = new String(bytes, StandardCharsets.UTF_8);
             formUpdateLabelAction = InputSanitizerHelper.sanitizeInput(formUpdateLabelAction);
         }
         if (formChangeLog != null) {
-            bytes = formChangeLog.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formChangeLog.getBytes(Charset.defaultCharset());
             formChangeLog = new String(bytes, StandardCharsets.UTF_8);
             formChangeLog = InputSanitizerHelper.sanitizeInput(formChangeLog);
         }
         if (formIssueReference != null) {
-            bytes = formIssueReference.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formIssueReference.getBytes(Charset.defaultCharset());
             formIssueReference = new String(bytes, StandardCharsets.UTF_8);
             formIssueReference = InputSanitizerHelper.sanitizeInput(formIssueReference);
         }
         if (formRegActionLabel != null) {
-            bytes = formRegActionLabel.getBytes(StandardCharsets.ISO_8859_1);
+            bytes = formRegActionLabel.getBytes(Charset.defaultCharset());
             formRegActionLabel = new String(bytes, StandardCharsets.UTF_8);
             formRegActionLabel = InputSanitizerHelper.sanitizeInput(formRegActionLabel);
         }
