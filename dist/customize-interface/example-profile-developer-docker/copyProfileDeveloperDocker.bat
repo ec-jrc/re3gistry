@@ -4,9 +4,9 @@ Rem THIS FILE SHOULD BE USED TO COPY YOUR LOCAL PROFILE AND SETTING INTO GITHUB 
 Rem AS WELL AS CUSTOM FILES WITH THE HEADER AND THE FOOTER, WITH ECL AND SHIRO(inspire_local) OR ECAS (inspire_server)
 
 Rem set up the source and destinations folders of the Repository where to copy from and the repo where to copy to SOURCE folder
-set "copyFROM=C:\Bilbo\Workspace\master-branch\re3gistry\dist\customize-interface\example-profile-developer-docker\"
-set "copyTOsourceGithub=C:\Bilbo\Workspace\master-branch\re3gistry\\sources\\"
-set "copyTOdistGithub=C:\Bilbo\Workspace\master-branch\re3gistry\\dist\\"
+set "copyFROM=PATH_TO_YOUR_CUSTOMIZED_FILES"
+set "copyTOsourceGithub=PATH_TO_GITHUB_REPO\\sources\\"
+set "copyTOdistGithub=PATH_TO_GITHUB_REPO\\dist\\"
 
 
 set "Re3gistry2buildhelper=Re3gistry2-build-helper"
