@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>eu.europa.ec</groupId>
+    <artifactId>Re3gistry2-build-helper</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+    <name>Re3gistry2-build-helper</name>
+    <properties>
+        <war.target.name>re3gistry2</war.target.name>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <persistence.unitname>Re3gistry2</persistence.unitname>
+        <persistence.transactiontpye>RESOURCE_LOCAL</persistence.transactiontpye>        
+        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+        <persistence.eclipselink.ddl-generation>none</persistence.eclipselink.ddl-generation>
+        <persistence.eclipselink.logging.level>CONFIG</persistence.eclipselink.logging.level>
+        <persistence.eclipselink.logging.parameters>false</persistence.eclipselink.logging.parameters>
+        <persistence.dependency.postgres.version>9.4.1212</persistence.dependency.postgres.version>
+        <analytics.id></analytics.id>
+        <analytics.url></analytics.url>
+        <header.message.class></header.message.class>
+        <header.message.text></header.message.text>
+        <application.rooturl>http://host.docker.internal/registry/</application.rooturl>
+        <!-- ECAS config -->
+        <!-- hint: it should match the application.hostname property -->
+        <ecas.filter.serverName>localhost</ecas.filter.serverName>
+        <ecas.filter.serverPort>8080</ecas.filter.serverPort>
+        <!-- useful in case of reverse proxy configuration, it should match application.rootURL -->
+        <ecas.filter.serverContextPath>/re3gistry2</ecas.filter.serverContextPath>
+        <application.solr.url>http://host.docker.internal:8983/solr/</application.solr.url>
+        <application.solr.core>re3gistry2</application.solr.core>
+        <application.solr.isactive>true</application.solr.isactive>
+        <application.solr.version>8.11.1</application.solr.version>
+    </properties>
+    <modules>
+        <module>../Re3gistry2Model</module>
+        <module>../Re3gistry2CRUDinterface</module>
+        <module>../Re3gistry2CRUDrdb</module>
+        <module>../Re3gistry2Base</module>
+        <module>../Re3gistry2JavaAPI</module>
+        <module>../Re3gistry2Migration</module>
+        <module>../Re3gistry2RestAPI</module>
+        <module>../Re3gistry2</module>
+    </modules>
+    <profiles>        
+        <profile>
+            <id>developer-docker</id>
+            <properties>
+                <profile.id>developer-docker</profile.id>
+                <persistence.db.port>5432</persistence.db.port>
+                <persistence.db.address>host.docker.internal</persistence.db.address>
+                <persistence.db.name>registrydb</persistence.db.name>
+                <persistence.jdbc.username>name</persistence.jdbc.username>
+                <persistence.jdbc.password>password</persistence.jdbc.password>
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>
+                <application.login.provider>SHIRO</application.login.provider>
+                <application.rooturl>http://host.docker.internal/registry/</application.rooturl>
+                <ecas.filter.serverName>host.docker.internal</ecas.filter.serverName>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[This is the <strong>local environment</strong> of the Re3gistry 2 software <br/> If you would like to participate to the testing check out the software repository <a class="ecl-link" href="https://github.com/ec-jrc/re3gistry">Re3gistry - localhost Instance - frontend view</a>]]></header.message.text>
+                <application.cache.disk.path>work/ehcache</application.cache.disk.path>
+                <!-- <application.releasenote.rss.path>C:/Devel/re3gistry_application/rss</application.releasenote.rss.path> -->
+                <application.releasenote.rss.path>webapps/re3gistry2/WEB-INF/classes</application.releasenote.rss.path>
+                <application.logging.path>work/registrylogger.log</application.logging.path>
+                <application.privacy>OFF</application.privacy>
+                <application.selected.interface>ecl</application.selected.interface>
+            </properties>
+        </profile>
+        <!-- Server profile -->
+        <profile>
+            <id>server-example-profile</id>                      
+            <properties>            
+                <persistence.db.address>DB_ADDRESS</persistence.db.address>
+                <persistence.db.port>5432</persistence.db.port>                
+                <persistence.db.name>re3gistry2_srv</persistence.db.name>
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>              
+                <persistence.jdbc.username>DB_USERNAME</persistence.jdbc.username>
+                <persistence.jdbc.password>DB_PASSWORD</persistence.jdbc.password>            
+                <persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>
+                <application.rooturl>https://registry-test.eu/re3gistry2</application.rooturl>
+                <application.solr.isactive>false</application.solr.isactive>        
+                <mail.smtp.host>example-smtp.eu</mail.smtp.host>
+                <mail.smtp.port>25</mail.smtp.port>
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
+                <mail.user></mail.user>
+                <mail.password></mail.password>
+                <mail.sender>sender@example.eu</mail.sender>
+                <web.session.cookie.secure>true</web.session.cookie.secure>
+				<application.cache.disk.path>/path/to/cache</application.cache.disk.path>
+				<application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <application.privacy>ON</application.privacy>
+            </properties>
+        </profile>     
+    </profiles>
+</project>
