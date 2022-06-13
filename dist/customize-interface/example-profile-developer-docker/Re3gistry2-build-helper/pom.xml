@@ -66,6 +66,13 @@
                 <application.logging.path>work/registrylogger.log</application.logging.path>
                 <application.privacy>OFF</application.privacy>
                 <application.selected.interface>ecl</application.selected.interface>
+                <mail.smtp.host>host.docker.internal</mail.smtp.host>
+                <mail.smtp.port>2500</mail.smtp.port> 
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.starttls.enable>false</mail.smtp.starttls.enable>
+                <mail.user>name</mail.user>
+                <mail.password>password</mail.password>
+                <mail.sender>admin@example.com</mail.sender>
             </properties>
         </profile>
         <!-- Server profile -->

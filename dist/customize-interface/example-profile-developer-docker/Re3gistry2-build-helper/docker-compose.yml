@@ -72,7 +72,7 @@ services:
          
     solr:
         image: solr:8.11.1
-        container_name: solr-container-v1 
+        container_name: reg-solr 
         ports:
          - "9983:9983"
          - "8983:8983"
@@ -82,6 +82,12 @@ services:
           - docker-entrypoint.sh
           - solr-precreate
           - re3gistry
-
+    mailserver:
+      image: marcopas/docker-mailslurper
+      container_name: mailserver
+      ports:
+        - 2500:2500
+        - 8081:8080 # http://localhost:8081/
+        - 8085:8085
 networks:
   main:
