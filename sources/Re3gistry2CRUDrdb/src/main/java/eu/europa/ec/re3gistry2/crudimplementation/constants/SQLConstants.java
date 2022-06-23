@@ -95,7 +95,7 @@ public class SQLConstants {
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGUSER = "SELECT r FROM RegItemproposed r WHERE r.regUser = :regUser";
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGUSER_COUNT = "SELECT count(r) FROM RegItemproposed r WHERE r.regUser = :regUser";
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGACTION = "SELECT r FROM RegItemproposed r WHERE r.regAction = :regAction";
-
+   
     public static final String SQL_GET_REGITEMPROPOSED_NEW_BY_REGITEMCLASSES_COLLECTION = "SELECT p.regItemproposedSubject FROM RegRelationproposed p JOIN  p.regItemproposedSubject r WHERE r.regItemclass IN :regItemclasses AND r.regItemReference IS NULL and p.regItemObject = :regItemObject and p.regRelationpredicate=:regRelationpredicete ORDER BY r.localid";
     public static final String SQL_GET_REGITEMPROPOSED_NEW_BY_REGITEMCLASSES_COLLECTION_COUNT = "SELECT count(p.regItemproposedSubject) FROM RegRelationproposed p JOIN  p.regItemproposedSubject r WHERE r.regItemclass IN :regItemclasses AND r.regItemReference IS NULL and p.regItemObject = :regItemObject and p.regRelationpredicate=:regRelationpredicete";
 

@@ -35,6 +35,7 @@ import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegItemclasstype;
 import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
+import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.text.MessageFormat;
 
@@ -474,4 +475,45 @@ public class RegItemproposedManager implements IRegItemproposedManager {
         q.setParameter("regAction", regAction);
         return (List<RegItemproposed>) q.getResultList();
     }
+    
+        public List<String> getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception {
+        //Preparing query
+        Query q = null;
+//            q = this.em.createQuery(SQLConstants.SQL_GET_REG_ITEM_BY_SUBJECT_PREDICATE_AND_FILTER_PREDICATE);
+//            q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM, regItem);
+//            q.setParameter(SQLConstants.SQL_PARAMETERS_REGSTATUS, regStatus);
+//            q.setParameter(SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate);
+//            q.setParameter(SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate);
+        try {
+            String query = "select r0.reg_item_subject from (select * from reg_relation r JOIN reg_item ri on ri.uuid = r.reg_item_subject WHERE ri.reg_status = ':regStatus' AND r.reg_item_object = ':regitem' and r.reg_relationpredicate = ':predicate') as r0 where r0.reg_item_subject not in (select r1.reg_item_subject from reg_relation r1 where r1.reg_relationpredicate = ':notpredicate')";
+            query = query.replace(":" + SQLConstants.SQL_PARAMETERS_REGSTATUS, regStatus.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_REGITEM, regItem.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate.getUuid());
+            q = this.em.createNativeQuery(query);
+        } catch (Exception ex) {
+            System.err.println("RegItemproposedManager.getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(), regItem: " + regItem.getLocalid());
+            return null;
+        }
+        return (List<String>) q.getResultList();
+    }
+        
+           public List<RegItemproposed> getAllSubjectsByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception {
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REG_ITEM_BY_OBJECT_PREDICATE_AND_SUBJECT_FILTER);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMPROPOSED, regItem);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate);
+        try {
+            return (List<RegItemproposed>) q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+           
+               public List<RegItemproposed> getAllItemProposed(RegItemclass regItemcalss) throws Exception {
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_BY_REGITEMCLASS);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
+        return (List<RegItemproposed>) q.getResultList();
+    }
+               
+
 }

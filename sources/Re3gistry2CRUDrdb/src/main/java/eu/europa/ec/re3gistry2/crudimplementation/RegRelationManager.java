@@ -227,7 +227,7 @@ public class RegRelationManager implements IRegRelationManager {
             return null;
         }
     }
-    
+      
     /**
      * Returns all the RegRelation by RegItem (object) and RegPredicate
      *
@@ -275,7 +275,7 @@ public class RegRelationManager implements IRegRelationManager {
             return null;
         }
     }
-
+    
     /**
      * Returns all the RegRelation by RegItems (subject) and RegPredicate
      *

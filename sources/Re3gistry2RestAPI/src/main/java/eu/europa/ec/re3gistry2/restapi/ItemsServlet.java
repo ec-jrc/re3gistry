@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
+import eu.europa.ec.re3gistry2.base.utility.ItemproposedHelper;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
@@ -57,6 +58,7 @@ import eu.europa.ec.re3gistry2.restapi.format.RDFFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.RORFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.XMLFormatter;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemproposedSupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.NoVersionException;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
@@ -143,19 +145,24 @@ public class ItemsServlet extends HttpServlet {
                     return;
                 }
 
-                ItemSupplier itemSupplier = new ItemSupplier(em,
-                        masterLanguage, languageCode);
-                ItemHistorySupplier itemHistorySupplier = new ItemHistorySupplier(em,
-                        masterLanguage, languageCode);
+                ItemproposedSupplier itemproposedSupplier = new ItemproposedSupplier(em, masterLanguage, languageCode);
+                ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
+                
+                ItemHistorySupplier itemHistorySupplier = new ItemHistorySupplier(em, masterLanguage, languageCode);
 
                 Optional<Item> optItem;
+                
                 if (uuid != null) {
                     try {
                         optItem = getItemByUuid(uuid, lang, itemSupplier);
                     } catch (Exception ex) {
-                        optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
+                        try{
+                            optItem = getItemProposedByUuid(uuid, lang, itemproposedSupplier);
+                        }catch(Exception e){
+                            optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
+                        }
                     }
-                } else {
+                } else{
                     Integer version = getVersionFromUri(uri);
                     //version is null if the uri doesnt contain any version information, so is a RegItem
                     if (version != null) {
@@ -171,11 +178,13 @@ public class ItemsServlet extends HttpServlet {
                         if (uri.endsWith(":0")) {
                             optItem = getItemByUri(uri.replace("0:", ""), lang, itemSupplier);
                         } else {
-                            optItem = getItemByUri(uri, lang, itemSupplier);
+                            optItem = getItemByUri(uri, lang, itemSupplier);                            
+                            if (!optItem.isPresent()) {
+                                optItem = getItemProposedByUri(uri, lang, itemproposedSupplier);
+                            }
                         }
                     }
-                }
-
+                }                
                 //try to see if is a status request
                 if (!optItem.isPresent()) {
                     StatusSupplier statusSupplier = new StatusSupplier(em, masterLanguage, languageCode);
@@ -185,8 +194,8 @@ public class ItemsServlet extends HttpServlet {
                         optItem = getItemStatusByUri(uri, lang, statusSupplier);
                     }
                 }
-
-                Item item = optItem.filter(typeFilter).orElse(null);
+                
+                Item item = optItem.filter(typeFilter).orElse(null); // OPT ITEM RESULT
                 if (item == null) {
                     ResponseUtil.err(resp, ApiError.NOT_FOUND);
                 } else {
@@ -307,6 +316,23 @@ public class ItemsServlet extends HttpServlet {
         cache.add(language, item);
         return Optional.of(item);
     }
+    
+       private Optional<Item> getItemProposedByUuid(String uuid, String language, ItemproposedSupplier itemproposedSupplier) throws Exception {
+
+        Item item = itemproposedSupplier.getItemProposedByUuid(uuid);
+        if (item == null) {
+            return Optional.empty();
+        }
+        return Optional.of(item);
+    }
+       
+       private Optional<Item> getItemProposedByUri(String uri, String language, ItemproposedSupplier itemproposedSupplier) throws Exception {
+        Item item = itemproposedSupplier.getItemProposedByUri(uri);
+        if (item == null) {
+            return Optional.empty();
+        }
+        return Optional.of(item);
+    }
 
     private Optional<Item> getItemByUri(String uri, String language, ItemSupplier itemSupplier) throws Exception {
         Item cached = cache.getByUrl(language, uri);
@@ -381,6 +407,6 @@ public class ItemsServlet extends HttpServlet {
         }
 
         cache.add(language, item);
-        return Optional.of(item);
+        return Optional.of(item);       
     }
 }

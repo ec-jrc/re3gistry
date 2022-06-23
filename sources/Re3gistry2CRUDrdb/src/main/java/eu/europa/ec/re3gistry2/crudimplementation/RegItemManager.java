@@ -67,7 +67,7 @@ public class RegItemManager implements IRegItemManager {
         return (RegItem) q.getSingleResult();
 
     }
-
+    
     /**
      * Returns all the RegItems
      *
@@ -249,7 +249,7 @@ public class RegItemManager implements IRegItemManager {
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
         return (List<RegItem>) q.getResultList();
     }
-
+    
     /**
      * Returns all the RegItems by RegAction
      *
@@ -514,7 +514,7 @@ public class RegItemManager implements IRegItemManager {
             return null;
         }
     }
-
+    
     /**
      * Returns all RegItems (subject) by RegItem (object) and RegPredicate where
      * subject RegItems must not have second RegPredicate Useful for example for
@@ -547,7 +547,7 @@ public class RegItemManager implements IRegItemManager {
         }
         return (List<String>) q.getResultList();
     }
-
+    
     @Override
     public List<RegItem> getAllValid(RegItemclass regItemcalss) throws Exception {
         //Preparing query

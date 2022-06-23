@@ -218,7 +218,7 @@ public class RegItemhistoryManager implements IRegItemhistoryManager {
 
         return (List<RegItemhistory>) q.getResultList();
     }
-
+    
     /**
      * Find the RegItemhistory specified by parameter. Returns RegItemhistory if
      * the operation succeed.

@@ -189,7 +189,7 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (List<RegLocalization>) q.getResultList();
     }
-
+    
     /**
      * Returns all the RegLocalization for the specified RegItems
      * in the specific language
@@ -313,7 +313,7 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (List<RegLocalization>) q.getResultList();
     }
-
+    
     /**
      * Returns all the RegLocalization for the specified RegField, RegItem and
      * RegAction
