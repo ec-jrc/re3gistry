@@ -23,6 +23,7 @@
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
 --%>
+<%@page import="eu.europa.ec.re3gistry2.javaapi.cache.CacheHelper"%>
 <%@page import="eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegFieldtype"%>
 <%@page import="eu.europa.ec.re3gistry2.base.utility.UserHelper"%>
@@ -107,7 +108,9 @@
             <%
                 }
             %>
-
+        <%
+                String buttonCacheDisabled = (CacheHelper.checkCacheCompleteRunning()) ? " disabled" : "";
+        %>
             <div class="row">
                 <div class="col-sm-9">
                     <h1>${regItemclass.localid}</h1>   
@@ -129,6 +132,16 @@
                             <a class="btn btn-primary edit-itemclass width100" data-<%=BaseConstants.KEY_FORM_FIELD_NAME_DATA_ITEMCLASSUUID%>=${regItemclass.uuid} href="#"><i class="far fa-edit" title="${localization.getString("label.edit")}"></i> ${localization.getString("label.edit")}</a>
                         </div>
                         <div class="col-sm-6">
+                                <a class="btn btn-approve-action width100 buttoncache btn-success" 
+                                   data-toggle="confirmation" 
+                                   data-title="Recache" 
+                                   data-placement="left" 
+                                   data-singleton="true" 
+                                   href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
+                                    ${localization.getString("label.cache.class")}
+                                </a>
+                        </div>
+                        <div class="col-sm-6">
                             <a class="btn btn-danger btn-approve-action btn-reg-action width100" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_REQUEST_REMOVEFIELD%>=<%=BaseConstants.KEY_FORM_FIELD_NAME_REQUEST_REMOVEFIELD%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i> ${localization.getString("label.remove")}</a>
                         </div>
                         <%} else {%>
@@ -137,6 +150,16 @@
                         </div>
                         <div class="col-sm-4">
                             <a class="btn btn-primary edit-itemclass width100" data-<%=BaseConstants.KEY_FORM_FIELD_NAME_DATA_ITEMCLASSUUID%>=${regItemclass.uuid} href="#"><i class="far fa-edit" title="${localization.getString("label.edit")}"></i> ${localization.getString("label.edit")}</a>
+                        </div>
+                        <div class="col-sm-4">
+                                <a class="btn btn-approve-action width100 buttoncache btn-success" 
+                                   data-toggle="confirmation" 
+                                   data-title="Recache" 
+                                   data-placement="left" 
+                                   data-singleton="true" 
+                                   href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
+                                    ${localization.getString("label.cache.class")}
+                                </a>
                         </div>
                         <div class="col-sm-4">
                             <a class="btn btn-danger btn-approve-action btn-reg-action width100" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_REQUEST_REMOVEFIELD%>=<%=BaseConstants.KEY_FORM_FIELD_NAME_REQUEST_REMOVEFIELD%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i> ${localization.getString("label.remove")}</a>
@@ -151,6 +174,16 @@
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-danger btn-approve-action btn-reg-action width100" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i> ${localization.getString("label.remove")}</a>
+                        </div>
+                        <div class="col-sm-6">
+                                <a class="btn btn-approve-action width100 buttoncache btn-success" 
+                                   data-toggle="confirmation" 
+                                   data-title="Recache" 
+                                   data-placement="left" 
+                                   data-singleton="true" 
+                                   href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
+                                    ${localization.getString("label.cache.class")}
+                                </a>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -198,7 +231,7 @@
                 </div>
             </div>
             <div class="alert alert-warning mt-3" role="alert">
-                ${localization.getString("label.changesautosaved")}
+                ${localization.getString("label.changesautosaved")} ${localization.getString("label.changesautosaved.cache")}
             </div>
 
             <c:if test="${not empty regFieldmappings}">
@@ -210,10 +243,10 @@
                             <th>${localization.getString("label.label")}</th>
                             <th>${localization.getString("label.type")}</th>
                             <th>${localization.getString("label.ishyperlinked")}</th>
-                            <th>${localization.getString("label.hidden")}</th>
+                            <th>${localization.getString("label.hidden")}<i class='fas fa-exclamation-circle'></i></th>
                             <th>${localization.getString("label.multivalued")}</th>
                             <th>${localization.getString("label.required")}</th>
-                            <th>${localization.getString("label.tablevisible")}</th>
+                            <th>${localization.getString("label.tablevisible")}<i class='fas fa-exclamation-circle'></i></th>
                             <th>${localization.getString("label.actions")}</th>
                         </tr>
                     </thead>
@@ -422,6 +455,17 @@
                 <% } %>
             </c:if>
         </div>
+
+        <script>
+            $(".buttoncache").on('click', function () {
+                //                        $('#startCaching').on('click', function () {
+                $(".buttoncache").addClass('disabled');
+                //                            $(this).addClass('disabled');
+                setTimeout(function () {
+                    location.reload();
+                }, 3000);
+            });
+        </script>
         <%@include file="includes/footer.inc.jsp" %>
         <%@include file="includes/pageend.inc.jsp" %>
 

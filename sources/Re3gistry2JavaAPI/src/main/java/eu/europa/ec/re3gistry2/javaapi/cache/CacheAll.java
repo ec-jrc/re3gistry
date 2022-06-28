@@ -36,6 +36,10 @@ public class CacheAll {
     }
 
     public void run() throws Exception {
+        this.run(null);
+    }
+        
+    public void run(String classUUID) throws Exception {
         // Init logger
         Logger logger = Configuration.getInstance().getLogger();
 
@@ -68,6 +72,18 @@ public class CacheAll {
 
                     // Getting all ItemClasses
                     List<RegItemclass> itemclassList = regItemclassManager.getAlltemclassOrderAscByDataprocedureorder();
+                    if (classUUID!=null) { 
+                        for (RegItemclass regItemclass : itemclassList) {
+                            if (regItemclass.getUuid().equals(classUUID)) {
+                                itemclassList.clear();
+                                itemclassList.add(regItemclass);
+//                                .getParent()
+                                break;
+                            }
+                        }
+                    }
+                    
+                    //cache.getByUuid(language, uuid)
 
                     CacheHelper.createCacheCompleteRunningFile();
 
