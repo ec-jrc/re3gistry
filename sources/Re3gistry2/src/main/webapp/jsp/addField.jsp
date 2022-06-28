@@ -143,11 +143,8 @@
                                 <%
                                     for (RegFieldtype tmpRegFieldtype : regFieldtypes) {
                                         if (!tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_COLLECTION)
-                                                && !tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_PARENT)
                                                 && !tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_REGISTER)
                                                 && !tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_REGISTRY)
-                                                && !tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_SUCCESSOR)
-                                                && !tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_PREDECESSOR)
                                                 && !tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_STATUS)
                                                 && !tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_GROUP)) {
                                 %><option value="<%=tmpRegFieldtype.getUuid()%>" data-reference="<%=tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_RELATION)%>"><%=tmpRegFieldtype.getLocalid()%><%=((tmpRegFieldtype.getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_STRING)) ? " (" + MessageFormat.format(localization.getString("label.maxchars"), properties.getProperty("application.input.maxlength")) + ")" : "")%></option><%
