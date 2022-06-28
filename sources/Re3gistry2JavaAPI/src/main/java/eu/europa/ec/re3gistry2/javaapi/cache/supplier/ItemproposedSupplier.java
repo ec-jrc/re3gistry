@@ -83,6 +83,7 @@ import eu.europa.ec.re3gistry2.model.RegRelationproposed;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.persistence.EntityManager;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -202,12 +203,11 @@ public class ItemproposedSupplier {
         Item item = new Item();
 
         setMainPropertiesForRegItemProposed(regItemproposed, item);
-
-//        setRegistryAndRegisterItemRefProposed(regIP, item);      
+        setRegistryAndRegisterItemRefProposed(regItemproposed, item);      
 //        setIsDefinedByFromRegItemProposed(regIP, item);     
 //        setContainedItemsFromRegItemProposed(regIP, item);  
 //        setContainedItemsFromRegItemProposedClassWithParent(regIP, item); 
-//        setTopConceptsFromRegItemProposed(regIP, item);    
+//        setTopConceptsFromRegItemProposed(regItemproposed, item);    
 //        setInSchemeAndTopConceptOfFromRegItemProposed(regIP, item); 
 //        setNarrowerFromRegItemProposed(regIP, item);  
 //        setBroaderFromRegItemProposed(regIP, item); 
@@ -216,7 +216,13 @@ public class ItemproposedSupplier {
 
     protected ContainedItem toContainedItemProposed(RegItemproposed regItemproposed) throws Exception {
         ContainedItem containedItem = new ContainedItem();
-
+  
+        boolean isPublic = regItemproposed.getRegStatus().getIspublic();
+        
+        if (!isPublic) {
+            return null;
+        }
+        
         setMainPropertiesForRegItemProposed(regItemproposed, containedItem);
         setRegistryAndRegisterItemRefProposed(regItemproposed, containedItem);
         setIsDefinedByFromRegItemProposed(regItemproposed, containedItem);
@@ -607,8 +613,14 @@ public class ItemproposedSupplier {
 
     protected ItemRef toItemRefProposed(RegItemproposed regItemproposed) throws Exception {
 
-        RegItem regItem = regItemproposed.getRegItemReference();
-
+        RegItem regItem = null;
+        
+        if(regItemproposed.getRegItemReference() != null){
+            regItem = regItemproposed.getRegItemReference(); 
+        }else{ 
+            regItem = regItemproposed.getRegAction().getRegItemRegister();
+        }
+        
         String uri = ItemproposedHelper.getProposedURI(regItemproposed, regItem, hasCollection, regRelationproposedManager, regRelationManager);
 
         RegField labelField = getLabelField();
@@ -866,16 +878,16 @@ public class ItemproposedSupplier {
         List<RegItemproposed> list = getRelatedItemsProposedBySubject(regItemproposed, predicate);
         if (list != null && !list.isEmpty()) {
             return list.stream().findAny().orElse(null);
+            }     
+            return null;
         }
-        return null;
-    }
 
     private List<RegItemproposed> getRelatedItemsProposedBySubject(RegItemproposed regItemproposed, RegRelationpredicate predicate) throws Exception {
 
         if (regRelationproposedManager != null && regItemproposed != null && predicate != null
                 && regRelationproposedManager.getAll(regItemproposed, predicate) != null) {
             return regRelationproposedManager.getAll(regItemproposed, predicate).stream()
-                    .map(rel -> rel.getRegItemproposedObject())
+                    .map(rel -> rel.getRegItemproposedSubject())
                     .collect(Collectors.toList());
         } else {
             return null;
