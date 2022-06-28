@@ -1132,7 +1132,12 @@ public class ItemSupplier {
              List <RegItemproposed> proposedItemsfromList = regItemproposedManager.getAll(regItemRegItemClass.get(i));
 
              for(int y=0; y<proposedItemsfromList.size(); y++){
-                 regItemproposedList.add(proposedItemsfromList.get(y));
+                 RegItemproposed proposedItem = proposedItemsfromList.get(y);
+                 boolean isPublic = proposedItem.getRegStatus().getIspublic();
+        
+                if (isPublic) {
+                   regItemproposedList.add(proposedItem); 
+                }   
              }      
         }
 
