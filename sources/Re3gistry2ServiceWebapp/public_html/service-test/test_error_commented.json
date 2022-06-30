@@ -1,0 +1,36 @@
+
+// Item not found [HTTP response status codes: 404]
+{
+    "error": {
+        "code":"404",
+        "description-code":"not-found",
+        "description":"Element not found"
+    }
+}
+
+// Format not supported [HTTP response status codes: 406]
+{
+    "error": {
+        "code":"406",
+        "description-code":"unknown-format",
+        "description":"The requested media type is not supported"
+    }
+}
+
+// Language not supported [HTTP response status codes: 406]
+{
+    "error": {
+        "code":"406",
+        "description-code":"unknown-language",
+        "description":"The requested language is not available"
+    }
+}
+
+// Internal server error [HTTP response status codes: 500]
+{
+    "error": {
+        "code":"500",
+        "description-code":"internal-server-error",
+        "description":"The server had an internal error"
+    }
+}

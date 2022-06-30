@@ -215,6 +215,19 @@ public class RegRelationproposedManager implements IRegRelationproposedManager {
             return null;
         }
     }
+    
+    public List<RegRelationproposed> getAllByRegItemsSubjectAndPredicate(List<RegItemproposed> regItems, RegRelationpredicate regRelationPredicate) throws Exception {
+//        //Preparing query
+//        Query q = this.em.createQuery(SQLConstants.SQL_GET_RELATIONPROPOSED_SUBJECTS_PREDICATE);
+//        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEM_LIST, regItems);
+//        q.setParameter(SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate);
+//        try {
+//            return (List<RegRelationproposed>) q.getResultList();
+//        } catch (Exception e) {
+//            return null;
+//        }
+            return null;
+    }
 
     /**
      * Returns all the RegRelationproposed by the RegRelation reference

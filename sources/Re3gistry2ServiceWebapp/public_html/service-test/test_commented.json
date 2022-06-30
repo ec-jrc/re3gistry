@@ -1,0 +1,384 @@
+{
+    "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel",
+    
+    /** The version of the current item **/
+    // On the reg_item the versionnumber is always 0 because of legacy implementation from the old version.
+    // To retrieve the version of the current reg_item you should look into reg_itemhistory table and check the 
+    // max(versionnumber) for the specified reg_item (you can filter by reg_item_reference that refers to 
+    // the reg_item in the reg_item table).
+    "version": {
+        "number": "3",
+        "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel:3"
+    },
+    
+    /** The list of versions related to the current item **/
+    // The list of old versions can be retrieved looking at the reg_itemhistory table and
+    // filtering by reg_item_reference.
+    "versionHistory": [
+        {
+            "number": "1",
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel:1"
+        }, {
+            "number": "2",
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel:2"
+        }
+    ],
+    
+    /** The overall language of the reg_item (requested in the rest query) **/
+    "language": "en",
+    
+    /** The type of the reg_item **/
+    "type": "item",
+    
+    /** The itemclass of the reg_item **/
+    "itemclass": {
+        "id": "CodeList"
+    },
+    
+    /** The registry of the reg_item **/
+    "registry": {
+        "uri": "http://inspire.ec.europa.eu/registry",
+        /** The list of fields of the registry **/
+        // Here we can limit to only the label. To get the "label" field there is
+        // the flag "istitle" in the table reg_field.
+        "properties": [
+            {
+                "lang": "en",
+                "id": "label",
+                "istitle": "true",
+                "label": "Label",
+                "values": [
+                    {
+                        "value": "INSPIRE registry",
+                        "href": ""
+                    }
+                ],
+                "order": "1"   
+            }
+        ]
+    },
+    
+    /** The registry of the reg_item **/
+    // this will not be available in case we are asking for the registry reg_item
+    "register": {
+        "uri": "http://inspire.ec.europa.eu/codelist",
+        /** The list of fields of the register **/
+        // Here we need limit to only to the label. To get the "label" field there is
+        // the flag "istitle" in the table reg_field.
+        "properties": [
+            {
+                "lang": "en",
+                "id": "label",
+                "istitle": "true",
+                "label": "Label",
+                "values": [
+                    {
+                        "value": "INSPIRE code list register",
+                        "href": ""
+                    }
+                ],
+                "order": "1"   
+            }
+        ]
+    },
+    
+    /** The list of fields related to the reg_item **/
+    // The fields shall be visible here only if they do not have 
+    // the flag "hidden" set to true (table reg_fieldmapping)
+    "properties": [
+        {
+            "lang": "en",
+            "id": "label",
+            // In case the file is a title field, the "istitle" flag shall 
+            // added to the json of the propery. Otherwise not.
+            // To check the "istitle" field, in the reg_field table thereis 
+            // the "istitle" flag           
+            "istitle":"true",
+            "label": "Label",
+            "values": [
+                {
+                    "value": "Label",
+                    "href": ""
+                }
+            ],
+            "href": "",
+            "order": "1"   
+        },
+        {
+            "lang": "en",
+            "id": "GovernanceLevel",
+            "label": "Governance Level",
+            "values": [
+                {
+                    "value": "Legal (EU)",
+                    "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                }
+            ],
+            "order": "3"   
+        },
+        // For the status, we fill aslo the href with the uri of the status
+        // done taking reg_statusgroup->baseuri + '/' + reg_statusgroup->localid + '/' + regstatus->localid
+        {
+            "lang": "en",
+            "id": "status",
+            "label": "Status",
+            "values": [
+                {
+                    "value": "Valid",
+                    "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                }
+            ],
+            "order": "4"   
+        },
+        // In case the field is a "relationReference" field we fill the href
+        // with the URI of the pointed reg_item (same in case of parent, successor or predecessor field)
+        {
+            "lang": "en",
+            "id": "theme",
+            "label": "Theme",
+            "values": [
+                {
+                    "value": "Administrative units",
+                    "href": "http://inspire.ec.europa.eu/theme/au"
+                },
+                {
+                    "value": "Administrative units",
+                    "href": "http://inspire.ec.europa.eu/theme/au"
+                }
+            ],
+            "order": "5"   
+        },
+        {
+            "lang": "en",
+            "id": "applicationschema",
+            "label": "Application schema",
+            "values": [
+                {
+                    "value": "Administrative units",
+                    "href": "http://inspire.ec.europa.eu/applicationschema/au"
+                }
+            ],
+            "order": "6"   
+        },
+        {
+            "lang": "en",
+            "id": "extensibility",
+            "label": "Extensibility",
+            "values": [
+                {
+                    "value": "Not extensible",
+                    "href": "http://inspire.ec.europa.eu/registry/extensibility/none"
+                }
+            ],
+            "order": "7"   
+        },
+        {
+            "lang": "en",
+            "id": "definition",
+            "label": "Definition",
+            "values": [
+                {
+                    "value": "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities.",
+                    "href": ""
+                }
+            ],
+            "order": "2"    
+        }
+    ],
+    /** This contains the list of collections **/
+    // The properties (the fields) here shall be visible only if the flag "tablevisible"
+    // is set to true (from table reg_fieldmapping)
+    // No other comments here since they are the same of the ones explained above.        
+    "containedItems": [ 
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/1stOrder",
+            "language": "en",
+            "type": "item",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "1st order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/2ndOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "2nd order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/3rdOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "3rd order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        },
+        {
+            "uri": "http://inspire.ec.europa.eu/codelist/AdministrativeHierarchyLevel/4thOrder",
+            "language": "en",
+            "itemclass": {
+                "id": "CodeListValue"
+            },
+            "properties": [
+                {
+                    "lang": "en",
+                    "id": "label",
+                    "istitle": "true",
+                    "label": "Label",
+                    "values": [
+                        {
+                            "value": "4th order",
+                            "href": ""
+                        }
+                    ],
+                    "order": "1"   
+                },
+                {
+                    "lang": "en",
+                    "id": "GovernanceLevel",
+                    "label": "Governance Level",
+                    "values": [
+                        {
+                            "value": "Legal (EU)",
+                            "href": "http://inspire.ec.europa.eu/registry/governance-level/eu-legal"
+                        }
+                    ],
+                    "order": "3"    
+                },
+                {
+                    "lang": "en",
+                    "id": "status",
+                    "label": "Status",
+                    "values": [
+                        {
+                            "value": "Valid",
+                            "href": "http://inspire.ec.europa.eu/registry/status/valid"
+                        }
+                    ],
+                    "order": "4"    
+                }
+            ]
+        }
+    ],
+    // Same structure as containedItems, but it is showing the children of the curent reg_item instead 
+    // of the collections. To find the eventual children of the current items
+    // check in the reg_relation if there are relation with the reg_relatonpredicate=4
+    // and the current item is set as "reg_item_subject"
+    "narrower":[]
+}

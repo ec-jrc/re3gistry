@@ -25,24 +25,25 @@ package eu.europa.ec.re3gistry2.base.utility;
 
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationManager;
-import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationproposedManager;
 import eu.europa.ec.re3gistry2.model.RegField;
 import eu.europa.ec.re3gistry2.model.RegItem;
+import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegLocalization;
-import eu.europa.ec.re3gistry2.model.RegLocalizationproposed;
 import eu.europa.ec.re3gistry2.model.RegRelation;
 import eu.europa.ec.re3gistry2.model.RegRelationproposed;
 import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 
 public class ItemproposedHelper {
@@ -95,6 +96,65 @@ public class ItemproposedHelper {
                 break;
         }
         return uri;
+    }
+    
+    public static String getProposedURI(RegItemproposed regItem) throws Exception {
+        // Getting the DB manager
+        EntityManager entityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
+
+        RegRelationpredicateManager relationPredicateManager = new RegRelationpredicateManager(entityManager);
+        RegRelationpredicate hasRegistry = relationPredicateManager.get(BaseConstants.KEY_PREDICATE_REGISTRY);
+        RegRelationpredicate hasRegister = relationPredicateManager.get(BaseConstants.KEY_PREDICATE_REGISTER);
+
+        if (regItem == null) {
+            return null;
+        }
+        RegItemclass itemclass = regItem.getRegItemclass();
+        switch (itemclass.getRegItemclasstype().getLocalid()) {
+            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY:
+                return itemclass.getBaseuri() + "/" + regItem.getLocalid();
+            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
+                String baseuri = itemclass.getBaseuri();
+                if (baseuri != null) {
+                    return baseuri + "/" + regItem.getLocalid();
+                }
+                String registryURI = getProposedURI(getRelatedItemProposedBySubject(regItem, hasRegistry, entityManager));
+                return registryURI + "/" + regItem.getLocalid();
+            case BaseConstants.KEY_ITEMCLASS_TYPE_ITEM:
+                String itemURI = null;
+                if (regItem.getExternal()) {
+                    itemURI = regItem.getLocalid();
+                } else {
+                    String registerURI = getProposedURI(getRelatedItemProposedBySubject(regItem, hasRegister, entityManager));
+                    List<RegItemproposed> collectionChain = getCollectionChain(regItem, entityManager);
+                    if (collectionChain.isEmpty()) {
+                        return registerURI + "/" + regItem.getLocalid();
+                    }
+                    String collectionsPath = collectionChain.stream()
+                            .map(collection -> collection.getLocalid())
+                            .collect(Collectors.joining("/"));
+                    itemURI = registerURI + "/" + collectionsPath + "/" + regItem.getLocalid();
+                }
+
+                return itemURI;
+            default:
+                throw new RuntimeException("Invalid type");
+        }
+    }
+    
+     private static List<RegItemproposed> getCollectionChain(RegItemproposed regItem, EntityManager entityManager) throws Exception {
+        RegRelationpredicateManager regRelationpredicateManager = new RegRelationpredicateManager(entityManager);
+        RegRelationpredicate hasCollection = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_COLLECTION);
+        RegItemproposed collection = getRelatedItemProposedBySubject(regItem, hasCollection, entityManager);
+        if (collection == null) {
+            return Collections.emptyList();
+        }
+        LinkedList<RegItemproposed> collectionChain = new LinkedList<>();
+        while (collection != null) {
+            collectionChain.addFirst(collection);
+            collection = getRelatedItemProposedBySubject(collection, hasCollection, entityManager);
+        }
+        return collectionChain;
     }
 
     public static HashMap<String, String> getRegistryLocalizationByRegItemproposed(RegItemproposed regItemproposed, EntityManager entityManager, RegLanguagecode regLanguagecode) {
@@ -211,6 +271,26 @@ public class ItemproposedHelper {
         } catch (Exception ex) {
             return HTML;
 
+        }
+    }
+    
+     protected static RegItemproposed getRelatedItemProposedBySubject(RegItemproposed regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
+        List<RegItemproposed> list = getRelatedItemsProposedBySubject(regItem, predicate, entityManager);
+        if (list != null && !list.isEmpty()) {
+            return list.stream().findAny().orElse(null);
+        }
+        return null;
+    }
+     
+     private static List<RegItemproposed> getRelatedItemsProposedBySubject(RegItemproposed regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
+        RegRelationproposedManager regRelationManager = new RegRelationproposedManager(entityManager);
+        if (regRelationManager != null && regItem != null && predicate != null
+                && regRelationManager.getAll(regItem, predicate) != null) {
+            return regRelationManager.getAll(regItem, predicate).stream()
+                    .map(rel -> rel.getRegItemproposedObject())
+                    .collect(Collectors.toList());
+        } else {
+            return null;
         }
     }
 

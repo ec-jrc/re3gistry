@@ -84,6 +84,7 @@ public class RegistryManagerDataExport extends HttpServlet {
         String regUserRegGroupMappingUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERGROUPMAPPING_UUID);
         String languageUUID = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
         String actionType = request.getParameter(BaseConstants.KEY_REQUEST_ACTIONTYPE);
+        String cacheClassUUID = request.getParameter(BaseConstants.KEY_REQUEST_ITEMCLASSUUID);
 
         startIndex = (startIndex != null) ? InputSanitizerHelper.sanitizeInput(startIndex) : null;
         startCaching = (startCaching != null) ? InputSanitizerHelper.sanitizeInput(startCaching) : null;
@@ -163,7 +164,11 @@ public class RegistryManagerDataExport extends HttpServlet {
                 boolean result;
 
                 try {
-                    cacheall.run();
+                    if (cacheClassUUID!=null) {
+                        cacheall.run(cacheClassUUID);
+                    } else {
+                        cacheall.run();
+                    }
                     subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_CACHE_SUCCESS);
                     body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_CACHE_SUCCESS);
                     result = true;

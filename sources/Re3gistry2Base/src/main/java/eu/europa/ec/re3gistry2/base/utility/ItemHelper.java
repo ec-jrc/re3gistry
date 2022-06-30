@@ -250,7 +250,7 @@ public class ItemHelper {
                 throw new RuntimeException("Invalid type");
         }
     }
-
+    
     private static List<RegItem> getCollectionChain(RegItem regItem, EntityManager entityManager) throws Exception {
         RegRelationpredicateManager regRelationpredicateManager = new RegRelationpredicateManager(entityManager);
         RegRelationpredicate hasCollection = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_COLLECTION);
@@ -276,7 +276,7 @@ public class ItemHelper {
 //                .findAny()
 //                .orElse(null);
     }
-
+    
     private static List<RegItem> getRelatedItemsBySubject(RegItem regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
         RegRelationManager regRelationManager = new RegRelationManager(entityManager);
         if (regRelationManager != null && regItem != null && predicate != null
@@ -288,5 +288,4 @@ public class ItemHelper {
             return null;
         }
     }
-
 }
