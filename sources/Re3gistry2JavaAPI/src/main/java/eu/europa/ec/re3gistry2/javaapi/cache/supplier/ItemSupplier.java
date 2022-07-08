@@ -80,6 +80,7 @@ import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLocalizationproposed;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -244,7 +245,26 @@ public class ItemSupplier {
 
     protected BasicContainedItem toBasicContainedItem(RegItem regItem) throws Exception {
         BasicContainedItem citem = new ContainedItem();
+        String label = getLabelfromItem(regItem);
+        LocalizedPropertyValue myvalues = new LocalizedPropertyValue(label, "");
+        citem.addValue(myvalues);
         citem.setUri(ItemHelper.getURI(regItem));
+        
+        RegItem topConcept = getRelatedItemBySubject(regItem, hasCollection);
+            if(topConcept!=null){
+                citem.setTopConceptOf(toBasicContainedItem(topConcept));
+                boolean moreParents = true;
+                while(moreParents){
+                    RegItem item = getRelatedItemBySubject(topConcept, hasCollection);
+                    if(item != null){
+                        BasicContainedItem subTopConcept = citem.getTopConceptOf();
+                        subTopConcept.setTopConceptOf(toBasicContainedItem(item));        
+                    }else{
+                        moreParents = false;
+                    }
+                }
+                
+            }    
         return citem;
     }
 
@@ -547,7 +567,7 @@ public class ItemSupplier {
                 basicContainedItem = toBasicContainedItem(relatedRegistry);
                 break;
             case TYPE_ITEM:
-                RegItem relatedCollection = getRelatedItemBySubject(regItem, hasCollection);
+                RegItem relatedCollection = getRelatedItemBySubject(regItem, hasCollection);              
                 if (relatedCollection != null) {
                     RegItem parentCollection = getRelatedItemBySubject(relatedCollection, hasParent);
                     if (parentCollection != null) {
@@ -1184,5 +1204,12 @@ public class ItemSupplier {
         } else {
             return null;
         }
+    }
+    
+    private String getLabelfromItem(RegItem regitem) throws Exception{
+       RegField field = regFieldManager.getByLocalid("label");
+       RegLocalization loc = (reglocalizationManager.getAll(field, regitem)).get(0);
+        
+        return loc.getValue();
     }
 }

@@ -795,7 +795,6 @@ function updatePageTitle(string) {
 function handleBreadcrumbs(data) {
 
     let breadcrumbOl = $('.' + elementClassName_breadcrumb);
-
     // Creating the base breadcrumb (only the first time)
     if (baseBreadcrumb === val_emptyString) {
         baseBreadcrumb = breadcrumbOl.html();
@@ -906,7 +905,6 @@ function renderRegisterBreadcrumb(data) {
 function renderItemsBreadcrumb(data) {
 
     let liHtml = val_emptyString;
-
     let currentItemUri = data.uri;
     let registerUri = data.register.uri;
 
@@ -935,38 +933,28 @@ function renderItemsBreadcrumb(data) {
 function generateBreadcrumbTrail(data) {
 
     let currentUri = data.uri;
+    let myBreadCrumbElements = [];
+    let myBreadCrumbElementsURL = [];
 
-    // Creating the list of additional elements for the breadcrumbs
-    let breadcrumbElements = currentUri.split('/');
-    breadcrumbElements = breadcrumbElements.reverse();
-    let breadcrumbUrls = [];
-    let tmpUrl = currentUri;
-    $.each(breadcrumbElements, function (index, item) {
-        breadcrumbUrls.push(tmpUrl);
-        tmpUrl = tmpUrl.replace('/' + item, '');
-    });
-
-    let liHtml = val_emptyString;
-    breadcrumbUrls.reverse();
-    $.each(breadcrumbUrls, function (index, item) {
-
-        // Filtering elements not needed in the breadcrumbs or already 
-        // processed (like registry and register or the current element)
-        if (item !== key_http + ':/' &&
-                item !== key_http + ':' &&
-                item !== key_https + ':' &&
-                item !== key_http + ':/' &&
-                item !== data.registry.uri &&
-                item !== data.register.uri &&
-                item !== data.uri) {
-
-            // Filtering the base URI
-            if (data.registry.uri.indexOf(item) < 0 || data.register.uri.indexOf(item) < 0) {
-
-                liHtml += renderBreadcrumbLink(getUriname(item), item);
-            }
+    //Rest of items
+    let topconcepts = true;
+    let currentLevel = data;
+    while(topconcepts){
+        try {
+            myBreadCrumbElements.push(currentLevel.topConceptOf.values[0].value); 
+            myBreadCrumbElementsURL.push(currentLevel.topConceptOf.uri)
+            currentLevel = currentLevel.topConceptOf;
+        } catch (error) {
+            topconcepts = false;
         }
-    });
+    }
+
+    myBreadCrumbElements.reverse();
+    myBreadCrumbElementsURL.reverse();
+    let liHtml = val_emptyString;
+    for(let i= 0 ; i<myBreadCrumbElements.length; i++){
+        liHtml += renderBreadcrumbLink(myBreadCrumbElements[i], myBreadCrumbElementsURL[i]);
+    }
 
     // Rendering the last element of the breadcrumb (current element)
     liHtml += renderBreadcrumbLastElement(getTitleField(data));
