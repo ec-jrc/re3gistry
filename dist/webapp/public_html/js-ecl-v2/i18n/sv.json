@@ -65,5 +65,7 @@
     "l-ec-website":"https://ec.europa.eu/info/index_{0}",
     "s-other-formats":"Tillgängliga format:",
     "s-insert-date":"Insert date",
-    "s-edit-date":"Edit date"
+    "s-edit-date":"Edit date",
+    "c-refine-results":"Refine results",
+    "c-clear-all":"Clear all"
 }
