@@ -193,6 +193,33 @@ public class ItemHistorySupplier {
         }
         return null;
     }
+    
+    public int sizeItemInHistory(String uri) throws Exception {
+        int i = uri.lastIndexOf('/');
+        if (i < 0) {
+            //if no column than is asking for the latest version
+            return 0;
+        }
+
+        String localidWithVersion = uri.substring(i + 1);
+        int uriCollection = uri.substring(0, i).lastIndexOf('/');
+        String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
+        i = uri.indexOf(':', i + 1);
+        Integer version;
+        try {
+            version = Integer.parseInt(uri.substring(i + 1));
+
+            String localid = localidWithVersion.replace(":" + version, "");
+            RegItemclass parentRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+            RegItemclass childRegItemClass = regItemClassManager.getChildItemclass(parentRegItemClass).get(0);
+            List<RegItemhistory> regItemHistoryVersion = regItemhistoryManager.getByLocalidAndRegItemClass(localid, childRegItemClass);
+
+            return regItemHistoryVersion.size();
+
+        } catch (NumberFormatException ignore) {
+        }
+        return 0;
+    }
 
     private Integer getVersionFromUri(String uri) {
         Integer version = null;

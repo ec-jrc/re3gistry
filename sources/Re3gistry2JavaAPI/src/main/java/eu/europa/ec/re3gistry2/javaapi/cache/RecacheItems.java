@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.Logger;
@@ -180,7 +178,7 @@ public class RecacheItems extends Thread {
             return Optional.empty();
         }
 
-        cache.add(language, item);
+        cache.add(language, item, null);
         return Optional.of(item);
     }
 

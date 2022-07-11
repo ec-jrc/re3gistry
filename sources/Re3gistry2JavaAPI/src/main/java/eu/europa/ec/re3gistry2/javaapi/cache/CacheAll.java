@@ -178,7 +178,7 @@ public class CacheAll {
             return Optional.empty();
         }
 
-        cache.add(language, item);
+        cache.add(language, item, null);
         return Optional.of(item);
     }
 
@@ -192,7 +192,7 @@ public class CacheAll {
             return Optional.empty();
         }
 
-        cache.add(language, item);
+        cache.add(language, item, null);
         return Optional.of(item);
     }
 
@@ -206,7 +206,7 @@ public class CacheAll {
             return Optional.empty();
         }
 
-        cache.add(language, item);
+        cache.add(language, item, item.getVersion().getNumber());
         return Optional.of(item);
     }
 
