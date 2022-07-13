@@ -39,10 +39,6 @@
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.jdbc.user" value="dbuser"/>
             <property name="eclipselink.ddl-generation" value="none"/>
-			<property name="eclipselink.logging.level" value="CONFIG"/>
-            <property name="eclipselink.logging.level.sql" value="CONFIG"/>
-            <property name="eclipselink.logging.parameters" value="false"/>
-            <property name="eclipselink.logging.file" value="path/to/catalina/base/logs/eclipselink.log"/>
         </properties>
     </persistence-unit>
 </persistence>
