@@ -67,5 +67,6 @@
     "s-insert-date":"Insert date",
     "s-edit-date":"Edit date",
     "c-refine-results":"Refine results",
-    "c-clear-all":"Clear all"
+    "c-clear-all":"Clear all",
+    "translatenotavailable":"Not available in French"
 }

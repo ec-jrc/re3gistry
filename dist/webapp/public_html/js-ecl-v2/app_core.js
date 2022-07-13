@@ -292,9 +292,19 @@ function renderProperties(data) {
         } else if (values.length == 1) {
             let value = values[0].value;
             let href = values[0].href;
-
+            
             tmpHtml = (href !== null && href !== val_emptyString) ? renderHref(value, href) : value;
-            htmlOutput += renderField(item.label, tmpHtml);
+
+            if((item.id === "label" || item.id ==="definition") && data.language != item.lang){
+
+                let myJSON = getLanguageJSON(data.language);
+                let finalJSON = JSON.parse(myJSON);
+                let language = finalJSON.translatenotavailable;
+                let finalLabel = item.label + "<br><small> "+" [" + language + "] </small> ";
+                htmlOutput += renderField(finalLabel, tmpHtml);
+            }else{
+                htmlOutput += renderField(item.label, tmpHtml);
+            }
 
             // If the property is the title, updating the page title.
             if (item.istitle !== null && item.istitle === val_true) {
@@ -995,4 +1005,13 @@ function renderSiteIdentity(data) {
  */
 function renderDl(string) {
     return htmlSnippet_dl.replace('{0}', string);
+}
+
+function getLanguageJSON(locale){
+    let JSONLINK = registryApp.hostURL + key_dataLocalizationFilesPath + '/' + locale + '.' + key_json;
+    var value= $.ajax({ 
+        url: JSONLINK, 
+        async: false
+     }).responseText;
+     return value;
 }
