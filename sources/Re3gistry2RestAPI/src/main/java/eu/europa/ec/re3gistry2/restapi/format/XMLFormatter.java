@@ -75,7 +75,7 @@ public class XMLFormatter implements Formatter {
         }
     }
 
-    private XMLStreamWriter getXMLWriter(OutputStream out, Item item) throws XMLStreamException {
+    private XMLStreamWriter getXMLWriter(OutputStream out, Item item, String startElement) throws XMLStreamException {
         XMLStreamWriter xml = XMLFactory.XOF.createXMLStreamWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
         xml = new IndentingXMLStreamWriter(xml, XMLFactory.NEW_LINE, XMLFactory.INDENT);
 
@@ -94,7 +94,7 @@ public class XMLFormatter implements Formatter {
 //        xml.writeAttribute(item.getItemclass().getId(), "xmlns", item.getUri());
 //        xml.writeAttribute("xmlns", item.getUri());
 //        xml.writeAttribute(NS_XML, "xmlns", item.getUri());
-        String schemaLocation = "http://inspire.ec.europa.eu/registry http://inspire.ec.europa.eu/draft-schemas/registry/2.0/"+item.getType()+".xsd";
+        String schemaLocation = "http://inspire.ec.europa.eu/registry http://inspire.ec.europa.eu/draft-schemas/registry/2.0/" + item.getType() + ".xsd";
         xml.writeAttribute("xsi", XSISCHEMALOCATION, "schemaLocation", schemaLocation);
 //        xml.writeAttribute(item.getItemclass().getId(), "id", item.getUri());
         xml.writeAttribute("id", item.getUri());
@@ -104,7 +104,7 @@ public class XMLFormatter implements Formatter {
     }
 
     private void writeRegistry(OutputStream out, Item item) throws XMLStreamException {
-        XMLStreamWriter xml = getXMLWriter(out, item);
+        XMLStreamWriter xml = getXMLWriter(out, item, "registry");
 
         writeLanguage(xml);
         writeDate(xml, item);
@@ -135,7 +135,7 @@ public class XMLFormatter implements Formatter {
     }
 
     private void writeRegister(OutputStream out, Item item) throws XMLStreamException {
-        XMLStreamWriter xml = getXMLWriter(out, item);
+        XMLStreamWriter xml = getXMLWriter(out, item, "register");
 
         writeLanguage(xml);
         writeDate(xml, item);
@@ -171,17 +171,25 @@ public class XMLFormatter implements Formatter {
     }
 
     private void writeItem(OutputStream out, Item item) throws XMLStreamException {
-        XMLStreamWriter xml = getXMLWriter(out, item);
+        String elementRoot;
+        if (item.getItemclass().getParentItemClassType().equals("register")) {
+            elementRoot = item.getItemclass().getParentid();
+        } else {
+            elementRoot = "value";
+        }
 
+        XMLStreamWriter xml = getXMLWriter(out, item, elementRoot);
         writeLanguage(xml);
         writeDate(xml, item);
         writeVersions(xml, item);
+
         writeFields(xml, item);
         writeItemclass(xml, item);
         writeIsDefinedBy(xml, item);
         writeRegistryAndRegister(xml, item);
 
-        if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
+        if (item.getContainedItems()
+                != null && !item.getContainedItems().isEmpty()) {
             xml.writeStartElement("containeditems");
             for (ContainedItem ci : item.getContainedItems()) {
                 writeItemShortVersion(xml, ci, "value");
@@ -198,6 +206,7 @@ public class XMLFormatter implements Formatter {
         }
 
         xml.writeEndDocument();
+
         xml.close();
     }
 
@@ -208,9 +217,10 @@ public class XMLFormatter implements Formatter {
         writeEmptyElement(xml, "thisversion", version.getUri());
         writeEmptyElement(xml, "latestversion", item.getUri());
         if (!versionHistory.isEmpty()) {
-            xml.writeStartElement("previousversions");
+            xml.writeStartElement("historyversion");
             for (VersionInformation versionInformation : versionHistory) {
-                writeEmptyElement(xml, "version", versionInformation.getUri() + ":" + versionInformation.getNumber());
+                writeEmptyElement(xml, "version", versionInformation.getUri());
+//                writeEmptyElement(xml, "version", versionInformation.getUri() + ":" + versionInformation.getNumber());
             }
             xml.writeEndElement();
         }
@@ -237,8 +247,8 @@ public class XMLFormatter implements Formatter {
                 String value = localizedProperty.getValues().get(0).getValue();
                 String href = localizedProperty.getValues().get(0).getHref();
 
-                String fieldName = localizedProperty.getLabel().replace("-item", "");
-                String fieldLocalId = localizedProperty.getId();
+                String fieldName = localizedProperty.getLabel().replace("-item", "").toLowerCase();
+                String fieldLocalId = localizedProperty.getId().replace("-item", "");
 //                String localNameLowerCase = fieldName.toLowerCase();
 
                 if (fieldName != null && "contactpoint".equals(fieldLocalId.toLowerCase())) {
@@ -254,12 +264,12 @@ public class XMLFormatter implements Formatter {
                 } else if (fieldName != null && "governance-level".equals(fieldLocalId.toLowerCase())) {
                     xml.writeStartElement("governance-level");
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    writeEmptyElement(xml, "uri", href);
+                    writeEmptyElement(xml, "id", href);
                     xml.writeEndElement();
                 } else if (fieldName != null && "collection".equals(fieldLocalId.toLowerCase())) {
-                    xml.writeStartElement("collection");
+                    xml.writeStartElement(item.getItemclass().getParentid());
                     writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    writeEmptyElement(xml, "uri", href);
+                    writeEmptyElement(xml, "id", href);
                     xml.writeEndElement();
                 } else if (fieldName != null && "successor".equals(fieldLocalId.toLowerCase())) {
                     xml.writeStartElement("successor");
@@ -316,7 +326,7 @@ public class XMLFormatter implements Formatter {
             default:
                 String itemClassName = item.getItemclass().getId();
                 xml.writeStartElement("itemclass");
-                xml.writeAttribute("uriname", itemClassName);
+                xml.writeAttribute("id", itemClassName);
 //                xml.writeAttribute(NS_XML, "uriname", itemClassName);
                 writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", item.getLanguage(), itemClassName);
                 xml.writeEndElement();
@@ -332,19 +342,16 @@ public class XMLFormatter implements Formatter {
             case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
                 xml.writeStartElement("registry");
                 xml.writeAttribute("id", item.getRegistry().getUri());
-//                xml.writeAttribute(NS_XML, "id", item.getRegistry().getUri());
                 writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", item.getLanguage(), item.getRegistry().getUri());
                 xml.writeEndElement();
                 break;
             default:
-                xml.writeStartElement("registry");
-                xml.writeAttribute("id", item.getRegistry().getUri());
-//                xml.writeAttribute(NS_XML, "id", item.getRegistry().getUri());
-                writeTitle(xml, item.getRegistry());
-
                 xml.writeStartElement("register");
                 xml.writeAttribute("id", item.getRegister().getUri());
-//                xml.writeAttribute(NS_XML, "id", item.getRegister().getUri());
+                writeTitle(xml, item.getRegister());
+                
+                xml.writeStartElement("registry");
+                xml.writeAttribute("id", item.getRegistry().getUri());
                 writeTitle(xml, item.getRegistry());
 
                 xml.writeEndElement();

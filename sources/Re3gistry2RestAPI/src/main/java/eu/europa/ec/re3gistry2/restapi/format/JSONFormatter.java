@@ -45,7 +45,7 @@ import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
-import org.json.JSONArray;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class JSONFormatter implements Formatter {
@@ -94,13 +94,14 @@ public class JSONFormatter implements Formatter {
             JSONArray containedArray = new JSONArray();
             for (ContainedItem ci : item.getContainedItems()) {
                 JSONObject containedItemsJSON = createOrderedJSONObject();
-                containedArray.put(writeRegisterShortVersion(containedItemsJSON, ci));
+                containedArray.add(writeRegisterShortVersion(containedItemsJSON, ci));
             }
             regItemJsonObject.put("registers", containedArray);
         }
 
         JSONObject employeeObject = createOrderedJSONObject();
-        employeeObject.put(item.getItemclass().getId().toLowerCase(), regItemJsonObject);
+//        employeeObject.put(item.getItemclass().getId().toLowerCase(), regItemJsonObject);
+        employeeObject.put("registry", regItemJsonObject);
 
         osw.write(employeeObject.toJSONString());
         osw.flush();
@@ -130,15 +131,14 @@ public class JSONFormatter implements Formatter {
         writeIsDefinedBy(regItemJsonObject, item);
         writeRegistryAndRegister(regItemJsonObject, item);
 
+        JSONArray containedJSONArray = new JSONArray();
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             JSONObject containedItemsJSON = createOrderedJSONObject();
-            int index = 0;
             for (ContainedItem ci : item.getContainedItems()) {
                 JSONObject itemJSON = createOrderedJSONObject();
                 JSONObject valueJSON = createOrderedJSONObject();
                 itemJSON.put("value", writeItemShortVersion(valueJSON, ci));
-                containedItemsJSON.put(String.valueOf(index), itemJSON);
-                index++;
+                containedJSONArray.add(itemJSON);
 
                 if (ci.isHasCollection()) {
                     if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
@@ -146,17 +146,17 @@ public class JSONFormatter implements Formatter {
                             JSONObject containedJSON = createOrderedJSONObject();
                             JSONObject containedvalueJSON = createOrderedJSONObject();
                             containedJSON.put(ci.getItemclass().getId().toLowerCase(), writeItemShortVersion(containedvalueJSON, c));
-                            containedItemsJSON.put(String.valueOf(index), containedJSON);
-                            index++;
+                            containedJSONArray.add(containedJSON);
                         }
                     }
                 }
             }
-            regItemJsonObject.put("containeditems", containedItemsJSON);
+            regItemJsonObject.put("containeditems", containedJSONArray);
         }
 
         JSONObject regiItemJSONObject = createOrderedJSONObject();
-        regiItemJSONObject.put(item.getItemclass().getId().toLowerCase(), regItemJsonObject);
+//        regiItemJSONObject.put(item.getItemclass().getId().toLowerCase(), regItemJsonObject);
+        regiItemJSONObject.put("register", regItemJsonObject);
 
         osw.write(regiItemJSONObject.toJSONString());
         osw.flush();
@@ -167,6 +167,14 @@ public class JSONFormatter implements Formatter {
         OutputStreamWriter osw = new OutputStreamWriter(out, "UTF-8");
 
         JSONObject regItemJsonObject = createOrderedJSONObject();
+        try {
+            Field changeMap = regItemJsonObject.getClass().getDeclaredField("map");
+            changeMap.setAccessible(true);
+            changeMap.set(regItemJsonObject, new LinkedHashMap<>());
+            changeMap.setAccessible(false);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+        }
+
         writeVersions(regItemJsonObject, item);
         writeLanguage(regItemJsonObject);
         writeDate(regItemJsonObject, item);
@@ -175,24 +183,36 @@ public class JSONFormatter implements Formatter {
         writeIsDefinedBy(regItemJsonObject, item);
         writeRegistryAndRegister(regItemJsonObject, item);
 
+        JSONArray containedItemsJSONArray = new JSONArray();
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
-            JSONObject containedItemsJSON = createOrderedJSONObject();
             for (ContainedItem ci : item.getContainedItems()) {
-                regItemJsonObject.put("value", writeItemShortVersion(containedItemsJSON, ci));
+                JSONObject containedItemsJSON = createOrderedJSONObject();
+                JSONObject valuecontainedItemsJSON = createOrderedJSONObject();
+                containedItemsJSON.put("value", writeItemShortVersion(valuecontainedItemsJSON, ci));
+                containedItemsJSONArray.add(containedItemsJSON);
 
                 if (ci.isHasCollection()) {
                     if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
                         for (ContainedItem c : ci.getContainedItems()) {
-                            regItemJsonObject.put("value", writeItemShortVersion(containedItemsJSON, c));
+                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
+                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
+                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c));
+                            containedItemsJSONArray.add(containedCollectionItemsJSON);
                         }
                     }
                 }
             }
-            regItemJsonObject.put("containeditems", containedItemsJSON);
         }
+        regItemJsonObject.put("containeditems", containedItemsJSONArray);
 
         JSONObject regiItemJSONObject = createOrderedJSONObject();
-        regiItemJSONObject.put(item.getItemclass().getId().toLowerCase(), regItemJsonObject);
+
+//            regiItemJSONObject.put(item.getItemclass().getId().toLowerCase(), regItemJsonObject);
+        if (item.getItemclass().getParentItemClassType().equals("register")) {
+            regiItemJSONObject.put(item.getItemclass().getParentid(), regItemJsonObject);
+        } else {
+            regiItemJSONObject.put("value", regItemJsonObject);
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -235,14 +255,14 @@ public class JSONFormatter implements Formatter {
 //        regItemJsonObject.put("thisversion", version.getUri() + ":" + version.getNumber());
         regItemJsonObject.put("latestversion", item.getUri());
         if (!versionHistory.isEmpty()) {
-            JSONArray previousversionsArray = new JSONArray();
+            JSONArray historyversionArray = new JSONArray();
             for (VersionInformation versionInformation : versionHistory) {
                 JSONObject versionJson = createOrderedJSONObject();
                 versionJson.put("version", versionInformation.getUri());
 //                versionJson.put("version", versionInformation.getUri() + ":" + versionInformation.getNumber());
-                previousversionsArray.put(versionJson);
+                historyversionArray.add(versionJson);
             }
-            regItemJsonObject.put("previousversions", previousversionsArray);
+            regItemJsonObject.put("historyversion", historyversionArray);
         }
     }
 
@@ -254,8 +274,8 @@ public class JSONFormatter implements Formatter {
                 String value = localizedProperty.getValues().get(0).getValue();
                 String href = localizedProperty.getValues().get(0).getHref();
 
-                String fieldName = localizedProperty.getLabel().replace("-item", "");
-                String fieldLocalId = localizedProperty.getId();
+                String fieldName = localizedProperty.getLabel().replace("-item", "").toLowerCase();
+                String fieldLocalId = localizedProperty.getId().replace("-item", "");
 
                 if (fieldName != null && "contactpoint".equals(fieldLocalId.toLowerCase())) {
                     JSONObject json = createOrderedJSONObject();
@@ -274,9 +294,14 @@ public class JSONFormatter implements Formatter {
 
                     JSONObject json = createOrderedJSONObject();
                     json.put("label", labelJson);
-                    json.put("uri", href);
+                    json.put("id", href);
 
                     regItemJsonObject.put(fieldName, json);
+                } else if (fieldName != null && "collection".equals(fieldLocalId.toLowerCase())) {
+                    JSONObject json = createOrderedJSONObject();
+                    json.put("label", value);
+                    json.put("id", href);
+                    regItemJsonObject.put(item.getItemclass().getParentid(), json);
                 } else if (fieldName != null && "status".equals(fieldLocalId.toLowerCase())) {
                     String itemClassName = item.getItemclass().getId();
                     JSONObject labelJson = createOrderedJSONObject();
@@ -331,7 +356,7 @@ public class JSONFormatter implements Formatter {
         labelJson.put("text", itemClassName);
         JSONObject json = createOrderedJSONObject();
         json.put("label", labelJson);
-        json.put("uriname", itemClassName);
+        json.put("id", itemClassName);
         return json;
     }
 
@@ -372,15 +397,15 @@ public class JSONFormatter implements Formatter {
                 regItemJsonObject.put("registry", jsonRegistry);
                 break;
             default:
-                JSONObject jsonDefaultRegistry = createOrderedJSONObject();
-                jsonDefaultRegistry.put("label", writeTitle(item.getRegistry()));
-                jsonDefaultRegistry.put("id", item.getRegistry().getUri());
-
-                regItemJsonObject.put("registry", jsonDefaultRegistry);
 
                 JSONObject jsonDefaultRegister = createOrderedJSONObject();
                 jsonDefaultRegister.put("label", writeTitle(item.getRegister()));
                 jsonDefaultRegister.put("id", item.getRegister().getUri());
+
+                JSONObject jsonDefaultRegistry = createOrderedJSONObject();
+                jsonDefaultRegistry.put("label", writeTitle(item.getRegistry()));
+                jsonDefaultRegistry.put("id", item.getRegistry().getUri());
+                jsonDefaultRegister.put("registry", jsonDefaultRegistry);
 
                 regItemJsonObject.put("register", jsonDefaultRegister);
                 break;
