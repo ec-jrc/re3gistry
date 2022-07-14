@@ -193,7 +193,7 @@ public class ItemHistorySupplier {
         }
         return null;
     }
-    
+
     public int sizeItemInHistory(String uri) throws Exception {
         int i = uri.lastIndexOf('/');
         if (i < 0) {
@@ -269,7 +269,12 @@ public class ItemHistorySupplier {
         setVersionAndHistory(regItemhistory, item, version);
         item.setType(regItemhistory.getRegItemclass().getRegItemclasstype().getLocalid());
         item.setLanguage(languageCode.getIso6391code());
-        item.setItemclass(new ItemClass(regItemhistory.getRegItemclass().getLocalid()));
+        RegItemclass itemclassparent = regItemhistory.getRegItemclass().getRegItemclassParent();
+        if (itemclassparent != null) {
+            item.setItemclass(new ItemClass(regItemhistory.getRegItemclass().getLocalid(), itemclassparent.getLocalid(), itemclassparent.getRegItemclasstype().getLocalid()));
+        } else {
+            item.setItemclass(new ItemClass(regItemhistory.getRegItemclass().getLocalid(), null, null));
+        }
         item.setProperties(getLocalizedProperties(regItemhistory, fieldMapping -> !fieldMapping.getHidden()));
 
         switch (regItemhistory.getRegItemclass().getRegItemclasstype().getLocalid()) {

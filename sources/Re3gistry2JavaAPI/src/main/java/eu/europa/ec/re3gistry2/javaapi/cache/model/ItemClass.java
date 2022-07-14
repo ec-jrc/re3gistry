@@ -30,14 +30,26 @@ import java.io.Serializable;
 
 public class ItemClass implements Serializable{
 
-    private final String id;
+     private final String id;
+    private final String parentid;
+    private final String parentItemClassType;
 
-    public ItemClass(String id) {
+    public ItemClass(String id, String parentid, String parentItemClassType) {
         this.id = id;
+        this.parentid = parentid;
+        this.parentItemClassType = parentItemClassType;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getParentid() {
+        return parentid;
+    }
+
+    public String getParentItemClassType() {
+        return parentItemClassType;
     }
 
 }

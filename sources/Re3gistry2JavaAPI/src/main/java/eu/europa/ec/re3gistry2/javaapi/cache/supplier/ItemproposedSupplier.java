@@ -983,7 +983,12 @@ public class ItemproposedSupplier {
 
         item.setType(regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid());
         item.setLanguage(languageCode.getIso6391code());
-        item.setItemclass(new ItemClass(regItemproposed.getRegItemclass().getLocalid()));
+        RegItemclass itemclassParent = regItemproposed.getRegItemclass().getRegItemclassParent();
+        if (itemclassParent != null) {
+            item.setItemclass(new ItemClass(regItemproposed.getRegItemclass().getLocalid(), itemclassParent.getLocalid(), itemclassParent.getRegItemclasstype().getLocalid()));
+        } else {
+            item.setItemclass(new ItemClass(regItemproposed.getRegItemclass().getLocalid(), null, null));
+        }
         item.setProperties(getLocalizedPropertiesItemproposed(regItemproposed, fieldMapping -> !fieldMapping.getHidden())); // ERROR QUERY BD
 
         switch (regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid()) {
