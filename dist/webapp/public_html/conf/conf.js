@@ -15,6 +15,7 @@ registryApp.maxSearchResultsPerPage = 10;
 registryApp.forceHttpURIs = true;
 
 // The app's base URLs
+registryApp.domainURL = '//registry-test.eu';
 registryApp.hostURL = '//registry-test.eu/registry';
 registryApp.searchURL = '//registry-test.eu/registry/search';
 registryApp.searchApiURL = '//registry-test.eu/registry/searchapi';
