@@ -656,7 +656,7 @@ function renderTableHeader(properties) {
  * @returns {String} The rendered HTML of the table
  */
 function renderTable(value, thead) {
-//    console.log(htmlSnippet_table.replace('{0}', thead).replace('{1}', value));
+//console.log(htmlSnippet_table.replace('{0}', thead).replace('{1}', value));
     return htmlSnippet_table.replace('{0}', thead).replace('{1}', value);
 }
 

@@ -84,12 +84,12 @@ function setCookie(cookieName, cookieValue, expiringDays) {
 
     // Checks if the cookies are enabled in the system and if the EU cookie
     // consent has been accepted
-    if (navigator.cookieEnabled && euCookieConsent && euCookieConsent.accepted("europa")) {
+    //if (navigator.cookieEnabled && euCookieConsent && euCookieConsent.accepted("europa")) {
         var d = new Date();
         d.setTime(d.getTime() + (expiringDays * 24 * 60 * 60 * 1000));
         var expires = key_cookieExpires + '=' + d.toUTCString();
         document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';' + key_cookiePath + '=/';
-    }
+    //}
 }
 
 /*
@@ -99,7 +99,7 @@ function setCookie(cookieName, cookieValue, expiringDays) {
  * @returns {String} The value of the cookie
  */
 function getCookie(cookieName) {
-    if (navigator.cookieEnabled) {
+    //if (navigator.cookieEnabled) {
         var name = cookieName + '=';
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
@@ -113,7 +113,7 @@ function getCookie(cookieName) {
             }
         }
         return val_emptyString;
-    }
+ //   }
 }
 /*
  * Function to sort an array (to be used in Array.sort(function(a,b){}))
@@ -189,7 +189,7 @@ function processUri() {
 //    }
     
      // Passing the current URL as the URI to be passed to the data service
-        languageFromUrl = val_emptyString;
+        //languageFromUrl = val_emptyString;
         uriFromUrl = currentUrl;
     
     // Check if the flag to force http is on
