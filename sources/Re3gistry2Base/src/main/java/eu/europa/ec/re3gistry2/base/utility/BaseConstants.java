@@ -132,6 +132,8 @@ public class BaseConstants {
     public static final String KEY_EMAIL_BODY_CACHE_SUCCESS = "mail.text.body.cache.success";
     public static final String KEY_EMAIL_SUBJECT_CACHE_ERROR = "mail.text.subject.cache.error";
     public static final String KEY_EMAIL_BODY_CACHE_ERROR = "mail.text.body.cache.error";
+    public static final String KEY_EMAIL_SUBJECT_ITEM_PUBLISHED = "mail.text.subject.item.publised";
+    public static final String KEY_EMAIL_BODY_ITEM_PUBLISHED = "mail.text.body.item.publised";
 
     /**
      * mail subject and body bulk import
@@ -613,6 +615,7 @@ public class BaseConstants {
     public static final String KEY_DISK_CACHE_MAXIMUM_SPACE = "application.cache.disk.maximum.space";
     public static final String KEY_CACHE_NAME_UUID = "items-by-uuid";
     public static final String KEY_CACHE_NAME_URL = "items-by-url";
+
 
     public String getKEY_APP_NAME() {
         return KEY_APP_NAME;

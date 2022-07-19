@@ -26,6 +26,7 @@ package eu.europa.ec.re3gistry2.web.controller;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.InputSanitizerHelper;
+import eu.europa.ec.re3gistry2.base.utility.MailManager;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.base.utility.UserHelper;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
@@ -51,6 +52,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -58,6 +60,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -191,6 +194,25 @@ public class RegisterManager extends HttpServlet {
 
                                     ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
                                     String operationResult = systemLocalization.getString(BaseConstants.KEY_OPERATION_CACHE_ISRUNNING);
+                                    
+                                    // Send email notification
+                                    // email in the action. changes_request, changes_implemented, submitted_by
+                                    if (regAction.getRegUser().getEmail() != null && !regAction.getRegUser().getEmail().isEmpty()) {
+                                        InternetAddress[] recipient = {
+                                            new InternetAddress(regAction.getRegUser().getEmail())
+                                        };
+                                        
+                                        String subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_ITEM_PUBLISHED);
+                                        String body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ITEM_PUBLISHED);
+                                        subject = (subject != null)
+                                                ? subject.replace("{label}", regAction.getLabel())
+                                                : "";
+                                        body = (body != null)
+                                                ? body.replace("{label}", regAction.getLabel())
+                                                .replace("{changelog}", regAction.getChangelog())
+                                                : "";
+                                        MailManager.sendMail(recipient, subject, body);
+                                    }
                                     // Setting the operation success attribute
                                     request.setAttribute(BaseConstants.KEY_REQUEST_RESULT_MESSAGE, operationResult);
                                 }
