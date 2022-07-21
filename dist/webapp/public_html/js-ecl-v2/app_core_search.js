@@ -72,7 +72,6 @@ const htmlSnippet_selectedFacetElement = '<span class="{0}"><span>{1}</span><but
 const htmlSnippet_href = '<a href="{0}" class="ecl-link ecl-link--standalone">{1}</a>';
 const htmlSnippet_hr = '<hr class="{0}" />';
 
-
 // Event name constants
 
 // Regular expression constants
@@ -174,6 +173,7 @@ function fetchData(uri, lang, startFrom, searchTerm, facetParam) {
         renderData(responseData, searchTerm, facetParamArray, facetParam);
 
         // Binding UI events
+        bindCommonEvents();
         bindEvents();
 
     }).fail(function (data) {
@@ -199,7 +199,6 @@ function renderData(data, searchTerm, facetParamArray, facetParam) {
         // Rendering the results counts
         renderSearchResultsCount(data);
         renderSearchResultsCountCurrentPage(data);
-
         // Rendering the facets
         renderFacets(data, facetParamArray);
         renderSelectedFacets(facetParamArray);
