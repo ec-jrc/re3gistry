@@ -514,7 +514,7 @@ CACHE:
 * Button "Cache all": This option helps to run a full cache of the active languages of the system.
 * Button "Remove cache": This option helps to remove the index of all the cache items.
 
-![Registry manager - Data export](images/data-export-registry-manager.PNG)
+![Registry manager - Data export](images/data_export_registry_manager.PNG)
 
 ## User profile
 
