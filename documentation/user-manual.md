@@ -505,7 +505,16 @@ In the group detail page apart from editing, group-related information can be ch
 
 ### Data export
 
-This option helps to easily run a full export of the registry data to the Solr index on the published items.
+The Data export sub-tab give the registry manager the possibility to run an complete SOLR index and a complete CACHE of the items presented in the system.
+
+SOLR: This option helps to easily run a full export of the registry data to the Solr index on the published items.
+
+CACHE: 
+* Button "Cache all - Master language": This option helps to run a full cache of the master language of the system.
+* Button "Cache all": This option helps to run a full cache of the active languages of the system.
+* Button "Remove cache": This option helps to remove the index of all the cache items.
+
+![Registry manager - Data export](images/data-export-registry-manager.PNG)
 
 ## User profile
 
