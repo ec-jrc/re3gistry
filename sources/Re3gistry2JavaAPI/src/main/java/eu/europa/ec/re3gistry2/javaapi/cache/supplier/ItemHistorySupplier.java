@@ -691,6 +691,8 @@ public class ItemHistorySupplier {
 
         List<RegItemhistory> itemHistory = regItemhistoryManager.getByRegItemReference(regItemManager.getByLocalidAndRegItemClass(regItemhistory.getLocalid(), regItemhistory.getRegItemclass()));
 
+        int minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(regItemhistory.getLocalid(), regItemhistory.getRegItemclass()).getVersionnumber();
+
         if (version == null) {
             // Requested current version
             int maxVersionNumber = itemHistory.stream()
@@ -715,10 +717,20 @@ public class ItemHistorySupplier {
                 throw new NoVersionException();
             }
             item.setVersion(new VersionInformation(version, uri + ":" + version));
-            item.setVersionHistory(itemHistory.stream()
-                    .filter(ih -> ih.getVersionnumber() != version)
-                    .map(ih -> new VersionInformation(ih.getVersionnumber(), uri + ":" + ih.getVersionnumber()))
-                    .collect(Collectors.toList()));
+
+            if (minVersion == 0) {
+                item.setVersionHistory(itemHistory.stream()
+                        .filter(ih -> ih.getVersionnumber() != version)
+                        .map(ih -> new VersionInformation(ih.getVersionnumber() + 1, uri + ":" + (ih.getVersionnumber() + 1)))
+                        .collect(Collectors.toList()));
+                
+            } else {
+                item.setVersionHistory(itemHistory.stream()
+                        .filter(ih -> ih.getVersionnumber() != version)
+                        .map(ih -> new VersionInformation(ih.getVersionnumber(), uri + ":" + ih.getVersionnumber()))
+                        .collect(Collectors.toList()));
+            }
+
             // This does add a :version suffix to the max version link even if it's not necessary
             // but it still works and reduces the complexity of this code
         }
