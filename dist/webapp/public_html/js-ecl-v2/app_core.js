@@ -403,12 +403,27 @@ function renderCollections(data) {
 
         // The table header is rendered with the first element (the fields are
         // the same for all the elements)
-        tHead = renderTableHeader(containedItems[0].properties);
+        let max = -Infinity;
+        let index = -1;
+        containedItems.forEach(function (a, i) {
+            if (a.properties.length > max) {
+                max = a.properties.length;
+                index = i;
+            }
+        });
+        var headerProperties = [];
+        $.each(containedItems[index].properties, function (index1, propertie) {
+            if (propertie.tablevisible !== null && propertie.tablevisible === val_true) {
+                headerProperties.push(propertie);
+            }
+        });
+
+        tHead = renderTableHeader(headerProperties);
 
         // The HTML of each contained item is rendered
         $.each(containedItems, function (index, item) {
 
-            htmlOutput += renderTableProperties(item);
+            htmlOutput += renderTableProperties(item, headerProperties);
         });
 
         // The HTML of the table is rendered
@@ -439,12 +454,27 @@ function renderNarrowers(data) {
 
         // The table header is rendered with the first element (the fields are
         // the same for all the elements)
-        tHead = renderTableHeader(narrowerItems[0].properties);
+        let max = -Infinity;
+        let index = -1;
+        narrowerItems.forEach(function (a, i) {
+            if (a.properties.length > max) {
+                max = a.properties.length;
+                index = i;
+            }
+        });
+        var headerProperties = [];
+        $.each(narrowerItems[index].properties, function (index1, propertie) {
+            if (propertie.tablevisible !== null && propertie.tablevisible === val_true) {
+                headerProperties.push(propertie);
+            }
+        });
+
+        tHead = renderTableHeader(headerProperties);
 
         // The HTML of each narrower item is rendered
         $.each(narrowerItems, function (index, item) {
 
-            htmlOutput += renderTableProperties(item);
+            htmlOutput += renderTableProperties(item, headerProperties);
         });
 
         // The HTML of the table is rendered
@@ -547,7 +577,7 @@ function renderHrefFormat(value, href) {
  * @param {Json} data The Re3gistry json data
  * @returns {String} The rendered HTML of the table properties
  */
-function renderTableProperties(data) {
+function renderTableProperties(data, headerProperties) {
     let htmlOutput = val_emptyString;
 
     if (data.properties !== null && data.properties.length > 0) {
@@ -557,26 +587,43 @@ function renderTableProperties(data) {
             return sortArray(a.order, b.order, key_ascOrdering);
         });
 
-        // Rendering the HTML of each field for the table
-        $.each(data.properties, function (index, item) {
-            if (item.tablevisible !== null && item.tablevisible === val_true) {
-                let values = item.values;
-                let value = val_emptyString;
+        $.each(headerProperties, function (index1, propertie) {
+            if (propertie.tablevisible !== null && propertie.tablevisible === val_true) {
 
-                if (values.length > 1) {
-                    value = renderList(values);
-                } else if (values.length == 1) {
-                    let tmpValue = values[0].value;
-                    let href = values[0].href;
+                // Rendering the HTML of each field for the table
+                let valueAdded = false;
+                $.each(data.properties, function (index, item) {
+                    if ((item.id === propertie.id) && !valueAdded) {
+                        if (item.tablevisible !== null && item.tablevisible === val_true) {
+                            let values = item.values;
+                            let value = val_emptyString;
 
-                    // In the table view, in case the field is a 'titlefield' the href
-                    // is added, in order to enable the link to the related element 
-                    // directly from the table
-                    if (item.istitle !== null && item.istitle === val_true) {
-                        value = renderHref(tmpValue, data.uri);
-                    } else {
-                        value = (href !== null && href !== val_emptyString) ? renderHref(tmpValue, href) : tmpValue;
+                            if (values.length > 1) {
+                                value = renderList(values);
+                            } else if (values.length == 1) {
+                                let tmpValue = values[0].value;
+                                let href = values[0].href;
+
+                                // In the table view, in case the field is a 'titlefield' the href
+                                // is added, in order to enable the link to the related element 
+                                // directly from the table
+                                if (item.istitle !== null && item.istitle === val_true) {
+                                    value = renderHref(tmpValue, data.uri);
+                                } else {
+                                    value = (href !== null && href !== val_emptyString) ? renderHref(tmpValue, href) : tmpValue;
+                                }
+                            }
+
+                            // Rendering the HTML of the td
+                            htmlOutput += renderTd(value, item.label);
+                            valueAdded = true;
+                        }
                     }
+                });
+                if (!valueAdded) {
+                    // Rendering the HTML of the td
+                    let value = val_emptyString;
+                    htmlOutput += renderTd(value, propertie.label);
                 }
 
                 // Rendering the HTML of the td
