@@ -21,9 +21,9 @@ The core of the release plan is **the annual major release** of the Re3gistry so
 
 In addition to this major release, every year **a number of minor releases** are also published (in January, March and September).
 
-Expected releses
+Expected releases
 
-R3gistry software:
+Re3gistry software:
 
 - Major releases: September 2022, September 2023, September 2024
 - Minor releases every three months between major releases. December, March, June.
