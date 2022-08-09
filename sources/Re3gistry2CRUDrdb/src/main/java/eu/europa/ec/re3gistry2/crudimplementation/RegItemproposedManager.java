@@ -184,6 +184,22 @@ public class RegItemproposedManager implements IRegItemproposedManager {
 
         return (RegItemproposed) q.getSingleResult();
     }
+    
+    public RegItemproposed getByLocalidAndRegItemClassAndRegStatus(String localid, RegItemclass regItemclass, RegStatus regStatus) throws Exception {
+        //Checking parameters
+        if (localid == null || regItemclass == null) {
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, "uuid"));
+        }
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEMPROPOSED_BY_LOCALID_REGITEMCLASS_REGSTATUS);
+        //Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEMPROPOSED_BY_LOCALID_REGITEMCLASS);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_LOCALID, localid);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemclass);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGSTATUS, regStatus);
+
+        return (RegItemproposed) q.getSingleResult();
+    }
 
     /**
      * Returns all the RegItemproposeds by RegItemType

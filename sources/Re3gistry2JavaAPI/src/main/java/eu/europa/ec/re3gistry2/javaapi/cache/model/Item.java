@@ -29,6 +29,7 @@ package eu.europa.ec.re3gistry2.javaapi.cache.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import java.io.Serializable;
 
 /**
@@ -55,6 +56,7 @@ public class Item extends ContainedItem implements Serializable {
     private ItemRef registry;
     private ItemRef register;
     private List<ContainedItem> containedItems;
+    private List<RegLanguagecode> activeLanguages;
 
     public ItemRef getRegistry() {
         return registry;
@@ -78,6 +80,14 @@ public class Item extends ContainedItem implements Serializable {
 
     public void setContainedItems(List<ContainedItem> containedItems) {
         this.containedItems = containedItems;
+    }
+    
+    public List<RegLanguagecode> getActiveLanguages() {
+        return activeLanguages;
+    }
+
+    public void setActiveLanguages(List<RegLanguagecode> activeLanguages) {
+        this.activeLanguages = activeLanguages;
     }
 
 }

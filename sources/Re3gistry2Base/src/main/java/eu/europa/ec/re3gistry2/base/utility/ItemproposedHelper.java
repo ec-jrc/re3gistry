@@ -55,10 +55,17 @@ public class ItemproposedHelper {
         // Creating the full URI
         String uri = regItemproposed.getLocalid();
 
-        // URI for external items
-        if (regItemproposed.getExternal()) {
+        if (regItemproposed.getExternal() != null) {
+            if (regItemproposed.getExternal()) {
             return uri;
         }
+        }else{
+            
+        }
+        // URI for external items
+//         if (regItemproposed.getExternal()) {
+//            return uri;
+//        }
 
         List<RegRelationproposed> regRelationproposeds = regRelationproposedManager.getAll(regItemproposed, regRelationpredicateCollection);
         List<RegRelation> regRelations = null;
@@ -84,7 +91,16 @@ public class ItemproposedHelper {
 
         switch (regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid()) {
             case BaseConstants.KEY_ITEMCLASS_TYPE_ITEM:
+                
+//                NOT VALID : TEST APPROACH
+//                if(regItemRegister.getRegItemclass().getBaseuri() == null){
+//                    uri = regItemRegister.getRegItemclass().getRegItemclassParent().getBaseuri() + "/" + regItemRegister.getRegItemclass().getRegItemclassParent().getLocalid() + "/" + uri;
+//                }else{
+//                    uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
+//                }
+                
                 uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
+                
                 break;
             case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
                 uri = regItemproposed.getRegItemclass().getBaseuri() + "/" + uri;

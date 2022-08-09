@@ -61,6 +61,10 @@ import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemproposedSupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.NoVersionException;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 public class ItemsServlet extends HttpServlet {
 
@@ -103,10 +107,44 @@ public class ItemsServlet extends HttpServlet {
             String uuid = RequestUtil.getParamTrimmed(req, "uuid", null);
             String uri = RequestUtil.getParamTrimmed(req, "uri", null);
             String format = RequestUtil.getParamTrimmed(req, "format", null);
+            String status=RequestUtil.getParamTrimmed(req, "status", null);
             uri = removeTrailingSlashes(uri);
 
             Predicate<Item> typeFilter = getTypeFilter(path);
             Formatter formatter = formatters.get(format);
+
+            if(lang.equalsIgnoreCase("active")){
+                String type = "application/json";
+                EntityManager em = emf.createEntityManager();
+                RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(em);
+                List<RegLanguagecode> activeLanguages = null;
+                try {
+                    activeLanguages = regLanguagecodeManager.getAllActive();
+                } catch (Exception ex) {
+                    java.util.logging.Logger.getLogger(ItemsServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                //TOITEM
+                List <Map<String,String>> toActiveLanguages = new ArrayList();
+                for(int i=0; i<activeLanguages.size();i++){
+                    HashMap<String, String> language = new HashMap<>();
+                    language.put("uuid", activeLanguages.get(i).getUuid());
+                    language.put("label", activeLanguages.get(i).getLabel());
+                    language.put("iso6391code", activeLanguages.get(i).getIso6391code());
+                    language.put("iso6392code", activeLanguages.get(i).getIso6392code());
+                    language.put("masterlanguage", activeLanguages.get(i).getMasterlanguage().toString());
+                    language.put("active", activeLanguages.get(i).getActive().toString());
+                    toActiveLanguages.add(language);
+                }
+                
+                byte[] body = JSONInternalFormatter.OM.writeValueAsBytes(toActiveLanguages);
+                resp.setContentType(type);
+                resp.setContentLength(body.length);
+                try (OutputStream out = resp.getOutputStream()) {
+                    out.write(body);
+                }      
+                return;
+            }
 
             if (typeFilter == null) {
                 ResponseUtil.err(resp, ApiError.NOT_FOUND);
@@ -154,10 +192,23 @@ public class ItemsServlet extends HttpServlet {
 
                     //if the item contains no version reference in the URL or if the item contains :0
                     if (version == 0) {
-                        optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
-                        if (!optItem.isPresent()) {
-                            optItem = getItemProposedByUri(uri, lang, itemproposedSupplier);
+                        if(status!=null){
+                            try{
+                                optItem = getItemProposedByUriAndStatus(uri, status, itemproposedSupplier);
+                            }catch(Exception e){
+                                optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
+                            } 
+                        }else{
+                                optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+                            
+                                //Check if optItem has a value, if it doesn't --> search the item in the proposed table
+                            if(!optItem.isPresent()){
+                                optItem = getItemProposedByUri(uri, itemproposedSupplier);
+                            }
                         }
+                        
+//                        if (!optItem.isPresent()) {    
+//                        }
                     } else {
                         int sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
                         if (sizeHistory == 0 || sizeHistory + 1 == version) {
@@ -309,8 +360,16 @@ public class ItemsServlet extends HttpServlet {
         return Optional.of(item);
     }
 
-    private Optional<Item> getItemProposedByUri(String uri, String language, ItemproposedSupplier itemproposedSupplier) throws Exception {
+    private Optional<Item> getItemProposedByUri(String uri, ItemproposedSupplier itemproposedSupplier) throws Exception {
         Item item = itemproposedSupplier.getItemProposedByUri(uri);
+        if (item == null) {
+            return Optional.empty();
+        }
+        return Optional.of(item);
+    }
+    
+    private Optional<Item> getItemProposedByUriAndStatus(String uri, String itemStatus, ItemproposedSupplier itemproposedSupplier) throws Exception {
+        Item item = itemproposedSupplier.getItemProposedByUriAndStatus(uri, itemStatus);
         if (item == null) {
             return Optional.empty();
         }
@@ -324,6 +383,21 @@ public class ItemsServlet extends HttpServlet {
         }
 
         Item item = itemSupplier.getItemByUri(uri);
+        if (item == null) {
+            return Optional.empty();
+        }
+
+        cache.add(language, item, null);
+        return Optional.of(item);
+    }
+    
+    private Optional<Item> getItemByUriAndStatus(String uri, String language, ItemSupplier itemSupplier, String itemStatus) throws Exception {
+        Item cached = cache.getByUrl(language, uri, null);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+
+        Item item = itemSupplier.getItemByUriAndStatus(uri, itemStatus);
         if (item == null) {
             return Optional.empty();
         }

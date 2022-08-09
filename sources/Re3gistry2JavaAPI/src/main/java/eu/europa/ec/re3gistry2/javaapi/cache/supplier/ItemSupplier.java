@@ -48,6 +48,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
@@ -109,6 +110,7 @@ public class ItemSupplier {
     private final RegRelationproposedManager regRelationproposedManager;
     private final RegLocalizationproposedManager reglocalizationproposedManager;
     private final ItemproposedSupplier itemproposedSupplier;
+    private final RegLanguagecodeManager regLanguagecodeManager;
 
     private final RegLanguagecode masterLanguage;
     private final RegLanguagecode languageCode;
@@ -146,7 +148,8 @@ public class ItemSupplier {
         this.regRelationproposedManager = new RegRelationproposedManager(em);
         this.itemproposedSupplier = new ItemproposedSupplier(em, masterLanguage, languageCode);
         this.reglocalizationproposedManager = new RegLocalizationproposedManager(em);
-
+        this.regLanguagecodeManager = new RegLanguagecodeManager(em);
+     
         this.masterLanguage = masterLanguage;
         this.languageCode = languageCode;
 
@@ -176,6 +179,15 @@ public class ItemSupplier {
         }
         return toItem(item);
     }
+    
+    public Item getItemByUriAndStatus(String uri, String status) throws Exception {
+        RegItem item = getRegItemByUriAndStatus(uri, status);
+        if (item == null) {
+            return null;
+        }
+        return toItem(item);
+    }
+
 
     private RegItem getRegItemByUri(String uri) throws Exception {
         int i = uri.lastIndexOf('/');
@@ -191,6 +203,39 @@ public class ItemSupplier {
 
             RegItem regItem = regItemManager.getByLocalidAndRegItemClass(localid, regItemRegItemClass);
             if (uri.equals(ItemHelper.getURI(regItem))) {
+                return regItem;
+            }
+        } catch (Exception e) {
+            for (RegItem item : regItemManager.getByLocalid(localid)) {
+                if (uri.equals(ItemHelper.getURI(item))) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+    
+    private RegItem getRegItemByUriAndStatus(String uri, String itemStatus) throws Exception {
+        int i = uri.lastIndexOf('/');
+        if (i < 0) {
+            throw new NoResultException();
+        }
+        String localid = uri.substring(i + 1);
+        try {
+            int uriCollection = uri.substring(0, i).lastIndexOf('/');
+            String regItemClassLocalId = uri.substring(uriCollection + 1).replace("/" + localid, "");
+            RegItemclass parentClass = regItemClassManager.get(regItemClassLocalId);
+            RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
+
+            RegStatus status = regStatusManager.findByLocalid(itemStatus);
+            RegItem regItem;
+            if(status.getIspublic()){
+                regItem = regItemManager.getByLocalidAndRegItemClassAndRegStatus(localid, regItemRegItemClass, status);
+            }else{
+                return null;
+            }
+            
+              if (uri.equals(ItemHelper.getURI(regItem))) {
                 return regItem;
             }
         } catch (Exception e) {
@@ -222,6 +267,7 @@ public class ItemSupplier {
         setNarrowerFromRegItem(regItem, item);
         setBroaderFromRegItem(regItem, item);
 
+//        setActiveLangList(item);        
         return item;
     }
 
@@ -1217,4 +1263,9 @@ public class ItemSupplier {
 
         return loc.getValue();
     }
+    
+    private void setActiveLangList(Item item) throws Exception{
+        List<RegLanguagecode> activeLanguages = regLanguagecodeManager.getAllActive();
+        item.setActiveLanguages(activeLanguages);
+    } 
 }

@@ -164,9 +164,17 @@ public class ItemproposedSupplier {
         //RegItem finalItem = new RegItem(itemProposed.getUuid(), itemProposed.getLocalid(), itemProposed.getInsertdate());
         return toItemProposed(itemProposed);
     }
-
+    
     public Item getItemProposedByUri(String uri) throws Exception {
         RegItemproposed item = getRegItemProposedByUri(uri);
+        if (item == null) {
+            return null;
+        }
+        return toItemProposed(item);
+    }
+
+    public Item getItemProposedByUriAndStatus(String uri, String itemStatus) throws Exception {
+        RegItemproposed item = getRegItemProposedByUriAndStatus(uri, itemStatus);
         if (item == null) {
             return null;
         }
@@ -184,8 +192,7 @@ public class ItemproposedSupplier {
             String regItemClassLocalId = uri.substring(uriCollection + 1).replace("/" + localid, "");
             RegItemclass parentClass = regItemClassManager.getByLocalid(regItemClassLocalId);
             RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
-
-            RegItemproposed regItemproposed = regItemproposedManager.getByLocalidAndRegItemClass(localid, regItemRegItemClass);
+            RegItemproposed regItemproposed = regItemproposedManager.getByLocalidAndRegItemClass(localid, regItemRegItemClass);            
 
             return regItemproposed;
         } catch (Exception e) {
@@ -193,6 +200,34 @@ public class ItemproposedSupplier {
             return null;
         }
     }
+    
+    private RegItemproposed getRegItemProposedByUriAndStatus(String uri, String itemStatus) throws Exception {
+        int i = uri.lastIndexOf('/');
+        if (i < 0) {
+            throw new NoResultException();
+        }
+        String localid = uri.substring(i + 1);
+        try {
+            int uriCollection = uri.substring(0, i).lastIndexOf('/');
+            String regItemClassLocalId = uri.substring(uriCollection + 1).replace("/" + localid, "");
+            RegItemclass parentClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+            RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
+
+            RegStatus status = regStatusManager.findByLocalid(itemStatus);
+            RegItemproposed regItemproposed;
+            if(status.getIspublic()){
+                regItemproposed = regItemproposedManager.getByLocalidAndRegItemClassAndRegStatus(localid, regItemRegItemClass, status);
+            }else{
+                return null;
+            }
+
+            return regItemproposed;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
 
     private Item toItemProposed(RegItemproposed regItemproposed) throws Exception {
         boolean isPublic = regItemproposed.getRegStatus().getIspublic();
@@ -1013,9 +1048,12 @@ public class ItemproposedSupplier {
             if (isParentList != null && !isParentList.isEmpty()) {
                 item.setIsParent(true);
             }
-            if (regItemproposed.getExternal()) {
+            if(regItemproposed.getExternal() != null){
+                if (regItemproposed.getExternal()) {
                 item.setExternal(true);
+                }
             }
+            
         }
 
         return item;

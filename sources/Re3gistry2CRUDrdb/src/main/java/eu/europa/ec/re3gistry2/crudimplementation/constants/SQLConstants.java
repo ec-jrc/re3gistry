@@ -59,6 +59,7 @@ public class SQLConstants {
     // RegItem
     public static final String SQL_GET_REGITEM_BY_LOCALID = "SELECT r FROM RegItem r WHERE r.localid = :localid";
     public static final String SQL_GET_REGITEM_BY_LOCALID_REGITEMCLASS = "SELECT r FROM RegItem r WHERE r.localid = :localid AND r.regItemclass = :regItemclass";
+    public static final String SQL_GET_REGITEM_BY_LOCALID_REGITEMCLASS_REGSTATUS = "SELECT r FROM RegItem r WHERE r.localid = :localid AND r.regItemclass = :regItemclass AND r.regStatus = :regStatus";
     public static final String SQL_GET_REGITEM_BY_REGITEMCLASSTYPE = "SELECT r FROM RegItem r JOIN r.regItemclass i WHERE i.regItemclasstype = :regItemclasstype";
     public static final String SQL_GET_REGITEM_BY_REGITEMCLASSTYPE_ACTIVE = "SELECT r FROM RegItem r JOIN r.regItemclass i WHERE i.regItemclasstype = :regItemclasstype AND i.active = TRUE";
     public static final String SQL_GET_REGITEM_BY_REGITEMCLASS = "SELECT r FROM RegItem r WHERE r.regItemclass = :regItemclass";
@@ -83,6 +84,7 @@ public class SQLConstants {
 
     // RegItemproposed
     public static final String SQL_GET_REGITEMPROPOSED_BY_LOCALID_REGITEMCLASS = "SELECT r FROM RegItemproposed r WHERE r.localid = :localid AND r.regItemclass = :regItemclass";
+    public static final String SQL_GET_REGITEMPROPOSED_BY_LOCALID_REGITEMCLASS_REGSTATUS = "SELECT r FROM RegItemproposed r WHERE r.localid = :localid AND r.regItemclass = :regItemclass AND r.regStatus = :regStatus";
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGITEMCLASSTYPE = "SELECT r FROM RegItemproposed r JOIN r.regItemclass i WHERE i.regItemclasstype = :regItemclasstype";
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGITEMCLASS = "SELECT r FROM RegItemproposed r WHERE r.regItemclass = :regItemclass";
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGITEMCLASSES = "SELECT r FROM RegItemproposed r WHERE r.regItemclass IN :regItemclasses ORDER BY r.localid";
@@ -223,5 +225,5 @@ public class SQLConstants {
     // RegStatus
     public static final String SQL_GET_REGSTATUS_BY_REGSTATUSGROUP = "SELECT r FROM RegStatus r WHERE r.regStatusgroup = :regStatusgroup";
     public static final String SQL_GET_REGSTATUSPUBIC_BY_REGSTATUSGROUP = "SELECT r FROM RegStatus r WHERE r.regStatusgroup = :regStatusgroup AND r.ispublic = TRUE";
-
+   
 }
