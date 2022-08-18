@@ -87,13 +87,17 @@ public class SolrHandler {
             RegItemManager regItemManager = new RegItemManager(em);
 
             // Getting all RegItems
-            List<RegItem> regItems = regItemManager.getAll();
+            List<RegItem> regItems = regItemManager.getAllActive();
 
             // Processing the RegItems
             SolrInputDocument document;
 
             // Locking other Solr complete index requests
             createSolrCompleteIndexinglRunningFile();
+
+            String deleteQuery = "*:*";
+            solrClient.deleteByQuery(deleteQuery);
+            solrClient.commit();
 
             for (RegItem regItem : regItems) {
 

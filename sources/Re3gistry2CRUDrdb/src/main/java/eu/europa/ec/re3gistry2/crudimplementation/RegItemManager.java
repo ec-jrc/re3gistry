@@ -249,6 +249,21 @@ public class RegItemManager implements IRegItemManager {
         q.setParameter("regItemclasstype", regItemcalsstype);
         return (List<RegItem>) q.getResultList();
     }
+    
+    /**
+     * Returns all the RegItems by RegItemType
+     *
+     * @param regItemcalsstype
+     * @return all the RegItems
+     * @throws Exception
+     */
+    @Override
+    public List<RegItem> getAllActive() throws Exception {
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_ACTIVE);
+        return (List<RegItem>) q.getResultList();
+    }
 
     /**
      * Returns all the RegItems by RegItemclass
