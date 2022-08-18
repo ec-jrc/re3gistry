@@ -23,6 +23,7 @@
  */
 package eu.europa.ec.re3gistry2.web.controller;
 
+import eu.europa.ec.re3gistry2.web.utility.UpdateRSS;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.InputSanitizerHelper;
@@ -37,9 +38,6 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRoleManager;
-import eu.europa.ec.re3gistry2.javaapi.cache.CacheHelper;
-import eu.europa.ec.re3gistry2.javaapi.cache.EhCache;
-import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
 import eu.europa.ec.re3gistry2.javaapi.cache.RecacheItems;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegActionHandler;
 import eu.europa.ec.re3gistry2.model.RegAction;
@@ -51,15 +49,19 @@ import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
+import eu.europa.ec.re3gistry2.web.utility.SendEmailFromAction;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -68,6 +70,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Logger;
 
 @WebServlet(WebConstants.PAGE_URINAME_REGISTERMANAGER)
@@ -187,32 +190,15 @@ public class RegisterManager extends HttpServlet {
                                 if (formSubmitAction != null && !regItems.isEmpty()) {
                                     //update RSS
                                     UpdateRSS.updateRSS(regAction, regItems);
-                                    
+
                                     //update CACHE
                                     RecacheItems recacheItems = new RecacheItems(entityManager, request, regItems);
                                     recacheItems.start();
 
                                     ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
                                     String operationResult = systemLocalization.getString(BaseConstants.KEY_OPERATION_CACHE_ISRUNNING);
-                                    
-                                    // Send email notification
-                                    // email in the action. changes_request, changes_implemented, submitted_by
-                                    if (regAction.getRegUser().getEmail() != null && !regAction.getRegUser().getEmail().isEmpty()) {
-                                        InternetAddress[] recipient = {
-                                            new InternetAddress(regAction.getRegUser().getEmail())
-                                        };
-                                        
-                                        String subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_ITEM_PUBLISHED);
-                                        String body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ITEM_PUBLISHED);
-                                        subject = (subject != null)
-                                                ? subject.replace("{label}", regAction.getLabel())
-                                                : "";
-                                        body = (body != null)
-                                                ? body.replace("{label}", regAction.getLabel())
-                                                .replace("{changelog}", regAction.getChangelog())
-                                                : "";
-                                        MailManager.sendMail(recipient, subject, body);
-                                    }
+
+                                    SendEmailFromAction.sendEmailToAllUsersOfAnAction(regAction, systemLocalization);
                                     // Setting the operation success attribute
                                     request.setAttribute(BaseConstants.KEY_REQUEST_RESULT_MESSAGE, operationResult);
                                 }

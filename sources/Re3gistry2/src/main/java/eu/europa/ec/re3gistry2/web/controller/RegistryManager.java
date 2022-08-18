@@ -23,6 +23,7 @@
  */
 package eu.europa.ec.re3gistry2.web.controller;
 
+import eu.europa.ec.re3gistry2.web.utility.UpdateRSS;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.InputSanitizerHelper;
@@ -47,6 +48,7 @@ import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
+import eu.europa.ec.re3gistry2.web.utility.SendEmailFromAction;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -189,6 +191,9 @@ public class RegistryManager extends HttpServlet {
 
                                     ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
                                     String operationResult = systemLocalization.getString(BaseConstants.KEY_OPERATION_CACHE_ISRUNNING);
+
+                                    SendEmailFromAction.sendEmailToAllUsersOfAnAction(regAction, systemLocalization);
+
                                     // Setting the operation success attribute
                                     request.setAttribute(BaseConstants.KEY_REQUEST_RESULT_MESSAGE, operationResult);
                                 }
