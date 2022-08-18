@@ -21,7 +21,7 @@
  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.web.controller;
+package eu.europa.ec.re3gistry2.web.utility;
 
 import java.io.IOException;
 import javax.servlet.Filter;

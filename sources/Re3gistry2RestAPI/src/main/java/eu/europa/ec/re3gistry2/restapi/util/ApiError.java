@@ -24,33 +24,29 @@
  *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  *  * for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.restapi;
+package eu.europa.ec.re3gistry2.restapi.util;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class ApiResponse {
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum ApiError {
 
-    private final int code;
-    private final String descriptionCode;
-    private final String description;
+    UUID_URI_REQUIRED(400, "bad-request", "Either uri or uuid query parameter required"),
+    ITEMCLASS_REQUIRED(404, "not-found", "The requested itemclass is not available."),
+    NOT_FOUND(404, "not-found", "Element not found"),
+    VERSION_NOT_FOUND(404, "version-not-found", "Element with specified version not found"),
+    FORMAT_NOT_SUPPORTED(406, "unknown-format", "The requested media type is not supported"),
+    LANGUAGE_NOT_SUPPORTED(406, "unknown-language", "The requested language is not available"),
+    INTERNAL_SERVER_ERROR(500, "internal-server-error", "The server had an internal error");
 
-    public ApiResponse(int code, String descriptionCode, String description) {
-        this.code = code;
-        this.descriptionCode = descriptionCode;
-        this.description = description;
+    private final ApiResponse error;
+
+    private ApiError(int code, String descriptionCode, String description) {
+        this.error = new ApiResponse(code, descriptionCode, description);
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    @JsonProperty("description-code")
-    public String getDescriptionCode() {
-        return descriptionCode;
-    }
-
-    public String getDescription() {
-        return description;
+    public ApiResponse getError() {
+        return error;
     }
 
 }

@@ -21,8 +21,9 @@
  * administrations, businesses and citizens programme (http://ec.europa.eu/isa2)
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.web.controller;
+package eu.europa.ec.re3gistry2.web.utility;
 
+import eu.europa.ec.re3gistry2.web.utility.ValidateSalt;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
