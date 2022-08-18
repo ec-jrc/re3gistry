@@ -37,6 +37,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import eu.europa.ec.re3gistry2.javaapi.cache.EhCache;
 import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
+import eu.europa.ec.re3gistry2.restapi.util.ApiError;
+import eu.europa.ec.re3gistry2.restapi.util.ApiResponse;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
 import org.apache.logging.log4j.LogManager;

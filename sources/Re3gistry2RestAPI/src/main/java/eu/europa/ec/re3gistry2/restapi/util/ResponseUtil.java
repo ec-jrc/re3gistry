@@ -33,8 +33,8 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.ApiError;
-import eu.europa.ec.re3gistry2.restapi.ApiResponse;
+import eu.europa.ec.re3gistry2.restapi.util.ApiError;
+import eu.europa.ec.re3gistry2.restapi.util.ApiResponse;
 import eu.europa.ec.re3gistry2.restapi.format.Formatter;
 import eu.europa.ec.re3gistry2.restapi.format.JSONInternalFormatter;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
