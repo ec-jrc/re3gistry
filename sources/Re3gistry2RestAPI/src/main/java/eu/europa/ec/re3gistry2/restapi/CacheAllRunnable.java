@@ -30,7 +30,7 @@ public class CacheAllRunnable implements Runnable {
 
         try {
             CacheAll cacheAll = new CacheAll(em, cache, null);
-            cacheAll.run();
+            cacheAll.run(null);
         } catch (Exception e) {
             this.logger.error("Unexpected exception occured", e);
         } finally {
@@ -39,5 +39,4 @@ public class CacheAllRunnable implements Runnable {
             }
         }
     }
-
 }

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +56,7 @@ public class RecacheItems extends Thread {
         try {
             if (!CacheHelper.checkCacheCompleteRunning()) {
                 cacheItems(regItems);
-            } 
+            }
         } catch (Exception e) {
             CacheHelper.deleteCacheCompleteRunningFile();
             this.logger.error("Unexpected exception occured", e);
@@ -81,9 +82,9 @@ public class RecacheItems extends Thread {
         List<RegItem> itemsToRecache = new ArrayList<>();
 
         // Iterating on the RegItems
-        for (RegItem regItem : regItems) {
-            try {
-                for (RegLanguagecode languageCode : availableLanguages) {
+        regItems.parallelStream().forEach((regItem) -> {
+            availableLanguages.parallelStream().forEach((RegLanguagecode languageCode) -> {
+                try {
                     this.logger.info("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
                     System.out.println("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
 
@@ -124,23 +125,27 @@ public class RecacheItems extends Thread {
                         default:
                             throw new RuntimeException("Unexpected type");
                     }
+                } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
+                    if (!em.isOpen()) {
+                        em = em.getEntityManagerFactory().createEntityManager();
+                    }
+                    if (!em.getTransaction().isActive()) {
+                        em.getTransaction().begin();
+                    }
+                    CacheHelper.deleteCacheCompleteRunningFile();
+                    this.logger.info("DB Connection problem, trying to reconnect - " + e.getMessage());
+                    System.out.println("DB Connection problem, trying to reconnect - " + e.getMessage());
+                } catch (Exception ex) {
+                    CacheHelper.deleteCacheCompleteRunningFile();
+                    this.logger.info("Error: " + ex.getMessage());
+                    System.out.println("Error: " + ex.getMessage());
                 }
-            } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
-                if (!em.isOpen()) {
-                    em = em.getEntityManagerFactory().createEntityManager();
-                }
-                if (!em.getTransaction().isActive()) {
-                    em.getTransaction().begin();
-                }
-                CacheHelper.deleteCacheCompleteRunningFile();
-                this.logger.info("DB Connection problem, trying to reconnect - " + e.getMessage());
-                System.out.println("DB Connection problem, trying to reconnect - " + e.getMessage());
-            }
-        }
+            });
+        });
 
         // Iterating on the relation RegItems
         //if the item has a collection, parent, successor, predecessor update it
-        for (RegItem regItem : itemsToRecache) {
+        itemsToRecache.parallelStream().forEach((regItem) -> {
             try {
                 for (RegLanguagecode languageCode : availableLanguages) {
                     this.logger.info("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
@@ -159,8 +164,12 @@ public class RecacheItems extends Thread {
                 CacheHelper.deleteCacheCompleteRunningFile();
                 this.logger.info("DB Connection problem, trying to reconnect - " + e.getMessage());
                 System.out.println("DB Connection problem, trying to reconnect - " + e.getMessage());
+            } catch (Exception ex) {
+                CacheHelper.deleteCacheCompleteRunningFile();
+                this.logger.info("Error: " + ex.getMessage());
+                System.out.println("Error: " + ex.getMessage());
             }
-        }
+        });
 
         CacheHelper.deleteCacheCompleteRunningFile();
         this.logger.info("END RECACHE @ " + new Date());
