@@ -50,6 +50,7 @@ public interface IRegItemManager{
     public int countAll(List<RegItemclass> regItemcalsses, boolean systemItems) throws Exception;
     public int countAll(RegRelationpredicate regRelationpredicate, RegItem regItemObject, boolean systemItems) throws Exception;
     public List<RegItem> getAllActive(RegItemclasstype regItemcalsstype) throws Exception;
+    public List<RegItem> getAllActive() throws Exception;
     public List<RegItem> getChildItemsList(RegItem regItem) throws Exception;
     public List<RegItem> getAllSubjectsByRegItemObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception;
     public List<String> getAllItemByRegItemObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception;
