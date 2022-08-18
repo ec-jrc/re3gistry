@@ -42,6 +42,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.restapi.util.AvailableFormatsUtil;
@@ -305,6 +306,10 @@ public class RDFFormatter implements Formatter {
 
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             for (ContainedItem ci : item.getContainedItems()) {
+                writeItemShortVersion(xml, ci);
+            }
+        } else if (item.getContainedItemsBeeingParentItemClass()!= null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
+            for (ContainedItem ci : item.getContainedItemsBeeingParentItemClass()) {
                 writeItemShortVersion(xml, ci);
             }
         }
@@ -617,6 +622,11 @@ public class RDFFormatter implements Formatter {
         xml.writeStartElement(DCAT, "isPartOf");
         writeEmptyElement(xml, DCAT, "Catalog", RDF, "about", item.getRegister().getUri());
         xml.writeEndElement();
+    }
+
+    @Override
+    public void write(ItemClass itemClass, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

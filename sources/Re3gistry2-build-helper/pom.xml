@@ -65,9 +65,15 @@
                 <mail.password></mail.password>
                 <mail.sender>sender@example.eu</mail.sender>
                 <web.session.cookie.secure>true</web.session.cookie.secure>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[This is the <strong>development environment</strong> of the Re3gistry 2 software <br/> <br/> Link to the <a class="ecl-link" href="https://localhost/registry">Re3gistry - localhost Instance - frontend view</a>]]></header.message.text>               
                 <application.cache.disk.path>/path/to/cache</application.cache.disk.path>
                 <application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
+                <application.logging.path>/path/to/log</application.logging.path>
                 <application.privacy>OFF</application.privacy>
+                <application.selected.interface>neutral</application.selected.interface>
+                <application.legacy.flag>ON</application.legacy.flag>
+                <application.schemas.path>/schemas/2.0</application.schemas.path>
             </properties>
         </profile>        
         <!-- Server profile -->
@@ -91,9 +97,15 @@
                 <mail.password></mail.password>
                 <mail.sender>sender@example.eu</mail.sender>
                 <web.session.cookie.secure>true</web.session.cookie.secure>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[This is the <strong>production environment</strong> of the Re3gistry 2 software <br/> <br/> Link to the <a class="ecl-link" href="https://localhost/registry">Re3gistry - localhost Instance - frontend view</a>]]></header.message.text>               
                 <application.cache.disk.path>/path/to/cache</application.cache.disk.path>
                 <application.releasenote.rss.path>/path/to/rss</application.releasenote.rss.path>
-                <application.privacy>ON</application.privacy>
+                <application.logging.path>/path/to/log</application.logging.path>
+                <application.privacy>OFF</application.privacy>
+                <application.selected.interface>neutral</application.selected.interface>
+                <application.legacy.flag>ON</application.legacy.flag>
+                <application.schemas.path>/schemas/2.0</application.schemas.path>
             </properties>
         </profile>     
     </profiles>

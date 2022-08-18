@@ -24,19 +24,33 @@
  *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  *  * for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.restapi.format;
+package eu.europa.ec.re3gistry2.restapi;
 
-import java.io.OutputStream;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
+public class ApiResponse {
 
-public interface Formatter {
+    private final int code;
+    private final String descriptionCode;
+    private final String description;
 
-    public String getFormatName();
-    public String getContentType();
-    public void write(Item item, RegLanguagecode lang, OutputStream out) throws Exception;
-    public void write(ItemClass itemClass, OutputStream out) throws Exception;
+    public ApiResponse(int code, String descriptionCode, String description) {
+        this.code = code;
+        this.descriptionCode = descriptionCode;
+        this.description = description;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    @JsonProperty("description-code")
+    public String getDescriptionCode() {
+        return descriptionCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
 }

@@ -24,19 +24,32 @@
  *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  *  * for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.restapi.format;
+package eu.europa.ec.re3gistry2.javaapi.cache.model;
 
-import java.io.OutputStream;
+import java.io.Serializable;
 
-import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
+public class BasicItemClass implements Serializable {
 
-public interface Formatter {
+    private final String id;
+    private final String parentid;
+    private final String parentItemClassType;
 
-    public String getFormatName();
-    public String getContentType();
-    public void write(Item item, RegLanguagecode lang, OutputStream out) throws Exception;
-    public void write(ItemClass itemClass, OutputStream out) throws Exception;
+    public BasicItemClass(String id, String parentid, String parentItemClassType) {
+        this.id = id;
+        this.parentid = parentid;
+        this.parentItemClassType = parentItemClassType;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getParentid() {
+        return parentid;
+    }
+
+    public String getParentItemClassType() {
+        return parentItemClassType;
+    }
 
 }

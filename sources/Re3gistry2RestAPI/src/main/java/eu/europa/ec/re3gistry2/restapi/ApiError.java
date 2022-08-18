@@ -24,19 +24,28 @@
  *  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  *  * for e-Government (ELISE)
  */
-package eu.europa.ec.re3gistry2.restapi.format;
+package eu.europa.ec.re3gistry2.restapi;
 
-import java.io.OutputStream;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum ApiError {
 
-public interface Formatter {
+    UUID_URI_REQUIRED(400, "bad-request", "Either uri or uuid query parameter required"),
+    NOT_FOUND(404, "not-found", "Element not found"),
+    VERSION_NOT_FOUND(404, "version-not-found", "Element with specified version not found"),
+    FORMAT_NOT_SUPPORTED(406, "unknown-format", "The requested media type is not supported"),
+    LANGUAGE_NOT_SUPPORTED(406, "unknown-language", "The requested language is not available"),
+    INTERNAL_SERVER_ERROR(500, "internal-server-error", "The server had an internal error");
 
-    public String getFormatName();
-    public String getContentType();
-    public void write(Item item, RegLanguagecode lang, OutputStream out) throws Exception;
-    public void write(ItemClass itemClass, OutputStream out) throws Exception;
+    private final ApiResponse error;
+
+    private ApiError(int code, String descriptionCode, String description) {
+        this.error = new ApiResponse(code, descriptionCode, description);
+    }
+
+    public ApiResponse getError() {
+        return error;
+    }
 
 }

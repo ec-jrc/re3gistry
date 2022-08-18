@@ -69,6 +69,7 @@ import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegStatusgroup;
 import eu.europa.ec.re3gistry2.model.RegStatuslocalization;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
@@ -1020,9 +1021,9 @@ public class ItemproposedSupplier {
         item.setLanguage(languageCode.getIso6391code());
         RegItemclass itemclassParent = regItemproposed.getRegItemclass().getRegItemclassParent();
         if (itemclassParent != null) {
-            item.setItemclass(new ItemClass(regItemproposed.getRegItemclass().getLocalid(), itemclassParent.getLocalid(), itemclassParent.getRegItemclasstype().getLocalid()));
+            item.setItemclass(new BasicItemClass(regItemproposed.getRegItemclass().getLocalid(), itemclassParent.getLocalid(), itemclassParent.getRegItemclasstype().getLocalid()));
         } else {
-            item.setItemclass(new ItemClass(regItemproposed.getRegItemclass().getLocalid(), null, null));
+            item.setItemclass(new BasicItemClass(regItemproposed.getRegItemclass().getLocalid(), null, null));
         }
         item.setProperties(getLocalizedPropertiesItemproposed(regItemproposed, fieldMapping -> !fieldMapping.getHidden())); // ERROR QUERY BD
 
