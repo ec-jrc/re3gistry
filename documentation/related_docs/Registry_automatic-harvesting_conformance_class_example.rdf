@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:dcat  ="http://www.w3.org/ns/dcat#"
+  xmlns:dct   ="http://purl.org/dc/terms/"
+  xmlns:foaf  ="http://xmlns.com/foaf/0.1/"
+  xmlns:rdf   ="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+<!-- ## Registry descriptor: Automatic Harvesting Conformance Class ## -->
+
+<!-- URI / URL of the registry -->
+<rdf:Description rdf:about="http://inspire.ec.europa.eu/registry">
+    <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Catalog"/>
+
+<!-- Name of the registry -->
+    <dct:title xml:lang="en">INSPIRE registry</dct:title>
+
+<!-- Registry publisher / responsible / contact point -->
+    <dct:publisher>
+
+<!-- This is the URI for the organisation taken from the MDR Corporate Bodies register maintained by
+     the EU Publications Office: http://publications.europa.eu/mdr/authority/corporate-body/
+     These URIs should be used for EU institutions and bodies.
+     Organisation not included in the MDR Corporate Bodies register should use their official URI (e.g.,
+     maintained by a national register), if any or use a well defined URI-pattern (an example could be a
+	 DBpedia URI)  
+-->
+      <foaf:Agent rdf:about="http://publications.europa.eu/resource/authority/corporate-body/JRC">
+        <foaf:name xml:lang="en">European Commission, Joint Research Centre</foaf:name>
+        <foaf:mbox rdf:resource="mailto:inspire-registry-dev@jrc.ec.europa.eu"/>
+		<foaf:homepage rdf:resource="https://ec.europa.eu/jrc"/>
+      </foaf:Agent>
+
+    </dct:publisher>
+	
+<!-- Update frequency. For conformance with DCAT-AP, this needs to be specified by using the
+     MDR Frequency register maintained by the EU Publications Office:
+     http://publications.europa.eu/mdr/authority/frequency/ -->
+    <dct:accrualPeriodicity rdf:resource="http://publications.europa.eu/resource/authority/frequency/DAILY"/>
+
+<!-- URIs and URLs of the register distributions available from the registry.
+
+	 The system will use the "dcat:downloadURL" as resource link. The URI shall be repeated
+	 in the "dcat:downloadURL" property even if it is the same specified as URI in the rdf:Description.
+
+	 The system will check if the Register descriptor is available at the given URI/URL through an HTTP GET
+	 request to the URI/URL specified in the "dcat:downloadURL" property with the HTTP Accept header set to 
+	 "application/rdf+xml". Otherwise it will ask for the resource using the standard HTTP GET request.
+-->
+	<dcat:dataset>	 
+		<rdf:Description rdf:about="http://inspire.ec.europa.eu/theme">
+			<dcat:distribution rdf:parseType="Resource">
+			  <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/RDF_XML"/>
+			  <dcat:downloadURL rdf:resource="http://inspire.ec.europa.eu/theme"/>
+			</dcat:distribution>			
+		</rdf:Description>
+	</dcat:dataset>
+	<dcat:dataset>	 
+		<rdf:Description rdf:about="http://inspire.ec.europa.eu/applicationschema">
+			<dcat:distribution rdf:parseType="Resource">
+			  <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/RDF_XML"/>
+			  <dcat:downloadURL rdf:resource="http://inspire.ec.europa.eu/applicationschema"/>
+			</dcat:distribution>			
+		</rdf:Description>
+	</dcat:dataset>
+	<dcat:dataset>
+		<rdf:Description rdf:about="http://inspire.ec.europa.eu/featureconcept">
+			<dcat:distribution rdf:parseType="Resource">
+			  <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/RDF_XML"/>
+			  <dcat:downloadURL rdf:resource="http://inspire.ec.europa.eu/featureconcept/featureconcept.en.rdf"/>
+			</dcat:distribution>			
+		</rdf:Description>
+	</dcat:dataset>
+	<dcat:dataset>
+		<rdf:Description rdf:about="http://inspire.ec.europa.eu/document">
+			<dcat:distribution rdf:parseType="Resource">
+			  <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/RDF_XML"/>
+			  <dcat:downloadURL rdf:resource="http://inspire.ec.europa.eu/document/document.en.rdf"/>
+			</dcat:distribution>			
+		</rdf:Description>
+	</dcat:dataset>
+	<dcat:dataset>
+		<rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ResourceType">
+			<dcat:distribution rdf:parseType="Resource">
+			  <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/RDF_XML"/>
+			  <dcat:downloadURL rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResourceType/ResourceType.en.rdf"/>
+			</dcat:distribution>			
+		</rdf:Description>
+	</dcat:dataset>
+
+<!-- ... the rest of the registers ... -->
+
+</rdf:Description>
+
+</rdf:RDF>
