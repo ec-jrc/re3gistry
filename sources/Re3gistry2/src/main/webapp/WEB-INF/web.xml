@@ -35,18 +35,17 @@
     </servlet-mapping>
     
  
-    <filter>
+      <filter>
         <filter-name>loadSalt</filter-name>
-        <filter-class>eu.europa.ec.re3gistry2.web.controller.LoadSalt</filter-class>
+        <filter-class>eu.europa.ec.re3gistry2.web.utility.LoadSalt</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>loadSalt</filter-name>
         <url-pattern>*</url-pattern>
     </filter-mapping>
-    
     <filter>
         <filter-name>validateSalt</filter-name>
-        <filter-class>eu.europa.ec.re3gistry2.web.controller.ValidateSalt</filter-class>
+        <filter-class>eu.europa.ec.re3gistry2.web.utility.ValidateSalt</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>validateSalt</filter-name>
