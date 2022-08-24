@@ -31,7 +31,6 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * ContainedItem information
@@ -229,7 +228,7 @@ public class ContainedItem extends BasicContainedItem implements Serializable {
     public void setContainedItemsBeeingParentItemClass(List<ContainedItem> containedItemsBeeingParentItemClass) {
         this.containedItemsBeeingParentItemClass = containedItemsBeeingParentItemClass;
     }
-    
+
     public List<ContainedItem> getContainedItems() {
         return containedItems;
     }
@@ -277,7 +276,5 @@ public class ContainedItem extends BasicContainedItem implements Serializable {
     public void setLatest(boolean latest) {
         this.latest = latest;
     }
-    
-    
 
 }

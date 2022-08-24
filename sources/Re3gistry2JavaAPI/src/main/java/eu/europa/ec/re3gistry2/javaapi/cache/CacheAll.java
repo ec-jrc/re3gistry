@@ -69,7 +69,7 @@ public class CacheAll {
                     RegItemclass regItemclassToCache = regItemclassManager.get(itemclassID);
                     itemclassList.add(regItemclassToCache);
                 } else {
-                    itemclassList = regItemclassManager.getAlltemclassOrderAscByDataprocedureorder();
+                    itemclassList.addAll(regItemclassManager.getAlltemclassOrderAscByDataprocedureorder());
                 }
 
                 CacheHelper.createCacheCompleteRunningFile();

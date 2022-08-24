@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.Logger;

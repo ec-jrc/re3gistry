@@ -724,7 +724,7 @@ public class ItemHistorySupplier {
                         .filter(ih -> ih.getVersionnumber() != version)
                         .map(ih -> new VersionInformation(ih.getVersionnumber() + 1, uri + ":" + (ih.getVersionnumber() + 1)))
                         .collect(Collectors.toList()));
-                
+
             } else {
                 item.setVersionHistory(itemHistory.stream()
                         .filter(ih -> ih.getVersionnumber() != version)

@@ -28,6 +28,7 @@ package eu.europa.ec.re3gistry2.restapi.format;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
@@ -136,7 +137,7 @@ public class XMLFormatter implements Formatter {
         writeLanguage(xml);
         writeDate(xml, item);
 //        writeVersions(xml, item);
-        writeFields(xml, item, null);
+        writeFields(xml, item);
 
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             xml.writeStartElement("registers");
@@ -156,7 +157,7 @@ public class XMLFormatter implements Formatter {
 
         writeLanguage(xml);
         writeDate(xml, item);
-        writeFields(xml, item, null);
+        writeFields(xml, item);
         writeRegistryAndRegister(xml, item);
 
         xml.writeEndElement();
@@ -167,7 +168,7 @@ public class XMLFormatter implements Formatter {
 
         writeLanguage(xml);
         writeDate(xml, item);
-        writeFields(xml, item, null);
+        writeFields(xml, item);
         writeRegistryAndRegister(xml, item);
 
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
@@ -190,7 +191,7 @@ public class XMLFormatter implements Formatter {
         writeLanguage(xml);
         writeDate(xml, item);
         writeVersions(xml, item);
-        writeFields(xml, item, collectionItem);
+        writeFields(xml, item);
         writeItemclass(xml, item);
 //        writeIsDefinedBy(xml, item);
         writeRegistryAndRegister(xml, item);
@@ -204,7 +205,7 @@ public class XMLFormatter implements Formatter {
         writeDate(xml, item);
         writeVersions(xml, item);
 
-        writeFields(xml, item, null);
+        writeFields(xml, item);
         writeItemclass(xml, item);
 //        writeIsDefinedBy(xml, item);
         writeRegistryAndRegister(xml, item);
@@ -214,7 +215,8 @@ public class XMLFormatter implements Formatter {
             xml.writeStartElement("containeditems");
             for (ContainedItem ci : item.getContainedItems()) {
 
-                if (ci.getItemclass().getId().equals(item.getItemclass().getId())) {
+                if (item.getItemclass().getParentItemClassType().equals("register")
+                        && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
                     writeItemShortVersion(xml, ci, item.getItemclass().getParentid(), item);
                 } else {
                     writeItemShortVersion(xml, ci, "value", item);
@@ -236,7 +238,8 @@ public class XMLFormatter implements Formatter {
 
             xml.writeStartElement("containeditems");
             for (ContainedItem ci : item.getContainedItemsBeeingParentItemClass()) {
-                if (ci.getItemclass().getId().equals(item.getItemclass().getId())) {
+                if (item.getItemclass().getParentItemClassType().equals("register")
+                        && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
                     writeItemShortVersion(xml, ci, item.getItemclass().getParentid(), item);
                 } else {
                     writeItemShortVersion(xml, ci, "value", item);
@@ -290,7 +293,7 @@ public class XMLFormatter implements Formatter {
         }
     }
 
-    private void writeFields(XMLStreamWriter xml, ContainedItem item, ContainedItem collectionItem) throws XMLStreamException {
+    private void writeFields(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
         // Get configuration properties
         final Properties configurationProperties = Configuration.getInstance().getProperties();
         String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
@@ -339,7 +342,11 @@ public class XMLFormatter implements Formatter {
                         writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                         xml.writeEndElement();
                     } else if (fieldName != null && "collection".equals(fieldLocalId)) {
-                        xml.writeStartElement(collectionItem.getItemclass().getParentid());
+                        String registerUri = item.getRegister().getUri();
+                        int index = registerUri.lastIndexOf("/");
+                        String registerid = registerUri.substring(index + 1);
+                        xml.writeStartElement(registerid);
+//                        xml.writeStartElement(item.getItemclass().getParentid());
                         xml.writeAttribute("id", href);
                         writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
                         xml.writeEndElement();

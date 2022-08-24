@@ -89,7 +89,7 @@ public class JSONFormatter implements Formatter {
         writeLanguage(regItemJsonObject);
         writeDate(regItemJsonObject, item);
         writeVersions(regItemJsonObject, item);
-        writeFields(regItemJsonObject, item, null);
+        writeFields(regItemJsonObject, item);
         writeItemclass(regItemJsonObject, item);
         writeIsDefinedBy(regItemJsonObject, item);
 
@@ -115,7 +115,7 @@ public class JSONFormatter implements Formatter {
         writeVersions(regItemJsonObject, item);
         writeLanguage(regItemJsonObject);
         writeDate(regItemJsonObject, item);
-        writeFields(regItemJsonObject, item, null);
+        writeFields(regItemJsonObject, item);
         writeItemclass(regItemJsonObject, item);
         writeIsDefinedBy(regItemJsonObject, item);
         writeRegistryAndRegister(regItemJsonObject, item);
@@ -129,7 +129,7 @@ public class JSONFormatter implements Formatter {
         writeVersions(regItemJsonObject, item);
         writeLanguage(regItemJsonObject);
         writeDate(regItemJsonObject, item);
-        writeFields(regItemJsonObject, item, null);
+        writeFields(regItemJsonObject, item);
         writeItemclass(regItemJsonObject, item);
         writeIsDefinedBy(regItemJsonObject, item);
         writeRegistryAndRegister(regItemJsonObject, item);
@@ -181,7 +181,7 @@ public class JSONFormatter implements Formatter {
         writeVersions(regItemJsonObject, item);
         writeLanguage(regItemJsonObject);
         writeDate(regItemJsonObject, item);
-        writeFields(regItemJsonObject, item, null);
+        writeFields(regItemJsonObject, item);
         writeItemclass(regItemJsonObject, item);
         writeIsDefinedBy(regItemJsonObject, item);
         writeRegistryAndRegister(regItemJsonObject, item);
@@ -191,7 +191,8 @@ public class JSONFormatter implements Formatter {
             for (ContainedItem ci : item.getContainedItems()) {
                 JSONObject containedItemsJSON = createOrderedJSONObject();
                 JSONObject valuecontainedItemsJSON = createOrderedJSONObject();
-                if (ci.getItemclass().getId().equals(item.getItemclass().getId())) {
+                if (item.getItemclass().getParentItemClassType().equals("register")
+                        && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
                     containedItemsJSON.put(item.getItemclass().getParentid(), writeItemShortVersion(valuecontainedItemsJSON, ci, item));
                 } else {
                     containedItemsJSON.put("value", writeItemShortVersion(valuecontainedItemsJSON, ci, item));
@@ -220,7 +221,8 @@ public class JSONFormatter implements Formatter {
             for (ContainedItem ci : item.getContainedItemsBeeingParentItemClass()) {
                 JSONObject containedItemsJSON = createOrderedJSONObject();
                 JSONObject valuecontainedItemsJSON = createOrderedJSONObject();
-                 if (ci.getItemclass().getId().equals(item.getItemclass().getId())) {
+                if (item.getItemclass().getParentItemClassType().equals("register")
+                        && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
                     containedItemsJSON.put(item.getItemclass().getParentid(), writeItemShortVersion(valuecontainedItemsJSON, ci, item));
                 } else {
                     containedItemsJSON.put("value", writeItemShortVersion(valuecontainedItemsJSON, ci, item));
@@ -272,7 +274,7 @@ public class JSONFormatter implements Formatter {
         writeVersions(regItemJsonObject, item);
         writeLanguage(regItemJsonObject);
         writeDate(regItemJsonObject, item);
-        writeFields(regItemJsonObject, item, collectionItem);
+        writeFields(regItemJsonObject, item);
         writeItemclass(regItemJsonObject, item);
         writeIsDefinedBy(regItemJsonObject, item);
         writeRegistryAndRegister(regItemJsonObject, item);
@@ -311,7 +313,7 @@ public class JSONFormatter implements Formatter {
         }
     }
 
-    private void writeFields(JSONObject regItemJsonObject, ContainedItem item, ContainedItem collectionItem) {
+    private void writeFields(JSONObject regItemJsonObject, ContainedItem item) {
         // Get configuration properties
         final Properties configurationProperties = Configuration.getInstance().getProperties();
         String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
@@ -378,7 +380,11 @@ public class JSONFormatter implements Formatter {
                         JSONObject json = createOrderedJSONObject();
                         json.put("label", value);
                         json.put("id", href);
-                        regItemJsonObject.put(collectionItem.getItemclass().getId(), json);
+                        String registerUri = item.getRegister().getUri();
+                        int index = registerUri.lastIndexOf("/");
+                        String registerid = registerUri.substring(index + 1);
+                        regItemJsonObject.put(registerid, json);
+//                        regItemJsonObject.put(item.getItemclass().getParentid(), json);
                     } else if (fieldName != null && "status".equals(fieldLocalId.toLowerCase())) {
                         String itemClassName = item.getItemclass().getId();
                         JSONObject labelJson = createOrderedJSONObject();

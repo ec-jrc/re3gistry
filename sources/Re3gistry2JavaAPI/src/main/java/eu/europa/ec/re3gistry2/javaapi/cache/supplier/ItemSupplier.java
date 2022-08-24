@@ -150,7 +150,7 @@ public class ItemSupplier {
         this.itemproposedSupplier = new ItemproposedSupplier(em, masterLanguage, languageCode);
         this.reglocalizationproposedManager = new RegLocalizationproposedManager(em);
         this.regLanguagecodeManager = new RegLanguagecodeManager(em);
-     
+
         this.masterLanguage = masterLanguage;
         this.languageCode = languageCode;
 
@@ -180,7 +180,7 @@ public class ItemSupplier {
         }
         return toItem(item);
     }
-    
+
     public Item getItemByUriAndStatus(String uri, String status) throws Exception {
         RegItem item = getRegItemByUriAndStatus(uri, status);
         if (item == null) {
@@ -188,7 +188,6 @@ public class ItemSupplier {
         }
         return toItem(item);
     }
-
 
     private RegItem getRegItemByUri(String uri) throws Exception {
         int i = uri.lastIndexOf('/');
@@ -199,20 +198,31 @@ public class ItemSupplier {
         try {
             int uriCollection = uri.substring(0, i).lastIndexOf('/');
             String regItemClassLocalId = uri.substring(uriCollection + 1).replace("/" + localid, "");
-            RegItemclass parentClass = regItemClassManager.getByLocalid(regItemClassLocalId);
-            RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
-
             RegItem regItem;
             try {
+                RegItemclass parentClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+                RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
+
                 regItem = regItemManager.getByLocalidAndRegItemClass(localid, regItemRegItemClass);
+
+                if (uri.equals(ItemHelper.getURI(regItem))) {
+                    return regItem;
+                }
             } catch (Exception e) {
+                int uriItemClassCollection = uri.substring(0, uriCollection).lastIndexOf('/');
+                String regItemClassCollectionLocalId = uri.substring(uriItemClassCollection + 1, uriCollection).replace("/" + regItemClassLocalId, "").replace("/" + localid, "");
+                RegItemclass parentClass = regItemClassManager.getByLocalid(regItemClassCollectionLocalId);
+                RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
+
                 RegItemclass regItemRegItemClassChild = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
                 regItem = regItemManager.getByLocalidAndRegItemClass(localid, regItemRegItemClassChild);
-            }
 
-            if (uri.equals(ItemHelper.getURI(regItem))) {
                 return regItem;
             }
+
+//            if (uri.equals(ItemHelper.getURI(regItem))) {
+//                return regItem;
+//            }
         } catch (Exception e) {
             for (RegItem item : regItemManager.getByLocalid(localid)) {
                 if (uri.equals(ItemHelper.getURI(item))) {
@@ -222,7 +232,7 @@ public class ItemSupplier {
         }
         return null;
     }
-    
+
     private RegItem getRegItemByUriAndStatus(String uri, String itemStatus) throws Exception {
         int i = uri.lastIndexOf('/');
         if (i < 0) {
@@ -237,13 +247,13 @@ public class ItemSupplier {
 
             RegStatus status = regStatusManager.findByLocalid(itemStatus);
             RegItem regItem;
-            if(status.getIspublic()){
+            if (status.getIspublic()) {
                 regItem = regItemManager.getByLocalidAndRegItemClassAndRegStatus(localid, regItemRegItemClass, status);
-            }else{
+            } else {
                 return null;
             }
-            
-              if (uri.equals(ItemHelper.getURI(regItem))) {
+
+            if (uri.equals(ItemHelper.getURI(regItem))) {
                 return regItem;
             }
         } catch (Exception e) {
@@ -371,7 +381,9 @@ public class ItemSupplier {
         item.setLanguage(languageCode.getIso6391code());
         RegItemclass itemclassParent = regItem.getRegItemclass().getRegItemclassParent();
         if (itemclassParent != null) {
-            item.setItemclass(new BasicItemClass(regItem.getRegItemclass().getLocalid(), itemclassParent.getLocalid(), itemclassParent.getRegItemclasstype().getLocalid()));
+            item.setItemclass(new BasicItemClass(regItem.getRegItemclass().getLocalid(),
+                    itemclassParent.getLocalid(),
+                    itemclassParent.getRegItemclasstype().getLocalid()));
         } else {
             item.setItemclass(new BasicItemClass(regItem.getRegItemclass().getLocalid(), null, null));
         }
@@ -1271,9 +1283,9 @@ public class ItemSupplier {
 
         return loc.getValue();
     }
-    
-    private void setActiveLangList(Item item) throws Exception{
+
+    private void setActiveLangList(Item item) throws Exception {
         List<RegLanguagecode> activeLanguages = regLanguagecodeManager.getAllActive();
         item.setActiveLanguages(activeLanguages);
-    } 
+    }
 }

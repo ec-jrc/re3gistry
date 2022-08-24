@@ -114,7 +114,7 @@ public class XSDFormatter implements Formatter {
         writeLanguage(xml);
         writeDate(xml);
 //        writeVersions(xml);
-        writeFields(xml, itemClass.getType(), itemClass.getId(), itemClass.getFields());
+        writeFields(xml, itemClass.getType(), null, itemClass.getFields());
 
         xml.writeStartElement("xs:element");
         xml.writeAttribute("name", "registers");
@@ -151,7 +151,7 @@ public class XSDFormatter implements Formatter {
         writeLanguage(xml);
         writeDate(xml);
 //        writeVersions(xml);
-        writeFields(xml, itemClass.getChildItemClassType(), itemClass.getChildItemClassLocalId(), itemClass.getContainedItemsFields());
+        writeFields(xml, itemClass.getChildItemClassType(), null, itemClass.getContainedItemsFields());
         writeRegistryAndRegister(xml, itemClass.getChildItemClassType());
 
         xml.writeEndElement();
@@ -179,7 +179,7 @@ public class XSDFormatter implements Formatter {
         writeLanguage(xml);
         writeDate(xml);
 //        writeVersions(xml);
-        writeFields(xml, itemClass.getType(), itemClass.getId(), itemClass.getFields());
+        writeFields(xml, itemClass.getType(), null, itemClass.getFields());
         writeRegistryAndRegister(xml, itemClass.getType());
 
         xml.writeStartElement("xs:element");
@@ -219,7 +219,7 @@ public class XSDFormatter implements Formatter {
         writeLanguage(xml);
         writeDate(xml);
         writeVersions(xml);
-        writeFields(xml, itemClass.getType(), itemClass.getParentid(), itemClass.getFields());
+        writeFields(xml, itemClass.getType(), itemClass.getRegisterLocalId(), itemClass.getFields());
         writeItemclass(xml, itemClass.getType());
         writeRegistryAndRegister(xml, itemClass.getType());
 
@@ -264,7 +264,7 @@ public class XSDFormatter implements Formatter {
         writeLanguage(xml);
         writeDate(xml);
         writeVersions(xml);
-        writeFields(xml, itemClass.getType(), itemClass.getParentid(), itemClass.getFields());
+        writeFields(xml, itemClass.getType(), itemClass.getRegisterLocalId(), itemClass.getFields());
         writeItemclass(xml, itemClass.getType());
         writeRegistryAndRegister(xml, itemClass.getType());
 
@@ -292,7 +292,13 @@ public class XSDFormatter implements Formatter {
             writeLanguage(xml);
             writeDate(xml);
             writeVersions(xml);
-            writeFields(xml, itemClass.getChildItemClassType(), itemClass.getId(), itemClass.getContainedItemsFields());
+            String registerlocalid;
+            if (!itemClass.getRegisterLocalId().isEmpty()) {
+                registerlocalid = itemClass.getRegisterLocalId();
+            } else {
+                registerlocalid = itemClass.getStartElement();
+            }
+            writeFields(xml, itemClass.getChildItemClassType(), registerlocalid, itemClass.getContainedItemsFields());
             writeItemclass(xml, itemClass.getChildItemClassType());
             writeRegistryAndRegister(xml, itemClass.getChildItemClassType());
 
@@ -329,7 +335,7 @@ public class XSDFormatter implements Formatter {
         writeEmptyElement(xml, "issued");
     }
 
-    private void writeFields(XMLStreamWriter xml, String itemClassType, String itemClassId, HashMap<String, String> localizedProperties) throws XMLStreamException {
+    private void writeFields(XMLStreamWriter xml, String itemClassType, String registerLocalId, HashMap<String, String> localizedProperties) throws XMLStreamException {
         // Get configuration properties
         final Properties configurationProperties = Configuration.getInstance().getProperties();
         String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
@@ -383,7 +389,7 @@ public class XSDFormatter implements Formatter {
                     xml.writeEndElement();
                     xml.writeEndElement();
                 } else if (fieldLocalId != null && "collection".equals(fieldLocalId)) {
-                    writeComplexeElementWithElementAndattribute(xml, itemClassId, "id", "0", "1");
+                    writeComplexeElementWithElementAndattribute(xml, registerLocalId, "id", "0", "1");
                 } else if (fieldLocalId != null && "successor".equals(fieldLocalId)) {
                     writeComplexeListElements(xml, "successors", 0, 1, "successor");
                 } else if (fieldLocalId != null && "predecessor".equals(fieldLocalId)) {

@@ -26,7 +26,6 @@
  */
 package eu.europa.ec.re3gistry2.restapi;
 
-import eu.europa.ec.re3gistry2.restapi.util.ApiError;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.XSDSchemaSupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.StatusSupplier;
 import java.io.IOException;
@@ -66,6 +65,7 @@ import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemproposedSupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.NoVersionException;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.restapi.format.XSDFormatter;
+import eu.europa.ec.re3gistry2.restapi.util.ApiError;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
 import java.io.OutputStream;
@@ -135,7 +135,7 @@ public class ItemsServlet extends HttpServlet {
             try {
                 em = emf.createEntityManager();
 
-                if (lang.equalsIgnoreCase("active")) {
+                if (lang!=null && lang.equalsIgnoreCase("active")) {
                     String type = "application/json";
                     RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(em);
                     List<RegLanguagecode> activeLanguages = null;
@@ -224,20 +224,7 @@ public class ItemsServlet extends HttpServlet {
 
                         //if the item contains no version reference in the URL or if the item contains :0
                         if (version == 0) {
-                            if (status != null) {
-                                try {
-                                    optItem = getItemProposedByUriAndStatus(uri, status, itemproposedSupplier);
-                                } catch (Exception e) {
-                                    optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
-                                }
-                            } else {
-                                optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
-
-                                //Check if optItem has a value, if it doesn't --> search the item in the proposed table
-                                if (!optItem.isPresent()) {
-                                    optItem = getItemProposedByUri(uri, itemproposedSupplier);
-                                }
-                            }
+                            optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
                         } else {
                             int sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
                             if (sizeHistory == 0 || sizeHistory + 1 == version) {
@@ -397,21 +384,6 @@ public class ItemsServlet extends HttpServlet {
         return Optional.of(item);
     }
     
-    private Optional<Item> getItemByUriAndStatus(String uri, String language, ItemSupplier itemSupplier, String itemStatus) throws Exception {
-        Item cached = cache.getByUrl(language, uri, null);
-        if (cached != null) {
-            return Optional.of(cached);
-        }
-
-        Item item = itemSupplier.getItemByUriAndStatus(uri, itemStatus);
-        if (item == null) {
-            return Optional.empty();
-        }
-
-        cache.add(language, item, null);
-        return Optional.of(item);
-    }
-
     private Optional<Item> getItemProposedByUuid(String uuid, String language, ItemproposedSupplier itemproposedSupplier) throws Exception {
         Item item = itemproposedSupplier.getItemProposedByUuid(uuid);
         if (item == null) {
