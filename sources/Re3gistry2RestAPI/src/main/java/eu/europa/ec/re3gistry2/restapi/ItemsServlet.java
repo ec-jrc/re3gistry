@@ -215,7 +215,9 @@ public class ItemsServlet extends HttpServlet {
                         if (sizeHistory == 0 || sizeHistory + 1 == version) {
                             optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
                         } else {
-                            optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+                          optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+//                            int fixedVersion = version - 1;
+//                            optItem = getItemHistoryByUri(uri.replace(":" + version, ":"+fixedVersion), lang, itemHistorySupplier, fixedVersion); //-1
                         }
                     }
                 }

@@ -416,7 +416,7 @@ public class ItemSupplier {
         item.setVersion(new VersionInformation(thisversion, uri + ":" + thisversion));
         item.setVersionHistory(itemHistory.stream()
                 .filter(ih -> ih.getVersionnumber() != maxVersionNumber + 1)
-                .map(ih -> new VersionInformation(ih.getVersionnumber(), uri + ":" + ih.getVersionnumber()))
+                .map(ih -> new VersionInformation(ih.getVersionnumber()+1, uri + ":" + (ih.getVersionnumber()+1))) // needed for showing the correct version
                 .collect(Collectors.toList()));
     }
 
