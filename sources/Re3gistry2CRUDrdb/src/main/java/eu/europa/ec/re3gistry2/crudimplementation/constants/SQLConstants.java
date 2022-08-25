@@ -129,7 +129,10 @@ public class SQLConstants {
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEM = "SELECT r FROM RegLocalization r WHERE r.regItem = :regitem AND r.regField IS NOT NULL";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEM_AND_LANGUAGE = "SELECT r FROM RegLocalization r WHERE r.regItem = :regitem AND r.regLanguagecode = :regLanguagecode AND r.regField IS NOT NULL";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_LANGUAGE_AND_ITEMS = "SELECT r FROM RegLocalization r WHERE r.regLanguagecode = :regLanguagecode AND r.regField IS NOT NULL AND r.regItem IN :regitemList";
-    public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMCLASS = "SELECT r FROM RegLocalization r WHERE r.regItemclass = :regitemclass";
+    public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMCLASS = "SELECT r FROM RegLocalization r WHERE r.regItemclass = :regItemclass";
+   
+    public static final String SQL_GET_LOCALIZATION_FIELDS_BY_REGFIELD_ITEMCLASS_HREFNORNULL = "SELECT * FROM RegLocalization r INNER JOIN RegItem ri ON ri.uuid = r.regItem AND ri.regItemclass = :regItemclass WHERE r.regField = :regfield AND r.href IS NOT NULL";
+    
     public static final String SQL_GET_LOCALIZATION_BY_FIELD = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem IS NULL";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD_LANGUAGECODE = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regLanguagecode = :regLanguagecode AND r.regItem IS NULL";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD_ITEM = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem = :regitem";

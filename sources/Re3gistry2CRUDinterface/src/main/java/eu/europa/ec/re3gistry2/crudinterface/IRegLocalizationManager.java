@@ -42,6 +42,7 @@ public interface IRegLocalizationManager{
     
     public List<RegLocalization> getAll(RegItem regItem) throws Exception;
     public List<RegLocalization> getAll(RegItem regItem, RegLanguagecode regLanguagecode) throws Exception;
+    public List<RegLocalization> getAllHrefNotNull(RegField regField, RegItemclass regItemclass) throws Exception;
     public List<RegLocalization> getAll(RegLanguagecode regLanguagecode, List<RegItem> regItems) throws Exception;
     public List<RegLocalization> getAll(RegItemclass regItemclass) throws Exception;
     public List<RegLocalization> getAll(RegField regField) throws Exception;

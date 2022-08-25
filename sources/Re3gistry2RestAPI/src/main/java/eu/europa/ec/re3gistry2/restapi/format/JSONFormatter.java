@@ -33,10 +33,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.OutputStream;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
+import eu.europa.ec.re3gistry2.base.utility.Configuration;
 
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemRef;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
@@ -45,6 +47,7 @@ import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -137,7 +140,7 @@ public class JSONFormatter implements Formatter {
             for (ContainedItem ci : item.getContainedItems()) {
                 JSONObject itemJSON = createOrderedJSONObject();
                 JSONObject valueJSON = createOrderedJSONObject();
-                itemJSON.put("value", writeItemShortVersion(valueJSON, ci));
+                itemJSON.put("value", writeItemShortVersion(valueJSON, ci, ci));
                 containedJSONArray.add(itemJSON);
 
                 if (ci.isHasCollection()) {
@@ -145,7 +148,7 @@ public class JSONFormatter implements Formatter {
                         for (ContainedItem c : ci.getContainedItems()) {
                             JSONObject containedJSON = createOrderedJSONObject();
                             JSONObject containedvalueJSON = createOrderedJSONObject();
-                            containedJSON.put(ci.getItemclass().getId().toLowerCase(), writeItemShortVersion(containedvalueJSON, c));
+                            containedJSON.put(ci.getItemclass().getId().toLowerCase(), writeItemShortVersion(containedvalueJSON, c, ci));
                             containedJSONArray.add(containedJSON);
                         }
                     }
@@ -188,7 +191,12 @@ public class JSONFormatter implements Formatter {
             for (ContainedItem ci : item.getContainedItems()) {
                 JSONObject containedItemsJSON = createOrderedJSONObject();
                 JSONObject valuecontainedItemsJSON = createOrderedJSONObject();
-                containedItemsJSON.put("value", writeItemShortVersion(valuecontainedItemsJSON, ci));
+                if (item.getItemclass().getParentItemClassType().equals("register")
+                        && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
+                    containedItemsJSON.put(item.getItemclass().getParentid(), writeItemShortVersion(valuecontainedItemsJSON, ci, item));
+                } else {
+                    containedItemsJSON.put("value", writeItemShortVersion(valuecontainedItemsJSON, ci, item));
+                }
                 containedItemsJSONArray.add(containedItemsJSON);
 
                 if (ci.isHasCollection()) {
@@ -196,14 +204,53 @@ public class JSONFormatter implements Formatter {
                         for (ContainedItem c : ci.getContainedItems()) {
                             JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
                             JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
-                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c));
+                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
+                            containedItemsJSONArray.add(containedCollectionItemsJSON);
+                        }
+                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+                        for (ContainedItem c : ci.getContainedItems()) {
+                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
+                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
+                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
+                            containedItemsJSONArray.add(containedCollectionItemsJSON);
+                        }
+                    }
+                }
+            }
+        } else if (item.getContainedItemsBeeingParentItemClass() != null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
+            for (ContainedItem ci : item.getContainedItemsBeeingParentItemClass()) {
+                JSONObject containedItemsJSON = createOrderedJSONObject();
+                JSONObject valuecontainedItemsJSON = createOrderedJSONObject();
+                if (item.getItemclass().getParentItemClassType().equals("register")
+                        && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
+                    containedItemsJSON.put(item.getItemclass().getParentid(), writeItemShortVersion(valuecontainedItemsJSON, ci, item));
+                } else {
+                    containedItemsJSON.put("value", writeItemShortVersion(valuecontainedItemsJSON, ci, item));
+                }
+                containedItemsJSONArray.add(containedItemsJSON);
+
+                if (ci.isHasCollection()) {
+                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
+                        for (ContainedItem c : ci.getContainedItems()) {
+                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
+                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
+                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
+                            containedItemsJSONArray.add(containedCollectionItemsJSON);
+                        }
+                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+                        for (ContainedItem c : ci.getContainedItems()) {
+                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
+                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
+                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
                             containedItemsJSONArray.add(containedCollectionItemsJSON);
                         }
                     }
                 }
             }
         }
-        regItemJsonObject.put("containeditems", containedItemsJSONArray);
+        if (containedItemsJSONArray != null && !containedItemsJSONArray.isEmpty()) {
+            regItemJsonObject.put("containeditems", containedItemsJSONArray);
+        }
 
         JSONObject regiItemJSONObject = createOrderedJSONObject();
 
@@ -223,7 +270,7 @@ public class JSONFormatter implements Formatter {
         osw.close();
     }
 
-    private JSONObject writeItemShortVersion(JSONObject regItemJsonObject, ContainedItem item) {
+    private JSONObject writeItemShortVersion(JSONObject regItemJsonObject, ContainedItem item, ContainedItem collectionItem) {
         writeVersions(regItemJsonObject, item);
         writeLanguage(regItemJsonObject);
         writeDate(regItemJsonObject, item);
@@ -267,6 +314,10 @@ public class JSONFormatter implements Formatter {
     }
 
     private void writeFields(JSONObject regItemJsonObject, ContainedItem item) {
+        // Get configuration properties
+        final Properties configurationProperties = Configuration.getInstance().getProperties();
+        String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
+
         List<LocalizedProperty> localizedProperties = item.getProperties();
         localizedProperties.forEach((localizedProperty) -> {
             String lang = localizedProperty.getLang();
@@ -275,65 +326,116 @@ public class JSONFormatter implements Formatter {
                 String href = localizedProperty.getValues().get(0).getHref();
 
                 String fieldName = localizedProperty.getLabel().replace("-item", "").toLowerCase();
-                String fieldLocalId = localizedProperty.getId().replace("-item", "");
+                String fieldLocalId = localizedProperty.getId().replace("-item", "").toLowerCase();
 
-                if (fieldName != null && "contactpoint".equals(fieldLocalId.toLowerCase())) {
-                    JSONObject json = createOrderedJSONObject();
-                    json.put("label", value);
-                    json.put("email", href);
-                    regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "license".equals(fieldLocalId.toLowerCase())) {
-                    JSONObject json = createOrderedJSONObject();
-                    json.put("label", value);
-                    json.put("uri", href);
-                    regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "governance-level".equals(fieldLocalId.toLowerCase())) {
-                    JSONObject labelJson = createOrderedJSONObject();
-                    labelJson.put("lang", item.getLanguage());
-                    labelJson.put("text", value);
+                if (fieldName != null && "successor".equals(fieldLocalId.toLowerCase())) {
+                    JSONArray successorsArray = writeComplexListElement(value, href, lang, fieldLocalId);
+                    regItemJsonObject.put("successors", successorsArray);
+                } else if (fieldName != null && "predecessor".equals(fieldLocalId.toLowerCase())) {
+                    JSONArray predecessorsArray = writeComplexListElement(value, href, lang, fieldLocalId);
+                    regItemJsonObject.put("predecessors", predecessorsArray);
+                } else if (fieldName != null && "parent".equals(fieldLocalId.toLowerCase())) {
+                    JSONArray successorsArray = writeComplexListElement(value, href, lang, fieldLocalId);
+                    regItemJsonObject.put("parents", successorsArray);
+                } else if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
+                    if (!href.isEmpty() && !value.isEmpty()) {
+                        JSONObject labelJson = createOrderedJSONObject();
+                        labelJson.put("lang", item.getLanguage());
+                        labelJson.put("text", value);
 
-                    JSONObject json = createOrderedJSONObject();
-                    json.put("label", labelJson);
-                    json.put("id", href);
+                        JSONObject json = createOrderedJSONObject();
+                        json.put("label", labelJson);
+                        json.put("id", href);
 
-                    regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && "collection".equals(fieldLocalId.toLowerCase())) {
-                    JSONObject json = createOrderedJSONObject();
-                    json.put("label", value);
-                    json.put("id", href);
-                    regItemJsonObject.put(item.getItemclass().getParentid(), json);
-                } else if (fieldName != null && "status".equals(fieldLocalId.toLowerCase())) {
-                    String itemClassName = item.getItemclass().getId();
-                    JSONObject labelJson = createOrderedJSONObject();
-                    labelJson.put("lang", item.getLanguage());
-                    labelJson.put("text", value);
+                        regItemJsonObject.put(fieldName, json);
+                    } else {
+                        JSONObject labelJson = createOrderedJSONObject();
+                        labelJson.put("lang", lang);
+                        labelJson.put("text", value);
 
-                    JSONObject json = createOrderedJSONObject();
-                    json.put("label", labelJson);
-                    json.put("id", href);
-
-                    regItemJsonObject.put(fieldName, json);
-                } else if (fieldName != null && ("annex".equals(fieldLocalId.toLowerCase()) || "themenumber".equals(fieldLocalId.toLowerCase()))) {
-                    regItemJsonObject.put(fieldLocalId, value);
-                } else if (!href.isEmpty() && !value.isEmpty()) {
-                    JSONObject labelJson = createOrderedJSONObject();
-                    labelJson.put("lang", item.getLanguage());
-                    labelJson.put("text", value);
-
-                    JSONObject json = createOrderedJSONObject();
-                    json.put("label", labelJson);
-                    json.put("uri", href);
-
-                    regItemJsonObject.put(fieldName, json);
+                        regItemJsonObject.put(fieldLocalId, labelJson);
+                    }
                 } else {
-                    JSONObject labelJson = createOrderedJSONObject();
-                    labelJson.put("lang", lang);
-                    labelJson.put("text", value);
+                    if (fieldName != null && "contactpoint".equals(fieldLocalId.toLowerCase())) {
+                        JSONObject json = createOrderedJSONObject();
+                        json.put("label", value);
+                        json.put("email", href);
+                        regItemJsonObject.put(fieldName, json);
+                    } else if (fieldName != null && "license".equals(fieldLocalId.toLowerCase())) {
+                        JSONObject json = createOrderedJSONObject();
+                        json.put("label", value);
+                        json.put("uri", href);
+                        regItemJsonObject.put(fieldName, json);
+                    } else if (fieldName != null && "governance-level".equals(fieldLocalId.toLowerCase())) {
+                        JSONObject labelJson = createOrderedJSONObject();
+                        labelJson.put("lang", item.getLanguage());
+                        labelJson.put("text", value);
 
-                    regItemJsonObject.put(fieldLocalId, labelJson);
+                        JSONObject json = createOrderedJSONObject();
+                        json.put("label", labelJson);
+                        json.put("id", href);
+
+                        regItemJsonObject.put(fieldName, json);
+                    } else if (fieldName != null && "collection".equals(fieldLocalId.toLowerCase())) {
+                        JSONObject json = createOrderedJSONObject();
+                        json.put("label", value);
+                        json.put("id", href);
+                        String registerUri = item.getRegister().getUri();
+                        int index = registerUri.lastIndexOf("/");
+                        String registerid = registerUri.substring(index + 1);
+                        regItemJsonObject.put(registerid, json);
+//                        regItemJsonObject.put(item.getItemclass().getParentid(), json);
+                    } else if (fieldName != null && "status".equals(fieldLocalId.toLowerCase())) {
+                        String itemClassName = item.getItemclass().getId();
+                        JSONObject labelJson = createOrderedJSONObject();
+                        labelJson.put("lang", item.getLanguage());
+                        labelJson.put("text", value);
+
+                        JSONObject json = createOrderedJSONObject();
+                        json.put("label", labelJson);
+                        json.put("id", href);
+
+                        regItemJsonObject.put(fieldName, json);
+                    } else if (fieldName != null && ("annex".equals(fieldLocalId.toLowerCase()) || "themenumber".equals(fieldLocalId.toLowerCase()))) {
+                        regItemJsonObject.put(fieldLocalId, value);
+                    } else if (!href.isEmpty() && !value.isEmpty()) {
+                        JSONObject labelJson = createOrderedJSONObject();
+                        labelJson.put("lang", item.getLanguage());
+                        labelJson.put("text", value);
+
+                        JSONObject json = createOrderedJSONObject();
+                        json.put("label", labelJson);
+                        json.put("id", href);
+
+                        regItemJsonObject.put(fieldName, json);
+                    } else {
+                        JSONObject labelJson = createOrderedJSONObject();
+                        labelJson.put("lang", lang);
+                        labelJson.put("text", value);
+
+                        regItemJsonObject.put(fieldLocalId, labelJson);
+                    }
                 }
             }
         });
+    }
+
+    private JSONArray writeComplexListElement(String value, String href, String lang, String name) {
+        JSONObject labelJson = createOrderedJSONObject();
+        labelJson.put("lang", lang);
+        labelJson.put("text", value);
+
+        JSONObject successor = createOrderedJSONObject();
+        successor.put("label", labelJson);
+        successor.put("id", href);
+
+        JSONObject json = createOrderedJSONObject();
+        json.put(name, successor);
+
+        JSONArray successorsArray = new JSONArray();
+        successorsArray.add(json);
+
+        return successorsArray;
     }
 
     private void writeItemclass(JSONObject regItemJsonObject, ContainedItem item) {
@@ -439,6 +541,11 @@ public class JSONFormatter implements Formatter {
         } catch (IllegalAccessException | NoSuchFieldException e) {
         }
         return jsonObject;
+    }
+
+    @Override
+    public void write(ItemClass itemClass, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

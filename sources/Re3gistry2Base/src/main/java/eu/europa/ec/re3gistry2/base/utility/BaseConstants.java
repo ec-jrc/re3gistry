@@ -82,7 +82,7 @@ public class BaseConstants {
     public static final String KEY_PROPERTY_LOGIN_TYPE = "application.login.type";
     public static final String KEY_PROPERTY_LOGIN_TYPE_SHIRO = "SHIRO";
     public static final String KEY_PROPERTY_LOGIN_TYPE_ECAS = "ECAS";
-    
+
     public static final String KEY_PROPERTY_INTERFACE_TYPE = "application.selected.interface";
     public static final String KEY_PROPERTY_INTERFACE_NEUTRAL_TYPE = "neutral";
     public static final String KEY_PROPERTY_INTERFACE_ECL_TYPE = "ecl";
@@ -108,11 +108,15 @@ public class BaseConstants {
     public static final String KEY_RELEASENOTE_RSS_APPLICATION = "application.releasenote.rss.path";
     public static final String KEY_TEXT_BANNER_APPLICATION = "application.banner";
     public static final String KEY_PRIVACY_APPLICATION = "application.privacy";
+    public static final String KEY_APPLICATION_LEGACY_FLAG = "application.legacy.flag";
+    public static final String KEY_APPLICATION_LEGACY_FLAG_ON = "ON";
+    public static final String KEY_APPLICATION_LEGACY_FLAG_OFF = "OFF";
+    public static final String KEY_APPLICATION_SCHEMA_PATH = "application.schemas.path";
 
     public static final String KEY_SELECTED_INTERFACE = "application.selected.interface";
     public static final String KEY_SELECTED_INTERFACE_ECL = "ecl";
     public static final String KEY_SELECTED_INTERFACE_NEUTRAL = "neutral";
-    
+
     /* Mail Subjects  and body */
     public static final String KEY_EMAIL_SUBJECT_SUCCESS = "mail.text.subject.success";
     public static final String KEY_EMAIL_BODY_SUCCESS = "mail.text.body.success";
@@ -615,7 +619,6 @@ public class BaseConstants {
     public static final String KEY_DISK_CACHE_MAXIMUM_SPACE = "application.cache.disk.maximum.space";
     public static final String KEY_CACHE_NAME_UUID = "items-by-uuid";
     public static final String KEY_CACHE_NAME_URL = "items-by-url";
-
 
     public String getKEY_APP_NAME() {
         return KEY_APP_NAME;

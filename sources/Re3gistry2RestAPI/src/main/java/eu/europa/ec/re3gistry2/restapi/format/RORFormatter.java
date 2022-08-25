@@ -41,6 +41,7 @@ import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.restapi.util.IndentingXMLStreamWriter;
 
@@ -360,6 +361,11 @@ public class RORFormatter implements Formatter {
         xml.writeStartElement(DCAT, "isPartOf");
         writeEmptyElement(xml, DCAT, "Catalog", RDF, "about", item.getRegister().getUri());
         xml.writeEndElement();
+    }
+
+    @Override
+    public void write(ItemClass itemClass, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

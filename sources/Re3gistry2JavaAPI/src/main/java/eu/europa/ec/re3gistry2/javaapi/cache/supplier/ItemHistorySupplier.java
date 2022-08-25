@@ -67,7 +67,7 @@ import eu.europa.ec.re3gistry2.model.RegStatuslocalization;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemRef;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
@@ -191,23 +191,23 @@ public class ItemHistorySupplier {
         int uriCollection = uri.substring(0, i).lastIndexOf('/');
         String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
         String localid = localidWithVersion.replace(":" + version, "");
-        RegItemclass regItemRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+        RegItemclass parentRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
         try {
-            RegItemclass parentRegItemRegItemClass = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
+            RegItemclass childRegItemClass = regItemClassManager.getChildItemclass(parentRegItemClass).get(0);
             RegItemhistory regItem;
             try {
-                regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, parentRegItemRegItemClass);
+                regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, childRegItemClass);
                 if (regItem != null) { // && uri.equals(getURI(regItem) + ":" + regItem.getVersionnumber())) {
                     return regItem;
                 }
             } catch (Exception ex) {
-                List<RegItemhistory> regItemList = regItemhistoryManager.getByLocalidAndRegItemClass(localid, parentRegItemRegItemClass);
+                List<RegItemhistory> regItemList = regItemhistoryManager.getByLocalidAndRegItemClass(localid, childRegItemClass);
                 if (regItemList.size() + 1 == version) {
                     return null;
                 }
             }
         } catch (Exception e) {
-            RegItemhistory regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, regItemRegItemClass);
+            RegItemhistory regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, parentRegItemClass);
             if (regItem != null && uri.equals(getURI(regItem) + ":" + regItem.getVersionnumber())) {
                 return regItem;
             }
@@ -242,7 +242,7 @@ public class ItemHistorySupplier {
         return 0;
     }
 
-    private Integer getVersionFromUri(String uri) {
+    public Integer getVersionFromUri(String uri) {
         Integer version = null;
         // Check if the part after the last slash contains a colon
         int i = uri.lastIndexOf('/');
@@ -290,11 +290,12 @@ public class ItemHistorySupplier {
         setVersionAndHistory(regItemhistory, item, version);
         item.setType(regItemhistory.getRegItemclass().getRegItemclasstype().getLocalid());
         item.setLanguage(languageCode.getIso6391code());
+
         RegItemclass itemclassparent = regItemhistory.getRegItemclass().getRegItemclassParent();
         if (itemclassparent != null) {
-            item.setItemclass(new ItemClass(regItemhistory.getRegItemclass().getLocalid(), itemclassparent.getLocalid(), itemclassparent.getRegItemclasstype().getLocalid()));
+            item.setItemclass(new BasicItemClass(regItemhistory.getRegItemclass().getLocalid(), itemclassparent.getLocalid(), itemclassparent.getRegItemclasstype().getLocalid()));
         } else {
-            item.setItemclass(new ItemClass(regItemhistory.getRegItemclass().getLocalid(), null, null));
+            item.setItemclass(new BasicItemClass(regItemhistory.getRegItemclass().getLocalid(), null, null));
         }
         item.setProperties(getLocalizedProperties(regItemhistory, fieldMapping -> !fieldMapping.getHidden()));
 
@@ -745,7 +746,7 @@ public class ItemHistorySupplier {
                         .filter(ih -> ih.getVersionnumber() != version)
                         .map(ih -> new VersionInformation(ih.getVersionnumber() + 1, uri + ":" + (ih.getVersionnumber() + 1)))
                         .collect(Collectors.toList()));
-                
+
             } else {
                 item.setVersion(new VersionInformation(version, uri + ":" + version));
                 item.setVersionHistory(itemHistory.stream()
@@ -827,7 +828,7 @@ public class ItemHistorySupplier {
                 try {
                     containedItemsList = new ArrayList<>();
 //                    if (complexItem) {
-//                        containedItemsList = getRelatedItemsByObject(regItem, hasCollection);
+//                        containedItemsList = getRelatedItemsByObject(regItemhistory, hasCollection);
 //                    } else {
                     List<String> collectionNoParentList = getAllColectionsNoParentOfItem(regItemhistory);
                     for (String uuid : collectionNoParentList) {
