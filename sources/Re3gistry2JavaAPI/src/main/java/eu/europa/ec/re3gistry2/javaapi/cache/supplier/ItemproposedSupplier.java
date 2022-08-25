@@ -40,11 +40,10 @@ import javax.persistence.NoResultException;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
-import eu.europa.ec.re3gistry2.base.utility.ItemHelper;
 import eu.europa.ec.re3gistry2.base.utility.ItemproposedHelper;
-import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegGroupManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
@@ -60,10 +59,7 @@ import eu.europa.ec.re3gistry2.model.RegField;
 import eu.europa.ec.re3gistry2.model.RegFieldmapping;
 import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
-import eu.europa.ec.re3gistry2.model.RegItemhistory;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.model.RegLocalization;
-import eu.europa.ec.re3gistry2.model.RegRelation;
 import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
 import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegStatusgroup;
@@ -78,13 +74,13 @@ import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.StatusLocalization;
+import eu.europa.ec.re3gistry2.model.RegGroup;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLocalizationproposed;
 import eu.europa.ec.re3gistry2.model.RegRelationproposed;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.persistence.EntityManager;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -111,6 +107,7 @@ public class ItemproposedSupplier {
     private final RegItemproposedManager regItemproposedManager;
     private final RegRelationproposedManager regRelationproposedManager;
     private RegLocalizationproposedManager regLocalizationproposedManager;
+    private final RegGroupManager regGroupManager;
     private final RegLanguagecode masterLanguage;
     private final RegLanguagecode languageCode;
 
@@ -145,6 +142,7 @@ public class ItemproposedSupplier {
         this.regItemproposedManager = new RegItemproposedManager(em);
         this.regRelationproposedManager = new RegRelationproposedManager(em);
         this.regLocalizationproposedManager = new RegLocalizationproposedManager(em);
+        this.regGroupManager = new RegGroupManager(em);
         this.masterLanguage = masterLanguage;
         this.languageCode = languageCode;
 
@@ -835,23 +833,44 @@ public class ItemproposedSupplier {
 
             default:
                 String key = field.getUuid();
+                RegGroup rolLabel = null;
                 List<RegLocalizationproposed> localizations = localizationsByField.get(key);
                 if (localizations == null || localizations.isEmpty()) {
-                    if (localizationsByFieldML == null) {
-                        break;
-                        //return null;
+                    if (localizationsByFieldML != null) {
+                        lang = masterLanguage.getIso6391code();
+                        localizations = localizationsByFieldML.get(key);
+                        if (localizations != null) {
+                            values = localizations.stream()
+                                    .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
+                                    .collect(Collectors.toList());
+                            break;
+                        }
                     }
                     // fallback to master language localization for this field for this reg item
-                    lang = masterLanguage.getIso6391code();
-                    localizations = localizationsByFieldML.get(key);
-                    if (localizations == null) {
-                        break;
-                        //return null;
+                    RegLocalizationproposed localization = this.regLocalizationproposedManager.get(field, masterLanguage);
+                    if (localization != null) {
+                        localizations = new ArrayList<>();
+                        localizations.add(localization);
                     }
+
+                    if (localization == null) {
+                        break;
+                    }
+                        
+                    // fix search in role
+                    // rols are not in reglocalization
+                    rolLabel = this.regGroupManager.getByLocalid(label);
                 }
+                
                 values = localizations.stream()
                         .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
                         .collect(Collectors.toList());
+                                if (rolLabel != null) {
+                }
+                if (rolLabel != null) {
+                    values.clear();
+                    values.add(new LocalizedPropertyValue(rolLabel.getName(), null));
+                }
                 break;
         }
 
@@ -906,8 +925,8 @@ public class ItemproposedSupplier {
     }
 
     private List<String> getAllColectionsNoParentOfItemProposed(RegItemproposed item) throws Exception {
-        RegItem item2 = null;
-        return regItemproposedManager.getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(item2, regStatusManager.get("1"), hasCollection, hasParent);
+
+        return regItemproposedManager.getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(item, regStatusManager.get("1"), hasCollection, hasParent);
     }
 
     protected RegItemproposed getRelatedItemProposedBySubject(RegItemproposed regItemproposed, RegRelationpredicate predicate) throws Exception {

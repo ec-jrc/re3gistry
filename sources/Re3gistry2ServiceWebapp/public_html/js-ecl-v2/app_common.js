@@ -84,14 +84,12 @@ function setCookie(cookieName, cookieValue, expiringDays) {
 
     // Checks if the cookies are enabled in the system and if the EU cookie
     // consent has been accepted
-//    if (navigator.cookieEnabled && euCookieConsent && euCookieConsent.accepted("europa")) {
-    var cck1 = JSON.parse($wt.cookie.get("cck1"));
-    if (cck1.cm && cck1.all1st) {
+//    if ($wt.analytics.isTrackable()) {
         var d = new Date();
         d.setTime(d.getTime() + (expiringDays * 24 * 60 * 60 * 1000));
         var expires = key_cookieExpires + '=' + d.toUTCString();
         document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';' + key_cookiePath + '=/';
-    }
+//    }
 }
 
 /*
@@ -101,9 +99,7 @@ function setCookie(cookieName, cookieValue, expiringDays) {
  * @returns {String} The value of the cookie
  */
 function getCookie(cookieName) {
-//    if (navigator.cookieEnabled) {
-    var cck1 = JSON.parse($wt.cookie.get("cck1"));
-    if (cck1.cm) {
+//    if ($wt.analytics.isTrackable()) {
         var name = cookieName + '=';
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
@@ -117,7 +113,7 @@ function getCookie(cookieName) {
             }
         }
         return val_emptyString;
-    }
+//    }
 }
 /*
  * Function to sort an array (to be used in Array.sort(function(a,b){}))
@@ -154,7 +150,7 @@ function processUri() {
 
     // Getting the current URL
     let currentUrl = window.location.href;
-    if (currentUrl.endsWith("/")){
+    if (currentUrl.endsWith("/")) {
         currentUrl = currentUrl.substring(0, currentUrl.length - 1);
     }
     // Getting the index of the lase occurence of "/"
@@ -164,12 +160,12 @@ function processUri() {
 //    let tmpUrl = currentUrl.substring(i);
     // Splitting this portion with "." to chech if it is specified a language
     // (e.g. elementName.en.html, but also the localID could contain a ".")
-    
+
     //example localID: de.codelist.test
     //example localID with language and format: de.codelist.test.en.xml
-    
-    
-    
+
+
+
 //    let urlCheck = tmpUrl.split(val_dot);
 
     // If the lenght of the urlCheck is 3
@@ -191,14 +187,14 @@ function processUri() {
 //        languageFromUrl = val_emptyString;
 //        uriFromUrl = currentUrl;
 //    }
-    
-     // Passing the current URL as the URI to be passed to the data service
-        languageFromUrl = val_emptyString;
-        uriFromUrl = currentUrl;
-    
+
+    // Passing the current URL as the URI to be passed to the data service
+//    languageFromUrl = val_emptyString;
+    uriFromUrl = currentUrl;
+
     // Check if the flag to force http is on
-    if(registryApp.forceHttpURIs){
-       uriFromUrl = uriFromUrl.replace(key_https + '://', key_http + '://')
+    if (registryApp.forceHttpURIs) {
+        uriFromUrl = uriFromUrl.replace(key_https + '://', key_http + '://')
     }
 }
 
@@ -227,13 +223,13 @@ function performSearch() {
 }
 
 /* Show or hide the loading overlay */
-function showLoadingOverlay(show){
-    
-    let loadingOverlayElement = $('.'+elementClassName_loadingOverlay);
-    
-    if(show){
+function showLoadingOverlay(show) {
+
+    let loadingOverlayElement = $('.' + elementClassName_loadingOverlay);
+
+    if (show) {
         loadingOverlayElement.show();
-    }else{
+    } else {
         loadingOverlayElement.hide();
     }
 }

@@ -44,6 +44,7 @@ import eu.europa.ec.re3gistry2.base.utility.ItemHelper;
 import eu.europa.ec.re3gistry2.base.utility.ItemproposedHelper;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegGroupManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
@@ -78,6 +79,7 @@ import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.StatusLocalization;
+import eu.europa.ec.re3gistry2.model.RegGroup;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLocalizationproposed;
 import java.text.DateFormat;
@@ -110,6 +112,7 @@ public class ItemSupplier {
     private final RegItemproposedManager regItemproposedManager;
     private final RegRelationproposedManager regRelationproposedManager;
     private final RegLocalizationproposedManager reglocalizationproposedManager;
+    private final RegGroupManager regGroupManager;
     private final ItemproposedSupplier itemproposedSupplier;
     private final RegLanguagecodeManager regLanguagecodeManager;
 
@@ -150,6 +153,7 @@ public class ItemSupplier {
         this.itemproposedSupplier = new ItemproposedSupplier(em, masterLanguage, languageCode);
         this.reglocalizationproposedManager = new RegLocalizationproposedManager(em);
         this.regLanguagecodeManager = new RegLanguagecodeManager(em);
+        this.regGroupManager = new RegGroupManager(em);
 
         this.masterLanguage = masterLanguage;
         this.languageCode = languageCode;
@@ -432,7 +436,7 @@ public class ItemSupplier {
         item.setVersion(new VersionInformation(thisversion, uri + ":" + thisversion));
         item.setVersionHistory(itemHistory.stream()
                 .filter(ih -> ih.getVersionnumber() != maxVersionNumber + 1)
-                .map(ih -> new VersionInformation(ih.getVersionnumber(), uri + ":" + ih.getVersionnumber()))
+                .map(ih -> new VersionInformation(ih.getVersionnumber()+1, uri + ":" + (ih.getVersionnumber()+1))) // needed for showing the correct version
                 .collect(Collectors.toList()));
     }
 
@@ -1055,23 +1059,42 @@ public class ItemSupplier {
 
             default:
                 String key = field.getUuid();
+                RegGroup rolLabel = null;
                 List<RegLocalization> localizations = localizationsByField.get(key);
                 if (localizations == null || localizations.isEmpty()) {
-                    if (localizationsByFieldML == null) {
-                        break;
-                        //return null;
+                    if (localizationsByFieldML != null) {
+                        lang = masterLanguage.getIso6391code();
+                        localizations = localizationsByFieldML.get(key);
+                        if (localizations != null) {
+                            values = localizations.stream()
+                                    .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
+                                    .collect(Collectors.toList());
+                            break;
+                        }
                     }
                     // fallback to master language localization for this field for this reg item
-                    lang = masterLanguage.getIso6391code();
-                    localizations = localizationsByFieldML.get(key);
-                    if (localizations == null) {
-                        break;
-                        //return null;
+                    RegLocalization localization = this.reglocalizationManager.get(field, masterLanguage);
+                    if (localization != null) {
+                        localizations = new ArrayList<>();
+                        localizations.add(localization);
                     }
+
+                    if (localization == null) {
+                        break;
+                    }
+                        
+                    // fix search in role
+                    // rols are not in reglocalization
+                    rolLabel = this.regGroupManager.getByLocalid(label);
                 }
                 values = localizations.stream()
                         .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
                         .collect(Collectors.toList());
+                
+                if (rolLabel != null) {
+                    values.clear();
+                    values.add(new LocalizedPropertyValue(rolLabel.getName(), null));
+                }
                 break;
         }
 

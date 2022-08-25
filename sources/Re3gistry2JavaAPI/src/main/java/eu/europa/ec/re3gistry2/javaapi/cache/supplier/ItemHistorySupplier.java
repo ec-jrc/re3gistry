@@ -154,7 +154,28 @@ public class ItemHistorySupplier {
     }
 
     public Item getItemHistoryByUri(String uri, Integer version) throws Exception {
+         try {
+             int i = uri.lastIndexOf('/');
+             if (i < 0) {
+                 throw new NoResultException();
+             }
+            String localidWithVersion = uri.substring(i + 1);
+            int uriCollection = uri.substring(0, i).lastIndexOf('/');
+            String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
+            RegItemclass regItemRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+            RegItemclass parentRegItemRegItemClass = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
+            String localid = localidWithVersion.replace(":" + localidWithVersion.substring(localidWithVersion.lastIndexOf(":") + 1), "");
+            int minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(localid, parentRegItemRegItemClass).getVersionnumber();
+            if (minVersion == 0) {
+                int fixedVersion = version -1;
+                uri = uri.replace(":"+version, ":"+fixedVersion);
+                version = version - 1;
+            }
+        } catch (Exception ex) {
+            version = version;
+        }
         RegItemhistory item = getRegItemByUri(uri, version);
+        
         if (item == null) {
             return null;
         }
@@ -176,7 +197,7 @@ public class ItemHistorySupplier {
             RegItemhistory regItem;
             try {
                 regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, childRegItemClass);
-                if (regItem != null && uri.equals(getURI(regItem) + ":" + regItem.getVersionnumber())) {
+                if (regItem != null) { // && uri.equals(getURI(regItem) + ":" + regItem.getVersionnumber())) {
                     return regItem;
                 }
             } catch (Exception ex) {
@@ -717,15 +738,17 @@ public class ItemHistorySupplier {
             } else if (itemHistory.stream().noneMatch(it -> it.getVersionnumber() == version)) {
                 throw new NoVersionException();
             }
-            item.setVersion(new VersionInformation(version, uri + ":" + version));
-
+            
             if (minVersion == 0) {
+                int fixedVersion = version + 1;
+                item.setVersion(new VersionInformation(fixedVersion, uri + ":" + fixedVersion));
                 item.setVersionHistory(itemHistory.stream()
                         .filter(ih -> ih.getVersionnumber() != version)
                         .map(ih -> new VersionInformation(ih.getVersionnumber() + 1, uri + ":" + (ih.getVersionnumber() + 1)))
                         .collect(Collectors.toList()));
 
             } else {
+                item.setVersion(new VersionInformation(version, uri + ":" + version));
                 item.setVersionHistory(itemHistory.stream()
                         .filter(ih -> ih.getVersionnumber() != version)
                         .map(ih -> new VersionInformation(ih.getVersionnumber(), uri + ":" + ih.getVersionnumber()))

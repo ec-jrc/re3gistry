@@ -492,7 +492,7 @@ public class RegItemproposedManager implements IRegItemproposedManager {
         return (List<RegItemproposed>) q.getResultList();
     }
     
-        public List<String> getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception {
+        public List<String> getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(RegItemproposed regItemproposed, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception {
         //Preparing query
         Query q = null;
 //            q = this.em.createQuery(SQLConstants.SQL_GET_REG_ITEM_BY_SUBJECT_PREDICATE_AND_FILTER_PREDICATE);
@@ -502,10 +502,10 @@ public class RegItemproposedManager implements IRegItemproposedManager {
 //            q.setParameter(SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate);
         try {
             String query = "select r0.reg_item_subject from (select * from reg_relation r JOIN reg_item ri on ri.uuid = r.reg_item_subject WHERE ri.reg_status = ':regStatus' AND r.reg_item_object = ':regitem' and r.reg_relationpredicate = ':predicate') as r0 where r0.reg_item_subject not in (select r1.reg_item_subject from reg_relation r1 where r1.reg_relationpredicate = ':notpredicate')";
-            query = query.replace(":" + SQLConstants.SQL_PARAMETERS_REGSTATUS, regStatus.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_REGITEM, regItem.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate.getUuid());
+            query = query.replace(":" + SQLConstants.SQL_PARAMETERS_REGSTATUS, regStatus.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_REGITEM, regItemproposed.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_PREDICATE, regRelationPredicate.getUuid()).replace(":" + SQLConstants.SQL_PARAMETERS_NOT_PREDICATE, subjectNotHavingPredicate.getUuid());
             q = this.em.createNativeQuery(query);
         } catch (Exception ex) {
-            System.err.println("RegItemproposedManager.getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(), regItem: " + regItem.getLocalid());
+            System.err.println("RegItemproposedManager.getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(), regItem: " + regItemproposed.getLocalid());
             return null;
         }
         return (List<String>) q.getResultList();
