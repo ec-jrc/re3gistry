@@ -16,7 +16,7 @@ The Re3gistry supports organisations in managing and updating reference codes in
 
 The Re3gistry software version numbers comply with the [Semantic Versioning Specification 2.0.0](http://semver.org/spec/v2.0.0.html).
 
-### Acknowledgments
+### Acknowledgements
 
 The development of this tool has been funded by the European Iinteroperability Programme ISA2 though the [ELISE action](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about). The European Location Interoperability Solutions for e-Government (ELISE) Action aims at Enabling Digital Government through Geospatial Data and Location Intelligence.
 
