@@ -1,18 +1,18 @@
-# Re3gistry 2 software
+# Re3gistry software
 
 [![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
 
 &copy; 2020 European Union, National Land Survey of Finland. Licensed under the EUPL.
 
-## About the Re3gistry 2
+## About the Re3gistry
 
-The Re3gistry 2 is a reusable open source solution for managing and sharing "reference codes".
+The Re3gistry is a reusable open source solution for managing and sharing "reference codes".
 
 It provides a consistent central access point where labels and descriptions for reference codes can be easily browsed by humans and retrieved by machines.
 
 Reference codes are exchanged between applications to uniquely reference some ‘thing’. They can be used to define sets of permissible values for a data field or to provide a reference or context for the data being exchanged. Examples are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
 
-The Re3gistry 2 supports organisations in managing and updating reference codes in a consistent way.
+The Re3gistry supports organisations in managing and updating reference codes in a consistent way.
 
 The Re3gistry software version numbers comply with the [Semantic Versioning Specification 2.0.0](http://semver.org/spec/v2.0.0.html).
 
@@ -22,7 +22,7 @@ The development of this tool has been funded by the European Iinteroperability P
 
 This new version of the software has been developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
-## Re3gistry 2 features
+## Re3gistry features
 
 Check out the [latest release](https://github.com/ec-jrc/re3gistry/releases).
 
@@ -46,7 +46,7 @@ Check out the [latest release](https://github.com/ec-jrc/re3gistry/releases).
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
 
-# Re3istry governance
+# Re3gistry governance
 
 The governance structure and processes of the Re3gistry aim to ensure the use and sustainability of the re3gistry by the Community, and to keep it aligned to the Community's needs.
 
@@ -54,8 +54,8 @@ The governance is ensured through the managers of the system.
 
 ## Project boards
 
-* Re3gistry Improvement proposal (R3IPs)
-    * If you would like to discuss an idea before documenting a full R3IP, simply create a new issue using the [R3IP template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-improvement-proposal.md). Complete the template as far as possible and mention that this is not a complete proposal yet, but that you are looking for feedback. If the idea is supported, you will be asked you to complete the proposal.
+* Improvement proposal (IP)
+    * If you would like to discuss an idea before documenting a full IP, simply create a new issue using the [IP template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-improvement-proposal.md). Complete the template as far as possible and mention that this is not a complete proposal yet, but that you are looking for feedback. If the idea is supported, you will be asked you to complete the proposal.
    
 * Bug fixing
     * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be monitored and will be added to the bugfixing project board. If additional information is required, you will be contacted.

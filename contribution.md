@@ -5,12 +5,12 @@ Thank you for your interest in contributing to the Re3gistry project. We would a
 Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.adoc) before you start interacting with the Re3gistry community.
 
 
-We distinguish between two types of changes to the R3TF software that are handled differently:
+We distinguish between two types of changes to the Re3gistry software that are handled differently:
 
-* For changes that provide bug fixes a Pull Request can be created that references an existing bug in the R3TF repository.
-* Changes that provide improvements to the software must first be discussed in an Re3gistry Improvement Proposal (R3IP) and reference an accepted R3IP.
+* For changes that provide bug fixes a Pull Request can be created that references an existing bug in the Re3gistry repository.
+* Changes that provide improvements to the software must first be discussed in an Re3gistry Improvement Proposal (IP) and reference an accepted IP.
 
-Your Pull Request will be reviewed by the managers of the repository.
+Your Pull Request will be reviewed by the technical managers.
 
 
 ## Developer Certificate of Origin
@@ -41,7 +41,7 @@ Most GIT clients support adding `Signed-off-by` to the commit messages but do no
 ## Pull Request Process
 * Please read and accept the Developer Certificate of Origin. All commits have to be **signed-off** and **digitally signed**. Make sure you have configured your GIT client accordingly.
 * Fork the repository
-    * Navigate to the Re3igstry project at https://github.com/ec-jrc/re3gistry
+    * Navigate to the Re3gistry project at https://github.com/ec-jrc/re3gistry
     * Click **FORK**
     * GitHub will take you to your own copy/fork of the Re3gistry repository
 * Clone a fork
@@ -62,7 +62,7 @@ Most GIT clients support adding `Signed-off-by` to the commit messages but do no
          * Pull the latest changes from upstream into your local repository
          * Create a new branch
          Use `git checkout -b branch_name` to create a new branch and than immediately switch to it. 
-         The branch name should be 'R3IP-NUMBER' for an Re3gistry Improvement Proposal, where NUMBER is the GitHub issue number from Re3gistry repository or 'bug-NUMBER' where NUMBER is the GitHub issue number from the Re3gistry repository.
+         The branch name should be 'IP-NUMBER' for an Re3gistry Improvement Proposal, where NUMBER is the GitHub issue number from Re3gistry repository or 'bug-NUMBER' where NUMBER is the GitHub issue number from the Re3gistry repository.
          
 * Make the code changes. Please also check the Requirements for a Pull Request section below.
          
@@ -86,7 +86,7 @@ Most GIT clients support adding `Signed-off-by` to the commit messages but do no
   You can use the comment box to at the bottom of the Pull Request to address questions that the project maintainer might have
 
 ## Requirements for a Pull Request
-1. A Pull Request can be composed by one or multiple commits. All changes together address one high-level concern. If a Pull Request provides multiple, distinct features from different sections and each section addresses a separate concern, without addressing one common high-level concern, it will be rejected. Examples for bad Pull Requests: a Pull Request that provides a bugfix and adds a feature or a Pull Request that addresses multiple R3IPs.
+1. A Pull Request can be composed by one or multiple commits. All changes together address one high-level concern. If a Pull Request provides multiple, distinct features from different sections and each section addresses a separate concern, without addressing one common high-level concern, it will be rejected. Examples for bad Pull Requests: a Pull Request that provides a bugfix and adds a feature or a Pull Request that addresses multiple IPs.
 2. Changes must be traceable in the commit history.
 3. Make sure you have added Javadocs if you have added public interfaces.
 4. Make sure there are no commented out code sections.
