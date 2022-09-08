@@ -8,8 +8,8 @@
 
 Note that we distinguish between two types of changes to the Re3gistry software that are handled differently:
 
-* For changes that provide bug fixes, a Pull Request can be created referencing an existing bug in the Re3gistry repository.
-* Changes including improvements to the software, must first be discussed in a Re3gistry Improvement Proposal (IP) and reference an accepted IP.
+* For changes that provide **bug fixes**, a Pull Request can be created referencing an existing bug in the Re3gistry repository.
+* Changes including **improvements to the software**, must first be discussed in a Re3gistry Improvement Proposal (IP) and reference an accepted IP.
 
 The technical managers will review your Pull Request.
 
