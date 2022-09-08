@@ -79,3 +79,6 @@ The Re3gistry project has established a governance model with well-defined proce
 
 Re3gistry welcomes contributions from everyone, please read carefully the [contribution guidelines](contribution.md) and follow our [Code of Conduct](https://github.com/ec-jrc/re3gistry/blob/master/CODE_OF_CONDUCT.adoc).
 
+## Release plan
+Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2022-2024.
+
