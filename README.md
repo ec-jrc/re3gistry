@@ -13,7 +13,7 @@ The Re3gistry software is a reusable open-source solution for **managing and sha
 
 > Reference codes can be sets of permissible values for a data field or to provide a reference or context for the data being exchanged between applications. Examples of reference codes are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
 
-Licensed under the **[EUPL](http://ec.europa.eu/idabc/eupl.html)**, Re3gistry is an open-source project to be deployed and further developed by contributors from any sector.
+Licensed under the **[EUPL](http://ec.europa.eu/idabc/eupl.html)**, Re3gistry is an open-source project that can be deployed and further developed by contributors from any sector, check out the Re3gistry Governance and contribution guidelines below.
 
 ## What Re3gistry offers you?
 
@@ -50,7 +50,7 @@ Managing reference codes setting up registries (systems of registers) helps:
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
 
-> Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join)to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
+> Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join) to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
 
 ## Acknowledgements
 
@@ -72,7 +72,7 @@ The governance is ensured through the managers of the system.
 * Bug fixing
     * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be monitored and will be added to the bugfixing project board. If additional information is required, you will be contacted.
     * The project board will be updated whenever the status of an issue changes.
-    * Pull requests for bugfixes are very welcome (see "Contributing" below)!
+    * Pull requests for bugfixes are very welcome (see "Contribution" below)!
 
 # Contribution
 
