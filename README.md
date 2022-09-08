@@ -6,6 +6,8 @@
 
 ## About the Re3gistry
 
+![Logo](documentation/images/logo.png)
+
 The Re3gistry software is a reusable open-source solution for **managing and sharing ‘reference codes’** through persistent URIs, ensuring that concepts are unambiguously referenced in any domain.
 
 > Reference codes can be sets of permissible values for a data field or to provide a reference or context for the data being exchanged between applications. Examples of reference codes are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
