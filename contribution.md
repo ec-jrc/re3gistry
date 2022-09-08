@@ -2,9 +2,9 @@
 
 > Thank you for your interest in contributing to the Re3gistry project. 
 > 
-> Please read the information on this page carefully to propagate your changes as soon as possible.
+> **Please read the information on this page carefully to understand the contribution options, and make sure you follow our [Code of Conduct](CODE_OF_CONDUCT.adoc) before you start interacting with the Re3gistry community.**
 
-**Please read and make sure you follow our [Code of Conduct](CODE_OF_CONDUCT.adoc) before you start interacting with the Re3gistry community.**
+If something does not work the way you expect, please take a look at [previously logged issues](https://github.com/ec-jrc/re3gistry/issues) first.
 
 Note that we distinguish between two types of changes to the Re3gistry software that are handled differently:
 
