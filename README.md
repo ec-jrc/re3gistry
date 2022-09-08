@@ -14,6 +14,7 @@ The Re3gistry software is a reusable open-source solution for **managing and sha
 > Reference codes can be sets of permissible values for a data field or to provide a reference or context for the data being exchanged between applications. Examples of reference codes are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
 
 Licensed under the **[EUPL](http://ec.europa.eu/idabc/eupl.html)**, Re3gistry is an open-source project that can be deployed and further developed by contributors from any sector, check out the Re3gistry Governance and contribution guidelines below.
+A copy of the license is available in the repository's [LICENSE](https://github.com/ec-jrc/re3gistry/blob/master/LICENSE) file.
 
 ## What Re3gistry offers you?
 
@@ -60,7 +61,7 @@ Version 2 of the software was developed in cooperation with the [National Land S
 
 # Re3gistry governance and Contributions (Under development)
 
-The Re3gistry project has established a governance model with well-defined processes to ensure the best use and sustainability of the software by the community.The governance is overseen by the managers of the system.
+The Re3gistry project has established a governance model with well-defined processes to ensure the best use and sustainability of the software by the contributors and the community at large. The governance is overseen by the Re3gistry managers.
 
 ## Project boards
 
@@ -74,5 +75,5 @@ The Re3gistry project has established a governance model with well-defined proce
 
 ## Contributions
 
-If you are interested in contributing to the Re3gistry project, please read carefully the [contribution guidelines](contribution.md).
+Re3gistry welcomes contributions from everyone, please read carefully the [contribution guidelines](contribution.md) and follow our [Code of Conduct](https://github.com/ec-jrc/re3gistry/blob/master/CODE_OF_CONDUCT.adoc).
 
