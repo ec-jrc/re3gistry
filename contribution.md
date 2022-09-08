@@ -74,7 +74,7 @@ Most GIT clients support adding `Signed-off-by´ to the commit messages but do n
          
 * Implement unit tests and test your changes. Run all unit tests of the module with the gradle test task. **Note**: your unit tests, additional integration and system tests are automatically run by a Continuous Integration system when you create the Pull Request and must also be passed.     
  
-* Please do not increase the version number. The managers will decide the version number based on the impact of the change.
+* Please do not increase the version number. The technical managers will decide the version number based on the impact of the change.
 
 * Push to your branch and create a Pull Request in our repository. Describe your design decisions for new features in the Pull Request.
 
