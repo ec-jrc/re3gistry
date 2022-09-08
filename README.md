@@ -45,6 +45,8 @@ Managing reference codes setting up registries (systems of registers) helps:
 * Support for register federation tool (RoR) with .ror files provision
 * User, Administrator and Developer guides
 
+> The Re3gistry software version numbers comply with the [Semantic Versioning Specification 2.0.0](http://semver.org/spec/v2.0.0.html).
+
 ## Documentation
 
 * [User manual](documentation/user-manual.md)
