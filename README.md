@@ -58,23 +58,21 @@ Managing reference codes setting up registries (systems of registers) helps:
 
 Version 2 of the software was developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
-# Re3gistry governance (Under development)
+# Re3gistry governance and Contibutions (Under development)
 
-The governance structure and processes of the Re3gistry aim to ensure the use and sustainability of the Re3gistry by the community, and to keep it aligned to the community's needs.
-
-The governance is ensured through the managers of the system.
+The Re3gistry project has established a governance model with well-defined processes to ensure the best use and sustainability of the software by the community.The governance is overseen by the managers of the system.
 
 ## Project boards
 
-* Improvement proposal (IP)
-    * If you would like to discuss an idea before documenting a full IP, simply create a new issue using the [IP template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-improvement-proposal.md). Complete the template as far as possible and mention that this is not a complete proposal yet, but that you are looking for feedback. If the idea is supported, you will be asked you to complete the proposal.
+* **Improvement Proposal** (IP)
+    * If you want to discuss an idea before documenting a full IP, create a new issue using the [IP template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-improvement-proposal.md). Complete the template as much as possible and mention that this is not a complete proposal yet, but that you are looking for feedback. You will be asked to complete the proposal if the idea is supported.
    
-* Bug fixing
-    * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be monitored and will be added to the bugfixing project board. If additional information is required, you will be contacted.
+* **Bug fixing**
+    * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be analysed and added to the bug fixing project board. If additional information is required, you might be contacted.
     * The project board will be updated whenever the status of an issue changes.
-    * Pull requests for bugfixes are very welcome (see "Contribution" below)!
+    * Pull requests for bug fixes are welcome (see more in "Contribution" below)!
 
-# Contribution
+## Contributions
 
 If you are interested in contributing to the Re3gistry project, please read carefully the [contribution guidelines](contribution.md).
 
