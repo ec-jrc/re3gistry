@@ -1,7 +1,7 @@
 # Registry federation requirementst
 
 
-This page describes the requirements that a resource shall fulfill in order to be part of the INSPIRE Register Federation. There are 3 levels of conformance: the first one is mandatory and contains the minimum information required for the RoR to register the Registry and the Registers in the federation. The second level, contains the information to enable the automatic harvesting of the information. The third one is reccomended in order to provide complete information related to each resource.
+This page describes the requirements that a resource shall fulfill in order to be part of the Register Federation. There are 3 levels of conformance: the first one is mandatory and contains the minimum information required for the RoR to register the Registry and the Registers in the federation. The second level, contains the information to enable the automatic harvesting of the information. The third one is reccomended in order to provide complete information related to each resource.
 
 The following paragraphs will describe the *required/recommended fields* to be provided for each of the classes and the *format* to create the exchange documents (subsequently called *"descriptors"*).
 
@@ -140,7 +140,7 @@ This conformance class is good for sharing the register content in the federatio
 | skos:inScheme | 1..1 |	URI |  |
 | skos:prefLabel | 1..1 |	rdfs:Literal |  |
 | skos:definition | 0..1 |	rdfs:Literal |  |
-| adms:status | 0..1 |	URI | The codelist to be used for the status is the one provided by the INSPIRE registry: http://inspire.ec.europa.eu/registry/status |
+| adms:status | 0..1 |	URI | The codelist to be used for the status is the one provided by the INSPIRE registry for example: http://inspire.ec.europa.eu/registry/status |
 
 **Requirement:** the *Register descriptor*  should include each of the item externally defined with the following property.
 
