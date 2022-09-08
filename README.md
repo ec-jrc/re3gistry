@@ -6,21 +6,19 @@
 
 ## About the Re3gistry
 
-The Re3gistry is a reusable open source solution for managing and sharing "reference codes".
+The Re3gistry software is a reusable open-source solution for **managing and sharing ‘reference codes’** through persistent URIs, ensuring that concepts are unambiguously referenced in any domain.
 
-It provides a consistent central access point where labels and descriptions for reference codes can be easily browsed by humans and retrieved by machines.
+Reference codes can be sets of permissible values for a data field or to provide a reference or context for the data being exchanged between applications. Examples of reference codes are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
 
-Reference codes are exchanged between applications to uniquely reference some ‘thing’. They can be used to define sets of permissible values for a data field or to provide a reference or context for the data being exchanged. Examples are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
+The Re3gistry provides a central access point where labels and descriptions for reference codes are easily accessible by both humans and machines while fostering **semantic interoperability across organisations**.
 
-The Re3gistry supports organisations in managing and updating reference codes in a consistent way.
-
-The Re3gistry software version numbers comply with the [Semantic Versioning Specification 2.0.0](http://semver.org/spec/v2.0.0.html).
+Licensed under the **[EUPL](http://ec.europa.eu/idabc/eupl.html)**, Re3gistry is an open-source project to be deployed and further developed by contributors from any sector.
 
 ### Acknowledgements
 
-The development of this tool has been funded by the European Iinteroperability Programme ISA2 though the [ELISE action](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about). The European Location Interoperability Solutions for e-Government (ELISE) Action aims at Enabling Digital Government through Geospatial Data and Location Intelligence.
+The development of the Re3gistry began in 2013 under the [Are3na action](https://joinup.ec.europa.eu/collection/are3na/about) (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/about) of the [ISA2 Programme](https://ec.europa.eu/isa2/isa2_en/). Starting 2022, the **[Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme)** is funding its development.
 
-This new version of the software has been developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
+Version 2 of the software has been developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
 ## Re3gistry features
 
