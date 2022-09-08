@@ -1,6 +1,7 @@
 # Re3gistry software
 
 [![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
+[![Latest version](https://img.shields.io/badge/latest%20version-2.3.1-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
 
 &copy; 2020 European Union, National Land Survey of Finland. Licensed under the EUPL.
 
@@ -42,8 +43,6 @@ Managing reference codes setting up registries (systems of registers) helps:
 * Support of externally governed items referenced through URI 
 * Support for register federation tool (RoR) with .ror files provision
 * User, Administrator and Developer guides
-
-> Check out the [latest release](https://github.com/ec-jrc/re3gistry/releases) for more features.
 
 ## Documentation
 
