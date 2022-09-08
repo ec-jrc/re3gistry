@@ -1,44 +1,47 @@
-# Re3gistry 2 software
+# Re3gistry software
 
 [![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
 
 &copy; 2020 European Union, National Land Survey of Finland. Licensed under the EUPL.
 
-## About the Re3gistry 2
+## About the Re3gistry
 
-The Re3gistry 2 is a reusable open source solution for managing and sharing "reference codes".
+The Re3gistry software is a reusable open-source solution for **managing and sharing ‘reference codes’** through persistent URIs, ensuring that concepts are unambiguously referenced in any domain.
 
-It provides a consistent central access point where labels and descriptions for reference codes can be easily browsed by humans and retrieved by machines.
+> Reference codes can be sets of permissible values for a data field or to provide a reference or context for the data being exchanged between applications. Examples of reference codes are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
 
-Reference codes are exchanged between applications to uniquely reference some ‘thing’. They can be used to define sets of permissible values for a data field or to provide a reference or context for the data being exchanged. Examples are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
+Licensed under the **[EUPL](http://ec.europa.eu/idabc/eupl.html)**, Re3gistry is an open-source project to be deployed and further developed by contributors from any sector.
 
-The Re3gistry 2 supports organisations in managing and updating reference codes in a consistent way.
+## What Re3gistry offers you?
 
-The Re3gistry software version numbers comply with the [Semantic Versioning Specification 2.0.0](http://semver.org/spec/v2.0.0.html).
+> The Re3gistry provides a central access point where labels and descriptions for reference codes are easily accessible by both humans and machines while fostering **semantic interoperability across organisations**.
 
-### Acknowledgments
+Managing reference codes setting up registries (systems of registers) helps:
 
-The development of this tool has been funded by the European Iinteroperability Programme ISA2 though the [ELISE action](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about). The European Location Interoperability Solutions for e-Government (ELISE) Action aims at Enabling Digital Government through Geospatial Data and Location Intelligence.
+* **Avoiding common mistakes** such as misspellings, entering synonyms, or filling out online forms.
+* **Facilitating the internationalisation of user interfaces** by providing multilingual labels.
+* **Ensuring semantic interoperability** when exchanging data between systems and applications.
+* **Tracing changes over time** throuhg a well documented versioning system.
+* **Increasing the value of the reference codes**, if widely reused and referenced
 
-This new version of the software has been developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
+## Re3gistry features
 
-## Re3gistry 2 features
-
-Check out the [latest release](https://github.com/ec-jrc/re3gistry/releases).
-
-* User friendly editing interface to add, edit and manage easily the registers and reference codes
-* Management of the full lifecycle of the reference codes (based on the ISO 19135 Standard)
-* Highly flexible and customisable data models
+* Ready-to-use & customisable interface interface​ 
+* Intuitive editing interface
+* RESTful API
+* Built-in [ISO 19135](https://www.iso.org/standard/54721.html) Reference codes management workflow
 * Multi-lingual content support
-* Support for versioning
-* RESTful API with content negotiation (including OpenAPI 3 descriptor)
-* Free-text search
-* Supported formats: HTML, ISO 19135 XML, JSON, RDF/XML, Re3gistry XML, CSV
-* Service formats can be easily added or customised
-* Multiple authentication options
-* Externally governed items referenced through URI 
-* INSPIRE register federation format support (option to automatically create the RoR format)
-* Web-app to access the reference codes in a human readable way.
+* Automatic versioning
+* Highly flexible and customisable data models - Formats available: HTML, ISO 19135 XML, JSON, RDF/XML, Re3gistry XML, CSV 
+* Bulk import functionality
+* SOLR indexing and search engine
+* Installation wizard, including migration support from [Re3gistry 1.3.X](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/releases) instances
+* Different authentication systems supported 
+* Support of externally governed items referenced through URI 
+* Support for register federation tool (RoR) with .ror files provision
+* User, Administrator and Developer guides
+
+> Check out the [latest release](https://github.com/ec-jrc/re3gistry/releases) for more features.
 
 ## Documentation
 
@@ -46,11 +49,31 @@ Check out the [latest release](https://github.com/ec-jrc/re3gistry/releases).
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
 
-## Community
+> Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join)to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
 
-Use the [the issue tracker](https://github.com/ec-jrc/re3gistry/issues) to:
-* report a problem,
-* propose a new feature or an improvement to the existing functionality,
-* start a discussion or raise a question
+## Acknowledgements
 
-## Missing features
+> The development of the Re3gistry began in 2013 under the [Are3na action](https://joinup.ec.europa.eu/collection/are3na/about) (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/about) of the [ISA2 Programme](https://ec.europa.eu/isa2/isa2_en/). Starting 2022, the **[Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme)** is funding its development.
+
+Version 2 of the software was developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
+
+# Re3gistry governance (Under development)
+
+The governance structure and processes of the Re3gistry aim to ensure the use and sustainability of the Re3gistry by the community, and to keep it aligned to the community's needs.
+
+The governance is ensured through the managers of the system.
+
+## Project boards
+
+* Improvement proposal (IP)
+    * If you would like to discuss an idea before documenting a full IP, simply create a new issue using the [IP template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-improvement-proposal.md). Complete the template as far as possible and mention that this is not a complete proposal yet, but that you are looking for feedback. If the idea is supported, you will be asked you to complete the proposal.
+   
+* Bug fixing
+    * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be monitored and will be added to the bugfixing project board. If additional information is required, you will be contacted.
+    * The project board will be updated whenever the status of an issue changes.
+    * Pull requests for bugfixes are very welcome (see "Contributing" below)!
+
+# Contribution
+
+If you are interested in contributing to the Re3gistry project, please read carefully the [contribution guidelines](contribution.md).
+
