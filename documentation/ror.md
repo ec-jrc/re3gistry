@@ -1,4 +1,4 @@
-# Registry federation requirementst
+# Registry federation requirements
 
 
 This page describes the requirements that a resource shall fulfill in order to be part of the Register Federation. There are 3 levels of conformance: the first one is mandatory and contains the minimum information required for the RoR to register the Registry and the Registers in the federation. The second level, contains the information to enable the automatic harvesting of the information. The third one is reccomended in order to provide complete information related to each resource.
