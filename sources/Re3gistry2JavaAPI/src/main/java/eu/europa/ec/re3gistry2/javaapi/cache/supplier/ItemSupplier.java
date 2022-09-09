@@ -325,6 +325,10 @@ public class ItemSupplier {
             while (moreParents) {
                 RegItem item = getRelatedItemBySubject(topConcept, hasCollection);
                 if (item != null) {
+                    //to avoid inifinite loop if an item has as a parent itself
+                    if (regItem.equals(item)) {
+                        return null;
+                    }
                     BasicContainedItem subTopConcept = citem.getTopConceptOf();
                     subTopConcept.setTopConceptOf(toBasicContainedItem(item));
                 } else {
@@ -436,7 +440,7 @@ public class ItemSupplier {
         item.setVersion(new VersionInformation(thisversion, uri + ":" + thisversion));
         item.setVersionHistory(itemHistory.stream()
                 .filter(ih -> ih.getVersionnumber() != maxVersionNumber + 1)
-                .map(ih -> new VersionInformation(ih.getVersionnumber()+1, uri + ":" + (ih.getVersionnumber()+1))) // needed for showing the correct version
+                .map(ih -> new VersionInformation(ih.getVersionnumber() + 1, uri + ":" + (ih.getVersionnumber() + 1))) // needed for showing the correct version
                 .collect(Collectors.toList()));
     }
 
@@ -1082,7 +1086,7 @@ public class ItemSupplier {
                     if (localization == null) {
                         break;
                     }
-                        
+
                     // fix search in role
                     // rols are not in reglocalization
                     rolLabel = this.regGroupManager.getByLocalid(label);
@@ -1090,7 +1094,7 @@ public class ItemSupplier {
                 values = localizations.stream()
                         .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
                         .collect(Collectors.toList());
-                
+
                 if (rolLabel != null) {
                     values.clear();
                     values.add(new LocalizedPropertyValue(rolLabel.getName(), null));
