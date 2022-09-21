@@ -75,24 +75,23 @@ public class CacheAll {
                 CacheHelper.createCacheCompleteRunningFile();
 
                 // Iterating on each ItemClasses
-                itemclassList.parallelStream().forEach((regItemclass) -> {
+                itemclassList.forEach((regItemclass) -> {
                     try {
                         logger.trace("CACHE ALL - regItemClass: " + regItemclass.getLocalid() + " - @ " + new Date());
                         System.out.println("CACHE ALL - regItemClass: " + regItemclass.getLocalid() + " - @ " + new Date());
 
                         // Getting all the RegItems by ItemClass
-                        List<RegItem> regitemList = regItemManager.getAll(regItemclass);
+                        List<RegItem> regitemList = regItemManager.getAllInternalItems(regItemclass);
 
                         // Iterating on the RegItems
-                        regitemList.parallelStream().forEach((regItem) -> {
-                            availableLanguages.parallelStream().forEach((RegLanguagecode languageCode) -> {
+                        regitemList.forEach((regItem) -> {
+                            availableLanguages.forEach((RegLanguagecode languageCode) -> {
                                 try {
                                     logger.trace("CACHE ALL - regItem: " + regItemclass.getLocalid() + " - regItem: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
                                     System.out.println("CACHE ALL - regItem: " + regItemclass.getLocalid() + " - regItem: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
 
                                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
                                     Optional<Item> optItem = getItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
-
                                 } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
                                     if (!em.isOpen()) {
                                         em = em.getEntityManagerFactory().createEntityManager();

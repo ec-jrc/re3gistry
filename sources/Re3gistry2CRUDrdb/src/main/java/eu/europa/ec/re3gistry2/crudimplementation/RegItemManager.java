@@ -279,6 +279,20 @@ public class RegItemManager implements IRegItemManager {
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
         return (List<RegItem>) q.getResultList();
     }
+    /**
+     * Returns all the RegItems by RegItemclass
+     *
+     * @param regItemcalss
+     * @return all the RegItems
+     * @throws Exception
+     */
+    @Override
+    public List<RegItem> getAllInternalItems(RegItemclass regItemcalss) throws Exception {
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_BY_REGITEMCLASS_INTERNAL);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
+        return (List<RegItem>) q.getResultList();
+    }
     
     /**
      * Returns all the RegItems by RegAction
