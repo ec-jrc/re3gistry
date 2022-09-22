@@ -220,11 +220,45 @@ public class ItemsServlet extends HttpServlet {
                             }
                         }
                     } else {
+                        
                         Integer version = getVersionFromUri(uri);
-
-                        //if the item contains no version reference in the URL or if the item contains :0
+                        if(status != null){
+                            
+                            if(version == 0){
+                                
+                                try {
+                                    optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
+                                    if(!optItem.isPresent()){
+                                        optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
+                                    }
+                                } catch (Exception e) {
+                                    optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
+                                }
+                                
+                                
+                            }else{
+                                int sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
+                                
+                                if (sizeHistory == 0 || sizeHistory + 1 == version) {
+                                try {
+                                    optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
+                                } catch (Exception e) {
+                                    optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
+                                }      
+                                } else {
+                                optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+                                }
+                            }
+                        }else{
+                            
+                           //if the item contains no version reference in the URL or if the item contains :0
                         if (version == 0) {
                             optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+                            
+                            if(!optItem.isPresent()){
+                                optItem = getItemProposedByUri(uri.replace(":" + version, ""), itemproposedSupplier);
+                            }
+                            
                         } else {
                             int sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
                             if (sizeHistory == 0 || sizeHistory + 1 == version) {
@@ -232,7 +266,8 @@ public class ItemsServlet extends HttpServlet {
                             } else {
                                 optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
                             }
-                        }
+                        }    
+                        } 
                     }
 
                     //try to see if is a status request
@@ -405,6 +440,21 @@ public class ItemsServlet extends HttpServlet {
         if (item == null) {
             return Optional.empty();
         }
+        return Optional.of(item);
+    }
+    
+    private Optional<Item> getItemByUriAndStatus(String uri, String language, ItemSupplier itemSupplier, String itemStatus) throws Exception {
+        Item cached = cache.getByUrl(language, uri, null);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+
+        Item item = itemSupplier.getItemByUriAndStatus(uri, itemStatus);
+        if (item == null) {
+            return Optional.empty();
+        }
+
+        cache.add(language, item, null);
         return Optional.of(item);
     }
 

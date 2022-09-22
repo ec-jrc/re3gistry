@@ -36,6 +36,9 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRoleManager;
+import eu.europa.ec.re3gistry2.javaapi.cache.CacheAll;
+import eu.europa.ec.re3gistry2.javaapi.cache.EhCache;
+import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegActionHandler;
 import eu.europa.ec.re3gistry2.model.RegAction;
 import eu.europa.ec.re3gistry2.model.RegGroup;
@@ -153,6 +156,27 @@ public class ControlBody extends HttpServlet {
             }
             // This is a view request
 
+            
+            //Cache the parent of the proposed item
+            ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
+            if (cache == null) {
+                cache = new EhCache();
+                request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
+            }
+            if (formRegActionUuid != null){
+               RegAction regActionForCache = regActionManager.get(formRegActionUuid);    
+               List<RegItemproposed> regItemProposeds = regItemproposedManager.getAll(regActionForCache);
+            
+                for (RegItemproposed regItemProposed : regItemProposeds) {
+                    EntityManager emCache = PersistenceFactory.getEntityManagerFactory().createEntityManager();
+                    CacheAll cacheAll = new CacheAll(emCache, cache, null);
+                    String uuid = regItemProposed.getRegAction().getRegItemRegister().getUuid();
+                    cacheAll.run(uuid); 
+                } 
+            }
+            
+
+            
             // Getting the submitting organization RegRole
             RegRole regRoleControlBody = regRoleManager.getByLocalId(BaseConstants.KEY_ROLE_CONTROLBODY);
 

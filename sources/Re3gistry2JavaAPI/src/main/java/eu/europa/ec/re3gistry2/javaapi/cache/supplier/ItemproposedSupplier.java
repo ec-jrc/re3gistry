@@ -40,6 +40,7 @@ import javax.persistence.NoResultException;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
+import eu.europa.ec.re3gistry2.base.utility.ItemHelper;
 import eu.europa.ec.re3gistry2.base.utility.ItemproposedHelper;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
@@ -75,11 +76,14 @@ import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.StatusLocalization;
 import eu.europa.ec.re3gistry2.model.RegGroup;
+import eu.europa.ec.re3gistry2.model.RegItemhistory;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
+import eu.europa.ec.re3gistry2.model.RegLocalization;
 import eu.europa.ec.re3gistry2.model.RegLocalizationproposed;
 import eu.europa.ec.re3gistry2.model.RegRelationproposed;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Vector;
 import javax.persistence.EntityManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -238,7 +242,7 @@ public class ItemproposedSupplier {
 
         setMainPropertiesForRegItemProposed(regItemproposed, item);
         setRegistryAndRegisterItemRefProposed(regItemproposed, item);      
-//        setIsDefinedByFromRegItemProposed(regIP, item);     
+//        setIsDefinedByFromRegItemProposed(regItemproposed, item);     
 //        setContainedItemsFromRegItemProposed(regIP, item);  
 //        setContainedItemsFromRegItemProposedClassWithParent(regIP, item); 
 //        setTopConceptsFromRegItemProposed(regItemproposed, item);    
@@ -301,20 +305,23 @@ public class ItemproposedSupplier {
     private void setRegistryAndRegisterItemRefProposed(RegItemproposed regItemproposed, ContainedItem item) throws Exception {
         ItemRef registryRef = null;
         ItemRef registerRef = null;
-
+        
         switch (item.getType()) {
             case TYPE_REGISTRY:
                 registerRef = null;
 
                 break;
             case TYPE_REGISTER:
-                registryRef = toItemRefProposed(getRelatedItemProposedBySubject(regItemproposed, hasRegistry));
+                registryRef = toItemRef(getRelatedItemProposedBySubject2(regItemproposed, hasRegistry));
 
                 // Making an assumption that register can not be parent or collection to any item
                 break;
             case TYPE_ITEM:
-                registryRef = toItemRefProposed(getRelatedItemProposedBySubject(regItemproposed, hasRegistry));
-                registerRef = toItemRefProposed(getRelatedItemProposedBySubject(regItemproposed, hasRegister));
+//                registryRef = toItemRefProposed(getRelatedItemProposedBySubject(regItemproposed, hasRegistry));
+//                registerRef = toItemRefProposed(getRelatedItemProposedBySubject(regItemproposed, hasRegister));
+                
+                registryRef = toItemRef(getRelatedItemProposedBySubject2(regItemproposed, hasRegistry));
+                registerRef = toItemRef(getRelatedItemProposedBySubject2(regItemproposed, hasRegister));
 
                 break;
             default:
@@ -1544,14 +1551,85 @@ public class ItemproposedSupplier {
     }
 
     private void setVersionAndHistoryItemproposed(RegItemproposed regItemproposed, ContainedItem item) throws Exception {
-        String uri = item.getUri();
+     
+       RegItem regItemReference = regItemproposed.getRegItemReference();
+                   String uri = item.getUri();
+                   List<RegItemhistory> itemHistory = regItemHistoryManager.getByRegItemReferenceProposed(regItemproposed);
+               
+            item.setVersion(new VersionInformation(0, uri + ":" + 0));
+        if(regItemReference != null){
+            int thisversion = itemHistory.size() + 2;
+            item.setVersion(new VersionInformation(thisversion, uri + ":" + thisversion));
+            String localId = regItemproposed.getRegItemReference().getLocalid();
 
-        // Requested current version
-        int maxVersionNumber = 0;
-        int thisversion = 0;
-        item.setVersion(new VersionInformation(thisversion, uri + ":" + thisversion));
-        ArrayList versionHistory = new ArrayList();
-        item.setVersionHistory(versionHistory);
+
+            List<RegItem> itemValid = regItemManager.getByLocalid(localId);
+
+            // Requested current version
+            int maxVersionNumber = itemHistory.stream()
+                    .mapToInt(ih -> ih.getVersionnumber())
+                    .max()
+                    .orElse(1); // Default to 1 if for whatever reason we can not find max version
+
+            item.setVersionHistory(itemHistory.stream()
+                    .filter(ih -> ih.getVersionnumber() != maxVersionNumber + 1)
+                    .map(ih -> new VersionInformation(ih.getVersionnumber()+1, uri + ":" + (ih.getVersionnumber()+1))) // needed for showing the correct version
+                    .collect(Collectors.toList()));
+
+            List<VersionInformation> history = item.getVersionHistory();       
+            int validVersion = itemHistory.size() + 1;
+            VersionInformation validItem = new VersionInformation(validVersion, uri + ":" + validVersion);        
+            history.add(validItem);
+        }else{
+            item.setVersionHistory(new Vector());
+        }
     }
 
+    
+    protected ItemRef toItemRef(RegItem regItem) throws Exception {
+        String uri = ItemHelper.getURI(regItem);
+
+        RegField labelField = getLabelField();
+        RegFieldmapping labelFieldmapping = regFieldmappingManager.getByFieldAndItemClass(labelField, regItem.getRegItemclass());
+
+        String lang = languageCode.getIso6391code();
+        String id = labelField.getLocalid();
+        boolean istitle = labelField.getIstitle();
+        int order = labelFieldmapping.getListorder();
+        boolean tablevisible = labelFieldmapping.getTablevisible();
+
+        List<RegLocalization> localizations = reglocalizationManager.getAll(labelField, regItem, languageCode);
+        if (localizations == null || localizations.isEmpty()) {
+            // fallback to master language localization for this field for this reg item
+            lang = masterLanguage.getIso6391code();
+            localizations = reglocalizationManager.getAll(labelField, regItem, masterLanguage);
+        }
+        List<LocalizedPropertyValue> values = localizations.stream()
+                .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
+                .collect(Collectors.toList());
+
+        LocalizedProperty property = new LocalizedProperty(lang, id, istitle, id, values, order, tablevisible);
+        return new ItemRef(uri, Arrays.asList(property));
+    }
+
+    private RegItem getRelatedItemProposedBySubject2(RegItemproposed regItemproposed, RegRelationpredicate predicate) throws Exception {
+        List<RegItem> list = getRelatedItemsBySubject(regItemproposed, predicate);
+        if (list != null && !list.isEmpty()) {
+            return list.stream().findAny().orElse(null);
+        }
+        return null;
+    }
+    
+    private List<RegItem> getRelatedItemsBySubject(RegItemproposed regItemproposed, RegRelationpredicate predicate) throws Exception {
+
+        if (regRelationproposedManager != null && regItemproposed != null && predicate != null
+                && regRelationproposedManager.getAll(regItemproposed, predicate) != null) {
+            return regRelationproposedManager.getAll(regItemproposed, predicate).stream()
+                    .map(rel -> rel.getRegItemObject())
+                    .collect(Collectors.toList());
+        } else {
+            return null;
+        }
+    }
+    
 }
