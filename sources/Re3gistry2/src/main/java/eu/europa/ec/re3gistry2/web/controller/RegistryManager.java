@@ -31,6 +31,7 @@ import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.base.utility.UserHelper;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
 import eu.europa.ec.re3gistry2.crudimplementation.RegActionManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegGroupManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemRegGroupRegRoleMappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
@@ -63,6 +64,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 @WebServlet(WebConstants.PAGE_URINAME_REGISTRYMANAGER)
 public class RegistryManager extends HttpServlet {
@@ -83,6 +85,7 @@ public class RegistryManager extends HttpServlet {
 
         // Instantiating managers
         RegRoleManager regRoleManager = new RegRoleManager(entityManager);
+        RegGroupManager regGroupManager = new RegGroupManager(entityManager);
         RegItemRegGroupRegRoleMappingManager regItemRegGroupRegRoleMappingManager = new RegItemRegGroupRegRoleMappingManager(entityManager);
         RegActionManager regActionManager = new RegActionManager(entityManager);
         RegItemproposedManager regItemproposedManager = new RegItemproposedManager(entityManager);
@@ -96,6 +99,10 @@ public class RegistryManager extends HttpServlet {
 
         String regActionUuid = request.getParameter(BaseConstants.KEY_REQUEST_ACTION_UUID);
         String languageUUID = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
+        
+        String formDirectPublish = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_DIRECTPUBLISH);
+        String changelog = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG);
+        String issueReference = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_ISSUEREFERENCE);
 
         formRegActionUuid = (formRegActionUuid != null) ? InputSanitizerHelper.sanitizeInput(formRegActionUuid) : null;
         formSubmitAction = (formSubmitAction != null) ? InputSanitizerHelper.sanitizeInput(formSubmitAction) : null;
@@ -126,13 +133,18 @@ public class RegistryManager extends HttpServlet {
         String[] actionManageSystem = {BaseConstants.KEY_USER_ACTION_MANAGESYSTEM};
         boolean permissionManageSystem = UserHelper.checkGenericAction(actionManageSystem, currentUserGroupsMap, regItemRegGroupRegRoleMappingManager);
 
-        if (permissionManageSystem) {
+        if (permissionManageSystem || StringUtils.equals(formDirectPublish,BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
 
             if (formRegActionUuid != null && formRegActionUuid.length() > 0 && formSubmitAction != null && formSubmitAction.length() > 0) {
                 // This is a save request
 
                 RegActionHandler regActionHandler = new RegActionHandler();
-                regActionHandler.registryManagerAction(formRegActionUuid, regUser);
+                if (StringUtils.equals(formDirectPublish, BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+                    regActionHandler.registryManagerActionSimplifiedWorkflow(formRegActionUuid, regUser, changelog, issueReference);
+                } else {
+                    regActionHandler.registryManagerAction(formRegActionUuid, regUser);
+                }
+                
 
                 regActionUuid = formRegActionUuid;
 
@@ -140,10 +152,14 @@ public class RegistryManager extends HttpServlet {
             // This is a view request
 
             // Getting the submitting organization RegRole
+            
             RegRole regRoleRegistryManager = regRoleManager.getByLocalId(BaseConstants.KEY_ROLE_REGISTRYMANAGER);
-
+            RegGroup regGroupRegistry = regGroupManager.getByLocalid(BaseConstants.KEY_ROLE_REGISTRYMANAGER);
             // Getting the list of mapping that contains the specified role
             List<RegItemRegGroupRegRoleMapping> tmps = regItemRegGroupRegRoleMappingManager.getAll(regRoleRegistryManager);
+            
+            tmps = regItemRegGroupRegRoleMappingManager.getAll(regGroupRegistry);
+            
 
             // Getting the action for which the current user is RYM
             Set<RegAction> regActions = new HashSet<>();

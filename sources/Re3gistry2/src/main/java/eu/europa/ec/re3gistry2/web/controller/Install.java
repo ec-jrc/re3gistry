@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
 @WebServlet(WebConstants.PAGE_URINAME_INSTALL)
@@ -84,6 +85,9 @@ public class Install extends HttpServlet {
         }
 
         if (step.equals(BaseConstants.KEY_REQUEST_CLEAN_INSTALLATION_PROFILE)) {
+          if(session!=null) {
+            request.getSession().setAttribute(BaseConstants.KEY_REQUEST_WORKFLOW, request.getParameterValues(BaseConstants.KEY_REQUEST_WORKFLOW)[0]);
+          }
           try {
             new RegInstallationStepCleanInstallationProfileHandler(request);
           } catch (Exception ex) {
@@ -110,6 +114,12 @@ public class Install extends HttpServlet {
                 new RegInstallationStepCleanInstallationProcessHandler(request, entityManagerRe3gistry2);
                 deleteSystemInstallingFile();
                 createSystemInstalledFile();
+                if (session!=null) {
+                    String workflow = (String) session.getAttribute(BaseConstants.KEY_REQUEST_WORKFLOW);
+                    if (StringUtils.equals(workflow, BaseConstants.KEY_REQUEST_WORKFLOW_SIMPLIFIED)) {
+                        createWorkflowFile();
+                    }
+                }
                 lastStep = true;
                 if (session != null) {
                     session.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_SUCCESS, BaseConstants.KEY_REQUEST_INSTALLATION_SUCCESS);
@@ -196,6 +206,25 @@ public class Install extends HttpServlet {
 
         } catch (IOException ex) {
             Configuration.getInstance().getLogger().error("Error while trying to create the system installing file", ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+    
+    private void createWorkflowFile() throws Exception {
+        String systemInstallingPath = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_WORKFLOW_SIMPLIFIED;
+        File workflowFile = new File(systemInstallingPath);
+
+        workflowFile.getParentFile().mkdirs();
+        try {
+
+            boolean success = workflowFile.createNewFile();
+
+            if (!success) {
+                throw new IOException();
+            }
+
+        } catch (IOException ex) {
+            Configuration.getInstance().getLogger().error("Error while trying to create the system workflow file", ex);
             throw new Exception(ex.getMessage());
         }
     }

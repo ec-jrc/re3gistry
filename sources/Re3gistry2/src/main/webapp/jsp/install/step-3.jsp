@@ -108,6 +108,8 @@
                                 <p class="mt-3">${localization.getString("installation.profile.choose.description")}</p>
 
                                 <div class="my-4 mt-5 mb-5">
+<!--                                    <input type="checkbox" id="${constants.KEY_REQUEST_WORKFLOW}" value="${constants.KEY_REQUEST_WORKFLOW_SIMPLIFIED}">
+                                    <label>Use.of.simplified.workflow</label><br>-->
                                     <div class="form-check">
                                         <label class="text-primary">
                                             <input type="radio" name="${constants.KEY_REQUEST_PROFILE}" checked id="${constants.KEY_REQUEST_CLEAN_INSTALLATION_PROFILE}" value="${constants.KEY_REQUEST_CLEAN_INSTALLATION_PROFILE}"> 
@@ -125,6 +127,24 @@
                                     </div>
                                 </div>
 
+                                <div class="my-4 mt-5 mb-5">
+                                <h3 class="text-primary menu-title">### Type of workflow ###</h3>
+                                <p class="mt-3">### Description of workflow ###</p>
+
+                                    <div class="form-check">
+                                        <label class="text-primary">
+                                            <input type="radio" name="${constants.KEY_REQUEST_WORKFLOW}" checked id="${constants.KEY_REQUEST_WORKFLOW_ISO}" value="${constants.KEY_REQUEST_WORKFLOW_ISO}"> 
+                                            <span class="label-text">ISO 19135</span>
+                                        </label>
+                                        <p>KEY_REQUEST_WORKFLOW_ISO</p>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="text-success">
+                                            <input type="radio" name="${constants.KEY_REQUEST_WORKFLOW}" id="${constants.KEY_REQUEST_WORKFLOW_SIMPLIFIED}" value="${constants.KEY_REQUEST_WORKFLOW_SIMPLIFIED}">
+                                            <span class="label-text">Simplified  workflow</span>
+                                        </label>
+                                        <p>KEY_REQUEST_WORKFLOW_SIMPLIFIED</p>    
+                                    </div>
 
                                 <div class="row">
                                     <div class="col-sm-6 col-md-8">

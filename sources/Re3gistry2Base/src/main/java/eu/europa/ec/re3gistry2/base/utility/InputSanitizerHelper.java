@@ -32,7 +32,7 @@ public class InputSanitizerHelper {
     private InputSanitizerHelper(){
     }
     
-    public static String sanitizeInput(String input){
+     public static String sanitizeInput(String input){
         
         Configuration configuration = Configuration.getInstance();
         
