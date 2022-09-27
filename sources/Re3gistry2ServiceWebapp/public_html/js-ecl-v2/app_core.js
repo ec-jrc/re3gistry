@@ -602,7 +602,11 @@ function renderTableProperties(data, headerProperties) {
                                 // is added, in order to enable the link to the related element 
                                 // directly from the table
                                 if (item.istitle !== null && item.istitle === val_true) {
-                                    value = renderHref(tmpValue, data.uri + "?status=" + data.properties[2].values[0].value.toLowerCase());
+                                    if(data.properties[2].values[0].value.toLowerCase() === "valid"){
+                                        value = renderHref(tmpValue, data.uri);
+                                    } else {
+                                        value = renderHref(tmpValue, data.uri + "?status=" + data.properties[2].values[0].value.toLowerCase());
+                                    }        
                                 } else {
                                     value = (href !== null && href !== val_emptyString) ? renderHref(tmpValue, href) : tmpValue;
                                 }
