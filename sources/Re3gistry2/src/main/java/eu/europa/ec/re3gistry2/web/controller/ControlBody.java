@@ -53,10 +53,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -164,17 +167,32 @@ public class ControlBody extends HttpServlet {
                 request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
             }
             if (formRegActionUuid != null){
-               RegAction regActionForCache = regActionManager.get(formRegActionUuid);    
-               List<RegItemproposed> regItemProposeds = regItemproposedManager.getAll(regActionForCache);
-            
+                RegAction regActionForCache;
+                List<RegItemproposed> regItemProposeds;
+                try{
+                    regActionForCache = regActionManager.get(formRegActionUuid);
+                    regItemProposeds = regItemproposedManager.getAll(regActionForCache);
+                }catch(Exception e){
+                    regItemProposeds = Collections.emptyList();
+                }
+                 
+                HashSet<String> parentsList = new HashSet <String>();
                 for (RegItemproposed regItemProposed : regItemProposeds) {
-                    EntityManager emCache = PersistenceFactory.getEntityManagerFactory().createEntityManager();
-                    CacheAll cacheAll = new CacheAll(emCache, cache, null);
-                    String uuid = regItemProposed.getRegAction().getRegItemRegister().getUuid();
+                    if(regItemProposed.getRegAction() != null && regItemProposed.getRegAction().getRegItemRegister() != null){
+                        if(regItemProposed.getRegAction().getRegItemRegister().getRegItemclass() != null && regItemProposed.getRegAction().getRegItemRegister().getRegItemclass().getUuid() != null){
+                            String uuid = regItemProposed.getRegAction().getRegItemRegister().getRegItemclass().getUuid();
+                            parentsList.add(uuid);
+                        } 
+                    } 
+                } 
+                EntityManager emCache = PersistenceFactory.getEntityManagerFactory().createEntityManager();
+                CacheAll cacheAll = new CacheAll(emCache, cache, null);
+                for (String uuid : parentsList) {
+//                    EntityManager emCache = Persistence.createEntityManagerFactory(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME).createEntityManager();   
                     cacheAll.run(uuid); 
                 } 
             }
-            
+            //XXX
 
             
             // Getting the submitting organization RegRole

@@ -1553,13 +1553,15 @@ public class ItemproposedSupplier {
     private void setVersionAndHistoryItemproposed(RegItemproposed regItemproposed, ContainedItem item) throws Exception {
      
        RegItem regItemReference = regItemproposed.getRegItemReference();
-                   String uri = item.getUri();
-                   List<RegItemhistory> itemHistory = regItemHistoryManager.getByRegItemReferenceProposed(regItemproposed);
-               
-            item.setVersion(new VersionInformation(0, uri + ":" + 0));
-        if(regItemReference != null){
-            int thisversion = itemHistory.size() + 2;
-            item.setVersion(new VersionInformation(thisversion, uri + ":" + thisversion));
+       String uri = item.getUri();
+       List<RegItemhistory> itemHistory = regItemHistoryManager.getByRegItemReferenceProposed(regItemproposed);
+                
+       item.setVersion(new VersionInformation(0, null));       
+//     item.setVersion(new VersionInformation(0, uri + ":" + 0));
+        if (regItemReference != null) {
+//            int thisversion = itemHistory.size() + 2;
+//            item.setVersion(new VersionInformation(thisversion, uri + ":" + thisversion));
+            item.setVersion(new VersionInformation(0, null));
             String localId = regItemproposed.getRegItemReference().getLocalid();
 
 
