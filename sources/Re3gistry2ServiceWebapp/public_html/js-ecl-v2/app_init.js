@@ -10,6 +10,9 @@ $(document).ready(function () {
     // Processing the URI
     processUri();
     
+    //Fill langauge selector on init
+    fillLanguageTable();
+
     // Initialization of the localization system
     initLocalization();
     
