@@ -91,7 +91,11 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="nav-item"><a class="nav-link active" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER%>" role="tab">${localization.getString("label.actions")}</a></li>
                     <li role="presentation" class="nav-item"><a class="nav-link" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_USERS%>" role="tab">${localization.getString("label.users")}</a></li>
+                    <% if (!Configuration.checkWorkflowSimplified()) {
+                        %>
                     <li role="presentation" class="nav-item"><a class="nav-link" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_GROUPS%>" role="tab">${localization.getString("label.groups")}</a></li>
+                    <% }
+                    %>
                     <li role="presentation" class="nav-item"><a class="nav-link" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>" role="tab">${localization.getString("label.dataexport")}</a></li>
                 </ul>
             </div>    
@@ -191,7 +195,7 @@
                         </td>
                         <td><%=tmp.getRegUser().getName() + " (" + tmp.getRegUser().getSsoreference() + ")"%></td>
                         <td>
-                            <%
+                         <%
                                 // Checking the status of the action
                                 boolean showActionPublish = false;
 
@@ -200,6 +204,37 @@
                                     showActionPublish = true;
                                 }
                             %>
+                            
+                                <%
+                                    // Checking the status of the action
+                                    boolean showSubmit = false;
+                                    boolean showChangesRequest = false;
+
+                                    // Check if the user is the owner of the action
+                                    if (Configuration.checkWorkflowSimplified()== false) {
+                                    
+                                    }
+                                    if (tmp.getRegUser().getSsoreference().equals(regUser.getSsoreference())) {
+                                        if (tmp.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT)) {
+                                            showSubmit = true;
+                                        }
+                                        if (tmp.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT) && (tmp.getChangeRequest() != null && tmp.getChangeRequest().length() > 0)) {
+                                            showChangesRequest = true;
+                                        }
+                                    }
+                                    
+                                %>
+                                <%if (showActionPublish==false) {%>
+                                    <%if (showSubmit && !(regAction == null && showChangesRequest)) {%>
+                                    <a href="#" class="btn btn-sm btn-success btn-submit-action btn-reg-action" data-<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>="<%=tmp.getUuid()%>"><i class="far fa-paper-plane"></i> ${localization.getString("submittingorganisations.label.submit")}</a><br/>
+                                    <a data-toggle="confirmation" data-title="${localization.getString("discard.action.confirm")}" data-placement="left" data-singleton="true" class="btn btn-sm btn-danger btn-approve-action  btn-reg-action mt-1" href=".<%=WebConstants.PAGE_URINAME_DISCARDPROPOSAL%>?<%=BaseConstants.KEY_REQUEST_ACTION_UUID%>=<%=tmp.getUuid()%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_DIRECTPUBLISH%>=true"><i class="fas fa-trash"></i> ${localization.getString("label.discardaction")}</a>
+                                    <%}%>
+
+                                    <%if (showChangesRequest && regAction == null) {%>
+                                    <a class="btn btn-sm btn-warning btn-submit-action btn-reg-action" data-<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>="<%=tmp.getUuid()%>" href="?<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>=<%=tmp.getUuid()%>"><i class="fab fa-readme"></i> ${localization.getString("submittingorganisations.label.readchangerequest")}</a><br/>
+                                    <%}%>
+                                <%}%>
+                                
                             <%-- Action buttons --%>
                             <%if (showActionPublish) {%>
                             <% if (!CacheHelper.checkCacheCompleteRunning()) {%>
@@ -502,7 +537,57 @@
             %>
 
         </div>
+          <div class="modal fade" tabindex="-1" role="dialog" id="submit_action">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="post">
 
+                        <input type="hidden" name="csrfPreventionSalt" value="${csrfPreventionSalt}"/>
+
+                        <input type="hidden" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>" id="<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>"/>
+                        <input type="hidden" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_SUBMITACTION%>" value="true" />
+                        <input type="hidden" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_DIRECTPUBLISH%>" value="true" />
+                        <div class="modal-header">
+                            <h5 class="modal-title">${localization.getString('submittingorganisations.label.modal.submitaction')} <%--(ID: <span id="actionIdDisplay"></span>)--%></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>${localization.getString('submittingorganisations.label.modal.submitdesc')}</p>
+
+                            <div class="form-group">
+                                <label>Action title</label>
+                                <input required class="form-control" disabled="" type="text" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_REACTIONLABEL%>" id="<%=BaseConstants.KEY_FORM_FIELD_NAME_REACTIONLABEL%>" <%=(regAction != null && regAction.getLabel() != null && regAction.getLabel().length() > 0) ? "value=\"" + regAction.getLabel() + "\"" : ""%> maxlength="<%= configuration.getProperties().getProperty("application.input.maxlength")%>" />
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-star text-danger"></i> ${localization.getString('submittingorganisations.label.modal.submitdescnotice')}</label>
+                                <textarea class="form-control border-danger" rows="5" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>" id="<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>">
+                                    <%=(regAction != null && regAction.getChangelog() != null && regAction.getChangelog().length() > 0) ? regAction.getChangelog() : ""%>
+                                </textarea>
+                                <label class="text-sm text-danger">${localization.getString('submittingorganisations.label.modal.field.required')}</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>${localization.getString('submittingorganisations.label.modal.issue')}</label>
+                                <input class="form-control" type="text" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_ISSUEREFERENCE%>" id="<%=BaseConstants.KEY_FORM_FIELD_NAME_ISSUEREFERENCE%>" <%=(regAction != null && regAction.getIssueTrackerLink() != null && regAction.getIssueTrackerLink().length() > 0) ? "value=\"" + regAction.getIssueTrackerLink() + "\"" : ""%> maxlength="<%= configuration.getProperties().getProperty("application.input.maxlength")%>"  />
+                            </div>
+
+<!--                            <div class="col-sm-12 text-sm">
+                                <i class="fas fa-star text-danger"></i> = Required fields
+                            </div>-->
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-6">
+                                <button type="button" class="btn btn-secondary width100" data-dismiss="modal"><i class="fas fa-ban"></i> ${localization.getString('label.cancel')}</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-success width100 d-none" id="submitButton"><i class="far fa-paper-plane"></i> ${localization.getString('label.submit')}</button>
+                            </div>
+                        </div>
+                    </form>  
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
         <%@include file="includes/footer.inc.jsp" %>
         <%@include file="includes/pageend.inc.jsp" %>
         <script src="./res/js/bootstrap-confirmation.min.js"></script>
@@ -526,6 +611,41 @@
                                         "order": [[0, "desc"]]
                                     });
                                 });
+                                
+
+        
+        
+            <%-- Init the confirm message --%>
+            $('[data-toggle=confirmation]').confirmation({
+                rootSelector: '[data-toggle=confirmation]'
+            });
+
+            $('.btn-submit-action').on('click', function () {
+                var actionUuid = $(this).data('<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>');
+                $.get(".<%=WebConstants.PAGE_URINAME_ACTIONDETAIL%>?<%=BaseConstants.KEY_REQUEST_ACTION_UUID%>=" + actionUuid, function (data) {
+                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_CHANGELOG%>);
+                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_ISSUEREFERENCE%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_ISSUETRACKERLINK%>);
+                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_REACTIONLABEL%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_LABEL%>);
+                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_DIRECTPUBLISH%>').val(true);
+                    $('#actionIdDisplay').text(actionUuid);
+                    $('#submit_action #<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>').val(actionUuid);
+                    if (data.<%=BaseConstants.KEY_JSON_FIELDS_CHANGEREQUEST%> != '' && data.<%=BaseConstants.KEY_JSON_FIELDS_CHANGEREQUEST%> != 'undefined' && data.<%=BaseConstants.KEY_JSON_FIELDS_CHANGEREQUEST%> != null) {
+                        $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_REACTIONLABEL%>').attr('disabled', 'disabled');
+                    }
+                    $('#submit_action').modal();
+                });
+            });
+
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG%>').bind('input propertychange', function () {
+
+                if (this.value.length) {
+                    $('#submitButton').removeClass("d-none");
+                } else {
+                    $('#submitButton').addClass("d-none");
+                }
+            });
+
+        
         </script>
 
     </body>

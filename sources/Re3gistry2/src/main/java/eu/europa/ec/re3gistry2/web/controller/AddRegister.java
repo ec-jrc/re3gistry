@@ -38,6 +38,7 @@ import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegItemclasstype;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
+import eu.europa.ec.re3gistry2.crudimplementation.RegGroupManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegItemproposedHandler;
 import eu.europa.ec.re3gistry2.model.RegItem;
@@ -81,6 +82,7 @@ public class AddRegister extends HttpServlet {
         RegItemclassManager regItemclassManager = new RegItemclassManager(entityManager);
         RegItemclasstypeManager regItemclasstypeManager = new RegItemclasstypeManager(entityManager);
         RegItemManager regItemManager = new RegItemManager(entityManager);
+        RegGroupManager regGroupManager = new RegGroupManager(entityManager);
 
         // Getting the user permission mapping from the session
         HashMap<String, RegGroup> currentUserGroupsMap = (HashMap) request.getSession().getAttribute(BaseConstants.KEY_SESSION_USERPERGROUPSMAP);
@@ -108,7 +110,19 @@ public class AddRegister extends HttpServlet {
         formLocalId = (formLocalId != null) ? InputSanitizerHelper.sanitizeInput(formLocalId) : null;
         formRegistryItemclassUuid = (formRegistryItemclassUuid != null) ? InputSanitizerHelper.sanitizeInput(formRegistryItemclassUuid) : null;
         formRegisterBaseUri = (formRegisterBaseUri != null) ? InputSanitizerHelper.sanitizeInput(formRegisterBaseUri) : null;
-
+        
+        // Workflow simplified
+        
+        boolean workflowSimplified = Configuration.checkWorkflowSimplified();
+        if (workflowSimplified) {
+            RegGroup registryManagerRegGroup = regGroupManager.getByLocalid("registryManager");
+            String uuid = registryManagerRegGroup.getUuid();
+            formRegisterOwner = uuid;
+            formRegisterManager = uuid;
+            formControlBody = uuid;
+            formSubmittingOrganizations = new String[] {uuid};
+        }
+        
         // Handling charset for the textual contents
         byte[] bytes;
         if (formLabel!=null) {
