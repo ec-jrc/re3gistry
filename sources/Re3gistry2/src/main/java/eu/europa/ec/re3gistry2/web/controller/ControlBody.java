@@ -35,6 +35,8 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemRegGroupRegRoleMappingM
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegRelationproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRoleManager;
 import eu.europa.ec.re3gistry2.javaapi.cache.CacheAll;
 import eu.europa.ec.re3gistry2.javaapi.cache.EhCache;
@@ -47,6 +49,8 @@ import eu.europa.ec.re3gistry2.model.RegItemRegGroupRegRoleMapping;
 import eu.europa.ec.re3gistry2.model.RegItemhistory;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
+import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
+import eu.europa.ec.re3gistry2.model.RegRelationproposed;
 import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.io.IOException;
@@ -57,6 +61,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
@@ -89,6 +94,8 @@ public class ControlBody extends HttpServlet {
         RegItemhistoryManager regItemhistoryManager = new RegItemhistoryManager(entityManager);
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManager);
+        RegRelationproposedManager regRelationproposedManager = new RegRelationproposedManager(entityManager);
+        RegRelationpredicateManager relationPredicateManager = new RegRelationpredicateManager(entityManager);
 
         //Getting request parameter
         String regActionUuid = request.getParameter(BaseConstants.KEY_REQUEST_ACTION_UUID);
@@ -177,7 +184,18 @@ public class ControlBody extends HttpServlet {
                 }
                  
                 HashSet<String> parentsList = new HashSet <String>();
+                HashSet<String> collectionsList = new HashSet <String>();
                 for (RegItemproposed regItemProposed : regItemProposeds) {
+                    List<RegRelationproposed> collections = regRelationproposedManager.getAllByObject(regItemProposed);
+                    
+                    if(collections != null && collections.size() > 0 ){
+                        for (RegRelationproposed collection : collections) {
+                            if(collection.getRegRelationpredicate().getLocalid().equals(BaseConstants.KEY_PREDICATE_COLLECTION)){
+                                String uuid = collection.getRegItemObject().getUuid();
+                                collectionsList.add(uuid);
+                            }
+                        }
+                    }
                     if(regItemProposed.getRegAction() != null && regItemProposed.getRegAction().getRegItemRegister() != null){
                         if(regItemProposed.getRegAction().getRegItemRegister().getRegItemclass() != null && regItemProposed.getRegAction().getRegItemRegister().getRegItemclass().getUuid() != null){
                             String uuid = regItemProposed.getRegAction().getRegItemRegister().getRegItemclass().getUuid();
@@ -191,8 +209,11 @@ public class ControlBody extends HttpServlet {
 //                    EntityManager emCache = Persistence.createEntityManagerFactory(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME).createEntityManager();   
                     cacheAll.run(uuid); 
                 } 
+                for (String uuid : collectionsList) {
+//                    EntityManager emCache = Persistence.createEntityManagerFactory(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME).createEntityManager();   
+                    cacheAll.run(uuid); 
+                } 
             }
-            //XXX
 
             
             // Getting the submitting organization RegRole
