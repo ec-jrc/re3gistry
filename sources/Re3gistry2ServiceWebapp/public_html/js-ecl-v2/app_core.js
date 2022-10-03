@@ -79,6 +79,10 @@ function fetchData(uri, lang) {
     if (lang === null || typeof lang === val_undefined || lang.length === 0) {
         lang = currentLanguage;
     }
+    
+    var url = new URL(uri);
+    var status = url.searchParams.get("status");
+    uri = uri.split('?')[0];
 
     // Show the loading overlay
     showLoadingOverlay(true);
@@ -87,7 +91,7 @@ function fetchData(uri, lang) {
 
         // Base URL of the service taken from the configuration 
         url: registryApp.dataServiceURL,
-        data: {uri: uri, lang: lang, format: key_jsonc}
+        data: {uri: uri, lang: lang, format: key_jsonc, status: status}
 
     }).done(function (responseData) {
 
@@ -598,7 +602,11 @@ function renderTableProperties(data, headerProperties) {
                                 // is added, in order to enable the link to the related element 
                                 // directly from the table
                                 if (item.istitle !== null && item.istitle === val_true) {
-                                    value = renderHref(tmpValue, data.uri);
+                                    if(data.properties[2].values[0].value.toLowerCase() === "valid"){
+                                        value = renderHref(tmpValue, data.uri);
+                                    } else {
+                                        value = renderHref(tmpValue, data.uri + "?status=" + data.properties[2].values[0].value.toLowerCase());
+                                    }        
                                 } else {
                                     value = (href !== null && href !== val_emptyString) ? renderHref(tmpValue, href) : tmpValue;
                                 }
