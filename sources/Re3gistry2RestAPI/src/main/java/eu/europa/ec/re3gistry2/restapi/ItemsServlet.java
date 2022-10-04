@@ -26,6 +26,7 @@
  */
 package eu.europa.ec.re3gistry2.restapi;
 
+import eu.europa.ec.re3gistry2.restapi.util.ApiError;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.XSDSchemaSupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.StatusSupplier;
 import java.io.IOException;
@@ -64,8 +65,8 @@ import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemproposedSupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.NoVersionException;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
+import eu.europa.ec.re3gistry2.restapi.format.ATOMFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.XSDFormatter;
-import eu.europa.ec.re3gistry2.restapi.util.ApiError;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
 import java.io.OutputStream;
@@ -97,6 +98,7 @@ public class ItemsServlet extends HttpServlet {
             addFormatter(new CSVFormatter(emf));
             addFormatter(new RORFormatter());
             addFormatter(new XSDFormatter());
+            addFormatter(new ATOMFormatter());
         } catch (Exception e) {
             LOG.error("Unexpected exception occured: cannot load the configuration system", e);
         }
@@ -126,16 +128,12 @@ public class ItemsServlet extends HttpServlet {
                 ResponseUtil.err(resp, ApiError.NOT_FOUND);
                 return;
             }
-            if (formatter == null) {
-                ResponseUtil.err(resp, ApiError.FORMAT_NOT_SUPPORTED);
-                return;
-            }
 
             EntityManager em = null;
             try {
                 em = emf.createEntityManager();
 
-                if (lang!=null && lang.equalsIgnoreCase("active")) {
+                if (lang != null && lang.equalsIgnoreCase("active")) {
                     String type = "application/json";
                     RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(em);
                     List<RegLanguagecode> activeLanguages = null;
@@ -191,6 +189,11 @@ public class ItemsServlet extends HttpServlet {
                 } else {
                     if (uuid == null && uri == null) {
                         ResponseUtil.err(resp, ApiError.UUID_URI_REQUIRED);
+                        return;
+                    }
+
+                    if (formatter == null) {
+                        ResponseUtil.err(resp, ApiError.FORMAT_NOT_SUPPORTED);
                         return;
                     }
 
@@ -362,7 +365,7 @@ public class ItemsServlet extends HttpServlet {
     }
 
     private Optional<Item> getItemByUri(String uri, String language, ItemSupplier itemSupplier) throws Exception {
-        Item cached = cache.getByUrl(language, uri, null);
+        Item cached = cache.getByUrl(language, uri);
         if (cached != null) {
             return Optional.of(cached);
         }
@@ -375,7 +378,7 @@ public class ItemsServlet extends HttpServlet {
         cache.add(language, item, null);
         return Optional.of(item);
     }
-    
+
     private Optional<Item> getItemProposedByUuid(String uuid, String language, ItemproposedSupplier itemproposedSupplier) throws Exception {
         Item item = itemproposedSupplier.getItemProposedByUuid(uuid);
         if (item == null) {
@@ -430,7 +433,7 @@ public class ItemsServlet extends HttpServlet {
     }
 
     private Optional<Item> getItemHistoryByUri(String uri, String language, ItemHistorySupplier itemHistorySupplier, Integer version) throws Exception {
-        Item cached = cache.getByUrl(language, uri, version);
+        Item cached = cache.getByUrl(language, uri);
         if (cached != null) {
             return Optional.of(cached);
         }
@@ -459,7 +462,7 @@ public class ItemsServlet extends HttpServlet {
     }
 
     private Optional<Item> getItemStatusByUri(String uri, String language, StatusSupplier statusSupplier) throws Exception {
-        Item cached = cache.getByUrl(language, uri, null);
+        Item cached = cache.getByUrl(language, uri);
         if (cached != null) {
             return Optional.of(cached);
         }

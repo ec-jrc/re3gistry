@@ -293,7 +293,7 @@ public class XSDFormatter implements Formatter {
             writeDate(xml);
             writeVersions(xml);
             String registerlocalid;
-            if (!itemClass.getRegisterLocalId().isEmpty()) {
+            if (itemClass.getRegisterLocalId()!=null && !itemClass.getRegisterLocalId().isEmpty()) {
                 registerlocalid = itemClass.getRegisterLocalId();
             } else {
                 registerlocalid = itemClass.getStartElement();

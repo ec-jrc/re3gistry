@@ -89,6 +89,11 @@ public class EhCache implements ItemCache {
     }
  
     @Override
+
+    public Item getByUrl(String language, String url) {
+       return getByUrl(language, url, null, null);
+    }
+
     public Item getByUrl(String language, String url, Integer version) { 
         return getByUrl(language, url, version, null);
     }
@@ -103,6 +108,7 @@ public class EhCache implements ItemCache {
         } else {
             return null;
         }
+
         synchronized (sync) {
             // Get configuration properties
             final Properties properties = Configuration.getInstance().getProperties();
@@ -122,7 +128,7 @@ public class EhCache implements ItemCache {
                                 ResourcePoolsBuilder.newResourcePoolsBuilder().disk(cacheMaximumGig, MemoryUnit.GB, true))
                         ).build(true);
 
-                Item it = persistentCacheManager.getCache(BaseConstants.KEY_CACHE_NAME_URL, String.class, Item.class).get(version != null ? getCacheKey(language, url + ":" + version) : getCacheKey(language, url));
+                Item it = persistentCacheManager.getCache(BaseConstants.KEY_CACHE_NAME_URL, String.class, Item.class).get(getCacheKey(language, url));
                 persistentCacheManager.close();
 
                 return it;

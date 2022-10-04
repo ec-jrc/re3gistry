@@ -35,6 +35,7 @@ public interface ItemCache {
     public Set<String> getLanguages();
 
     public Item getByUuid(String language, String uuid);
+    public Item getByUrl(String language, String url);
     public Item getByUrl(String language, String url, Integer version, String itemStatus);
     public Item getByUrl(String language, String url, Integer version);
 

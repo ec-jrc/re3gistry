@@ -308,7 +308,7 @@ public class RDFFormatter implements Formatter {
             for (ContainedItem ci : item.getContainedItems()) {
                 writeItemShortVersion(xml, ci);
             }
-        } else if (item.getContainedItemsBeeingParentItemClass()!= null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
+        } else if (item.getContainedItemsBeeingParentItemClass() != null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
             for (ContainedItem ci : item.getContainedItemsBeeingParentItemClass()) {
                 writeItemShortVersion(xml, ci);
             }
@@ -605,10 +605,12 @@ public class RDFFormatter implements Formatter {
     private void writeVersion(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
         List<VersionInformation> versionHistory = item.getVersionHistory();
         VersionInformation version = item.getVersion();
-        writeEmptyElement(xml, OWL, "sameAs", RDF, "resource", item.getUri() + ":" + (versionHistory.size() + 1));
+        writeEmptyElement(xml, OWL, "sameAs", RDF, "resource", version.getUri());
         writeEmptyElement(xml, ADMS, "last", RDF, "resource", item.getUri());
-        if (versionHistory.size() != 0) {
-            writeEmptyElement(xml, ADMS, "prev", RDF, "resource", item.getUri() + ":" + versionHistory.size());
+        if (versionHistory != null && !versionHistory.isEmpty()) {
+            for (VersionInformation versionInformation : versionHistory) {
+                writeEmptyElement(xml, ADMS, "prev", RDF, "resource", versionInformation.getUri());
+            }
         }
     }
 

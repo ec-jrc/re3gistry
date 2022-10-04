@@ -81,8 +81,8 @@ public class RecacheItems extends Thread {
         List<RegItem> itemsToRecache = new ArrayList<>();
 
         // Iterating on the RegItems
-        regItems.parallelStream().forEach((regItem) -> {
-            availableLanguages.parallelStream().forEach((RegLanguagecode languageCode) -> {
+        regItems.forEach((regItem) -> {
+            availableLanguages.forEach((RegLanguagecode languageCode) -> {
                 try {
                     this.logger.info("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
                     System.out.println("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
@@ -144,7 +144,7 @@ public class RecacheItems extends Thread {
 
         // Iterating on the relation RegItems
         //if the item has a collection, parent, successor, predecessor update it
-        itemsToRecache.parallelStream().forEach((regItem) -> {
+        itemsToRecache.forEach((regItem) -> {
             try {
                 for (RegLanguagecode languageCode : availableLanguages) {
                     this.logger.info("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());

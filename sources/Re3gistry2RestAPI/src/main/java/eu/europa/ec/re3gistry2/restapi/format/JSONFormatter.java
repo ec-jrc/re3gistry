@@ -301,12 +301,11 @@ public class JSONFormatter implements Formatter {
         regItemJsonObject.put("thisversion", version.getUri());
 //        regItemJsonObject.put("thisversion", version.getUri() + ":" + version.getNumber());
         regItemJsonObject.put("latestversion", item.getUri());
-        if (!versionHistory.isEmpty()) {
+        if (versionHistory != null && !versionHistory.isEmpty()) {
             JSONArray historyversionArray = new JSONArray();
             for (VersionInformation versionInformation : versionHistory) {
                 JSONObject versionJson = createOrderedJSONObject();
                 versionJson.put("version", versionInformation.getUri());
-//                versionJson.put("version", versionInformation.getUri() + ":" + versionInformation.getNumber());
                 historyversionArray.add(versionJson);
             }
             regItemJsonObject.put("historyversion", historyversionArray);

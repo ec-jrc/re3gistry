@@ -37,6 +37,7 @@ import javax.persistence.NoResultException;
 import eu.europa.ec.re3gistry2.crudimplementation.RegStatusManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegStatusgroupManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegStatuslocalizationManager;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
 import eu.europa.ec.re3gistry2.model.RegField;
 import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;

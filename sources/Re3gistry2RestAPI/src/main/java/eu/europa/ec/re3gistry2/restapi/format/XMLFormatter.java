@@ -28,7 +28,6 @@ package eu.europa.ec.re3gistry2.restapi.format;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
@@ -271,7 +270,7 @@ public class XMLFormatter implements Formatter {
 
         writeEmptyElement(xml, "thisversion", version.getUri());
         writeEmptyElement(xml, "latestversion", item.getUri());
-        if (!versionHistory.isEmpty()) {
+        if (versionHistory != null && !versionHistory.isEmpty()) {
             xml.writeStartElement("previousversions");
             for (VersionInformation versionInformation : versionHistory) {
                 writeEmptyElement(xml, "version", versionInformation.getUri());
@@ -315,8 +314,7 @@ public class XMLFormatter implements Formatter {
                     writeComplexListElement(xml, localizedProperty, lang, "predecessors", fieldLocalId);
                 } else if (fieldName != null && "parent".equals(fieldLocalId)) {
                     writeComplexListElement(xml, localizedProperty, lang, "parents", fieldLocalId);
-                }
-                if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
+                } else if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
                     if (href != null && !href.isEmpty()) {
                         xml.writeStartElement(fieldLocalId);
                         xml.writeAttribute("id", href);
