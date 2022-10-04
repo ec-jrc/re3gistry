@@ -82,7 +82,7 @@ public class RegInstallationStepCleanInstallationProcessHandler {
 
         String[] activeLanguageCodes = (String[]) session.getAttribute(BaseConstants.KEY_REQUEST_ACTIVE_LANGUAGECODES);
         String masterLanguageCode = (String) session.getAttribute(BaseConstants.KEY_REQUEST_MASTERLANGUAGE);
-
+        
         regInstallationHandler.saveActiveLanguages(activeLanguageCodes, commit);
         RegLanguagecode masterLanguage = regInstallationHandler.saveMasterLanguage(masterLanguageCode, commit);
 

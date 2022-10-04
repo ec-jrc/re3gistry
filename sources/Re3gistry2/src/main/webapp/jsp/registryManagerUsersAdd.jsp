@@ -84,7 +84,11 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="nav-item"><a class="nav-link" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER%>" role="tab">${localization.getString("label.actions")}</a></li>
                     <li role="presentation" class="nav-item"><a class="nav-link active" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_USERS%>" role="tab">${localization.getString("label.users")}</a></li>
+                    <% if (!Configuration.checkWorkflowSimplified()) {
+                        %>
                     <li role="presentation" class="nav-item"><a class="nav-link" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_GROUPS%>" role="tab">${localization.getString("label.groups")}</a></li>
+                                        <% }
+                    %>
                     <li role="presentation" class="nav-item"><a class="nav-link" href=".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>" role="tab">${localization.getString("label.dataexport")}</a></li>
                 </ul>
             </div>
@@ -196,10 +200,23 @@
                             List<RegGroup> regGroups = (List<RegGroup>) request.getAttribute(BaseConstants.KEY_REQUEST_REGGROUPS);
                         %>
                         <%
+                             if (Configuration.checkWorkflowSimplified()) {
+                             for (RegGroup tmp : regGroups) {
+                                     if (tmp.getLocalid().equals(BaseConstants.KEY_FIELD_MANDATORY_REGISTRYMANAGER)) {
+                                     %>
+                                     <tr>
+                                         <td><input type="checkbox" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_SELECTED_GROUPS_NEW_USER%>" value="<%=tmp.getUuid()%>" checked disabled/></td>
+                                         <td><a href="?<%=BaseConstants.KEY_REQUEST_GROUP_UUID%>=<%=tmp.getUuid()%>"><%=tmp.getName()%></a></td>                    
+                                     </tr> 
+                        <%
+                            }
+                                 }
+                            } else {
                             for (RegGroup tmp : regGroups) {
                                 boolean found = false;
                                 String foundUuid = null;
                                 // Check if the user is in the current group
+                               
 
                         %>
                         <tr>
@@ -208,6 +225,7 @@
                         </tr> 
                         <%
                             }
+}
                         %>  
                     </tbody>
                 </table>

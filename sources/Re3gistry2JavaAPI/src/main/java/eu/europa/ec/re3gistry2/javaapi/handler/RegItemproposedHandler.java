@@ -1895,7 +1895,11 @@ public class RegItemproposedHandler {
             RegGroupManager regGroupManager = new RegGroupManager(entityManager);
             RegGroup regGroup;
             try {
-                regGroup = regGroupManager.get(groupUuid);
+//                if (groupUuid == null) {
+//                    regGroup = regGroupManager.getByLocalid("registryManager");
+//                } else {
+                    regGroup = regGroupManager.get(groupUuid);
+//                }
 
                 if (!entityManager.getTransaction().isActive()) {
                     entityManager.getTransaction().begin();

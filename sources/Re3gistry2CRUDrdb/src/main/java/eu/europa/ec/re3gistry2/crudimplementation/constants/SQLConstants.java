@@ -165,7 +165,7 @@ public class SQLConstants {
     public static final String SQL_GET_LOCALIZATIONHISTORY_BY_FIELD_ITEM_ACTION = "SELECT r FROM RegLocalizationhistory r WHERE r.regField = :regfield AND r.regItemhistory = :regitem AND r.regAction = :regaction";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMHISTORY = "SELECT r FROM RegLocalizationhistory r WHERE r.regItemhistory = :regItemhistory AND r.regField IS NOT NULL";
 
-// RegRelation
+    // RegRelation
     public static final String SQL_GET_RELATION_BY_SUBJECT_ITEM = "SELECT r FROM RegRelation r WHERE r.regItemSubject = :regitem";
     public static final String SQL_GET_RELATION_BY_OBJECT_ITEM = "SELECT r FROM RegRelation r WHERE r.regItemObject = :regitem";
     public static final String SQL_GET_RELATION_COLLECTION_REFERENCE = "SELECT r FROM RegRelation r WHERE r.regItemSubject = :regitem AND r.regRelationpredicate = :predicate";
@@ -174,7 +174,7 @@ public class SQLConstants {
     public static final String SQL_GET_RELATION_SUBJECTS_PREDICATE = "SELECT r FROM RegRelation r WHERE r.regItemSubject IN :regitemList AND r.regRelationpredicate = :predicate";
     public static final String SQL_GET_SUBJECT_BY_OBJECT_PREDICATE_AND_SUBJECT_FILTER = "SELECT r FROM RegRelation r WHERE r.regItemObject = :regitem AND r.regRelationpredicate = :predicate AND r.regItemSubject NOT IN (SELECT r1.regItemSubject FROM RegRelation r1 WHERE r1.regRelationpredicate = :notpredicate)";
 
-    // RegRelation
+    // RegRelationProposed
     public static final String SQL_GET_RELATIONPROPOSED_BY_SUBJECT_ITEM = "SELECT r FROM RegRelationproposed r WHERE r.regItemproposedSubject = :regitem";
     public static final String SQL_GET_RELATIONPROPOSED_BY_OBJECT_ITEM = "SELECT r FROM RegRelationproposed r WHERE r.regItemproposedObject = :regitem";
     public static final String SQL_GET_RELATIONPROPOSED_OBJECT_PREDICATE = "SELECT r FROM RegRelationproposed r WHERE r.regItemObject = :regitem AND r.regRelationpredicate = :predicate";

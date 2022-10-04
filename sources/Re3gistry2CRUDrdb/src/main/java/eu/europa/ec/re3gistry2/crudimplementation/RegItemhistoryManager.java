@@ -30,6 +30,7 @@ import eu.europa.ec.re3gistry2.model.RegAction;
 import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegItemhistory;
+import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
 import eu.europa.ec.re3gistry2.model.RegStatus;
 import java.text.MessageFormat;
@@ -215,6 +216,19 @@ public class RegItemhistoryManager implements IRegItemhistoryManager {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEMHISTORY_BY_REITEMREFERENCE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMREFERENCE, regItemReference);
+
+        return (List<RegItemhistory>) q.getResultList();
+    }
+    
+    public List<RegItemhistory> getByRegItemReferenceProposed(RegItemproposed regItemReference) throws Exception {
+        //Checking parameters
+        if (regItemReference == null) {
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, "uuid"));
+        }
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEMHISTORY_BY_REITEMREFERENCE);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMREFERENCE, regItemReference.getRegItemReference());
 
         return (List<RegItemhistory>) q.getResultList();
     }

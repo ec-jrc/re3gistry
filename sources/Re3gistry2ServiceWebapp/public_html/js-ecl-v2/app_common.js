@@ -55,6 +55,32 @@ const eventName_click = 'click';
 var uriFromUrl = val_emptyString;
 var baseBreadcrumb = val_emptyString;
 
+var unparsedLanguageJSON = "";
+var originalLanguages = new Dictionary();
+     originalLanguages.add("en", "English");
+     originalLanguages.add("es", "Español");
+     originalLanguages.add("bg", "български");
+     originalLanguages.add("cs", "čeština");
+     originalLanguages.add("da", "dansk");
+     originalLanguages.add("de", "Deutsch");
+     originalLanguages.add("et", "eesti");
+     originalLanguages.add("el", "ελληνικά");
+     originalLanguages.add("fr", "français");
+     originalLanguages.add("ga", "Gaeilge");
+     originalLanguages.add("hr", "hrvatski");
+     originalLanguages.add("it", "italiano");
+     originalLanguages.add("lv", "latviešu");
+     originalLanguages.add("lt", "lietuvių");
+     originalLanguages.add("hu", "magyar");
+     originalLanguages.add("mt", "Malti");
+     originalLanguages.add("nl", "Nederlands");
+     originalLanguages.add("pl", "polski");
+     originalLanguages.add("pt", "português");
+     originalLanguages.add("ro", "română");
+     originalLanguages.add("sk", "slovenčina");
+     originalLanguages.add("sl", "slovenščina");
+     originalLanguages.add("fi", "suomi");
+     originalLanguages.add("sv", "svenska");
 
 // ** Script body ** //
 
@@ -233,3 +259,67 @@ function showLoadingOverlay(show) {
         loadingOverlayElement.hide();
     }
 }
+
+function Dictionary(){
+	this.add = add;
+	this.dataStore = [];
+	this.find = find;
+	this.remove = remove;
+}
+
+function add(key, value){
+	this.dataStore[key] = value;
+}
+
+function remove(key){
+	delete this.dataStore[key];
+}
+
+function find(key){
+	return this.dataStore[key];
+}
+
+function fillLanguageTable(){
+
+    //Check if languages have already been set in the table
+    // if(unparsedLanguageJSON == "" || document.getElementsByClassName("ecl-language-list__item").length == 0){
+
+    // Get the JSON that contains the active language list
+    let JSONLINK = registryApp.hostURL + "/rest?lang=active&format=jsonc"
+    unparsedLanguageJSON =  $.ajax({ 
+        url: JSONLINK, 
+        async: false
+     }).responseText;
+
+     var languageJSON = JSON.parse(unparsedLanguageJSON);
+     var columnChange = false;
+
+     var finalLanguageColumns = document.getElementsByClassName("ecl-language-list__list");
+
+     for(var i=0; i<languageJSON.length;i++){
+
+        var languageli = document.createElement("li");
+        var languagelink = document.createElement("a");
+        var languageSpan = document.createElement("span");
+
+        languageSpan.setAttribute("class","ecl-link__label");
+        languageli.setAttribute("class", "ecl-language-list__item");
+        languagelink.lang = languageJSON[i].iso6391code;
+        languagelink.setAttribute("hreflang", languageJSON[i].iso6391code);
+        languagelink.rel = "alternate";
+        languagelink.href = "#language_" + languageJSON[i].iso6391code;
+        languagelink.setAttribute("class", "ecl-language-list__link ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-after"); 
+        languageSpan.innerHTML = originalLanguages.find(languageJSON[i].iso6391code);
+        languagelink.appendChild(languageSpan);
+        languageli.appendChild(languagelink);
+
+        if(columnChange){
+            columnChange = false;
+            finalLanguageColumns[0].appendChild(languageli);
+        }else{
+            columnChange = true;
+            finalLanguageColumns[1].appendChild(languageli);
+        }
+     }
+
+     }

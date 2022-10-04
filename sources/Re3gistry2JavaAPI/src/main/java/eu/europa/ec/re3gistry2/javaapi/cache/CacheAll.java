@@ -89,8 +89,14 @@ public class CacheAll {
                                 try {
                                     logger.trace("CACHE ALL - regItem: " + regItemclass.getLocalid() + " - regItem: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
                                     System.out.println("CACHE ALL - regItem: " + regItemclass.getLocalid() + " - regItem: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
-
+                                    if (!em.isOpen()) {
+                                        em = em.getEntityManagerFactory().createEntityManager();
+                                    }
+                                    if (!em.getTransaction().isActive()) {
+                                        em.getTransaction().begin();
+                                    }
                                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
+//                                    cache.remove(languageCode.getIso6391code(), regItemclass.getUuid());
                                     Optional<Item> optItem = getItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
                                 } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
                                     if (!em.isOpen()) {

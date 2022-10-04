@@ -57,6 +57,8 @@ public class BaseConstants {
     // Installation file flag
     public static final String KEY_FILE_NAME_SYSTEMINSTALLED = "system.installed";
     public static final String KEY_FILE_NAME_SYSTEMINSTALLING = "system.installing";
+    
+    public static final String KEY_FILE_NAME_WORKFLOW_SIMPLIFIED = "workflow.simplified";
 
     public static final String KEY_FILE_NAME_SOLR_COMPLETE_INDEXING_RUNNING = "solr_complete_indexing.running";
     public static final String KEY_FILE_NAME_CACHEALL_COMPLETE_RUNNING = "cacheall_complete.running";
@@ -379,6 +381,9 @@ public class BaseConstants {
     public static final String KEY_REQUEST_MIGRATION_PROCESS = "migration-process";
     public static final String KEY_REQUEST_MIGRATION_SUMMARY = "migration-summary";
     public static final String KEY_REQUEST_PROFILE = "profile";
+    public static final String KEY_REQUEST_WORKFLOW = "workflow";
+    public static final String KEY_REQUEST_WORKFLOW_SIMPLIFIED = "workflow-simplified";
+    public static final String KEY_REQUEST_WORKFLOW_ISO = "workflow-iso";
 
     public static final String KEY_REQUEST_USER_OLD_PASSWORD = "oldPassword";
     public static final String KEY_REQUEST_USER_NEW_PASSWORD = "newPassword";
@@ -424,6 +429,7 @@ public class BaseConstants {
     public static final String KEY_FORM_FIELD_NAME_USERUUID = "userUuid";
     public static final String KEY_FORM_FIELD_NAME_GROUPUUID = "groupUuid";
     public static final String KEY_FORM_FIELD_NAME_SUBMITACTION = "submitAction";
+    public static final String KEY_FORM_FIELD_NAME_DIRECTPUBLISH = "directPublish";
     public static final String KEY_FORM_FIELD_NAME_UPDATELABELACTION = "updateLabelAction";
     public static final String KEY_FORM_FIELD_NAME_APPROVE_TYPE = "approveType";
     public static final String KEY_FORM_FIELD_NAME_ITEMCLASSUUID = "itemclassUuid";
@@ -1294,6 +1300,15 @@ public class BaseConstants {
 
     public String getKEY_REQUEST_PROFILE() {
         return KEY_REQUEST_PROFILE;
+    }
+    public String getKEY_REQUEST_WORKFLOW() {
+        return KEY_REQUEST_WORKFLOW;
+    }
+    public String getKEY_REQUEST_WORKFLOW_SIMPLIFIED() {
+        return KEY_REQUEST_WORKFLOW_SIMPLIFIED;
+    }
+    public String getKEY_REQUEST_WORKFLOW_ISO() {
+        return KEY_REQUEST_WORKFLOW_ISO;
     }
 
     public String getKEY_REQUEST_USER_OLD_PASSWORD() {

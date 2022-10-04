@@ -211,35 +211,27 @@ public class ItemsServlet extends HttpServlet {
                             masterLanguage, languageCode);
                     ItemproposedSupplier itemproposedSupplier = new ItemproposedSupplier(em, masterLanguage, languageCode);
 
-                    Optional<Item> optItem;
-                    if (uuid != null) {
-                        try {
-                            optItem = getItemByUuid(uuid, lang, itemSupplier);
-                        } catch (Exception ex) {
-                            try {
-                                optItem = getItemProposedByUuid(uuid, lang, itemproposedSupplier);
-                            } catch (Exception e) {
-                                optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
-                            }
-                        }
-                    } else {
-                        Integer version = getVersionFromUri(uri);
-
-                        //if the item contains no version reference in the URL or if the item contains :0
-                        if (version == 0) {
-                            optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
-                        } else {
-                            int sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
-                            if (sizeHistory == 0 || sizeHistory + 1 == version) {
-                                optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
-                            } else {
-                                optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
-                            }
-                        }
+                    Optional<Item> optItem = Optional.empty();
+                    
+                    Integer version;
+                    try{
+                         version = getVersionFromUri(uri);
+                    }catch(Exception uriError){
+                        version = 0;
                     }
-
+                    
+                    if(uuid != null && status != null ){                       
+                       throw new Exception();
+                    }else if (uuid != null){
+                        optItem = searchForItemByUuid(uuid, lang, itemSupplier, itemproposedSupplier, itemHistorySupplier);   
+                    }else if (uri != null && status != null){
+                        optItem = searchForItemByURIStatus(uri, lang, version, status, itemSupplier, itemproposedSupplier, itemHistorySupplier);
+                    } else if (uri != null){
+                        optItem = searchForItemByURI(uri, version, lang, itemSupplier, itemproposedSupplier, itemHistorySupplier);
+                    }
+ 
                     //try to see if is a status request
-                    if (!optItem.isPresent()) {
+                    if (!optItem.isPresent() && status == null) {
                         StatusSupplier statusSupplier = new StatusSupplier(em, masterLanguage, languageCode);
                         if (uuid != null) {
                             optItem = getItemStatusByUuid(uuid, lang, statusSupplier);
@@ -410,6 +402,21 @@ public class ItemsServlet extends HttpServlet {
         }
         return Optional.of(item);
     }
+    
+    private Optional<Item> getItemByUriAndStatus(String uri, String language, ItemSupplier itemSupplier, String itemStatus) throws Exception {
+        Item cached = cache.getByUrl(language, uri, null, itemStatus);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+
+        Item item = itemSupplier.getItemByUriAndStatus(uri, itemStatus);
+        if (item == null) {
+            return Optional.empty();
+        }
+
+        cache.add(language, item, null);
+        return Optional.of(item);
+    }
 
     private Optional<Item> getItemHistoryByUuid(String uuid, String language, ItemHistorySupplier itemHistorySupplier) throws Exception {
         Item cached = cache.getByUuid(language, uuid);
@@ -467,5 +474,125 @@ public class ItemsServlet extends HttpServlet {
 
         cache.add(language, item, null);
         return Optional.of(item);
+    }
+
+    private Optional<Item> searchForItemByUuid(String uuid, String lang, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
+        Optional <Item> optItem;
+        try {
+                            optItem = getItemByUuid(uuid, lang, itemSupplier);
+                        } catch (Exception ex) {
+                            try {
+                                optItem = getItemProposedByUuid(uuid, lang, itemproposedSupplier);
+                            } catch (Exception e) {
+                                try {
+                                    optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
+                                } catch (Exception ex1) {
+                                    optItem = Optional.empty();
+                                }
+                            }
+                        }
+        return optItem;
+    }
+
+    private Optional<Item> searchForItemByURI(String uri, Integer version, String lang, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
+        
+        Optional<Item> optItem;
+        optItem = Optional.empty();
+
+        if (version == 0) {
+
+            try {
+                optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+            } catch (Exception ex) {
+                optItem = Optional.empty();
+            }
+
+            if (!optItem.isPresent()) {
+                try {
+                    optItem = getItemProposedByUri(uri.replace(":" + version, ""), itemproposedSupplier);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+
+        } else {
+            int sizeHistory;
+            sizeHistory = 0;
+            try {
+                sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
+            } catch (Exception ex) {
+                sizeHistory = 0;
+            }
+            if (sizeHistory != 0 || sizeHistory + 1 != version) {
+                try {
+                    optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+        }
+
+        return optItem;     
+    }
+
+    private Optional<Item> searchForItemByURIStatus(String uri, String lang, Integer version, String status, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
+        
+        Optional<Item> optItem;
+        
+        if (version == 0) {
+
+            if (status.equalsIgnoreCase("valid")
+                        || status.equalsIgnoreCase("invalid")
+                        || status.equalsIgnoreCase("superseded")
+                        || status.equalsIgnoreCase("retired")) {
+                try {
+                    optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }else{
+                try {
+                    optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+            
+        } else {
+            int sizeHistory;
+            try {
+                sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
+            } catch (Exception ex) {
+                sizeHistory = 0;
+            }
+            
+            if (sizeHistory == 0 || sizeHistory + 1 == version) {
+                
+                if (status.equalsIgnoreCase("valid")
+                        || status.equalsIgnoreCase("invalid")
+                        || status.equalsIgnoreCase("superseded")
+                        || status.equalsIgnoreCase("retired")) {
+                    try {
+                        optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
+                    } catch (Exception ex) {
+                        optItem = Optional.empty();
+                    }
+                }else{
+                   try {
+                    optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
+                } catch (Exception e) {
+                    optItem = Optional.empty();
+                } 
+                } 
+            } else {
+                try {
+                    optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+        }
+        
+        return optItem;
     }
 }

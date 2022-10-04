@@ -53,6 +53,10 @@ public class EhCache implements ItemCache {
         return Collections.unmodifiableSet(languages);
     }
 
+    
+//    public Item getByUuid(String language, String uuid) {
+//        return getByUuid(language, uuid);
+//    }
     @Override
     public Item getByUuid(String language, String uuid) {
         synchronized (sync) {
@@ -83,9 +87,28 @@ public class EhCache implements ItemCache {
             }
         }
     }
-
+ 
     @Override
+
     public Item getByUrl(String language, String url) {
+       return getByUrl(language, url, null, null);
+    }
+
+    public Item getByUrl(String language, String url, Integer version) { 
+        return getByUrl(language, url, version, null);
+    }
+    
+    public Item getByUrl(String language, String url, Integer version, String itemStatus) {
+        if (itemStatus == null 
+                || itemStatus.equalsIgnoreCase("valid")
+                || itemStatus.equalsIgnoreCase("invalid")
+                || itemStatus.equalsIgnoreCase("superseded")
+                || itemStatus.equalsIgnoreCase("retired")) {
+            
+        } else {
+            return null;
+        }
+
         synchronized (sync) {
             // Get configuration properties
             final Properties properties = Configuration.getInstance().getProperties();
@@ -117,6 +140,19 @@ public class EhCache implements ItemCache {
 
     @Override
     public void add(String language, Item item, Integer version) {
+        add(language, item, version, null);
+    }
+    
+    public void add(String language, Item item, Integer version, String itemStatus) {
+        if (itemStatus == null 
+                || itemStatus.equalsIgnoreCase("valid")
+                || itemStatus.equalsIgnoreCase("invalid")
+                || itemStatus.equalsIgnoreCase("superseded")
+                || itemStatus.equalsIgnoreCase("retired")) {
+            
+        } else {
+            return;
+        }
         synchronized (sync) {
             // Get configuration properties
             final Properties properties = Configuration.getInstance().getProperties();

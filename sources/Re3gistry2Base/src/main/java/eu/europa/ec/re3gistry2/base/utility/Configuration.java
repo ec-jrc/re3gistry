@@ -127,6 +127,23 @@ public class Configuration {
       }
       return installed;
     }
+    
+    public static boolean checkWorkflowSimplified() {
+      boolean workflowSimplified = false;
+      try {
+          File f = new File(Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_WORKFLOW_SIMPLIFIED);
+          logger.trace("Checking for existence of file " + f.getAbsolutePath());
+          if (f.exists() && !f.isDirectory()) {
+              workflowSimplified = true;
+              logger.trace("The system has simplified workflow");
+          } else {
+            logger.trace("The system has not simplified workflow");
+          }
+      } catch (Exception e) {
+          logger.error(e.getMessage(), e);
+      }
+      return workflowSimplified;
+    }
 
     public static boolean checkInstallRunning() {
         boolean installing = false;
