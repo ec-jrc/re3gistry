@@ -24,7 +24,7 @@ services:
           # Be sure file sources-main/resources-configurations_files/system.installed
           #  is removed from the war file. If not, installation will be not detected.
           - ../../dist/customize-interface/example-profile-developer-docker/dump-docker-202205180929.sql:/docker-entrypoint-initdb.d/init_backup.sql
-          # login from example db: name@example.com password
+          # login example db: name@example.com password
         expose: 
           - "5432"
         ports:
@@ -66,8 +66,8 @@ services:
           - web
         volumes:
              - ../../dist/webapp/httpd.conf:/usr/local/apache2/conf/httpd.conf
-             - ../../dist/webapp/public_html:/var/www/host.docker.internal/public_html
              - ../../dist/webapp/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+             - ../Re3gistry2ServiceWebapp/public_html:/var/www/host.docker.internal/public_html
         restart: always
         networks:
           - main
@@ -80,10 +80,14 @@ services:
          - "8983:8983"
 #        volumes:
 #          - ../../../solr:/opt/solr/server/solr/re3gistry2
+#        entrypoint:
+#          - docker-entrypoint.sh
+#          - solr-precreate
+#          - re3gistry
         entrypoint:
-          - docker-entrypoint.sh
-          - solr-precreate
-          - re3gistry
+        - bash
+        - "-c"
+        - "precreate-core re3gistry; precreate-core rortest; exec solr -f"
     mailserver:
       image: marcopas/docker-mailslurper
       container_name: mailserver
