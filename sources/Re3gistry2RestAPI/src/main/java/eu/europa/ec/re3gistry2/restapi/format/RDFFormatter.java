@@ -605,8 +605,10 @@ public class RDFFormatter implements Formatter {
     private void writeVersion(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
         List<VersionInformation> versionHistory = item.getVersionHistory();
         VersionInformation version = item.getVersion();
-        writeEmptyElement(xml, OWL, "sameAs", RDF, "resource", version.getUri());
-        writeEmptyElement(xml, ADMS, "last", RDF, "resource", item.getUri());
+        if (version!=null && version.getUri()!=null) {  
+            writeEmptyElement(xml, OWL, "sameAs", RDF, "resource", version.getUri());
+            writeEmptyElement(xml, ADMS, "last", RDF, "resource", item.getUri());
+        }
         if (versionHistory != null && !versionHistory.isEmpty()) {
             for (VersionInformation versionInformation : versionHistory) {
                 writeEmptyElement(xml, ADMS, "prev", RDF, "resource", versionInformation.getUri());

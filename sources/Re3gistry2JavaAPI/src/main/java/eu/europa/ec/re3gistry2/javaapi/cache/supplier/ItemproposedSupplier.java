@@ -294,7 +294,7 @@ public class ItemproposedSupplier {
         ContainedItem containedItem = new ContainedItem();
 
         setMainPropertiesForRegItemProposed(regItemproposed, containedItem);
-//        setRegistryAndRegisterItemRefProposed(regItemproposed, containedItem);
+        setRegistryAndRegisterItemRefProposed(regItemproposed, containedItem);
 //        setIsDefinedByFromRegItemProposed(regItemproposed, containedItem);
 //        setTopConceptsFromRegItemProposed(regItemproposed, containedItem);
 //        setInSchemeAndTopConceptOfFromRegItemProposed(regItemproposed, containedItem);

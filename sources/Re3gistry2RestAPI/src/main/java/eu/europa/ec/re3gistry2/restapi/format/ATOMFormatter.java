@@ -224,7 +224,9 @@ public class ATOMFormatter implements Formatter {
         xml.writeEndElement();
 
         xml.writeStartElement("link");
-        xml.writeAttribute("href", version.getUri());
+        if (version!=null && version.getUri()!=null) {
+            xml.writeAttribute("href", version.getUri());
+        }
         xml.writeAttribute("rel", "self");
         xml.writeEndElement();
 
@@ -233,7 +235,7 @@ public class ATOMFormatter implements Formatter {
         xml.writeAttribute("rel", "latest-version");
         xml.writeEndElement();
 
-        if (!versionHistory.isEmpty()) {
+        if (versionHistory!=null && !versionHistory.isEmpty()) {
             for (VersionInformation versionInformation : versionHistory) {
                 xml.writeStartElement("link");
                 xml.writeAttribute("href", versionInformation.getUri());

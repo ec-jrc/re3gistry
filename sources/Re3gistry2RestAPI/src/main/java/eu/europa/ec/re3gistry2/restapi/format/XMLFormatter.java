@@ -267,9 +267,12 @@ public class XMLFormatter implements Formatter {
     private void writeVersions(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
         List<VersionInformation> versionHistory = item.getVersionHistory();
         VersionInformation version = item.getVersion();
-
-        writeEmptyElement(xml, "thisversion", version.getUri());
-        writeEmptyElement(xml, "latestversion", item.getUri());
+        if(version!=null && version.getUri()!=null) {
+            writeEmptyElement(xml, "thisversion", version.getUri());
+        }
+        if(item!=null && item.getUri()!=null) {
+            writeEmptyElement(xml, "latestversion", item.getUri());
+        }
         if (versionHistory != null && !versionHistory.isEmpty()) {
             xml.writeStartElement("previousversions");
             for (VersionInformation versionInformation : versionHistory) {
