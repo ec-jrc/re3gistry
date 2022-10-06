@@ -226,7 +226,7 @@
                                 %>
                                 <%if (showActionPublish==false) {%>
                                     <%if (showSubmit && !(regAction == null && showChangesRequest)) {%>
-                                    <a href="#" class="btn btn-sm btn-success btn-submit-action btn-reg-action" data-<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>="<%=tmp.getUuid()%>"><i class="far fa-paper-plane"></i> ${localization.getString("submittingorganisations.label.submit")}</a><br/>
+                                    <a href="#" class="btn btn-sm btn-success btn-submit-action btn-reg-action" data-<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>="<%=tmp.getUuid()%>"><i class="far fa-paper-plane"></i> ${localization.getString("label.submit")}</a><br/>
                                     <a data-toggle="confirmation" data-title="${localization.getString("discard.action.confirm")}" data-placement="left" data-singleton="true" class="btn btn-sm btn-danger btn-approve-action  btn-reg-action mt-1" href=".<%=WebConstants.PAGE_URINAME_DISCARDPROPOSAL%>?<%=BaseConstants.KEY_REQUEST_ACTION_UUID%>=<%=tmp.getUuid()%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_DIRECTPUBLISH%>=true"><i class="fas fa-trash"></i> ${localization.getString("label.discardaction")}</a>
                                     <%}%>
 
