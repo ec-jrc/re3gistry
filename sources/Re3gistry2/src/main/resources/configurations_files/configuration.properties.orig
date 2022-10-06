@@ -45,6 +45,9 @@ application.language.defaultLocale=en
 # ECAS base URL (authetication method)
 application.ecas.baseurl = https://webgate.ec.europa.eu
 
+# Cache
+application.cache.disk.path=${application.cache.disk.path}
+
 # Login type - ECAS | SHIRO
 application.login.type=SHIRO
 
@@ -103,7 +106,7 @@ application.solr.fieldtoindex.localid=label,description,definition
 #   * propose to add RegItem Register and RegItem Registry
 #
 # - |ManageFieldMapping| with this permission a RegUser can:
-#   * add field mpping (between field and item) 
+#   * add field mapping (between field and item) 
 #   * eidt firld mapping (e.g. change properties such mandatory, multivalued, ecc.)
 # 
 # - |ManageField| with this permission a RegUser can:
