@@ -32,6 +32,7 @@ import eu.europa.ec.re3gistry2.model.RegFieldmapping;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -160,6 +161,11 @@ public class CSVFormatter implements Formatter {
         } else {
             return "";
         }
+    }
+
+    @Override
+    public void write(ItemClass itemClass, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

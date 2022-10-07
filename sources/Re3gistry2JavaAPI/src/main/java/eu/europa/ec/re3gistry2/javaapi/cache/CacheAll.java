@@ -10,7 +10,6 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
-import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemHistorySupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemSupplier;
 import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,11 +33,7 @@ public class CacheAll {
         this.regMasterLanguagecode = regMasterLanguagecode;
     }
 
-    public void run() throws Exception {
-        this.run(null);
-    }
-        
-    public void run(String classUUID) throws Exception {
+    public void run(String itemclassID) throws Exception {
         // Init logger
         Logger logger = Configuration.getInstance().getLogger();
 
@@ -64,46 +58,45 @@ public class CacheAll {
                 availableLanguages = regLanguagecodeManager.getAllActive();
             }
 
-            availableLanguages.forEach((RegLanguagecode languageCode) -> {
+            try {
+                logger.trace("---[ STARTING CACHE ALL]--- @ " + new Date());
+                System.out.println("---[ STARTING CACHE ALL]--- @ " + new Date());
 
-                try {
-                    logger.trace("---[ STARTING CACHE ALL]--- @ " + new Date());
-                    System.out.println("---[ STARTING CACHE ALL]--- @ " + new Date());
+                // Getting all ItemClasses
+                List<RegItemclass> itemclassList = new ArrayList<>();
 
-                    // Getting all ItemClasses
-                    List<RegItemclass> itemclassList = regItemclassManager.getAlltemclassOrderAscByDataprocedureorder();
-                    if (classUUID!=null) { 
-                        for (RegItemclass regItemclass : itemclassList) {
-                            if (regItemclass.getUuid().equals(classUUID)) {
-                                itemclassList.clear();
-                                itemclassList.add(regItemclass);
-//                                .getParent()
-                                break;
-                            }
-                        }
-                    }
-                    
-                    //cache.getByUuid(language, uuid)
+                if (itemclassID != null) {
+                    RegItemclass regItemclassToCache = regItemclassManager.get(itemclassID);
+                    itemclassList.add(regItemclassToCache);
+                } else {
+                    itemclassList.addAll(regItemclassManager.getAlltemclassOrderAscByDataprocedureorder());
+                }
 
-                    CacheHelper.createCacheCompleteRunningFile();
+                CacheHelper.createCacheCompleteRunningFile();
 
-                    // Iterating on each ItemClasses
-                    itemclassList.forEach((regItemclass) -> {
-                        try {
-                            logger.trace("CACHE ALL - regItemClass: " + regItemclass.getLocalid() + " - @ " + new Date());
-                            System.out.println("CACHE ALL - regItemClass: " + regItemclass.getLocalid() + " - @ " + new Date());
+                // Iterating on each ItemClasses
+                itemclassList.forEach((regItemclass) -> {
+                    try {
+                        logger.trace("CACHE ALL - regItemClass: " + regItemclass.getLocalid() + " - @ " + new Date());
+                        System.out.println("CACHE ALL - regItemClass: " + regItemclass.getLocalid() + " - @ " + new Date());
 
-                            // Getting all the RegItems by ItemClass
-                            List<RegItem> regitemList = regItemManager.getAll(regItemclass);
+                        // Getting all the RegItems by ItemClass
+                        List<RegItem> regitemList = regItemManager.getAllInternalItems(regItemclass);
 
-                            // Iterating on the RegItems
-                            for (RegItem regItem : regitemList) {
-
+                        // Iterating on the RegItems
+                        regitemList.forEach((regItem) -> {
+                            availableLanguages.forEach((RegLanguagecode languageCode) -> {
                                 try {
-                                    logger.trace("CACHE ALL - regItemClass: " + regItemclass.getLocalid() + " - regItem: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
-                                    System.out.println("CACHE ALL - regItemClass: " + regItemclass.getLocalid() + " - regItem: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
-
+                                    logger.trace("CACHE ALL - regItem: " + regItemclass.getLocalid() + " - regItem: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
+                                    System.out.println("CACHE ALL - regItem: " + regItemclass.getLocalid() + " - regItem: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
+                                    if (!em.isOpen()) {
+                                        em = em.getEntityManagerFactory().createEntityManager();
+                                    }
+                                    if (!em.getTransaction().isActive()) {
+                                        em.getTransaction().begin();
+                                    }
                                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
+//                                    cache.remove(languageCode.getIso6391code(), regItemclass.getUuid());
                                     Optional<Item> optItem = getItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
                                 } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
                                     if (!em.isOpen()) {
@@ -115,71 +108,46 @@ public class CacheAll {
 
                                     logger.trace("DB Connection problem, trying to reconnect - " + e.getMessage());
                                     System.out.println("DB Connection problem, trying to reconnect - " + e.getMessage());
+                                } catch (Exception ex) {
+                                    logger.trace("Error in creating the Item - " + regItem.getLocalid() + " with reg_itemclass: " + regItem.getRegItemclass().getLocalid() + ", error: " + ex.getMessage());
                                 }
-                            }
+                            });
+                        });
 
-                            // Getting all RegItemHistory by ItemClass                
-                            //List<RegItemhistory> regitemHistoryList = regItemhistoryManager.getByRegItemClass(regItemclass);
-                            // Iterating on RegItemHistory
-                            //for (RegItemhistory regItemhistory : regitemHistoryList) {
-                            //logger.trace("CACHE ALL - regItemhistory: " + regItemhistory.getLocalid() + " - @ " + new Date());
-                            //System.out.println("CACHE ALL - regItemhistory: " + regItemhistory.getLocalid() + " - @ " + new Date());
-                            // Iterating on all the available languages
-                            //List<RegLocalizationhistory> localizationHistoryListForRegItem = regLocalizationhistoryManager.getAll(regItemhistory);
-                            //for (RegLocalizationhistory regLocalizationhistory : localizationHistoryListForRegItem) {
-                            //RegLanguagecode languageCode = regLocalizationhistory.getRegLanguagecode();
-                            //logger.trace("CACHE ALL - regItemhistory: " + regItemhistory.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
-                            //System.out.println("CACHE ALL - regItemhistory: " + regItemhistory.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
-                            //ItemHistorySupplier itemHistorySupplier = new ItemHistorySupplier(em, masterLanguage, languageCode);
-                            //Optional<Item> optItem = getItemHistoryByUuid(regItemhistory.getUuid(), languageCode.getIso6391code(), itemHistorySupplier);
-                            //}
-                            //}
-                        } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
-                            if (!em.isOpen()) {
-                                em = em.getEntityManagerFactory().createEntityManager();
-                            }
-                            if (!em.getTransaction().isActive()) {
-                                em.getTransaction().begin();
-                            }
-
-                            logger.trace("DB Connection problem, trying to reconnect - " + e.getMessage());
-                            System.out.println("DB Connection problem, trying to reconnect - " + e.getMessage());
-                        } catch (Exception ex) {
-                            java.util.logging.Logger.getLogger(CacheAll.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
+                        if (!em.isOpen()) {
+                            em = em.getEntityManagerFactory().createEntityManager();
                         }
-                    });
+                        if (!em.getTransaction().isActive()) {
+                            em.getTransaction().begin();
+                        }
 
-                    CacheHelper.deleteCacheCompleteRunningFile();
-                    logger.trace("END CACHE ALL @ " + new Date());
-                    System.out.println("END CACHE ALL @ " + new Date());
-                } catch (Exception ex) {
-                    logger.trace("Unexpected exception occured", ex);
-                    System.out.println("Unexpected exception occured" + ex.getMessage());
-                }
-            });
+                        logger.trace("DB Connection problem, trying to reconnect - " + e.getMessage());
+                        System.out.println("DB Connection problem, trying to reconnect - " + e.getMessage());
+                    } catch (Exception ex) {
+                        CacheHelper.deleteCacheCompleteRunningFile();
+                        logger.trace("Unexpected exception occured", ex);
+                        System.out.println("Unexpected exception occured" + ex.getMessage());
+                    }
+                });
+
+                CacheHelper.deleteCacheCompleteRunningFile();
+                logger.trace("END CACHE ALL @ " + new Date());
+                System.out.println("END CACHE ALL @ " + new Date());
+            } catch (Exception ex) {
+                CacheHelper.deleteCacheCompleteRunningFile();
+                logger.trace("Unexpected exception occured", ex);
+                System.out.println("Unexpected exception occured" + ex.getMessage());
+            }
         } catch (Exception ex) {
-            logger.trace("Unexpected exception occured", ex);
             CacheHelper.deleteCacheCompleteRunningFile();
+            logger.trace("Unexpected exception occured", ex);
             throw new Exception("Unexpected exception occured. " + ex.getMessage());
         } finally {
             if (em != null) {
                 em.close();
             }
         }
-    }
-
-    private Optional<Item> getItemByUuid(String uuid, String language, ItemSupplier itemSupplier) throws Exception {
-        Item cached = cache.getByUuid(language, uuid);
-        if (cached != null) {
-            return Optional.of(cached);
-        }
-        Item item = itemSupplier.getItemByUuid(uuid);
-        if (item == null) {
-            return Optional.empty();
-        }
-
-        cache.add(language, item);
-        return Optional.of(item);
     }
 
     private Optional<Item> getItemByUuid(RegItem regItem, String language, ItemSupplier itemSupplier) throws Exception {
@@ -192,21 +160,7 @@ public class CacheAll {
             return Optional.empty();
         }
 
-        cache.add(language, item);
-        return Optional.of(item);
-    }
-
-    private Optional<Item> getItemHistoryByUuid(String uuid, String language, ItemHistorySupplier itemHistorySupplier) throws Exception {
-        Item cached = cache.getByUuid(language, uuid);
-        if (cached != null) {
-            return Optional.of(cached);
-        }
-        Item item = itemHistorySupplier.getItemHistoryByUuid(uuid);
-        if (item == null) {
-            return Optional.empty();
-        }
-
-        cache.add(language, item);
+        cache.add(language, item, null);
         return Optional.of(item);
     }
 

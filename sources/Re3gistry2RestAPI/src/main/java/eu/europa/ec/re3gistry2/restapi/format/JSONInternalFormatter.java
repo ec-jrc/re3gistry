@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 
 public class JSONInternalFormatter implements Formatter {
 
@@ -57,6 +58,11 @@ public class JSONInternalFormatter implements Formatter {
     @Override
     public void write(Item item, RegLanguagecode language, OutputStream out) throws Exception {
         OM.writeValue(out, item);
+    }
+
+    @Override
+    public void write(ItemClass itemClass, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

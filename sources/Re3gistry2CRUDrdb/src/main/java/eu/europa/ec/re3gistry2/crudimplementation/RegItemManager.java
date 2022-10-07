@@ -202,6 +202,21 @@ public class RegItemManager implements IRegItemManager {
 
         return (RegItem) q.getSingleResult();
     }
+    
+    public RegItem getByLocalidAndRegItemClassAndRegStatus(String localid, RegItemclass regItemclass, RegStatus regStatus) throws Exception {
+        //Checking parameters
+        if (localid == null || regItemclass == null) {
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, "uuid"));
+        }
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_BY_LOCALID_REGITEMCLASS_REGSTATUS);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_LOCALID, localid);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemclass);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGSTATUS, regStatus);
+
+        return (RegItem) q.getSingleResult();
+    }
 
     /**
      * Returns all the RegItems by RegItemType
@@ -234,6 +249,21 @@ public class RegItemManager implements IRegItemManager {
         q.setParameter("regItemclasstype", regItemcalsstype);
         return (List<RegItem>) q.getResultList();
     }
+    
+    /**
+     * Returns all the RegItems by RegItemType
+     *
+     * @param regItemcalsstype
+     * @return all the RegItems
+     * @throws Exception
+     */
+    @Override
+    public List<RegItem> getAllActive() throws Exception {
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_ACTIVE);
+        return (List<RegItem>) q.getResultList();
+    }
 
     /**
      * Returns all the RegItems by RegItemclass
@@ -246,6 +276,20 @@ public class RegItemManager implements IRegItemManager {
     public List<RegItem> getAll(RegItemclass regItemcalss) throws Exception {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_BY_REGITEMCLASS);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
+        return (List<RegItem>) q.getResultList();
+    }
+    /**
+     * Returns all the RegItems by RegItemclass
+     *
+     * @param regItemcalss
+     * @return all the RegItems
+     * @throws Exception
+     */
+    @Override
+    public List<RegItem> getAllInternalItems(RegItemclass regItemcalss) throws Exception {
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_BY_REGITEMCLASS_INTERNAL);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
         return (List<RegItem>) q.getResultList();
     }

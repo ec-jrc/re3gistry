@@ -67,7 +67,7 @@ import eu.europa.ec.re3gistry2.model.RegStatuslocalization;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
-import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemRef;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
@@ -99,6 +99,7 @@ public class ItemHistorySupplier {
     private final RegStatuslocalizationManager regStatusLocalizationManager;
     private final ItemSupplier itemSupplier;
 
+    private final EntityManager entityManager;
     private final RegLanguagecode masterLanguage;
     private final RegLanguagecode languageCode;
 
@@ -118,23 +119,24 @@ public class ItemHistorySupplier {
     private boolean topConceptItem = false;
     private final RegItemclassManager regItemClassManager;
 
-    public ItemHistorySupplier(EntityManager em,
+    public ItemHistorySupplier(EntityManager entityManager,
             RegLanguagecode masterLanguage,
             RegLanguagecode languageCode) throws Exception {
 
-        this.regItemClassManager = new RegItemclassManager(em);
-        this.regItemManager = new RegItemManager(em);
-        this.regItemhistoryManager = new RegItemhistoryManager(em);
-        RegRelationpredicateManager relationPredicateManager = new RegRelationpredicateManager(em);
-        this.regRelationhistoryManager = new RegRelationhistoryManager(em);
-        this.regFieldManager = new RegFieldManager(em);
-        this.regLocalizationhistoryManager = new RegLocalizationhistoryManager(em);
-        this.regLocalizationManager = new RegLocalizationManager(em);
-        this.regFieldmappingManager = new RegFieldmappingManager(em);
-        this.regStatusManager = new RegStatusManager(em);
-        this.regStatusLocalizationManager = new RegStatuslocalizationManager(em);
-        this.itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
+        this.regItemClassManager = new RegItemclassManager(entityManager);
+        this.regItemManager = new RegItemManager(entityManager);
+        this.regItemhistoryManager = new RegItemhistoryManager(entityManager);
+        RegRelationpredicateManager relationPredicateManager = new RegRelationpredicateManager(entityManager);
+        this.regRelationhistoryManager = new RegRelationhistoryManager(entityManager);
+        this.regFieldManager = new RegFieldManager(entityManager);
+        this.regLocalizationhistoryManager = new RegLocalizationhistoryManager(entityManager);
+        this.regLocalizationManager = new RegLocalizationManager(entityManager);
+        this.regFieldmappingManager = new RegFieldmappingManager(entityManager);
+        this.regStatusManager = new RegStatusManager(entityManager);
+        this.regStatusLocalizationManager = new RegStatuslocalizationManager(entityManager);
+        this.itemSupplier = new ItemSupplier(entityManager, masterLanguage, languageCode);
 
+        this.entityManager = entityManager;
         this.masterLanguage = masterLanguage;
         this.languageCode = languageCode;
 
@@ -154,6 +156,26 @@ public class ItemHistorySupplier {
     }
 
     public Item getItemHistoryByUri(String uri, Integer version) throws Exception {
+         try {
+             int i = uri.lastIndexOf('/');
+             if (i < 0) {
+                 throw new NoResultException();
+             }
+            String localidWithVersion = uri.substring(i + 1);
+            int uriCollection = uri.substring(0, i).lastIndexOf('/');
+            String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
+            RegItemclass regItemRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+            RegItemclass parentRegItemRegItemClass = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
+            String localid = localidWithVersion.replace(":" + localidWithVersion.substring(localidWithVersion.lastIndexOf(":") + 1), "");
+            int minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(localid, parentRegItemRegItemClass).getVersionnumber();
+            if (minVersion == 0) {
+                int fixedVersion = version -1;
+                uri = uri.replace(":"+version, ":"+fixedVersion);
+                version = version - 1;
+            }
+        } catch (Exception ex) {
+            version = version;
+        }
         RegItemhistory item = getRegItemByUri(uri, version);
         if (item == null) {
             return null;
@@ -170,23 +192,28 @@ public class ItemHistorySupplier {
         int uriCollection = uri.substring(0, i).lastIndexOf('/');
         String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
         String localid = localidWithVersion.replace(":" + version, "");
-        RegItemclass regItemRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+        RegItemclass parentRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
         try {
-            RegItemclass parentRegItemRegItemClass = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
+            RegItemclass childRegItemClass = regItemClassManager.getChildItemclass(parentRegItemClass).get(0);
             RegItemhistory regItem;
             try {
-                regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, parentRegItemRegItemClass);
-                if (regItem != null && uri.equals(getURI(regItem) + ":" + regItem.getVersionnumber())) {
-                    return regItem;
+
+                RegItemhistory minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(localid, childRegItemClass);
+                if (minVersion.getVersionnumber() == 0) {
+                    regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version - 1, childRegItemClass);
+                } else {
+                    regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, childRegItemClass);
                 }
+
+                return regItem;
             } catch (Exception ex) {
-                List<RegItemhistory> regItemList = regItemhistoryManager.getByLocalidAndRegItemClass(localid, parentRegItemRegItemClass);
+                List<RegItemhistory> regItemList = regItemhistoryManager.getByLocalidAndRegItemClass(localid, childRegItemClass);
                 if (regItemList.size() + 1 == version) {
                     return null;
                 }
             }
         } catch (Exception e) {
-            RegItemhistory regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, regItemRegItemClass);
+            RegItemhistory regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, parentRegItemClass);
             if (regItem != null && uri.equals(getURI(regItem) + ":" + regItem.getVersionnumber())) {
                 return regItem;
             }
@@ -194,7 +221,34 @@ public class ItemHistorySupplier {
         return null;
     }
 
-    private Integer getVersionFromUri(String uri) {
+    public int sizeItemInHistory(String uri) throws Exception {
+        int i = uri.lastIndexOf('/');
+        if (i < 0) {
+            //if no column than is asking for the latest version
+            return 0;
+        }
+
+        String localidWithVersion = uri.substring(i + 1);
+        int uriCollection = uri.substring(0, i).lastIndexOf('/');
+        String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
+        i = uri.indexOf(':', i + 1);
+        Integer version;
+        try {
+            version = Integer.parseInt(uri.substring(i + 1));
+
+            String localid = localidWithVersion.replace(":" + version, "");
+            RegItemclass parentRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+            RegItemclass childRegItemClass = regItemClassManager.getChildItemclass(parentRegItemClass).get(0);
+            List<RegItemhistory> regItemHistoryVersion = regItemhistoryManager.getByLocalidAndRegItemClass(localid, childRegItemClass);
+
+            return regItemHistoryVersion.size();
+
+        } catch (NumberFormatException ignore) {
+        }
+        return 0;
+    }
+
+    public Integer getVersionFromUri(String uri) {
         Integer version = null;
         // Check if the part after the last slash contains a colon
         int i = uri.lastIndexOf('/');
@@ -242,7 +296,13 @@ public class ItemHistorySupplier {
         setVersionAndHistory(regItemhistory, item, version);
         item.setType(regItemhistory.getRegItemclass().getRegItemclasstype().getLocalid());
         item.setLanguage(languageCode.getIso6391code());
-        item.setItemclass(new ItemClass(regItemhistory.getRegItemclass().getLocalid()));
+
+        RegItemclass itemclassparent = regItemhistory.getRegItemclass().getRegItemclassParent();
+        if (itemclassparent != null) {
+            item.setItemclass(new BasicItemClass(regItemhistory.getRegItemclass().getLocalid(), itemclassparent.getLocalid(), itemclassparent.getRegItemclasstype().getLocalid()));
+        } else {
+            item.setItemclass(new BasicItemClass(regItemhistory.getRegItemclass().getLocalid(), null, null));
+        }
         item.setProperties(getLocalizedProperties(regItemhistory, fieldMapping -> !fieldMapping.getHidden()));
 
         switch (regItemhistory.getRegItemclass().getRegItemclasstype().getLocalid()) {
@@ -360,7 +420,7 @@ public class ItemHistorySupplier {
         LinkedList<RegItem> collectionChain = new LinkedList<>();
         while (collection != null) {
             collectionChain.addFirst(collection);
-            collection = itemSupplier.getRelatedItemBySubject(collection, hasCollection);
+            collection = ItemHelper.getRelatedItemBySubject(collection, hasCollection, entityManager);
         }
         return collectionChain;
     }
@@ -659,6 +719,8 @@ public class ItemHistorySupplier {
 
         List<RegItemhistory> itemHistory = regItemhistoryManager.getByRegItemReference(regItemManager.getByLocalidAndRegItemClass(regItemhistory.getLocalid(), regItemhistory.getRegItemclass()));
 
+        int minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(regItemhistory.getLocalid(), regItemhistory.getRegItemclass()).getVersionnumber();
+
         if (version == null) {
             // Requested current version
             int maxVersionNumber = itemHistory.stream()
@@ -683,10 +745,20 @@ public class ItemHistorySupplier {
                 throw new NoVersionException();
             }
             item.setVersion(new VersionInformation(version, uri + ":" + version));
-            item.setVersionHistory(itemHistory.stream()
-                    .filter(ih -> ih.getVersionnumber() != version)
-                    .map(ih -> new VersionInformation(ih.getVersionnumber(), uri + ":" + ih.getVersionnumber()))
-                    .collect(Collectors.toList()));
+
+            if (minVersion == 0) {
+                item.setVersionHistory(itemHistory.stream()
+                        .filter(ih -> ih.getVersionnumber() != version)
+                        .map(ih -> new VersionInformation(ih.getVersionnumber() + 1, uri + ":" + (ih.getVersionnumber() + 1)))
+                        .collect(Collectors.toList()));
+
+            } else {
+                item.setVersionHistory(itemHistory.stream()
+                        .filter(ih -> ih.getVersionnumber() != version)
+                        .map(ih -> new VersionInformation(ih.getVersionnumber(), uri + ":" + ih.getVersionnumber()))
+                        .collect(Collectors.toList()));
+            }
+
             // This does add a :version suffix to the max version link even if it's not necessary
             // but it still works and reduces the complexity of this code
         }
@@ -760,7 +832,7 @@ public class ItemHistorySupplier {
                 try {
                     containedItemsList = new ArrayList<>();
 //                    if (complexItem) {
-//                        containedItemsList = getRelatedItemsByObject(regItem, hasCollection);
+//                        containedItemsList = getRelatedItemsByObject(regItemhistory, hasCollection);
 //                    } else {
                     List<String> collectionNoParentList = getAllColectionsNoParentOfItem(regItemhistory);
                     for (String uuid : collectionNoParentList) {
@@ -821,7 +893,7 @@ public class ItemHistorySupplier {
             case TYPE_ITEM:
                 RegItem relatedCollection = getRelatedItemByRegitemHistorySubject(regItemhistory, hasCollection);
                 if (relatedCollection != null) {
-                    RegItem parentCollection = itemSupplier.getRelatedItemBySubject(relatedCollection, hasParent);
+                    RegItem parentCollection = ItemHelper.getRelatedItemBySubject(relatedCollection, hasParent, entityManager);
                     if (parentCollection != null) {
                         relatedCollection = parentCollection;
                     }

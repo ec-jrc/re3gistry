@@ -38,11 +38,14 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
+import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.restapi.util.IndentingXMLStreamWriter;
+import java.util.Properties;
 
 public class RORFormatter implements Formatter {
 
@@ -138,7 +141,6 @@ public class RORFormatter implements Formatter {
 
         writeRoles(xml, item);
         writeAuthorityFrequency(xml, item);
-        xml.writeEndElement();
 
 //        write registers
         if (item.getContainedItemsBeeingParentItemClass() != null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
@@ -146,6 +148,7 @@ public class RORFormatter implements Formatter {
                 writeItemShortVersion(xml, ci);
             }
         }
+        xml.writeEndElement();
     }
 
     private void writeRegister(XMLStreamWriter xml, Item item) throws XMLStreamException {
@@ -163,25 +166,24 @@ public class RORFormatter implements Formatter {
         writeRoles(xml, item);
         writeAuthorityFrequency(xml, item);
 
-        xml.writeEndElement();
-
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             for (ContainedItem ci : item.getContainedItems()) {
                 writeItemShortVersion(xml, ci);
             }
         }
+        xml.writeEndElement();
     }
 
     private void writeItemShortVersion(XMLStreamWriter xml, ContainedItem containedItem) throws XMLStreamException {
-        xml.writeStartElement(DCAT, "dataset");
+        xml.writeStartElement(DCT, "dataset");
         xml.writeStartElement(RDF, "Description");
         xml.writeAttribute(RDF, "about", containedItem.getUri());
 
         xml.writeStartElement(DCAT, "distribution");
         xml.writeAttribute(RDF, "parseType", "Resource");
 
-        writeEmptyElement(xml, RDF, "format", RDF, "resource", "http://publications.europa.eu/resource/authority/file-type/RDF_XML");
-        writeEmptyElement(xml, RDF, "downloadURL", RDF, "resource", containedItem.getUri() + "/" + containedItem.getLocalid() + ".ror");
+        writeEmptyElement(xml, DCT, "format", RDF, "resource", "http://publications.europa.eu/resource/authority/file-type/RDF_XML");
+        writeEmptyElement(xml, DCAT, "downloadURL", RDF, "resource", containedItem.getUri() + "/" + containedItem.getLocalid() + ".ror");
 
         xml.writeEndElement();
         xml.writeEndElement();
@@ -204,13 +206,12 @@ public class RORFormatter implements Formatter {
         writeAuthorityFrequency(xml, item);
         writeRoles(xml, item);
 
-        xml.writeEndElement();
-
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             for (ContainedItem ci : item.getContainedItems()) {
                 writeItemShortVersion(xml, ci);
             }
         }
+        xml.writeEndElement();
     }
 
     private void writeRDFType(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
@@ -297,8 +298,12 @@ public class RORFormatter implements Formatter {
     }
 
     private void writeRoles(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
-        xml.writeStartElement(DCAT, "publisher");
-        writeEmptyElement(xml, FOAF, "Agent", RDF, "about", "http://publications.europa.eu/resource/authority/corporate-body/JRC");
+        xml.writeStartElement(DCT, "publisher");
+
+//        writeEmptyElement(xml, FOAF, "Agent", RDF, "about", "http://publications.europa.eu/resource/authority/corporate-body/JRC");
+        xml.writeStartElement(FOAF, "Agent");
+        xml.writeAttribute(RDF, "about", "http://publications.europa.eu/resource/authority/corporate-body/JRC");
+
         for (String roleProperty : ROLE_PROPERTY_TO_ELEMENT.keySet()) {
             Optional<LocalizedProperty> p = item.getProperty(roleProperty);
             if (!p.isPresent()) {
@@ -316,6 +321,12 @@ public class RORFormatter implements Formatter {
                 writeSimpleElement(xml, FOAF, "name", NS_XML, "lang", lang, value);
             }
         }
+        final Properties configurationProperties = Configuration.getInstance().getProperties();
+        String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
+        if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
+            writeEmptyElement(xml, FOAF, "mbox", RDF, "resource", "mailto:jrc-inspire-support@ec.europa.eu");
+        }
+        xml.writeEndElement();
         xml.writeEndElement();
     }
 
@@ -347,7 +358,7 @@ public class RORFormatter implements Formatter {
     }
 
     private void writeAuthorityFrequency(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
-        writeEmptyElement(xml, DCT, "accrualPeriodicity", RDF, "resource", "http://publications.europa.eu/resource/authority/frequency/UNKNOWN");
+        writeEmptyElement(xml, DCT, "accrualPeriodicity", RDF, "resource", "http://publications.europa.eu/resource/authority/frequency/MONTHLY");
     }
 
     private void writeRegistryElement(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
@@ -360,6 +371,11 @@ public class RORFormatter implements Formatter {
         xml.writeStartElement(DCAT, "isPartOf");
         writeEmptyElement(xml, DCAT, "Catalog", RDF, "about", item.getRegister().getUri());
         xml.writeEndElement();
+    }
+
+    @Override
+    public void write(ItemClass itemClass, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -174,6 +174,7 @@ function fetchData(uri, lang, startFrom, searchTerm, facetParam) {
         renderData(responseData, searchTerm, facetParamArray, facetParam);
 
         // Binding UI events
+        bindCommonEvents();
         bindEvents();
 
     }).fail(function (data) {

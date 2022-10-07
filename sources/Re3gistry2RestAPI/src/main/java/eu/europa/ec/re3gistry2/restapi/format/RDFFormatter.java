@@ -42,6 +42,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.restapi.util.AvailableFormatsUtil;
@@ -305,6 +306,10 @@ public class RDFFormatter implements Formatter {
 
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             for (ContainedItem ci : item.getContainedItems()) {
+                writeItemShortVersion(xml, ci);
+            }
+        } else if (item.getContainedItemsBeeingParentItemClass() != null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
+            for (ContainedItem ci : item.getContainedItemsBeeingParentItemClass()) {
                 writeItemShortVersion(xml, ci);
             }
         }
@@ -600,10 +605,14 @@ public class RDFFormatter implements Formatter {
     private void writeVersion(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
         List<VersionInformation> versionHistory = item.getVersionHistory();
         VersionInformation version = item.getVersion();
-        writeEmptyElement(xml, OWL, "sameAs", RDF, "resource", item.getUri() + ":" + (versionHistory.size() + 1));
-        writeEmptyElement(xml, ADMS, "last", RDF, "resource", item.getUri());
-        if (versionHistory.size() != 0) {
-            writeEmptyElement(xml, ADMS, "prev", RDF, "resource", item.getUri() + ":" + versionHistory.size());
+        if (version!=null && version.getUri()!=null) {  
+            writeEmptyElement(xml, OWL, "sameAs", RDF, "resource", version.getUri());
+            writeEmptyElement(xml, ADMS, "last", RDF, "resource", item.getUri());
+        }
+        if (versionHistory != null && !versionHistory.isEmpty()) {
+            for (VersionInformation versionInformation : versionHistory) {
+                writeEmptyElement(xml, ADMS, "prev", RDF, "resource", versionInformation.getUri());
+            }
         }
     }
 
@@ -617,6 +626,11 @@ public class RDFFormatter implements Formatter {
         xml.writeStartElement(DCAT, "isPartOf");
         writeEmptyElement(xml, DCAT, "Catalog", RDF, "about", item.getRegister().getUri());
         xml.writeEndElement();
+    }
+
+    @Override
+    public void write(ItemClass itemClass, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

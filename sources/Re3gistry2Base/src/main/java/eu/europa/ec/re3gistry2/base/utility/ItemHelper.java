@@ -36,6 +36,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegLocalization;
 import eu.europa.ec.re3gistry2.model.RegRelation;
 import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -250,7 +251,7 @@ public class ItemHelper {
                 throw new RuntimeException("Invalid type");
         }
     }
-    
+
     private static List<RegItem> getCollectionChain(RegItem regItem, EntityManager entityManager) throws Exception {
         RegRelationpredicateManager regRelationpredicateManager = new RegRelationpredicateManager(entityManager);
         RegRelationpredicate hasCollection = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_COLLECTION);
@@ -266,7 +267,7 @@ public class ItemHelper {
         return collectionChain;
     }
 
-    protected static RegItem getRelatedItemBySubject(RegItem regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
+    public static RegItem getRelatedItemBySubject(RegItem regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
         List<RegItem> list = getRelatedItemsBySubject(regItem, predicate, entityManager);
         if (list != null && !list.isEmpty()) {
             return list.stream().findAny().orElse(null);
@@ -276,16 +277,34 @@ public class ItemHelper {
 //                .findAny()
 //                .orElse(null);
     }
-    
-    private static List<RegItem> getRelatedItemsBySubject(RegItem regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
+
+    public static List<RegItem> getRelatedItemsBySubject(RegItem regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
         RegRelationManager regRelationManager = new RegRelationManager(entityManager);
+        List<RegRelation> regItemsBySubject = regRelationManager.getAllByRegItemSubjectAndPredicate(regItem, predicate);
         if (regRelationManager != null && regItem != null && predicate != null
-                && regRelationManager.getAllByRegItemSubjectAndPredicate(regItem, predicate) != null) {
-            return regRelationManager.getAllByRegItemSubjectAndPredicate(regItem, predicate).stream()
+                && regItemsBySubject != null) {
+            return regItemsBySubject.stream()
                     .map(rel -> rel.getRegItemObject())
                     .collect(Collectors.toList());
         } else {
             return null;
         }
     }
+
+    public static List<RegItem> getRelatedItemsByObject(RegItem regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
+        RegRelationManager regRelationManager = new RegRelationManager(entityManager);
+        List<RegRelation> relations = regRelationManager.getAllByRegItemObjectAndPredicate(regItem, predicate);
+
+        if (regRelationManager != null && regItem != null && predicate != null
+                && relations != null) {
+            List<RegItem> subjects = new ArrayList<>();
+            relations.forEach((relation) -> {
+                subjects.add(relation.getRegItemSubject());
+            });
+            return subjects;
+        } else {
+            return null;
+        }
+    }
+
 }

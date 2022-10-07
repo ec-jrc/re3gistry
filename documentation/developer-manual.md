@@ -20,7 +20,7 @@ A summary of some of the technologies used to implement the software is presente
 
 * Programming language: Java (1.8)
 * Middle-ware: EclipseLink (tested with PostgreSQL)
-* Authentication: Apache Shiro
+* Authentication: Apache Shiro / EU Login
 * Front-end languages and components:
   * HTML 5
   * jQuery 3.x
@@ -150,3 +150,31 @@ Roles
 ### How to customize GitHub to use your own files
 
 Please check the folder "dist\customize-interface\example-profile-developer". Here you will find a script to be run after the customization of your own paths to your local repository of the project and you own customize files: such as footer, header, configurations. Once the script has copied all the files into your own repository you can start using the system already containing your own customize interface.
+
+### Configuration Apache SHIRO
+The Apache SHIRO configuration is defined in `source\Re3gistry2\src\main\resources\shiro.ini` and `sources\Re3gistry2\src\main\webapp\WEB-INF\web.xml`.
+
+Add to your profile 
+
+     <application.login.provider>SHIRO</application.login.provider>
+
+Restart the service and check the authentication menchanism.
+
+### Configuration EU Login
+EU Login is the central login mechanism of the European Commission. You can enable login against that central service in case your intended users have or can acquire a EU Login.
+
+The EU Login configuration is defined in
+`sources\Re3gistry2\src\main\resources\ecas-config.properties` and `sources\Re3gistry2\src\main\webapp\WEB-INF\web.xml`.
+
+Add to your profile 
+
+     <application.login.provider>ECAS</application.login.provider>
+     <ecas.filter.serverName>CHANGE_ME_SERVER_NAME</ecas.filter.serverName>
+     <ecas.filter.serverPort>CHANGE_ME_PORT</ecas.filter.serverPort>
+     <ecas.filter.serverContextPath>CHANGE_ME_CONTEXT_APPLICATION</ecas.filter.serverContextPath>
+
+For tomcat, add two files to the tomcat lib folder: ecas-tomcat-x.y.z.jar and log4j-x.y.z.jar. 
+
+Verify that the JDK trusts the [ECAS certificates](https://webgate.ec.europa.eu/CITnet/confluence/display/IAM/Downloads-Certificates) else import them on the keystore of the JVM.
+
+Restart the service and check the authentication menchanism.

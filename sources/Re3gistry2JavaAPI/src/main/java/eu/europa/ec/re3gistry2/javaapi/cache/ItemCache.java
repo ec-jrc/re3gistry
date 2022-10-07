@@ -36,8 +36,10 @@ public interface ItemCache {
 
     public Item getByUuid(String language, String uuid);
     public Item getByUrl(String language, String url);
+    public Item getByUrl(String language, String url, Integer version, String itemStatus);
+    public Item getByUrl(String language, String url, Integer version);
 
-    public void add(String language, Item item);
+    public void add(String language, Item item, Integer version);
 
     public void remove(String language, String uuid);
     public void removeAll();

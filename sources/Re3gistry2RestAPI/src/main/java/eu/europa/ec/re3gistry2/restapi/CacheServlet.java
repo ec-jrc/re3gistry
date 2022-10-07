@@ -26,6 +26,8 @@
  */
 package eu.europa.ec.re3gistry2.restapi;
 
+import eu.europa.ec.re3gistry2.restapi.util.ApiResponse;
+import eu.europa.ec.re3gistry2.restapi.util.ApiError;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import java.io.IOException;
 
@@ -69,6 +71,7 @@ public class CacheServlet extends HttpServlet {
             return;
         }
         String uuid = RequestUtil.getParamTrimmed(req, "uuid", null);
+        Integer version = 0;
         boolean flushAll = uuid == null || uuid.isEmpty();
         if (flushAll) {
             cache.removeAll();

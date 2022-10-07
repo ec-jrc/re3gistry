@@ -53,10 +53,14 @@ public class EhCache implements ItemCache {
         return Collections.unmodifiableSet(languages);
     }
 
+    
+//    public Item getByUuid(String language, String uuid) {
+//        return getByUuid(language, uuid);
+//    }
     @Override
     public Item getByUuid(String language, String uuid) {
         synchronized (sync) {
-              // Get configuration properties
+            // Get configuration properties
             final Properties properties = Configuration.getInstance().getProperties();
             String cachePath = properties.getProperty(BaseConstants.KEY_DISK_CACHE_PATH, null);
             String cacheMaximumDiskSpace = properties.getProperty(BaseConstants.KEY_DISK_CACHE_MAXIMUM_SPACE, "5");
@@ -83,11 +87,30 @@ public class EhCache implements ItemCache {
             }
         }
     }
-
+ 
     @Override
+
     public Item getByUrl(String language, String url) {
+       return getByUrl(language, url, null, null);
+    }
+
+    public Item getByUrl(String language, String url, Integer version) { 
+        return getByUrl(language, url, version, null);
+    }
+    
+    public Item getByUrl(String language, String url, Integer version, String itemStatus) {
+        if (itemStatus == null 
+                || itemStatus.equalsIgnoreCase("valid")
+                || itemStatus.equalsIgnoreCase("invalid")
+                || itemStatus.equalsIgnoreCase("superseded")
+                || itemStatus.equalsIgnoreCase("retired")) {
+            
+        } else {
+            return null;
+        }
+
         synchronized (sync) {
-              // Get configuration properties
+            // Get configuration properties
             final Properties properties = Configuration.getInstance().getProperties();
             String cachePath = properties.getProperty(BaseConstants.KEY_DISK_CACHE_PATH, null);
             String cacheMaximumDiskSpace = properties.getProperty(BaseConstants.KEY_DISK_CACHE_MAXIMUM_SPACE, "5");
@@ -116,7 +139,20 @@ public class EhCache implements ItemCache {
     }
 
     @Override
-    public void add(String language, Item item) {
+    public void add(String language, Item item, Integer version) {
+        add(language, item, version, null);
+    }
+    
+    public void add(String language, Item item, Integer version, String itemStatus) {
+        if (itemStatus == null 
+                || itemStatus.equalsIgnoreCase("valid")
+                || itemStatus.equalsIgnoreCase("invalid")
+                || itemStatus.equalsIgnoreCase("superseded")
+                || itemStatus.equalsIgnoreCase("retired")) {
+            
+        } else {
+            return;
+        }
         synchronized (sync) {
             // Get configuration properties
             final Properties properties = Configuration.getInstance().getProperties();
@@ -139,7 +175,7 @@ public class EhCache implements ItemCache {
                         ).build(true);
 
                 persistentCacheManager.getCache(BaseConstants.KEY_CACHE_NAME_UUID, String.class, Item.class).put(getCacheKey(language, item.getUuid()), item);
-                persistentCacheManager.getCache(BaseConstants.KEY_CACHE_NAME_URL, String.class, Item.class).put(getCacheKey(language, item.getUri()), item);
+                persistentCacheManager.getCache(BaseConstants.KEY_CACHE_NAME_URL, String.class, Item.class).put(version != null ? getCacheKey(language, item.getVersion().getUri()) : getCacheKey(language, item.getUri()), item);
                 persistentCacheManager.close();
 
                 languages.add(language);
@@ -150,11 +186,11 @@ public class EhCache implements ItemCache {
     @Override
     public void remove(String language, String uuid) {
         synchronized (sync) {
-             // Get configuration properties
+            // Get configuration properties
             final Properties properties = Configuration.getInstance().getProperties();
             String cachePath = properties.getProperty(BaseConstants.KEY_DISK_CACHE_PATH);
             String cacheMaximumDiskSpace = properties.getProperty(BaseConstants.KEY_DISK_CACHE_MAXIMUM_SPACE, "5");
-          
+
             int cacheMaximumGig;
             try {
                 cacheMaximumGig = Integer.parseInt(cacheMaximumDiskSpace);
@@ -191,7 +227,7 @@ public class EhCache implements ItemCache {
             final Properties properties = Configuration.getInstance().getProperties();
             String cachePath = properties.getProperty(BaseConstants.KEY_DISK_CACHE_PATH);
             String cacheMaximumDiskSpace = properties.getProperty(BaseConstants.KEY_DISK_CACHE_MAXIMUM_SPACE, "5");
-            
+
             int cacheMaximumGig;
             try {
                 cacheMaximumGig = Integer.parseInt(cacheMaximumDiskSpace);

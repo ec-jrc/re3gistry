@@ -45,6 +45,9 @@ application.language.defaultLocale=en
 # ECAS base URL (authetication method)
 application.ecas.baseurl = https://webgate.ec.europa.eu
 
+# Cache
+application.cache.disk.path=/path/to/cache
+
 # Login type - ECAS | SHIRO
 application.login.type=SHIRO
 
@@ -103,7 +106,7 @@ application.solr.fieldtoindex.localid=label,description,definition
 #   * propose to add RegItem Register and RegItem Registry
 #
 # - |ManageFieldMapping| with this permission a RegUser can:
-#   * add field mpping (between field and item) 
+#   * add field mapping (between field and item) 
 #   * eidt firld mapping (e.g. change properties such mandatory, multivalued, ecc.)
 # 
 # - |ManageField| with this permission a RegUser can:
@@ -149,8 +152,8 @@ mail.smtp.host=smtphost
 mail.smtp.port=25
 mail.smtp.auth=false
 mail.smtp.starttls.enable=true
-mail.user=
-mail.password=
+mail.user=name
+mail.password=password
 mail.sender=jrc-inspire-support@ec.europa.eu
 mail.template=<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><title>%subject%</title></head><body><table style="width:100%;border-collapse:collapse"><tbody><tr style="background-color:#0065a2"><td style="padding:8px;color:#fff;font-size:14px;font-family:verdana">%subject%</td></tr><tr><td style="font-size:14px;font-family:verdana;padding:16px 0 16px 0"><p>%mailbody%</p><hr style="border:0;border-top:1px solid #777" /><p style="font-size:12px">This email has been automatically generated, please do not reply to it. For more details please access the <a href=\"%application.rooturl%\">management interface</a>.</p></td></tr><tr style="background-color:#0065a2"><td style="padding:8px;color:#fff;font-size:12px;font-family:verdana">Best regards, <br/>INSPIRE Re3gistry Team</td></tr></tbody></table></body></html>
 

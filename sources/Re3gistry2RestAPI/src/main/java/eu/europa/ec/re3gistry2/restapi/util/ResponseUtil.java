@@ -33,11 +33,11 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
-import eu.europa.ec.re3gistry2.restapi.ApiError;
-import eu.europa.ec.re3gistry2.restapi.ApiResponse;
 import eu.europa.ec.re3gistry2.restapi.format.Formatter;
 import eu.europa.ec.re3gistry2.restapi.format.JSONInternalFormatter;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
+import eu.europa.ec.re3gistry2.restapi.format.XSDFormatter;
 
 public class ResponseUtil {
 
@@ -46,6 +46,14 @@ public class ResponseUtil {
         String type = formatter.getContentType();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         formatter.write(item, lang, baos);
+        send(resp, sc, type, baos);
+    }
+    
+     public static void ok(HttpServletResponse resp, ItemClass itemClass, Formatter formatter) throws Exception {
+        int sc = HttpServletResponse.SC_OK;
+        String type = formatter.getContentType();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ((XSDFormatter)formatter).write(itemClass, baos);
         send(resp, sc, type, baos);
     }
 

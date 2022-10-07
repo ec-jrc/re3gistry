@@ -64,6 +64,10 @@ The common tabs available to any users are:
 
 Details for each menu item are provided in the following sections.
 
+## Simplified workflow
+
+If the simplified workflow has been chosen during the installation, the only role that will be use is the Registry Manager. This workflow will simplify the steps mentioned in the following sections. There will be no need to process the data through all the different roles, all the actions will appear in the Registry manager tab directly.
+
 ## Users, roles and groups
 
 The Re3gistry 2 follows the [ISO 19135 Standard "Geographic information — Procedures for item registration"](https://www.iso.org/standard/54721.html).
@@ -75,6 +79,7 @@ The possible user roles that the registry 2 manages are:
 * Register manager
 * Control body 
 * Submitting organisations
+
 
 The system is highly flexible in managing the **roles** since it is not assigning the role directly to the **user**. Instead, the user is assigned to one or more **groups**. Then this group is associated to one or more **registers**, specifying the role for each of the group. This means that a group can have different roles on different registers. Each user in the system can be associated to one or more groups. 
 
@@ -505,7 +510,16 @@ In the group detail page apart from editing, group-related information can be ch
 
 ### Data export
 
-This option helps to easily run a full export of the registry data to the Solr index on the published items.
+The Data export sub-tab give the registry manager the possibility to run an complete SOLR index and a complete CACHE of the items presented in the system.
+
+SOLR: This option helps to easily run a full export of the registry data to the Solr index on the published items.
+
+CACHE: 
+* Button "Cache all - Master language": This option helps to run a full cache of the master language of the system.
+* Button "Cache all": This option helps to run a full cache of the active languages of the system.
+* Button "Remove cache": This option helps to remove the index of all the cache items.
+
+![Registry manager - Data export](images/data_export_registry_manager.PNG)
 
 ## User profile
 

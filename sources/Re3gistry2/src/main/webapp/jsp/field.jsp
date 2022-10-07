@@ -108,9 +108,9 @@
             <%
                 }
             %>
-        <%
+            <%
                 String buttonCacheDisabled = (CacheHelper.checkCacheCompleteRunning()) ? " disabled" : "";
-        %>
+            %>
             <div class="row">
                 <div class="col-sm-9">
                     <h1>${regItemclass.localid}</h1>   
@@ -128,62 +128,60 @@
                     <c:when test="${regItemclass.regItemclasstype.localid eq BaseConstants.KEY_ITEMCLASS_TYPE_ITEM}">
 
                         <%if (childItemClassSize != 0) {%>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <a class="btn btn-primary edit-itemclass width100" data-<%=BaseConstants.KEY_FORM_FIELD_NAME_DATA_ITEMCLASSUUID%>=${regItemclass.uuid} href="#"><i class="far fa-edit" title="${localization.getString("label.edit")}"></i> ${localization.getString("label.edit")}</a>
                         </div>
-                        <div class="col-sm-6">
-                                <a class="btn btn-approve-action width100 buttoncache btn-success" 
-                                   data-toggle="confirmation" 
-                                   data-title="Recache" 
-                                   data-placement="left" 
-                                   data-singleton="true" 
-                                   href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
-                                    ${localization.getString("label.cache.class")}
-                                </a>
+                        <div class="col-sm-4">
+                            <a class="btn btn-approve-action width100 buttoncache btn-success" 
+                               data-toggle="confirmation" 
+                               data-title="Recache" 
+                               data-placement="left" 
+                               data-singleton="true" 
+                               href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
+                                <i class="far fa-file"></i> ${localization.getString("label.cache.class")}
+                            </a>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <a class="btn btn-danger btn-approve-action btn-reg-action width100" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_REQUEST_REMOVEFIELD%>=<%=BaseConstants.KEY_FORM_FIELD_NAME_REQUEST_REMOVEFIELD%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i> ${localization.getString("label.remove")}</a>
                         </div>
                         <%} else {%>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <a class="btn btn-success width100" href=".<%=WebConstants.PAGE_URINAME_ADDITEMCLASS%>?${constants.KEY_REQUEST_ITEMCLASSUUID}=${regItemclass.uuid}&${constants.KEY_REQUEST_LANGUAGEUUID}=${regLanguagecode.uuid}"><i class="fas fa-plus" title="${localization.getString("label.addchilditemitemclass")}"></i> ${localization.getString("label.addchilditemitemclass")}</a>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <a class="btn btn-primary edit-itemclass width100" data-<%=BaseConstants.KEY_FORM_FIELD_NAME_DATA_ITEMCLASSUUID%>=${regItemclass.uuid} href="#"><i class="far fa-edit" title="${localization.getString("label.edit")}"></i> ${localization.getString("label.edit")}</a>
                         </div>
-                        <div class="col-sm-4">
-                                <a class="btn btn-approve-action width100 buttoncache btn-success" 
-                                   data-toggle="confirmation" 
-                                   data-title="Recache" 
-                                   data-placement="left" 
-                                   data-singleton="true" 
-                                   href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
-                                    ${localization.getString("label.cache.class")}
-                                </a>
+                        <div class="col-sm-3">
+                            <a class="btn btn-approve-action width100 buttoncache btn-success" 
+                               data-toggle="confirmation" 
+                               data-title="Recache" 
+                               data-placement="left" 
+                               data-singleton="true" 
+                               href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
+                                <i class="far fa-file"></i> ${localization.getString("label.cache.class")}
+                            </a>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <a class="btn btn-danger btn-approve-action btn-reg-action width100" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_REQUEST_REMOVEFIELD%>=<%=BaseConstants.KEY_FORM_FIELD_NAME_REQUEST_REMOVEFIELD%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i> ${localization.getString("label.remove")}</a>
                         </div>
                         <%}%>
-
-
                     </c:when>
                     <c:otherwise>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <a class="btn btn-primary edit-itemclass width100" data-<%=BaseConstants.KEY_FORM_FIELD_NAME_DATA_ITEMCLASSUUID%>=${regItemclass.uuid} href="#"><i class="far fa-edit" title="${localization.getString("label.edit")}"></i> ${localization.getString("label.edit")}</a>
                         </div>
-                        <div class="col-sm-6">
-                            <a class="btn btn-danger btn-approve-action btn-reg-action width100" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i> ${localization.getString("label.remove")}</a>
+                        <div class="col-sm-4">
+                            <a class="btn btn-approve-action width100 buttoncache btn-success" 
+                               data-toggle="confirmation" 
+                               data-title="Recache" 
+                               data-placement="left" 
+                               data-singleton="true" 
+                               href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
+                                <i class="far fa-file"></i> ${localization.getString("label.cache.class")}
+                            </a>
                         </div>
-                        <div class="col-sm-6">
-                                <a class="btn btn-approve-action width100 buttoncache btn-success" 
-                                   data-toggle="confirmation" 
-                                   data-title="Recache" 
-                                   data-placement="left" 
-                                   data-singleton="true" 
-                                   href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>">
-                                    ${localization.getString("label.cache.class")}
-                                </a>
+                        <div class="col-sm-4">
+                            <a class="btn btn-danger btn-approve-action btn-reg-action width100" data-toggle="confirmation" data-title="${localization.getString("discard.contentclass.confirm")}" data-placement="left" data-singleton="true" href=".<%=WebConstants.PAGE_PATH_ITEMCLASS + WebConstants.PAGE_URINAME_ITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=${regItemclass.uuid}&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_REMOVE_VALUE_TYPE_REMOVE%>"><i class="far fa-trash-alt" title="${localization.getString("label.remove")}"></i> ${localization.getString("label.remove")}</a>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -368,18 +366,18 @@
                             columnDefs: [{orderable: true, className: 'reorder', targets: 0, type: 'num-fmt' }],
                     <% } %>
                     "columns": [null, { "width": "16%" }, null, null, null, null, null, null, null],
-                    'drawCallback': function () {
+                            'drawCallback': function () {
                     <%-- Init the update on checkbox (if the user has the right) --%>
                     <% if (permissionManageFieldMapping) {%>
-                    $(".cbUpdate").on('change', function(){
-                    var itemclassUuid = $(this).parent().parent().data("<%=WebConstants.DATA_PARAMETER_ITEMCLASSUUID%>");
-                    var fieldUuid = $(this).parent().parent().data("<%=WebConstants.DATA_PARAMETER_FIELDUUID%>");
-                    var checkboxType = $(this).data("type");
-                    var checked = $(this).is(":checked");
-                    $.get(".<%=WebConstants.PAGE_URINAME_FIELD%>?<%=BaseConstants.KEY_REQUEST_FIELDUUID%>=" + fieldUuid + "&<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=" + itemclassUuid + "&<%=BaseConstants.KEY_REQUEST_CHECKBOXTYPE%>=" + checkboxType + "&<%=BaseConstants.KEY_REQUEST_CHECKED%>=" + checked, function(data) {});
-                    });
+                            $(".cbUpdate").on('change', function(){
+                            var itemclassUuid = $(this).parent().parent().data("<%=WebConstants.DATA_PARAMETER_ITEMCLASSUUID%>");
+                            var fieldUuid = $(this).parent().parent().data("<%=WebConstants.DATA_PARAMETER_FIELDUUID%>");
+                            var checkboxType = $(this).data("type");
+                            var checked = $(this).is(":checked");
+                            $.get(".<%=WebConstants.PAGE_URINAME_FIELD%>?<%=BaseConstants.KEY_REQUEST_FIELDUUID%>=" + fieldUuid + "&<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=" + itemclassUuid + "&<%=BaseConstants.KEY_REQUEST_CHECKBOXTYPE%>=" + checkboxType + "&<%=BaseConstants.KEY_REQUEST_CHECKED%>=" + checked, function(data) {});
+                            });
                     <% } %>
-                    }
+                            }
                     });
                     <%-- If the user has the rights, activating the update of the
                     list order on drag & drop --%>
@@ -458,12 +456,12 @@
 
         <script>
             $(".buttoncache").on('click', function () {
-                //                        $('#startCaching').on('click', function () {
-                $(".buttoncache").addClass('disabled');
-                //                            $(this).addClass('disabled');
-                setTimeout(function () {
-                    location.reload();
-                }, 3000);
+            //                        $('#startCaching').on('click', function () {
+            $(".buttoncache").addClass('disabled');
+            //                            $(this).addClass('disabled');
+            setTimeout(function () {
+            location.reload();
+            }, 3000);
             });
         </script>
         <%@include file="includes/footer.inc.jsp" %>
@@ -479,31 +477,31 @@
         <% }%>
 
         <script>
-                    $(".edit-itemclass").on('click', function (e) {
-                    e.preventDefault();
-                    itemclassUuid = $(this).data('<%=BaseConstants.KEY_FORM_FIELD_NAME_DATA_ITEMCLASSUUID%>');
-                    $.ajax({
-                    url: '.<%=WebConstants.PAGE_URINAME_EDITITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=' + itemclassUuid
-                    }).done(function (data) {
-                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_LOCALID%>').removeAttr("disabled");
-                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_BASEURI%>').removeAttr("disabled");
-                    $('.btn-save').removeAttr("disabled");
-                    $('.alert-itemclass-not-editable').addClass('hidden');
-                    $('#<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_UUID%>);
-                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_LOCALID%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_LOCALID%>);
-                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_BASEURI%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_BASEURI%>);
-                    console.log(data.<%=BaseConstants.KEY_JSON_FIELDS_NOTEDITABLE%> === true);
-                    if (data.<%=BaseConstants.KEY_JSON_FIELDS_NOTEDITABLE%> === true) {
-                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_LOCALID%>').attr("disabled", "disabled");
-                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_BASEURI%>').attr("disabled", "disabled");
-                    $('.btn-save').attr("disabled", "disabled");
-                    $('.alert-itemclass-not-editable').removeClass('hidden');
-                    } else if (data.<%=BaseConstants.KEY_JSON_FIELDS_ITEMCLASSTYPE%> === '<%=BaseConstants.KEY_ITEMCLASS_TYPE_ITEM%>') {
-                    $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_BASEURI%>').attr("disabled", "disabled");
-                    }
-                    $('#editModal').modal('toggle');
-                    });
-                    });
+            $(".edit-itemclass").on('click', function (e) {
+            e.preventDefault();
+            itemclassUuid = $(this).data('<%=BaseConstants.KEY_FORM_FIELD_NAME_DATA_ITEMCLASSUUID%>');
+            $.ajax({
+            url: '.<%=WebConstants.PAGE_URINAME_EDITITEMCLASS%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=' + itemclassUuid
+            }).done(function (data) {
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_LOCALID%>').removeAttr("disabled");
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_BASEURI%>').removeAttr("disabled");
+            $('.btn-save').removeAttr("disabled");
+            $('.alert-itemclass-not-editable').addClass('hidden');
+            $('#<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_UUID%>);
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_LOCALID%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_LOCALID%>);
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_BASEURI%>').val(data.<%=BaseConstants.KEY_JSON_FIELDS_BASEURI%>);
+            console.log(data.<%=BaseConstants.KEY_JSON_FIELDS_NOTEDITABLE%> === true);
+            if (data.<%=BaseConstants.KEY_JSON_FIELDS_NOTEDITABLE%> === true) {
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_LOCALID%>').attr("disabled", "disabled");
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_BASEURI%>').attr("disabled", "disabled");
+            $('.btn-save').attr("disabled", "disabled");
+            $('.alert-itemclass-not-editable').removeClass('hidden');
+            } else if (data.<%=BaseConstants.KEY_JSON_FIELDS_ITEMCLASSTYPE%> === '<%=BaseConstants.KEY_ITEMCLASS_TYPE_ITEM%>') {
+            $('#<%=BaseConstants.KEY_FORM_FIELD_NAME_BASEURI%>').attr("disabled", "disabled");
+            }
+            $('#editModal').modal('toggle');
+            });
+            });
         </script>
 
     </body>

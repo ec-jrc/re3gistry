@@ -55,6 +55,32 @@ const eventName_click = 'click';
 var uriFromUrl = val_emptyString;
 var baseBreadcrumb = val_emptyString;
 
+var unparsedLanguageJSON = "";
+var originalLanguages = new Dictionary();
+     originalLanguages.add("en", "English");
+     originalLanguages.add("es", "Español");
+     originalLanguages.add("bg", "български");
+     originalLanguages.add("cs", "čeština");
+     originalLanguages.add("da", "dansk");
+     originalLanguages.add("de", "Deutsch");
+     originalLanguages.add("et", "eesti");
+     originalLanguages.add("el", "ελληνικά");
+     originalLanguages.add("fr", "français");
+     originalLanguages.add("ga", "Gaeilge");
+     originalLanguages.add("hr", "hrvatski");
+     originalLanguages.add("it", "italiano");
+     originalLanguages.add("lv", "latviešu");
+     originalLanguages.add("lt", "lietuvių");
+     originalLanguages.add("hu", "magyar");
+     originalLanguages.add("mt", "Malti");
+     originalLanguages.add("nl", "Nederlands");
+     originalLanguages.add("pl", "polski");
+     originalLanguages.add("pt", "português");
+     originalLanguages.add("ro", "română");
+     originalLanguages.add("sk", "slovenčina");
+     originalLanguages.add("sl", "slovenščina");
+     originalLanguages.add("fi", "suomi");
+     originalLanguages.add("sv", "svenska");
 
 // ** Script body ** //
 
@@ -84,12 +110,12 @@ function setCookie(cookieName, cookieValue, expiringDays) {
 
     // Checks if the cookies are enabled in the system and if the EU cookie
     // consent has been accepted
-    if (navigator.cookieEnabled && euCookieConsent && euCookieConsent.accepted("europa")) {
+//    if ($wt.analytics.isTrackable()) {
         var d = new Date();
         d.setTime(d.getTime() + (expiringDays * 24 * 60 * 60 * 1000));
         var expires = key_cookieExpires + '=' + d.toUTCString();
         document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';' + key_cookiePath + '=/';
-    }
+//    }
 }
 
 /*
@@ -99,7 +125,7 @@ function setCookie(cookieName, cookieValue, expiringDays) {
  * @returns {String} The value of the cookie
  */
 function getCookie(cookieName) {
-    if (navigator.cookieEnabled) {
+//    if ($wt.analytics.isTrackable()) {
         var name = cookieName + '=';
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
@@ -113,7 +139,7 @@ function getCookie(cookieName) {
             }
         }
         return val_emptyString;
-    }
+//    }
 }
 /*
  * Function to sort an array (to be used in Array.sort(function(a,b){}))
@@ -150,7 +176,7 @@ function processUri() {
 
     // Getting the current URL
     let currentUrl = window.location.href;
-    if (currentUrl.endsWith("/")){
+    if (currentUrl.endsWith("/")) {
         currentUrl = currentUrl.substring(0, currentUrl.length - 1);
     }
     // Getting the index of the lase occurence of "/"
@@ -160,12 +186,12 @@ function processUri() {
 //    let tmpUrl = currentUrl.substring(i);
     // Splitting this portion with "." to chech if it is specified a language
     // (e.g. elementName.en.html, but also the localID could contain a ".")
-    
+
     //example localID: de.codelist.test
     //example localID with language and format: de.codelist.test.en.xml
-    
-    
-    
+
+
+
 //    let urlCheck = tmpUrl.split(val_dot);
 
     // If the lenght of the urlCheck is 3
@@ -187,14 +213,14 @@ function processUri() {
 //        languageFromUrl = val_emptyString;
 //        uriFromUrl = currentUrl;
 //    }
-    
-     // Passing the current URL as the URI to be passed to the data service
-        languageFromUrl = val_emptyString;
-        uriFromUrl = currentUrl;
-    
+
+    // Passing the current URL as the URI to be passed to the data service
+//    languageFromUrl = val_emptyString;
+    uriFromUrl = currentUrl;
+
     // Check if the flag to force http is on
-    if(registryApp.forceHttpURIs){
-       uriFromUrl = uriFromUrl.replace(key_https + '://', key_http + '://')
+    if (registryApp.forceHttpURIs) {
+        uriFromUrl = uriFromUrl.replace(key_https + '://', key_http + '://')
     }
 }
 
@@ -223,13 +249,77 @@ function performSearch() {
 }
 
 /* Show or hide the loading overlay */
-function showLoadingOverlay(show){
-    
-    let loadingOverlayElement = $('.'+elementClassName_loadingOverlay);
-    
-    if(show){
+function showLoadingOverlay(show) {
+
+    let loadingOverlayElement = $('.' + elementClassName_loadingOverlay);
+
+    if (show) {
         loadingOverlayElement.show();
-    }else{
+    } else {
         loadingOverlayElement.hide();
     }
 }
+
+function Dictionary(){
+	this.add = add;
+	this.dataStore = [];
+	this.find = find;
+	this.remove = remove;
+}
+
+function add(key, value){
+	this.dataStore[key] = value;
+}
+
+function remove(key){
+	delete this.dataStore[key];
+}
+
+function find(key){
+	return this.dataStore[key];
+}
+
+function fillLanguageTable(){
+
+    //Check if languages have already been set in the table
+    // if(unparsedLanguageJSON == "" || document.getElementsByClassName("ecl-language-list__item").length == 0){
+
+    // Get the JSON that contains the active language list
+    let JSONLINK = registryApp.hostURL + "/rest?lang=active&format=jsonc"
+    unparsedLanguageJSON =  $.ajax({ 
+        url: JSONLINK, 
+        async: false
+     }).responseText;
+
+     var languageJSON = JSON.parse(unparsedLanguageJSON);
+     var columnChange = false;
+
+     var finalLanguageColumns = document.getElementsByClassName("ecl-language-list__list");
+
+     for(var i=0; i<languageJSON.length;i++){
+
+        var languageli = document.createElement("li");
+        var languagelink = document.createElement("a");
+        var languageSpan = document.createElement("span");
+
+        languageSpan.setAttribute("class","ecl-link__label");
+        languageli.setAttribute("class", "ecl-language-list__item");
+        languagelink.lang = languageJSON[i].iso6391code;
+        languagelink.setAttribute("hreflang", languageJSON[i].iso6391code);
+        languagelink.rel = "alternate";
+        languagelink.href = "#language_" + languageJSON[i].iso6391code;
+        languagelink.setAttribute("class", "ecl-language-list__link ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-after"); 
+        languageSpan.innerHTML = originalLanguages.find(languageJSON[i].iso6391code);
+        languagelink.appendChild(languageSpan);
+        languageli.appendChild(languagelink);
+
+        if(columnChange){
+            columnChange = false;
+            finalLanguageColumns[0].appendChild(languageli);
+        }else{
+            columnChange = true;
+            finalLanguageColumns[1].appendChild(languageli);
+        }
+     }
+
+     }

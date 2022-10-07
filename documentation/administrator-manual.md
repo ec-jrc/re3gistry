@@ -11,7 +11,6 @@ This is a live document; it is being improved continuously. To have the last ver
 Please report any feedback on the documentation [in the GitHub issue tracker](https://github.com/ec-jrc/re3gistry/issues).
 
 ## Overview
-
 The Re3gistry 2 is a reusable open source solution for managing and sharing "reference codes".
 
 This manual will cover the following topics:
@@ -111,6 +110,13 @@ The next step allows you to choose between 2 options:
 
 *  Installation: choose this option if you want to install the Re3gistry software for the first time and to create a registry from scratch
 * Migration: choose this option if you want to upgrade a preexisting Re3gistry instance. This option will keep your settings and content. Note that this option **will work only on an existing instance running on Re3gistry version 1.3.X**.
+
+![Installation wizard - Installation type](images/install-workflow.png)
+
+The installation process also gives you the option to choose the application workflow to use.
+
+* ISO 19135: Recommended if you plan to receive contributions from different organisations and manage them following a formal and standardised governance process.
+* Simplified: Recommended if the data management will be handled entirely internally in the same organisation, or within a small group of contributors, not requiring such formal process.
 
 #### Installation option
 

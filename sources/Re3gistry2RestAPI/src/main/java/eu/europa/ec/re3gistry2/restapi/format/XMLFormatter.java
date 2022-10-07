@@ -27,11 +27,14 @@
 package eu.europa.ec.re3gistry2.restapi.format;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
+import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemRef;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedProperty;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.restapi.util.IndentingXMLStreamWriter;
 import java.io.OutputStream;
@@ -39,6 +42,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -79,26 +83,49 @@ public class XMLFormatter implements Formatter {
         XMLStreamWriter xml = XMLFactory.XOF.createXMLStreamWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
         xml = new IndentingXMLStreamWriter(xml, XMLFactory.NEW_LINE, XMLFactory.INDENT);
 
-        String itemclassLocalId;
-        if (item.isHasCollection()) {
-            itemclassLocalId = "value";
-        } else {
-            itemclassLocalId = item.getItemclass().getId().toLowerCase();
+        xml.writeStartDocument();
+
+        // Get configuration properties
+        final Properties configurationProperties = Configuration.getInstance().getProperties();
+        String schemaPath = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_SCHEMA_PATH) + "/";
+
+        switch (item.getType()) {
+            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY:
+                xml.writeStartElement("registry");
+                xml.writeDefaultNamespace(item.getUri());
+
+                String schemaLocationRegistry = item.getUri() + " " + item.getUri() + schemaPath + "registry.xsd";
+                xml.writeAttribute("xsi", XSISCHEMALOCATION, "schemaLocation", schemaLocationRegistry);
+
+                break;
+            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
+                xml.writeStartElement("register");
+                xml.writeDefaultNamespace(item.getUri() + "_register");
+
+                String schemaLocationRegister = item.getUri() + "_register " + item.getRegistry().getUri() + schemaPath + item.getItemclass().getId() + "_register.xsd";
+                xml.writeAttribute("xsi", XSISCHEMALOCATION, "schemaLocation", schemaLocationRegister);
+
+                break;
+            default:
+                String itemclassLocalId = item.getItemclass().getId();
+                String startElement;
+
+                if (item.getItemclass().getParentItemClassType().equals("register")) {
+                    startElement = item.getItemclass().getParentid();
+                } else {
+                    startElement = "value";
+                }
+                xml.writeStartElement(startElement);
+                xml.writeDefaultNamespace(item.getRegister().getUri() + "_register/" + itemclassLocalId);
+
+                String schemaLocationItem = item.getRegister().getUri() + "_register/" + itemclassLocalId + " " + item.getRegistry().getUri() + schemaPath + itemclassLocalId + ".xsd";
+                xml.writeAttribute("xsi", XSISCHEMALOCATION, "schemaLocation", schemaLocationItem);
+
+                break;
         }
 
-        xml.writeStartDocument();
-        xml.writeStartElement(itemclassLocalId);
-        xml.writeDefaultNamespace(item.getUri());
-
         xml.writeAttribute("xmlns", XSISCHEMALOCATION, "xsi", XSISCHEMALOCATION);
-//        xml.writeAttribute(item.getItemclass().getId(), "xmlns", item.getUri());
-//        xml.writeAttribute("xmlns", item.getUri());
-//        xml.writeAttribute(NS_XML, "xmlns", item.getUri());
-        String schemaLocation = "http://inspire.ec.europa.eu/registry http://inspire.ec.europa.eu/draft-schemas/registry/2.0/"+item.getType()+".xsd";
-        xml.writeAttribute("xsi", XSISCHEMALOCATION, "schemaLocation", schemaLocation);
-//        xml.writeAttribute(item.getItemclass().getId(), "id", item.getUri());
         xml.writeAttribute("id", item.getUri());
-//        xml.writeAttribute(NS_XML, "id", item.getUri());
 
         return xml;
     }
@@ -108,7 +135,7 @@ public class XMLFormatter implements Formatter {
 
         writeLanguage(xml);
         writeDate(xml, item);
-        writeVersions(xml, item);
+//        writeVersions(xml, item);
         writeFields(xml, item);
 
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
@@ -126,8 +153,9 @@ public class XMLFormatter implements Formatter {
     private void writeRegisterShortVersion(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
         xml.writeStartElement("register");
         xml.writeAttribute("id", item.getUri());
-//        xml.writeAttribute(NS_XML, "id", item.getUri());
 
+        writeLanguage(xml);
+        writeDate(xml, item);
         writeFields(xml, item);
         writeRegistryAndRegister(xml, item);
 
@@ -139,14 +167,13 @@ public class XMLFormatter implements Formatter {
 
         writeLanguage(xml);
         writeDate(xml, item);
-        writeVersions(xml, item);
         writeFields(xml, item);
         writeRegistryAndRegister(xml, item);
 
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             xml.writeStartElement("containeditems");
             for (ContainedItem ci : item.getContainedItems()) {
-                writeItemShortVersion(xml, ci, ci.getItemclass().getId());
+                writeItemShortVersion(xml, ci, ci.getItemclass().getId(), ci);
             }
             xml.writeEndElement();
         }
@@ -155,16 +182,17 @@ public class XMLFormatter implements Formatter {
         xml.close();
     }
 
-    private void writeItemShortVersion(XMLStreamWriter xml, ContainedItem item, String mainElementName) throws XMLStreamException {
+    private void writeItemShortVersion(XMLStreamWriter xml, ContainedItem item, String mainElementName, ContainedItem collectionItem) throws XMLStreamException {
         xml.writeStartElement(mainElementName.toLowerCase());
         xml.writeAttribute("id", item.getUri());
 //        xml.writeAttribute(NS_XML, "id", item.getUri());
 
         writeLanguage(xml);
+        writeDate(xml, item);
         writeVersions(xml, item);
         writeFields(xml, item);
         writeItemclass(xml, item);
-        writeIsDefinedBy(xml, item);
+//        writeIsDefinedBy(xml, item);
         writeRegistryAndRegister(xml, item);
 
         xml.writeEndElement();
@@ -172,24 +200,58 @@ public class XMLFormatter implements Formatter {
 
     private void writeItem(OutputStream out, Item item) throws XMLStreamException {
         XMLStreamWriter xml = getXMLWriter(out, item);
-
         writeLanguage(xml);
         writeDate(xml, item);
         writeVersions(xml, item);
+
         writeFields(xml, item);
         writeItemclass(xml, item);
-        writeIsDefinedBy(xml, item);
+//        writeIsDefinedBy(xml, item);
         writeRegistryAndRegister(xml, item);
 
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
+
             xml.writeStartElement("containeditems");
             for (ContainedItem ci : item.getContainedItems()) {
-                writeItemShortVersion(xml, ci, "value");
 
+                if (item.getItemclass().getParentItemClassType().equals("register")
+                        && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
+                    writeItemShortVersion(xml, ci, item.getItemclass().getParentid(), item);
+                } else {
+                    writeItemShortVersion(xml, ci, "value", item);
+                }
                 if (ci.isHasCollection()) {
                     if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
                         for (ContainedItem c : ci.getContainedItems()) {
-                            writeItemShortVersion(xml, c, "value");
+                            writeItemShortVersion(xml, c, "value", item);
+                        }
+                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
+                            writeItemShortVersion(xml, c, "value", item);
+                        }
+                    }
+                }
+            }
+            xml.writeEndElement();
+        } else if (item.getContainedItemsBeeingParentItemClass() != null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
+
+            xml.writeStartElement("containeditems");
+            for (ContainedItem ci : item.getContainedItemsBeeingParentItemClass()) {
+                if (item.getItemclass().getParentItemClassType().equals("register")
+                        && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
+                    writeItemShortVersion(xml, ci, item.getItemclass().getParentid(), item);
+                } else {
+                    writeItemShortVersion(xml, ci, "value", item);
+                }
+
+                if (ci.isHasCollection()) {
+                    if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
+                            writeItemShortVersion(xml, c, "value", item);
+                        }
+                    } else if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
+                        for (ContainedItem c : ci.getContainedItems()) {
+                            writeItemShortVersion(xml, c, "value", item);
                         }
                     }
                 }
@@ -198,19 +260,24 @@ public class XMLFormatter implements Formatter {
         }
 
         xml.writeEndDocument();
+
         xml.close();
     }
 
     private void writeVersions(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
         List<VersionInformation> versionHistory = item.getVersionHistory();
         VersionInformation version = item.getVersion();
-
-        writeEmptyElement(xml, "thisversion", version.getUri());
-        writeEmptyElement(xml, "latestversion", item.getUri());
-        if (!versionHistory.isEmpty()) {
+        if(version!=null && version.getUri()!=null) {
+            writeEmptyElement(xml, "thisversion", version.getUri());
+        }
+        if(item!=null && item.getUri()!=null) {
+            writeEmptyElement(xml, "latestversion", item.getUri());
+        }
+        if (versionHistory != null && !versionHistory.isEmpty()) {
             xml.writeStartElement("previousversions");
             for (VersionInformation versionInformation : versionHistory) {
-                writeEmptyElement(xml, "version", versionInformation.getUri() + ":" + versionInformation.getNumber());
+                writeEmptyElement(xml, "version", versionInformation.getUri());
+//                writeEmptyElement(xml, "version", versionInformation.getUri() + ":" + versionInformation.getNumber());
             }
             xml.writeEndElement();
         }
@@ -229,6 +296,10 @@ public class XMLFormatter implements Formatter {
     }
 
     private void writeFields(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
+        // Get configuration properties
+        final Properties configurationProperties = Configuration.getInstance().getProperties();
+        String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
+
         List<LocalizedProperty> localizedProperties = item.getProperties();
         for (LocalizedProperty localizedProperty : localizedProperties) {
 
@@ -237,54 +308,86 @@ public class XMLFormatter implements Formatter {
                 String value = localizedProperty.getValues().get(0).getValue();
                 String href = localizedProperty.getValues().get(0).getHref();
 
-                String fieldName = localizedProperty.getLabel().replace("-item", "");
-                String fieldLocalId = localizedProperty.getId();
-//                String localNameLowerCase = fieldName.toLowerCase();
+                String fieldName = localizedProperty.getLabel().replace("-item", "").toLowerCase();
+                String fieldLocalId = localizedProperty.getId().replace("-item", "").toLowerCase();
 
-                if (fieldName != null && "contactpoint".equals(fieldLocalId.toLowerCase())) {
-                    xml.writeStartElement("contactPoint");
-                    writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    writeEmptyElement(xml, "email", href);
-                    xml.writeEndElement();
-                } else if (fieldName != null && "license".equals(fieldLocalId.toLowerCase())) {
-                    xml.writeStartElement("license");
-                    writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    writeEmptyElement(xml, "uri", href);
-                    xml.writeEndElement();
-                } else if (fieldName != null && "governance-level".equals(fieldLocalId.toLowerCase())) {
-                    xml.writeStartElement("governance-level");
-                    writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    writeEmptyElement(xml, "uri", href);
-                    xml.writeEndElement();
-                } else if (fieldName != null && "collection".equals(fieldLocalId.toLowerCase())) {
-                    xml.writeStartElement("collection");
-                    writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    writeEmptyElement(xml, "uri", href);
-                    xml.writeEndElement();
-                } else if (fieldName != null && "successor".equals(fieldLocalId.toLowerCase())) {
-                    xml.writeStartElement("successor");
-                    writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    writeEmptyElement(xml, "uri", href);
-                    xml.writeEndElement();
-                } else if (fieldName != null && "predecessor".equals(fieldLocalId.toLowerCase())) {
-                    xml.writeStartElement("predecessor");
-                    writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    writeEmptyElement(xml, "uri", href);
-                    xml.writeEndElement();
-                } else if (fieldName != null && "status".equals(fieldLocalId.toLowerCase())) {
-                    xml.writeStartElement(fieldLocalId);
-                    xml.writeAttribute("id", href);
-//                    xml.writeAttribute(NS_XML, "id", href);
-                    writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
-                    xml.writeEndElement();
-                } else if (fieldName != null && ("annex".equals(fieldLocalId.toLowerCase()) || "themenumber".equals(fieldLocalId.toLowerCase()))) {
-                    writeEmptyElement(xml, fieldLocalId, value);
+                if (fieldName != null && "successor".equals(fieldLocalId)) {
+                    writeComplexListElement(xml, localizedProperty, lang, "successors", fieldLocalId);
+                } else if (fieldName != null && "predecessor".equals(fieldLocalId)) {
+                    writeComplexListElement(xml, localizedProperty, lang, "predecessors", fieldLocalId);
+                } else if (fieldName != null && "parent".equals(fieldLocalId)) {
+                    writeComplexListElement(xml, localizedProperty, lang, "parents", fieldLocalId);
+                } else if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
+                    if (href != null && !href.isEmpty()) {
+                        xml.writeStartElement(fieldLocalId);
+                        xml.writeAttribute("id", href);
+                        writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
+                        xml.writeEndElement();
+                    } else {
+                        writeSimpleElementWithAttribute(xml, fieldLocalId, NS_XML, "lang", lang, value);
+                    }
                 } else {
-                    writeSimpleElementWithAttribute(xml, fieldLocalId, NS_XML, "lang", lang, value);
+                    if (fieldName != null && "contactpoint".equals(fieldLocalId)) {
+                        xml.writeStartElement("contactpoint");
+                        writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
+                        writeEmptyElement(xml, "email", href);
+                        xml.writeEndElement();
+                    } else if (fieldName != null && "license".equals(fieldLocalId)) {
+                        xml.writeStartElement("license");
+                        writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
+                        writeEmptyElement(xml, "uri", href);
+                        xml.writeEndElement();
+                    } else if (fieldName != null && "governance-level".equals(fieldLocalId)) {
+                        xml.writeStartElement("governance-level");
+                        xml.writeAttribute("id", href);
+                        writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
+                        xml.writeEndElement();
+                    } else if (fieldName != null && "collection".equals(fieldLocalId)) {
+                        String registerUri = item.getRegister().getUri();
+                        int index = registerUri.lastIndexOf("/");
+                        String registerid = registerUri.substring(index + 1);
+                        xml.writeStartElement(registerid);
+//                        xml.writeStartElement(item.getItemclass().getParentid());
+                        xml.writeAttribute("id", href);
+                        writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
+                        xml.writeEndElement();
+                    } else if (fieldName != null && "status".equals(fieldLocalId)) {
+                        xml.writeStartElement(fieldLocalId);
+                        xml.writeAttribute("id", href);
+                        writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
+                        xml.writeEndElement();
+                    } else if (fieldName != null && ("annex".equals(fieldLocalId) || "themenumber".equals(fieldLocalId))) {
+                        writeEmptyElement(xml, fieldLocalId, value);
+                    } else if (href != null && !href.isEmpty()) {
+                        xml.writeStartElement(fieldLocalId);
+                        xml.writeAttribute("id", href);
+                        writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, value);
+                        xml.writeEndElement();
+                    } else {
+                        writeSimpleElementWithAttribute(xml, fieldLocalId, NS_XML, "lang", lang, value);
+                    }
                 }
 
             }
         }
+    }
+
+    private void writeComplexListElement(XMLStreamWriter xml, LocalizedProperty localizedProperty, String lang, String mainElement, String secondElement) throws XMLStreamException {
+        xml.writeStartElement(mainElement);
+
+        List<LocalizedPropertyValue> valuesListsuccessors = localizedProperty.getValues();
+        if (valuesListsuccessors != null && !valuesListsuccessors.isEmpty()) {
+            for (LocalizedPropertyValue localizedPropertyValue : valuesListsuccessors) {
+                String valueSuccessor = localizedPropertyValue.getValue();
+                String hrefSuccessor = localizedPropertyValue.getHref();
+
+                xml.writeStartElement(secondElement);
+                xml.writeAttribute("id", hrefSuccessor);
+                writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", lang, valueSuccessor);
+                xml.writeEndElement();
+            }
+        }
+        xml.writeEndElement();
     }
 
     private void writeIsDefinedBy(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
@@ -298,8 +401,8 @@ public class XMLFormatter implements Formatter {
                 if (referenceList != null) {
                     for (ContainedItem containedItem : referenceList) {
                         xml.writeStartElement(containedItem.getItemclass().getId().toLowerCase().replace("-item", ""));
+                        xml.writeAttribute("id", containedItem.getUri());
                         writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", containedItem.getLanguage(), containedItem.getLocalid());
-                        writeEmptyElement(xml, "uri", containedItem.getUri());
                         xml.writeEndElement();
                     }
                 }
@@ -332,19 +435,16 @@ public class XMLFormatter implements Formatter {
             case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
                 xml.writeStartElement("registry");
                 xml.writeAttribute("id", item.getRegistry().getUri());
-//                xml.writeAttribute(NS_XML, "id", item.getRegistry().getUri());
                 writeSimpleElementWithAttribute(xml, "label", NS_XML, "lang", item.getLanguage(), item.getRegistry().getUri());
                 xml.writeEndElement();
                 break;
             default:
-                xml.writeStartElement("registry");
-                xml.writeAttribute("id", item.getRegistry().getUri());
-//                xml.writeAttribute(NS_XML, "id", item.getRegistry().getUri());
-                writeTitle(xml, item.getRegistry());
-
                 xml.writeStartElement("register");
                 xml.writeAttribute("id", item.getRegister().getUri());
-//                xml.writeAttribute(NS_XML, "id", item.getRegister().getUri());
+                writeTitle(xml, item.getRegister());
+
+                xml.writeStartElement("registry");
+                xml.writeAttribute("id", item.getRegistry().getUri());
                 writeTitle(xml, item.getRegistry());
 
                 xml.writeEndElement();
@@ -373,10 +473,16 @@ public class XMLFormatter implements Formatter {
 
     private void writeSimpleElementWithAttribute(XMLStreamWriter xml, String localName, String nsAttr, String attrKey, String attrValue, String value) throws XMLStreamException {
         xml.writeStartElement(localName);
-        xml.writeAttribute(attrKey, attrValue);
+        xml.writeAttribute("xml", attrValue, "lang", attrValue);
+//        xml.writeAttribute(attrKey, attrValue);
 //        xml.writeAttribute(nsAttr, attrKey, attrValue);
         xml.writeCharacters(value);
         xml.writeEndElement();
+    }
+
+    @Override
+    public void write(ItemClass itemClass, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

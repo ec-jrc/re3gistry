@@ -167,7 +167,7 @@ public class RegistryManagerDataExport extends HttpServlet {
                     if (cacheClassUUID!=null) {
                         cacheall.run(cacheClassUUID);
                     } else {
-                        cacheall.run();
+                        cacheall.run(null);
                     }
                     subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_CACHE_SUCCESS);
                     body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_CACHE_SUCCESS);

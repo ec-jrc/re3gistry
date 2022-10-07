@@ -51,6 +51,7 @@
 <%
     // Getting the configuration
     boolean checInstallation = configuration.checkInstallation();
+    boolean checWorkflowSimplified = configuration.checkWorkflowSimplified();
 
     // Instantiating managers
     RegUserRegGroupMappingManager regUserRegGroupMappingManager = new RegUserRegGroupMappingManager(entityManager);
@@ -87,6 +88,7 @@
             ${checInstallation}
 
             <%        if (checInstallation) {
+                        
             %>
             <c:choose>
                 <c:when test="${not empty regUser}">
@@ -102,17 +104,17 @@
                     </li>
                     <% } %>
 
-                    <% if (partOfSubmittingOrganizations || partOfRegistryManager) { %>
+                    <% if ((partOfSubmittingOrganizations || partOfRegistryManager) && (checWorkflowSimplified==false)) { %>
                     <li class="nav-item bg-hover-gray<c:if test="${currentPageName == wconstants.PAGE_URINAME_SUBMITTINGORGANISATIONS}"> active</c:if>">
                         <a class="nav-link" href=".${wconstants.PAGE_URINAME_SUBMITTINGORGANISATIONS}"><i class="fas fa-user-plus"></i> ${localization.getString('menu.submittingorganisations.label')}</a>
                     </li>
                     <% } %>
-                    <% if (partOfControlBody) { %>
+                    <% if (partOfControlBody && (checWorkflowSimplified==false)) { %>
                     <li class="nav-item bg-hover-gray<c:if test="${currentPageName == wconstants.PAGE_URINAME_CONTROLBODY}"> active</c:if>">
                         <a class="nav-link" href=".${wconstants.PAGE_URINAME_CONTROLBODY}"><i class="fas fa-user-check"></i> ${localization.getString('menu.controlbody.label')}</a>
                     </li>
                     <% } %>
-                    <% if (partOfRegisterManager) { %>
+                    <% if (partOfRegisterManager && (checWorkflowSimplified==false)) { %>
                     <li class="nav-item bg-hover-gray<c:if test="${currentPageName == wconstants.PAGE_URINAME_REGISTERMANAGER}"> active</c:if>">
                         <a class="nav-link" href=".${wconstants.PAGE_URINAME_REGISTERMANAGER}"><i class="fas fa-user-cog"></i> ${localization.getString('menu.registermanager.label')}</a>
                     </li>

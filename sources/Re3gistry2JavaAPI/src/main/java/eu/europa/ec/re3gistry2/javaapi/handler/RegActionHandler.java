@@ -367,6 +367,14 @@ public class RegActionHandler {
     }
 
     public void registryManagerAction(String actionUuid, RegUser regUser) throws Exception {
+        this.registryManagerAction(actionUuid, regUser, false, null, null);
+    }
+    
+    public void registryManagerActionSimplifiedWorkflow(String actionUuid, RegUser regUser, String changelog, String issueReference) throws Exception {
+        this.registryManagerAction(actionUuid, regUser, true, changelog, issueReference);
+    }
+    
+    private void registryManagerAction(String actionUuid, RegUser regUser, boolean simplifiedWorkflow, String changelog, String issueReference) throws Exception {
 
         // initializing managers
         RegActionManager regActionManager = new RegActionManager(entityManager);
@@ -396,6 +404,15 @@ public class RegActionHandler {
 
                 // Setting the submitted status to the RegAction
                 regAction.setRegStatus(regStatusUpdatePublished);
+                
+                if (simplifiedWorkflow) {
+                    if (changelog!=null) {
+                        regAction.setChangelog(changelog);
+                    }
+                    if (issueReference!=null) {
+                        regAction.setIssueTrackerLink(issueReference);
+                    }
+                }
 
                 entityManager.getTransaction().commit();
 
@@ -417,6 +434,7 @@ public class RegActionHandler {
                     if (regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_ACCEPTED)
                             || (regItemproposed.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT)
                             && (regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)
+                            || simplifiedWorkflow
                             || regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)))) {
                         regItemproposed.setRegStatus(regStatusUpdateValid);
                     }

@@ -189,10 +189,10 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (List<RegLocalization>) q.getResultList();
     }
-    
+
     /**
-     * Returns all the RegLocalization for the specified RegItems
-     * in the specific language
+     * Returns all the RegLocalization for the specified RegItems in the
+     * specific language
      *
      * @param regItem The regItem to find the localization fields
      * @param regLanguagecode
@@ -236,7 +236,7 @@ public class RegLocalizationManager implements IRegLocalizationManager {
 
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_FIELDS_BY_ITEMCLASS);
-        q.setParameter("regitemclass", regItemclass);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemclass);
         return (List<RegLocalization>) q.getResultList();
     }
 
@@ -313,7 +313,7 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGLANGUAGECODE, regLanguagecode);
         return (List<RegLocalization>) q.getResultList();
     }
-    
+
     /**
      * Returns all the RegLocalization for the specified RegField, RegItem and
      * RegAction
@@ -340,6 +340,16 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_FIELD_BY_VALUE);
         q.setParameter(SQLConstants.SQL_PARAMETERS_VALUE, value);
+        return (List<RegLocalization>) q.getResultList();
+    }
+
+    @Override
+    public List<RegLocalization> getAllHrefNotNull(RegField regField, RegItemclass regItemclass) throws Exception {
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_FIELDS_BY_REGFIELD_ITEMCLASS_HREFNORNULL);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGFIELD, regField);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemclass);
         return (List<RegLocalization>) q.getResultList();
     }
 

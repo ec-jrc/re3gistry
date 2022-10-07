@@ -29,17 +29,14 @@
 
         <link
             rel="stylesheet"
-            href="/registry/css/style.css"
+            href="/registry/css/style_netrual.css"
             />
 
         <script src="https://inspire.ec.europa.eu/cdn/1.0/js/jquery.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
-        <script src="//ec.europa.eu/wel/cookie-consent/consent.js" type="text/javascript"></script>
+        <script defer src="https://europa.eu/webtools/load.js" type="text/javascript"></script>
 
         <script src="/registry/conf/conf.js"></script>
-        <!--        <script src="/registry/js-ecl-v2/app_common.js"></script>
-                <script src="/registry/js-ecl-v2/app_i18n.js"></script>
-                <script src="/registry/js-ecl-v2/app_core.js"></script>
-                <script src="/registry/js-ecl-v2/app_init.js" defer></script>-->
+        <script src="/registry/js-ecl-v2/app_api.js" defer></script>-->
 
         <script src="/registry/libs/DataTables_v1.10.20/js/jquery.dataTables.min.js" defer></script>
 
@@ -318,7 +315,7 @@
                         </p>
 
                         <blockquote class="ecl-blockquote ecl-u-mt-m">
-                            <footer class="ecl-blockquote__attribution  ecl-u-mt-xs">
+                            <footer class="ecl-blockquote__attribution ecl-u-mt-xs">
                                 <cite class="ecl-blockquote__author">http://{base_uri}/{register_uriname}/{register_uriname}.{language_code}.{format}</cite><br/>
                                 <cite class="ecl-blockquote__author ecl-u-mt-l">http://{base_uri}/{itemclass}/{itemclass}.{language_code}.{format}</cite><br/>
                                 <cite class="ecl-blockquote__author ecl-u-mt-l">http://{base_uri}/{itemclass_collection}/{collection_uriname}/{item_uriname}/{item_uriname}.{language_code}.{format}</cite>
@@ -334,12 +331,12 @@
                             <footer class="ecl-blockquote__attribution"><cite class="ecl-blockquote__author">Examples</cite></footer>
                             <div class="ecl-blockquote__body">
                                 <ul class="ecl-unordered-list">
-                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/codelist/codelist.en.xml">/codelist/codelist.en.xml</a></li>
-                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/AgeBy5YearsValue.fr.csv"> /codelist/AgeBy5YearsValue/AgeBy5YearsValue.fr.csv</a></li>
-                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml">/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml</a></li>
-                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/applicationschema/applicationschema.it.xml">/applicationschema/applicationschema.it.xml</a></li>
-                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/theme/mf/mf.ro.json">/theme/mf/mf.ro.json</a></li>
-                                    <li class="ecl-unordered-list__item"><a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/document/SCDWHO">/document/SCDWHO/SCDWHO.es.rdf</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="link-ecl-unordered-list" href="_registryApp_domainURL_/codelist/codelist.en.xml">_registryApp_domainURL_/codelist/codelist.en.xml</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="link-ecl-unordered-list" href="_registryApp_domainURL_/codelist/AgeBy5YearsValue/AgeBy5YearsValue.fr.csv">_registryApp_domainURL_/codelist/AgeBy5YearsValue/AgeBy5YearsValue.fr.csv</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="link-ecl-unordered-list" href="_registryApp_domainURL_/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml">_registryApp_domainURL_/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="link-ecl-unordered-list" href="_registryApp_domainURL_/applicationschema/applicationschema.it.xml">_registryApp_domainURL_/applicationschema/applicationschema.it.xml</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="link-ecl-unordered-list" href="_registryApp_domainURL_/theme/mf/mf.ro.json">_registryApp_domainURL_/theme/mf/mf.ro.json</a></li>
+                                    <li class="ecl-unordered-list__item"><a class="link-ecl-unordered-list" href="_registryApp_domainURL_/document/SCDWHO">_registryApp_domainURL_/document/SCDWHO/SCDWHO.es.rdf</a></li>
                                 </ul>
                             </div>
                         </blockquote>
@@ -352,9 +349,9 @@
                         </p>
                         <blockquote class="ecl-blockquote ecl-u-mt-m">
                             <footer class="ecl-blockquote__attribution  ecl-u-mt-xs">
-                                <cite class="ecl-blockquote__author">https://{base_uri}/{register_uriname}/rest?uri=http://{base_uri}/{register_uriname}&format={format}&lang={language_code}</cite><br/>
-                                <cite class="ecl-blockquote__author ecl-u-mt-l">https://{base_uri}/{register_uriname}/rest?uri=http://{base_uri}/{itemclass}.&format={format}&lang={language_code}</cite><br/>
-                                <cite class="ecl-blockquote__author ecl-u-mt-l">https://{base_uri}/{register_uriname}/rest?uri=http://{base_uri}/{itemclass_collection}/{collection_uriname}/{item_uriname}&format={format}&lang={language_code}</cite>
+                                <cite class="ecl-blockquote__author">http://{base_uri}/{register_uriname}/rest?uri=https://{base_uri}/{register_uriname}&format={format}&lang={language_code}</cite><br/>
+                                <cite class="ecl-blockquote__author ecl-u-mt-l">http://{base_uri}/{register_uriname}/rest?uri=https://{base_uri}/{itemclass}.&format={format}&lang={language_code}</cite><br/>
+                                <cite class="ecl-blockquote__author ecl-u-mt-l">http://{base_uri}/{register_uriname}/rest?uri=https://{base_uri}/{itemclass_collection}/{collection_uriname}/{item_uriname}&format={format}&lang={language_code}</cite>
                             </footer>
                         </blockquote>
 
@@ -363,13 +360,13 @@
                             Let's consider the example above:
                         </p>
                         <p class="ecl-u-type-heading-5 ecl-u-mt-m">
-                            <a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml">https://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml</a>
+                            <a class="link-ecl-unordered-list" href="_registryApp_domainURL_/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml">_registryApp_domainURL_/codelist/AgeBy5YearsValue/15-20/15-20.sl.xml</a>
                         </p>
                         <p class="ecl-card__description ecl-u-mt-m">
                             this is calling the API in following way:
                         </p>
                         <p class="ecl-u-type-heading-5 ecl-u-mt-m">
-                            <a class="" href="https://inspire-sandbox.jrc.ec.europa.eu/registry/rest?uri=http://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20&format=xml&lang=sl">https://inspire-sandbox.jrc.ec.europa.eu/registry/rest?uri=http://inspire-sandbox.jrc.ec.europa.eu/codelist/AgeBy5YearsValue/15-20&format=xml&lang=sl</a>
+                            <a class="link-ecl-unordered-list" href="_registryApp_domainURL_/registry/rest?uri=_registryApp_domainURL_/codelist/AgeBy5YearsValue/15-20&format=xml&lang=sl">_registryApp_domainURL_/registry/rest?uri=_registryApp_domainURL_/codelist/AgeBy5YearsValue/15-20&format=xml&lang=sl</a>
                         </p>
                     </div>
                 </div>
@@ -451,6 +448,14 @@
             var elt = document.querySelector('[data-ecl-accordion2]');
             var accordion = new ECL.Accordion2(elt);
             accordion.init();
+        </script>
+        <script type="application/json">
+            {
+            "utility" : "cck",
+            "url": {
+            "en": "https://my.ec.europa.eu/cookie-policy_en"
+            }
+            }
         </script>
     </body>
 </html>

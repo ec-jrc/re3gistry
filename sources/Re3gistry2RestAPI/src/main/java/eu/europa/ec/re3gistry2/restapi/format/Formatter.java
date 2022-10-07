@@ -30,11 +30,13 @@ import java.io.OutputStream;
 
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 
 public interface Formatter {
 
     public String getFormatName();
     public String getContentType();
     public void write(Item item, RegLanguagecode lang, OutputStream out) throws Exception;
+    public void write(ItemClass itemClass, OutputStream out) throws Exception;
 
 }

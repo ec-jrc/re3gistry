@@ -26,6 +26,9 @@
  */
 package eu.europa.ec.re3gistry2.restapi;
 
+import eu.europa.ec.re3gistry2.restapi.util.ApiError;
+import eu.europa.ec.re3gistry2.javaapi.cache.supplier.XSDSchemaSupplier;
+import eu.europa.ec.re3gistry2.javaapi.cache.supplier.StatusSupplier;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +45,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
-import eu.europa.ec.re3gistry2.base.utility.ItemproposedHelper;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
+import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
@@ -58,10 +61,18 @@ import eu.europa.ec.re3gistry2.restapi.format.RDFFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.RORFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.XMLFormatter;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemproposedSupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.NoVersionException;
+import eu.europa.ec.re3gistry2.model.RegItemclass;
+import eu.europa.ec.re3gistry2.restapi.format.ATOMFormatter;
+import eu.europa.ec.re3gistry2.restapi.format.XSDFormatter;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
 import eu.europa.ec.re3gistry2.restapi.util.ResponseUtil;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 public class ItemsServlet extends HttpServlet {
 
@@ -86,6 +97,8 @@ public class ItemsServlet extends HttpServlet {
             addFormatter(new RDFFormatter());
             addFormatter(new CSVFormatter(emf));
             addFormatter(new RORFormatter());
+            addFormatter(new XSDFormatter());
+            addFormatter(new ATOMFormatter());
         } catch (Exception e) {
             LOG.error("Unexpected exception occured: cannot load the configuration system", e);
         }
@@ -104,18 +117,9 @@ public class ItemsServlet extends HttpServlet {
             String uuid = RequestUtil.getParamTrimmed(req, "uuid", null);
             String uri = RequestUtil.getParamTrimmed(req, "uri", null);
             String format = RequestUtil.getParamTrimmed(req, "format", null);
+            String status = RequestUtil.getParamTrimmed(req, "status", null);
+            String itemclassparam = RequestUtil.getParamTrimmed(req, "itemclass", null);
             uri = removeTrailingSlashes(uri);
-
-//            if (uri != null) {
-//                int slash = uri.lastIndexOf('/');
-//                String localid = uri.substring(slash + 1);
-//                int count = countOccurance(uri, localid);
-//
-//                if (count == 2) {
-//                    int start = uri.lastIndexOf(localid);
-//                    uri = uri.substring(0, start - 1);
-//                }
-//            }
 
             Predicate<Item> typeFilter = getTypeFilter(path);
             Formatter formatter = formatters.get(format);
@@ -124,82 +128,124 @@ public class ItemsServlet extends HttpServlet {
                 ResponseUtil.err(resp, ApiError.NOT_FOUND);
                 return;
             }
-            if (formatter == null) {
-                ResponseUtil.err(resp, ApiError.FORMAT_NOT_SUPPORTED);
-                return;
-            }
-            if (uuid == null && uri == null) {
-                ResponseUtil.err(resp, ApiError.UUID_URI_REQUIRED);
-                return;
-            }
 
             EntityManager em = null;
             try {
                 em = emf.createEntityManager();
 
-                RegLanguagecodeManager languageManager = new RegLanguagecodeManager(em);
-                RegLanguagecode masterLanguage = languageManager.getMasterLanguage();
-                RegLanguagecode languageCode = getLanguageCode(languageManager, lang, masterLanguage);
-                if (languageCode == null) {
-                    ResponseUtil.err(resp, ApiError.LANGUAGE_NOT_SUPPORTED);
-                    return;
-                }
-
-                ItemproposedSupplier itemproposedSupplier = new ItemproposedSupplier(em, masterLanguage, languageCode);
-                ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
-                
-                ItemHistorySupplier itemHistorySupplier = new ItemHistorySupplier(em, masterLanguage, languageCode);
-
-                Optional<Item> optItem;
-                
-                if (uuid != null) {
+                if (lang != null && lang.equalsIgnoreCase("active")) {
+                    String type = "application/json";
+                    RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(em);
+                    List<RegLanguagecode> activeLanguages = null;
                     try {
-                        optItem = getItemByUuid(uuid, lang, itemSupplier);
+                        activeLanguages = regLanguagecodeManager.getAllActive();
                     } catch (Exception ex) {
-                        try{
-                            optItem = getItemProposedByUuid(uuid, lang, itemproposedSupplier);
-                        }catch(Exception e){
-                            optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
-                        }
+                        java.util.logging.Logger.getLogger(ItemsServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else{
-                    Integer version = getVersionFromUri(uri);
-                    //version is null if the uri doesnt contain any version information, so is a RegItem
-                    if (version != null) {
-                        if (version == 0) {
-                            optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+
+                    //TOITEM
+                    List<Map<String, String>> toActiveLanguages = new ArrayList();
+                    for (int i = 0; i < activeLanguages.size(); i++) {
+                        HashMap<String, String> language = new HashMap<>();
+                        language.put("uuid", activeLanguages.get(i).getUuid());
+                        language.put("label", activeLanguages.get(i).getLabel());
+                        language.put("iso6391code", activeLanguages.get(i).getIso6391code());
+                        language.put("iso6392code", activeLanguages.get(i).getIso6392code());
+                        language.put("masterlanguage", activeLanguages.get(i).getMasterlanguage().toString());
+                        language.put("active", activeLanguages.get(i).getActive().toString());
+                        toActiveLanguages.add(language);
+                    }
+
+                    byte[] body = JSONInternalFormatter.OM.writeValueAsBytes(toActiveLanguages);
+                    resp.setContentType(type);
+                    resp.setContentLength(body.length);
+                    try (OutputStream out = resp.getOutputStream()) {
+                        out.write(body);
+                    }
+                    return;
+                } else if (itemclassparam != null) {
+                    RegItemclassManager regItemclassManager = new RegItemclassManager(em);
+                    try {
+                        RegItemclass regItemclass = regItemclassManager.getByLocalid(itemclassparam.replace("_register", ""));
+                        XSDSchemaSupplier xsdSchemaSupplier = new XSDSchemaSupplier(em, regItemclass);
+
+                        ItemClass itemClass = xsdSchemaSupplier.getItemClass(regItemclass);
+
+                        if (itemClass == null) {
+                            ResponseUtil.err(resp, ApiError.NOT_FOUND);
                         } else {
-                            optItem = getItemHistoryByUri(uri, version, lang, itemHistorySupplier);
-                            if (!optItem.isPresent()) {
-                                optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
-                            }
+                            ResponseUtil.ok(resp, itemClass, formatter);
                         }
-                    } else {
-                        if (uri.endsWith(":0")) {
-                            optItem = getItemByUri(uri.replace("0:", ""), lang, itemSupplier);
-                        } else {
-                            optItem = getItemByUri(uri, lang, itemSupplier);                            
-                            if (!optItem.isPresent()) {
-                                optItem = getItemProposedByUri(uri, lang, itemproposedSupplier);
-                            }
+                    } catch (Exception ex) {
+
+                        List<RegItemclass> itemclassList = regItemclassManager.getAll(false);
+                        String list = null;
+                        for (RegItemclass regItemclass : itemclassList) {
+                            list = list + ", " + regItemclass.getLocalid();
                         }
+                        ApiError.ITEMCLASS_REQUIRED.getError().getDescription().concat(list);
+                        ResponseUtil.err(resp, ApiError.ITEMCLASS_REQUIRED);
                     }
-                }                
-                //try to see if is a status request
-                if (!optItem.isPresent()) {
-                    StatusSupplier statusSupplier = new StatusSupplier(em, masterLanguage, languageCode);
-                    if (uuid != null) {
-                        optItem = getItemStatusByUuid(uuid, lang, statusSupplier);
-                    } else {
-                        optItem = getItemStatusByUri(uri, lang, statusSupplier);
-                    }
-                }
-                
-                Item item = optItem.filter(typeFilter).orElse(null); // OPT ITEM RESULT
-                if (item == null) {
-                    ResponseUtil.err(resp, ApiError.NOT_FOUND);
                 } else {
-                    ResponseUtil.ok(resp, item, languageCode, formatter);
+                    if (uuid == null && uri == null) {
+                        ResponseUtil.err(resp, ApiError.UUID_URI_REQUIRED);
+                        return;
+                    }
+
+                    if (formatter == null) {
+                        ResponseUtil.err(resp, ApiError.FORMAT_NOT_SUPPORTED);
+                        return;
+                    }
+
+                    RegLanguagecodeManager languageManager = new RegLanguagecodeManager(em);
+                    RegLanguagecode masterLanguage = languageManager.getMasterLanguage();
+                    RegLanguagecode languageCode = getLanguageCode(languageManager, lang, masterLanguage);
+                    if (languageCode == null) {
+                        ResponseUtil.err(resp, ApiError.LANGUAGE_NOT_SUPPORTED);
+                        return;
+                    }
+
+                    ItemSupplier itemSupplier = new ItemSupplier(em,
+                            masterLanguage, languageCode);
+                    ItemHistorySupplier itemHistorySupplier = new ItemHistorySupplier(em,
+                            masterLanguage, languageCode);
+                    ItemproposedSupplier itemproposedSupplier = new ItemproposedSupplier(em, masterLanguage, languageCode);
+
+                    Optional<Item> optItem = Optional.empty();
+                    
+                    Integer version;
+                    try{
+                         version = getVersionFromUri(uri);
+                    }catch(Exception uriError){
+                        version = 0;
+                    }
+                    
+                    if(uuid != null && status != null ){                       
+                       throw new Exception();
+                    }else if (uuid != null){
+                        optItem = searchForItemByUuid(uuid, lang, itemSupplier, itemproposedSupplier, itemHistorySupplier);   
+                    }else if (uri != null && status != null){
+                        optItem = searchForItemByURIStatus(uri, lang, version, status, itemSupplier, itemproposedSupplier, itemHistorySupplier);
+                    } else if (uri != null){
+                        optItem = searchForItemByURI(uri, version, lang, itemSupplier, itemproposedSupplier, itemHistorySupplier);
+                    }
+ 
+                    //try to see if is a status request
+                    if (!optItem.isPresent() && status == null) {
+                        StatusSupplier statusSupplier = new StatusSupplier(em, masterLanguage, languageCode);
+                        if (uuid != null) {
+                            optItem = getItemStatusByUuid(uuid, lang, statusSupplier);
+                        } else {
+                            optItem = getItemStatusByUri(uri, lang, statusSupplier);
+                        }
+                    }
+
+                    Item item = optItem.filter(typeFilter).orElse(null);
+                    if (item == null) {
+                        ResponseUtil.err(resp, ApiError.NOT_FOUND);
+                    } else {
+                        ResponseUtil.ok(resp, item, languageCode, formatter);
+                    }
                 }
             } catch (NoResultException e) {
                 try {
@@ -252,11 +298,12 @@ public class ItemsServlet extends HttpServlet {
         int i = uri.lastIndexOf('/');
         i = uri.indexOf(':', i + 1);
         if (i < 0) {
-            version = null;
+            version = 0;
         } else {
             try {
                 version = Integer.parseInt(uri.substring(i + 1));
-            } catch (Exception ignore) {
+                return version;
+            } catch (NumberFormatException ignore) {
                 return null;
             }
         }
@@ -313,24 +360,7 @@ public class ItemsServlet extends HttpServlet {
             return Optional.empty();
         }
 
-        cache.add(language, item);
-        return Optional.of(item);
-    }
-    
-       private Optional<Item> getItemProposedByUuid(String uuid, String language, ItemproposedSupplier itemproposedSupplier) throws Exception {
-
-        Item item = itemproposedSupplier.getItemProposedByUuid(uuid);
-        if (item == null) {
-            return Optional.empty();
-        }
-        return Optional.of(item);
-    }
-       
-       private Optional<Item> getItemProposedByUri(String uri, String language, ItemproposedSupplier itemproposedSupplier) throws Exception {
-        Item item = itemproposedSupplier.getItemProposedByUri(uri);
-        if (item == null) {
-            return Optional.empty();
-        }
+        cache.add(language, item, null);
         return Optional.of(item);
     }
 
@@ -345,10 +375,46 @@ public class ItemsServlet extends HttpServlet {
             return Optional.empty();
         }
 
-        cache.add(language, item);
+        cache.add(language, item, null);
+        return Optional.of(item);
+    }
 
-        Item it = cache.getByUrl(language, uri);
+    private Optional<Item> getItemProposedByUuid(String uuid, String language, ItemproposedSupplier itemproposedSupplier) throws Exception {
+        Item item = itemproposedSupplier.getItemProposedByUuid(uuid);
+        if (item == null) {
+            return Optional.empty();
+        }
+        return Optional.of(item);
+    }
 
+    private Optional<Item> getItemProposedByUri(String uri, ItemproposedSupplier itemproposedSupplier) throws Exception {
+        Item item = itemproposedSupplier.getItemProposedByUri(uri);
+        if (item == null) {
+            return Optional.empty();
+        }
+        return Optional.of(item);
+    }
+
+    private Optional<Item> getItemProposedByUriAndStatus(String uri, String itemStatus, ItemproposedSupplier itemproposedSupplier) throws Exception {
+        Item item = itemproposedSupplier.getItemProposedByUriAndStatus(uri, itemStatus);
+        if (item == null) {
+            return Optional.empty();
+        }
+        return Optional.of(item);
+    }
+    
+    private Optional<Item> getItemByUriAndStatus(String uri, String language, ItemSupplier itemSupplier, String itemStatus) throws Exception {
+        Item cached = cache.getByUrl(language, uri, null, itemStatus);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+
+        Item item = itemSupplier.getItemByUriAndStatus(uri, itemStatus);
+        if (item == null) {
+            return Optional.empty();
+        }
+
+        cache.add(language, item, null);
         return Optional.of(item);
     }
 
@@ -362,11 +428,11 @@ public class ItemsServlet extends HttpServlet {
             return Optional.empty();
         }
 
-        cache.add(language, item);
+        cache.add(language, item, item.getVersion().getNumber());
         return Optional.of(item);
     }
 
-    private Optional<Item> getItemHistoryByUri(String uri, Integer version, String language, ItemHistorySupplier itemHistorySupplier) throws Exception {
+    private Optional<Item> getItemHistoryByUri(String uri, String language, ItemHistorySupplier itemHistorySupplier, Integer version) throws Exception {
         Item cached = cache.getByUrl(language, uri);
         if (cached != null) {
             return Optional.of(cached);
@@ -377,7 +443,7 @@ public class ItemsServlet extends HttpServlet {
             return Optional.empty();
         }
 
-        cache.add(language, item);
+        cache.add(language, item, version);
         return Optional.of(item);
     }
 
@@ -391,7 +457,7 @@ public class ItemsServlet extends HttpServlet {
             return Optional.empty();
         }
 
-        cache.add(language, item);
+        cache.add(language, item, null);
         return Optional.of(item);
     }
 
@@ -406,7 +472,127 @@ public class ItemsServlet extends HttpServlet {
             return Optional.empty();
         }
 
-        cache.add(language, item);
-        return Optional.of(item);       
+        cache.add(language, item, null);
+        return Optional.of(item);
+    }
+
+    private Optional<Item> searchForItemByUuid(String uuid, String lang, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
+        Optional <Item> optItem;
+        try {
+                            optItem = getItemByUuid(uuid, lang, itemSupplier);
+                        } catch (Exception ex) {
+                            try {
+                                optItem = getItemProposedByUuid(uuid, lang, itemproposedSupplier);
+                            } catch (Exception e) {
+                                try {
+                                    optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
+                                } catch (Exception ex1) {
+                                    optItem = Optional.empty();
+                                }
+                            }
+                        }
+        return optItem;
+    }
+
+    private Optional<Item> searchForItemByURI(String uri, Integer version, String lang, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
+        
+        Optional<Item> optItem;
+        optItem = Optional.empty();
+
+        if (version == 0) {
+
+            try {
+                optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+            } catch (Exception ex) {
+                optItem = Optional.empty();
+            }
+
+            if (!optItem.isPresent()) {
+                try {
+                    optItem = getItemProposedByUri(uri.replace(":" + version, ""), itemproposedSupplier);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+
+        } else {
+            int sizeHistory;
+            sizeHistory = 0;
+            try {
+                sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
+            } catch (Exception ex) {
+                sizeHistory = 0;
+            }
+            if (sizeHistory != 0 || sizeHistory + 1 != version) {
+                try {
+                    optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+        }
+
+        return optItem;     
+    }
+
+    private Optional<Item> searchForItemByURIStatus(String uri, String lang, Integer version, String status, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
+        
+        Optional<Item> optItem;
+        
+        if (version == 0) {
+
+            if (status.equalsIgnoreCase("valid")
+                        || status.equalsIgnoreCase("invalid")
+                        || status.equalsIgnoreCase("superseded")
+                        || status.equalsIgnoreCase("retired")) {
+                try {
+                    optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }else{
+                try {
+                    optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+            
+        } else {
+            int sizeHistory;
+            try {
+                sizeHistory = itemHistorySupplier.sizeItemInHistory(uri);
+            } catch (Exception ex) {
+                sizeHistory = 0;
+            }
+            
+            if (sizeHistory == 0 || sizeHistory + 1 == version) {
+                
+                if (status.equalsIgnoreCase("valid")
+                        || status.equalsIgnoreCase("invalid")
+                        || status.equalsIgnoreCase("superseded")
+                        || status.equalsIgnoreCase("retired")) {
+                    try {
+                        optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
+                    } catch (Exception ex) {
+                        optItem = Optional.empty();
+                    }
+                }else{
+                   try {
+                    optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
+                } catch (Exception e) {
+                    optItem = Optional.empty();
+                } 
+                } 
+            } else {
+                try {
+                    optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+        }
+        
+        return optItem;
     }
 }

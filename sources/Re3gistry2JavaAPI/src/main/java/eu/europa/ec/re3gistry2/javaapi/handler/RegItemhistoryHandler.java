@@ -131,11 +131,26 @@ public class RegItemhistoryHandler {
                 // Getting the current latest version of thr RegItemhistory if available
                 int versionNumber = 0;
                 try {
-                    RegItemhistory regItemHistory = regItemhistoryManager.getMaxVersionByLocalidAndRegItemClass(regItem.getLocalid(), regItem.getRegItemclass());
-                    if (regItemHistory.getVersionnumber() >= 0) {
-                        versionNumber = regItemHistory.getVersionnumber() + 1;
+                    RegItemhistory maxVersionRegItemhistory = regItemhistoryManager.getMaxVersionByLocalidAndRegItemClass(regItem.getLocalid(), regItem.getRegItemclass());
+                    int maxVersion = maxVersionRegItemhistory.getVersionnumber();
+
+                    if (maxVersion > 0) {
+
+                        int minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(maxVersionRegItemhistory.getLocalid(), maxVersionRegItemhistory.getRegItemclass()).getVersionnumber();
+                        if (minVersion == 0) {
+                            List<RegItemhistory> regItemHistoryList = regItemhistoryManager.getByLocalidAndRegItemClass(maxVersionRegItemhistory.getLocalid(), maxVersionRegItemhistory.getRegItemclass());
+                            for (RegItemhistory regItemhistoryItem : regItemHistoryList) {
+                                int itemHistoryVersionupdated = regItemhistoryItem.getVersionnumber() + 1;
+                                maxVersionRegItemhistory.setVersionnumber(itemHistoryVersionupdated);
+                                regItemhistoryManager.update(maxVersionRegItemhistory);
+                            }
+                        }
+
+                        versionNumber = maxVersion + 1;
                     } else {
-                        versionNumber = 0;
+                        //history starts with 1
+//it was 0 before the release 2.3.2:  versionNumber = 0;
+                        versionNumber = 1;
                     }
                 } catch (NoResultException e) {
                 }
@@ -263,7 +278,6 @@ public class RegItemhistoryHandler {
 
                 // Removing the RegItem
                 // Done after the removal of the proposed items int the RegActionHandler
-
                 entityManager.getTransaction().commit();
             }
             /* ## End Synchronized ## */

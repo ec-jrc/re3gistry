@@ -87,13 +87,17 @@ public class SolrHandler {
             RegItemManager regItemManager = new RegItemManager(em);
 
             // Getting all RegItems
-            List<RegItem> regItems = regItemManager.getAll();
+            List<RegItem> regItems = regItemManager.getAllActive();
 
             // Processing the RegItems
             SolrInputDocument document;
 
             // Locking other Solr complete index requests
             createSolrCompleteIndexinglRunningFile();
+
+            String deleteQuery = "*:*";
+            solrClient.deleteByQuery(deleteQuery);
+            solrClient.commit();
 
             for (RegItem regItem : regItems) {
 
@@ -263,6 +267,7 @@ public class SolrHandler {
             // Getting & setting the collection (if available)
             String collectionlocalid = "";
             String collectionItemclasslocalid = "";
+            boolean isCollection = true;
             RegRelationpredicate regRelationpredicateCollection = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_COLLECTION);
             try {
                 List<RegRelation> regRelationCollections = regRelationManager.getAll(regItem, regRelationpredicateCollection);
@@ -272,6 +277,7 @@ public class SolrHandler {
                 collectionItemclasslocalid = regItemCollection.getRegItemclass().getLocalid();
             } catch (Exception e) {
                 // The item doesn't have a collection
+                isCollection = false;
             }
 
             // Getting regItem's child itemclass
@@ -293,20 +299,22 @@ public class SolrHandler {
                 filterQueries.add("itemclass_localid:" + childItemclasses.get(0).getLocalid());
             }
 
-            if (regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)
-                    || regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) {
-                filterQueries.add("-collection_localid:*");
-
-                if (childItemclasses != null && childItemclasses.size() > 1) {
-                    filterQueries.add("itemclass_type:register");
-                    filterQueries.add("itemclass_localid:*");
-                }
-
-            } else {
-                if (childItemclasses != null && childItemclasses.size() == 1) {
-                    filterQueries.add("collection_localid:" + regItem.getLocalid());
-                } else {
+            if (isCollection==true) {
+                if (regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)
+                        || regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) {
                     filterQueries.add("-collection_localid:*");
+
+                    if (childItemclasses != null && childItemclasses.size() > 1) {
+                        filterQueries.add("itemclass_type:register");
+                        filterQueries.add("itemclass_localid:*");
+                    }
+
+                } else {
+                    if (childItemclasses != null && childItemclasses.size() == 1) {
+                        filterQueries.add("collection_localid:" + regItem.getLocalid());
+                    } else {
+                        filterQueries.add("-collection_localid:*");
+                    }
                 }
             }
 

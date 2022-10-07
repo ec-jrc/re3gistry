@@ -39,6 +39,7 @@ public interface IRegItemManager{
     public RegItem getByLocalidAndRegItemClass(String localid, RegItemclass regItemclass) throws Exception;
     public List<RegItem> getAll(RegItemclasstype regItemcalsstype) throws Exception;
     public List<RegItem> getAll(RegItemclass regItemcalss) throws Exception;
+    public List<RegItem> getAllInternalItems(RegItemclass regItemcalss) throws Exception;
     public List<RegItem> getAllValid(RegItemclass regItemcalss) throws Exception;
     public List<RegItem> getAll(List<RegItemclass> regItemcalsses, int start, int maxResults) throws Exception;
     public int countAll(List<RegItemclass> regItemcalsses) throws Exception;
@@ -50,6 +51,7 @@ public interface IRegItemManager{
     public int countAll(List<RegItemclass> regItemcalsses, boolean systemItems) throws Exception;
     public int countAll(RegRelationpredicate regRelationpredicate, RegItem regItemObject, boolean systemItems) throws Exception;
     public List<RegItem> getAllActive(RegItemclasstype regItemcalsstype) throws Exception;
+    public List<RegItem> getAllActive() throws Exception;
     public List<RegItem> getChildItemsList(RegItem regItem) throws Exception;
     public List<RegItem> getAllSubjectsByRegItemObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception;
     public List<String> getAllItemByRegItemObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception;

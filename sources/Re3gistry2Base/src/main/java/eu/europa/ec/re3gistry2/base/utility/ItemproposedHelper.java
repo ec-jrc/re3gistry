@@ -55,36 +55,79 @@ public class ItemproposedHelper {
         // Creating the full URI
         String uri = regItemproposed.getLocalid();
 
-        // URI for external items
-        if (regItemproposed.getExternal()) {
+        if (regItemproposed.getExternal() != null) {
+            if (regItemproposed.getExternal()) {
             return uri;
         }
+        }else{
+            
+        }
+        // URI for external items
+//         if (regItemproposed.getExternal()) {
+//            return uri;
+//        }
 
         List<RegRelationproposed> regRelationproposeds = regRelationproposedManager.getAll(regItemproposed, regRelationpredicateCollection);
-        List<RegRelation> regRelations = null;
+//        List<RegRelation> regRelations = null;
+//
+//        while (true) {
+//
+//            if (regRelationproposeds == null || regRelationproposeds.isEmpty() || (regRelations != null && regRelations.isEmpty())) {
+//                break;
+//            }
+//            // Setting the localid of the collection
+//            if (regRelations == null) {
+//                uri = regRelationproposeds.get(0).getRegItemObject().getLocalid() + "/" + uri;
+//                regRelations = regRelationManager.getAll(regRelationproposeds.get(0).getRegItemObject(), regRelationpredicateCollection);
+//            } else {
+//                uri = regRelations.get(0).getRegItemObject().getLocalid() + "/" + uri;
+//                regRelations = regRelationManager.getAll(regRelations.get(0).getRegItemObject(), regRelationpredicateCollection);
+//            }
+//
+//            // Checking for other collections at an upper level.
+//            // For proposed items only one collecion is in RegRelationproposed (the one related to the current oproposed items)
+//            // The eventual other upper cololectionare in the RegRelation
+//        }
+        
+       
 
         while (true) {
 
-            if (regRelationproposeds == null || regRelationproposeds.isEmpty() || (regRelations != null && regRelations.isEmpty())) {
+            if (regRelationproposeds == null || regRelationproposeds.isEmpty()) {
                 break;
             }
             // Setting the localid of the collection
-            if (regRelations == null) {
-                uri = regRelationproposeds.get(0).getRegItemObject().getLocalid() + "/" + uri;
-                regRelations = regRelationManager.getAll(regRelationproposeds.get(0).getRegItemObject(), regRelationpredicateCollection);
-            } else {
-                uri = regRelations.get(0).getRegItemObject().getLocalid() + "/" + uri;
-                regRelations = regRelationManager.getAll(regRelations.get(0).getRegItemObject(), regRelationpredicateCollection);
-            }
+            uri = regRelationproposeds.get(0).getRegItemproposedObject().getLocalid() + "/" + uri;
 
             // Checking for other collections at an upper level.
-            // For proposed items only one collecion is in RegRelationproposed (the one related to the current oproposed items)
-            // The eventual other upper cololectionare in the RegRelation
+            regRelationproposeds = regRelationproposedManager.getAll(regRelationproposeds.get(0).getRegItemproposedObject(), regRelationpredicateCollection);
+
         }
+        
 
         switch (regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid()) {
             case BaseConstants.KEY_ITEMCLASS_TYPE_ITEM:
+                
+
+                
+//                NOT VALID : TEST APPROACH
+//                if(regItemRegister.getRegItemclass().getBaseuri() == null){
+//                    uri = regItemRegister.getRegItemclass().getRegItemclassParent().getBaseuri() + "/" + regItemRegister.getRegItemclass().getRegItemclassParent().getLocalid() + "/" + uri;
+//                }else{
+//                    uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
+//                }
+//                uri = regItemRegister.getRegItemclass().getRegItemclassParent().getBaseuri();
+                
+                
+//                if(regItemRegister.getRegItemclass().getBaseuri() == null){
+//                uri = regItemRegister.getRegItemclass().getRegItemclassParent().getBaseuri() + regItemRegister.getRegItemclass().getRegItemclassParent().getLocalid();
+//                }else{
+//                    uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
+//                }
+                
+//                uri = regItemproposed.getRegItemclass().getBaseuri() + "/" + uri;
                 uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
+                
                 break;
             case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
                 uri = regItemproposed.getRegItemclass().getBaseuri() + "/" + uri;

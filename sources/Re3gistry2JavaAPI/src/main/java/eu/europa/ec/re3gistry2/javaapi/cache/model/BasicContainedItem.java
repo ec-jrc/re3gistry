@@ -27,6 +27,8 @@
 package eu.europa.ec.re3gistry2.javaapi.cache.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ContainedItem information
@@ -34,6 +36,9 @@ import java.io.Serializable;
 public class BasicContainedItem implements Serializable{
 
     private String uri;
+    private String label;
+    private List <LocalizedPropertyValue> values = new ArrayList <LocalizedPropertyValue>();
+    private BasicContainedItem topConceptOf;
 
     public String getUri() {
         return uri;
@@ -41,6 +46,34 @@ public class BasicContainedItem implements Serializable{
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+    
+    public String getLabel(){
+        return label;
+    }
+    
+    public void setLabel(String label){
+        this.label=label;
+    }
+    
+    public List <LocalizedPropertyValue> getValues(){
+        return values;
+    }
+    
+    public void setValues(List <LocalizedPropertyValue> values){
+        this.values=values;
+    }
+    
+    public void addValue(LocalizedPropertyValue value){
+        this.values.add(value);
+    }
+    
+    public BasicContainedItem getTopConceptOf(){
+        return topConceptOf;
+    }
+    
+    public void setTopConceptOf(BasicContainedItem topConceptOf){
+        this.topConceptOf=topConceptOf;
     }
 
 }

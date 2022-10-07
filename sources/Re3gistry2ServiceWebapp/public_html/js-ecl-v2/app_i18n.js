@@ -61,8 +61,8 @@ function initLocalization(selector) {
         // Checking if there is a language stored in the cookies
 //        if (navigator.cookieEnabled) {
 
-            // Getting the language stored in the cookie
-            storedLanguage = getCookie(key_cookieName_language);
+        // Getting the language stored in the cookie
+        storedLanguage = getCookie(key_cookieName_language);
 //        }
 
         // Takes the cookie stored language if available, otherwise the default
@@ -80,6 +80,9 @@ function initLocalization(selector) {
 
     // Getting the right language button if not passed by parameter.
     if (selector === '' || typeof selector === val_undefined || selector === null) {
+        if (typeof currentLanguage === val_undefined) {
+            currentLanguage = 'en';
+        }
         selector = $('.' + elementClassName_languageListButton + '[' + elementAttributeName_lang + '="' + currentLanguage + '"]');
     }
 
@@ -140,6 +143,9 @@ function updateLanguageActions() {
  * @param {DOM element} selector
  */
 function refreshSelectedLanguages(selector) {
+    if (currentLanguage === val_undefined) {
+        currentLanguage = 'en';
+    }
 
     // Remove initial active classes and elements in the language selector dialog
     $('.' + elementClassName_languageListButton).each(function () {
@@ -173,6 +179,10 @@ function refreshSelectedLanguages(selector) {
  * @param {String} locale The locale file to load
  */
 function loadI18nFile(locale) {
+    if (currentLanguage === val_undefined) {
+        currentLanguage = 'en';
+        locale = 'en';
+    }
     $.getJSON(registryApp.hostURL + key_dataLocalizationFilesPath + '/' + locale + '.' + key_json, function (data) {
 
         // Stores the i18n Json object in the global variable i18n
@@ -184,7 +194,7 @@ function loadI18nFile(locale) {
             .fail(function () {
                 // If the locale language file  is not available, reading the 
                 // default one
-                console.log('Failed loading locale file. Reading the default one.');
+//                console.log('Failed loading locale file. Reading the default one.');
                 loadI18nFile(registryApp.defaultLanguage);
             });
 }
