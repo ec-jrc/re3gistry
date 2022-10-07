@@ -64,6 +64,10 @@ The common tabs available to any users are:
 
 Details for each menu item are provided in the following sections.
 
+## Simplified workflow
+
+If the simplified workflow has been chosen during the installation, the only role that will be use is the Registry Manager. This workflow will simplify the steps mentioned in the following sections. There will be no need to process the data through all the different roles, all the actions will appear in the Registry manager tab directly.
+
 ## Users, roles and groups
 
 The Re3gistry 2 follows the [ISO 19135 Standard "Geographic information — Procedures for item registration"](https://www.iso.org/standard/54721.html).
@@ -75,6 +79,7 @@ The possible user roles that the registry 2 manages are:
 * Register manager
 * Control body 
 * Submitting organisations
+
 
 The system is highly flexible in managing the **roles** since it is not assigning the role directly to the **user**. Instead, the user is assigned to one or more **groups**. Then this group is associated to one or more **registers**, specifying the role for each of the group. This means that a group can have different roles on different registers. Each user in the system can be associated to one or more groups. 
 
