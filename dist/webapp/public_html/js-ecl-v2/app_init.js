@@ -6,7 +6,7 @@
 
 // ** Ready init handlers ** //
 $(document).ready(function () {
-
+    
     // Processing the URI
     processUri();
     

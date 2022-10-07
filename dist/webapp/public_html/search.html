@@ -4,9 +4,6 @@
         <title>Registry | Search</title>
         <meta content="width=device-width,initial-scale=1" name="viewport" />
         <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Expires" content="0">
         <script>
             var cl = document.querySelector('html').classList;
             cl.remove('no-js');
@@ -25,8 +22,13 @@
             media="print"
             />
 
+        <link
+            rel="stylesheet"
+            href="/registry/css/style_netrual.css"
+            />
+
         <script src="https://inspire.ec.europa.eu/cdn/1.0/js/jquery.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
-        <script src="//ec.europa.eu/wel/cookie-consent/consent.js" type="text/javascript"></script>
+        <script defer src="https://europa.eu/webtools/load.js" type="text/javascript"></script>
 
         <script src="/registry/conf/conf.js"></script>
         <script src="/registry/js-ecl-v2/app_common.js"></script>
@@ -34,8 +36,8 @@
         <script src="/registry/js-ecl-v2/app_core_search.js"></script>
         <script src="/registry/js-ecl-v2/app_init.js" defer></script>
 
-        <link rel="stylesheet" href="/registry/libs/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
-        <script src="/registry/libs/bootstrap-4.3.1-dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <!--        <link rel="stylesheet" href="/registry/libs/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+                <script src="/registry/libs/bootstrap-4.3.1-dist/js/bootstrap.min.js" crossorigin="anonymous"></script>-->
 
 
     </head>
@@ -229,6 +231,14 @@
         ></script>
         <script>
             ECL.autoInit();
+        </script>
+        <script type="application/json">
+            {
+            "utility" : "cck",
+            "url": {
+            "en": "https://my.ec.europa.eu/cookie-policy_en"
+            }
+            }
         </script>
     </body>
 </html>

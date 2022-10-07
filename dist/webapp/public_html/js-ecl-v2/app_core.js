@@ -44,8 +44,10 @@ const htmlSnippet_td = '<td data-ecl-table-header="{1}" class="ecl-table__cell">
 const htmlSnippet_ul = '<ul class="ecl-unordered-list ecl-unordered-list--no-bullet">{0}</ul>';
 const htmlSnippet_li = '<li class="ecl-unordered-list__item">{0}</li>';
 const htmlSnippet_href = '<a href="{0}" class="ecl-link ecl-link--standalone">{1}</a>';
-const htmlSnippet_href_format = '<a href="{0}" class="ecl-link ecl-link--standalone ecl-u-mr-2xl"><svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#general--file"></use></svg> {1}</a>';
+const htmlSnippet_href_external_link = '<a href="{0}" class="ecl-link ecl-link--standalone">{1} <svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#ui--external"></use></svg></a>';
+const htmlSnippet_href_format = '<li class="ecl-social-media-follow__item"><a href="{0}" class="ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-before ecl-social-media-follow__link"><svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#general--file"></use></svg> {1}</a></li>';
 const htmlSnippet_field = '<div class="ecl-row"><div class="ecl-col-lg-3 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m">{0}</span></div><div class="ecl-col-lg-9 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m {2}">{1}</span></div></div>';
+const htmlSnippet_field_format = '<div class="ecl-row"><div class="ecl-col-lg-3 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m">{0}</span></div><div class="ecl-col-lg-9 ecl-col-sm-12 ecl-u-mv-s"><ul class="ecl-social-media-follow__list">{1}</ul></div></div>';
 //const htmlSnippet_field = '<dt class="ecl-description-list__term">{0}</dt><dd class="ecl-description-list__definition">{1}</dd>';
 const htmlSnippet_hx = '<h{0} class="ecl-u-type-heading-{0}{1}">{2}</h{0}>';
 const htmlSnippet_hr = '<hr class="{0}" />';
@@ -79,6 +81,10 @@ function fetchData(uri, lang) {
     if (lang === null || typeof lang === val_undefined || lang.length === 0) {
         lang = currentLanguage;
     }
+    
+    var url = new URL(uri);
+    var status = url.searchParams.get("status");
+    uri = uri.split('?')[0];
 
     // Show the loading overlay
     showLoadingOverlay(true);
@@ -87,7 +93,7 @@ function fetchData(uri, lang) {
 
         // Base URL of the service taken from the configuration 
         url: registryApp.dataServiceURL,
-        data: {uri: uri, lang: lang, format: key_jsonc}
+        data: {uri: uri, lang: lang, format: key_jsonc, status: status}
 
     }).done(function (responseData) {
 
@@ -232,7 +238,7 @@ function renderVersionInfo(data) {
         htmlOutput += renderField(i18n[key_thisVersion], renderHref(version.uri, version.uri));
 
         // Checking if the version history info are available
-        if (versionHistory !== null && versionHistory.length > 0) {
+        if (typeof versionHistory !== 'undefined' && versionHistory !== null && versionHistory.length > 0) {
 
             // Sorting the version history descending
             versionHistory.sort(function (a, b) {
@@ -292,9 +298,9 @@ function renderProperties(data) {
         } else if (values.length == 1) {
             let value = values[0].value;
             let href = values[0].href;
-            
-            tmpHtml = (href !== null && href !== val_emptyString) ? renderHref(value, href) : value;
 
+            tmpHtml = (href !== null && href !== val_emptyString) ? renderHref(value, href) : value;
+            
             if((item.id === "label" || item.id ==="definition") && data.language != item.lang){
 
                 let myJSON = getLanguageJSON(data.language);
@@ -329,13 +335,16 @@ function renderProperties(data) {
 function renderFormats(data) {
 
     let href;
+    let hrefRor;
     let htmlOutput = val_emptyString;
 
     if (data.latest == true) {
         href = data.uri + "/" + data.localid + "." + currentLanguage + ".";
+        hrefRor = data.uri + "/" + data.localid + ".";
     } else {
         if (typeof data.version !== 'undefined') {
             href = data.uri + ":" + data.version.number + "/" + data.localid + "." + currentLanguage + ".";
+            hrefRor = data.uri + ":" + data.version.number + "/" + data.localid + ".";
         }
     }
 
@@ -356,8 +365,11 @@ function renderFormats(data) {
             htmlInner += renderHrefFormat("CSV", href + "csv");
         }
 
+        htmlInner += renderHrefFormat("ATOM", href + "atom");
+        htmlInner += renderHrefFormat("ROR", hrefRor + "ror");
+
         //TODO to be completed
-        htmlOutput += renderField(i18n[key_otherFormats], htmlInner);
+        htmlOutput += renderFieldFormat(i18n[key_otherFormats], htmlInner);
     }
     return htmlOutput;
 }
@@ -492,11 +504,14 @@ function renderNarrowers(data) {
  * @returns {String} The rendered HTML of the field  
  */
 function renderField(label, value) {
-    if (label.toLowerCase()=== 'label') {
+    if (label.toLowerCase() === 'label') {
         return htmlSnippet_field.replace('{0}', label).replace('{1}', value).replace('{2}', 'ecl-u-type-bold');
     } else {
         return htmlSnippet_field.replace('{0}', label).replace('{1}', value).replace('{2}', '');
     }
+}
+function renderFieldFormat(label, value) {
+    return htmlSnippet_field_format.replace('{0}', label).replace('{1}', value).replace('{2}', '');
 }
 
 /*
@@ -556,6 +571,18 @@ function renderHref(value, href) {
 
     return htmlSnippet_href.replace('{0}', href).replace('{1}', value);
 }
+/*
+ * Render the href of the field in HTML
+ * 
+ * @param {String} value The value of the field
+ * @param {String} href The href of the field
+ * @returns {String} The rendered href HTML element of the field  
+ * 
+ */
+function renderHrefExternalLink(value, href) {
+
+    return htmlSnippet_href_external_link.replace('{0}', href).replace('{1}', value);
+}
 
 /*
  * Render the href of the field in HTML
@@ -608,7 +635,21 @@ function renderTableProperties(data, headerProperties) {
                                 // is added, in order to enable the link to the related element 
                                 // directly from the table
                                 if (item.istitle !== null && item.istitle === val_true) {
-                                    value = renderHref(tmpValue, data.uri);
+
+                                    let windowlocation = window.location.href.replace("http://", "").replace("https://", "");
+                                    let indexSlash = windowlocation.indexOf("/");
+                                    let contain = windowlocation.substring(0, indexSlash);
+
+                                    if (data.uri.includes(contain)) {
+                                          if(data.properties[2].values[0].value.toLowerCase() === "valid"){
+                                            value = renderHref(tmpValue, data.uri);
+                                          } else {
+                                            value = renderHref(tmpValue, data.uri + "?status=" + data.properties[2].values[0].value.toLowerCase());
+                                          }   
+                                    } else {
+                                        value = renderHrefExternalLink(tmpValue, data.uri);
+                                    }
+
                                 } else {
                                     value = (href !== null && href !== val_emptyString) ? renderHref(tmpValue, href) : tmpValue;
                                 }
@@ -625,9 +666,6 @@ function renderTableProperties(data, headerProperties) {
                     let value = val_emptyString;
                     htmlOutput += renderTd(value, propertie.label);
                 }
-
-                // Rendering the HTML of the td
-                htmlOutput += renderTd(value, item.label);
             }
         });
 
@@ -703,7 +741,6 @@ function renderTableHeader(properties) {
  * @returns {String} The rendered HTML of the table
  */
 function renderTable(value, thead) {
-//console.log(htmlSnippet_table.replace('{0}', thead).replace('{1}', value));
     return htmlSnippet_table.replace('{0}', thead).replace('{1}', value);
 }
 
@@ -852,6 +889,7 @@ function updatePageTitle(string) {
 function handleBreadcrumbs(data) {
 
     let breadcrumbOl = $('.' + elementClassName_breadcrumb);
+
     // Creating the base breadcrumb (only the first time)
     if (baseBreadcrumb === val_emptyString) {
         baseBreadcrumb = breadcrumbOl.html();
@@ -962,6 +1000,7 @@ function renderRegisterBreadcrumb(data) {
 function renderItemsBreadcrumb(data) {
 
     let liHtml = val_emptyString;
+
     let currentItemUri = data.uri;
     let registerUri = data.register.uri;
 

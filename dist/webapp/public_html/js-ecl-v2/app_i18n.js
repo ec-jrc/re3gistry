@@ -59,11 +59,11 @@ function initLocalization(selector) {
     } else {
 
         // Checking if there is a language stored in the cookies
-        //if (navigator.cookieEnabled) {
+//        if (navigator.cookieEnabled) {
 
-            // Getting the language stored in the cookie
-            storedLanguage = getCookie(key_cookieName_language);
-        //}
+        // Getting the language stored in the cookie
+        storedLanguage = getCookie(key_cookieName_language);
+//        }
 
         // Takes the cookie stored language if available, otherwise the default
         currentLanguage = (storedLanguage !== val_emptyString) ? storedLanguage : getBrowserLanguage();
@@ -71,14 +71,16 @@ function initLocalization(selector) {
     }
 
     // Storing the language to the cookie if needed
-    if ((storedLanguage === null || typeof storedLanguage === val_undefined || storedLanguage === val_emptyString) && navigator.cookieEnabled) {
+    if ((storedLanguage === null || typeof storedLanguage === val_undefined || storedLanguage === val_emptyString)
+//            && navigator.cookieEnabled
+            ) {
         // Storing the language in the cookie 
         setCookie(key_cookieName_language, currentLanguage, val_cookieExpirationDays);
     }
 
     // Getting the right language button if not passed by parameter.
     if (selector === '' || typeof selector === val_undefined || selector === null) {
-		if (typeof currentLanguage === val_undefined) {
+        if (typeof currentLanguage === val_undefined) {
             currentLanguage = 'en';
         }
         selector = $('.' + elementClassName_languageListButton + '[' + elementAttributeName_lang + '="' + currentLanguage + '"]');
@@ -192,7 +194,7 @@ function loadI18nFile(locale) {
             .fail(function () {
                 // If the locale language file  is not available, reading the 
                 // default one
-                //console.log('Failed loading locale file. Reading the default one.');
+//                console.log('Failed loading locale file. Reading the default one.');
                 loadI18nFile(registryApp.defaultLanguage);
             });
 }

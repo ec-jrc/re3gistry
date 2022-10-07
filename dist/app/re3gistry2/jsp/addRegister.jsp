@@ -62,7 +62,7 @@
 <jsp:useBean id="constants" class="eu.europa.ec.re3gistry2.base.utility.BaseConstants" scope="session"/>
 <%    // Setting system localization
     ResourceBundle localization = (ResourceBundle) request.getAttribute(BaseConstants.KEY_REQUEST_LOCALIZATION);
-
+    boolean checWorkflowSimplifiedAdd = configuration.checkWorkflowSimplified();
     // Initializing managers
     RegFieldManager regFieldManager = new RegFieldManager(entityManager);
     RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
@@ -191,7 +191,7 @@
                         <textarea id="<%=BaseConstants.KEY_FIELD_MANDATORY_CONTENTSUMMARY_LOCALID%>" maxlength="<%=configuration.getProperties().getProperty("application.input.maxlength")%>" type="text" class="form-control" value="" name="<%=BaseConstants.KEY_FIELD_MANDATORY_CONTENTSUMMARY_LOCALID%>"></textarea>
                     </div>
                 </div>
-
+                <% if (checWorkflowSimplifiedAdd==false) { %>
                 <%-- Showing the register ownerr field and selector --%>                            
                 <div class="row form-group editing-labels" title="${localization.getString("registry.registerowner.tooltip")}">
                     <%
@@ -292,6 +292,7 @@
                         </div>
                     </div>
                 </div>
+                <% } %>
 
 
                 <%-- If the user has the rights to insert a new RegItemclass, showing 

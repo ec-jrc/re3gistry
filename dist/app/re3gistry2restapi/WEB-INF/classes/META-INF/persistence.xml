@@ -34,7 +34,7 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         
         <properties>      
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://DB_ADDRESS:5432/re3gistry2_dev"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://DB_ADDRESS:5432/re3gistry2_srv"/>
             <property name="javax.persistence.jdbc.password" value="DB_PASSWORD"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.jdbc.user" value="DB_USERNAME"/>
