@@ -150,6 +150,12 @@ public class Install extends HttpServlet {
                 new RegInstallationStepMigrationPorcessHandler(request, entityManagerRe3gistry2);
                 deleteSystemInstallingFile();
                 createSystemInstalledFile();
+                if (session!=null) {
+                    String workflow = (String) session.getAttribute(BaseConstants.KEY_REQUEST_WORKFLOW);
+                    if (StringUtils.equals(workflow, BaseConstants.KEY_REQUEST_WORKFLOW_SIMPLIFIED)) {
+                        createWorkflowFile();
+                    }
+                }
                 lastStep = true;
                 if (session != null) {
                     session.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_SUCCESS, BaseConstants.KEY_REQUEST_INSTALLATION_SUCCESS);
