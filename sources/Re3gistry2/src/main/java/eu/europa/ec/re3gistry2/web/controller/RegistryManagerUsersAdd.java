@@ -95,22 +95,24 @@ public class RegistryManagerUsersAdd extends HttpServlet {
         String email = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_EMAIL);
         String ssoReference = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_SSO_REFERENCE);
         String[] selectedgroups = request.getParameterValues(BaseConstants.KEY_FORM_FIELD_NAME_SELECTED_GROUPS_NEW_USER);
-        
+
         formSubmitAction = (formSubmitAction != null) ? InputSanitizerHelper.sanitizeInput(formSubmitAction) : null;
-        
+
         // Handling charset for the textual contents
         byte[] bytes;
-        if (name!=null) {
+        if (name != null) {
             bytes = name.getBytes(Charset.defaultCharset());
             name = new String(bytes, StandardCharsets.UTF_8);
             name = InputSanitizerHelper.sanitizeInput(name);
         }
-        if (email!=null) {
+        if (email != null) {
+            email = email.toLowerCase();
             bytes = email.getBytes(Charset.defaultCharset());
             email = new String(bytes, StandardCharsets.UTF_8);
             email = InputSanitizerHelper.sanitizeInput(email);
         }
-        if (ssoReference!=null) {
+        if (ssoReference != null) {
+            ssoReference = ssoReference.toLowerCase();
             bytes = ssoReference.getBytes(Charset.defaultCharset());
             ssoReference = new String(bytes, StandardCharsets.UTF_8);
             ssoReference = InputSanitizerHelper.sanitizeInput(ssoReference);
@@ -184,32 +186,6 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                         // Store the user
                         result = regUserHandler.addUser(newUser);
 
-                        // Prepare the email email to the user with the generated key
-                        String recipientString = newUser.getEmail();
-                        InternetAddress[] recipient = {
-                            new InternetAddress(recipientString)
-                        };
-
-                        String subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_NEW_REGISTRATION);
-                        String body;
-
-                        if (loginType.equals(BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO)) {
-                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_NEW_REGISTRATION);
-                            body = (body != null)
-                                    ? body.replace("{name}", name)
-                                            .replace("{email}", email)
-                                            .replace("{key}", key)
-                                    : "";
-                        } else {
-                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ECAS_NEW_REGISTRATION); 
-                            body = (body != null)
-                                    ? body.replace("{name}", name)
-                                    : "";
-                        }
-
-                        // Sending the mail
-                        MailManager.sendMail(recipient, subject, body);
-
                         /**
                          * save group reference
                          */
@@ -234,6 +210,33 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                                 logger.error("@ RegUserHandler.addUser: generic error.", e);
                             }
                         }
+
+                        // Prepare the email email to the user with the generated key
+                        String recipientString = newUser.getEmail();
+                        InternetAddress[] recipient = {
+                            new InternetAddress(recipientString)
+                        };
+
+                        String subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_NEW_REGISTRATION);
+                        String body;
+
+                        if (loginType.equals(BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO)) {
+                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_NEW_REGISTRATION);
+                            body = (body != null)
+                                    ? body.replace("{name}", name)
+                                            .replace("{email}", email)
+                                            .replace("{key}", key)
+                                    : "";
+                        } else {
+                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ECAS_NEW_REGISTRATION);
+                            body = (body != null)
+                                    ? body.replace("{name}", name)
+                                    : "";
+                        }
+
+                        // Sending the mail
+                        MailManager.sendMail(recipient, subject, body);
+
                     }
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
