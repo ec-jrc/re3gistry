@@ -140,7 +140,7 @@ public class JSONFormatter implements Formatter {
             for (ContainedItem ci : item.getContainedItems()) {
                 JSONObject itemJSON = createOrderedJSONObject();
                 JSONObject valueJSON = createOrderedJSONObject();
-                itemJSON.put("value", writeItemShortVersion(valueJSON, ci, ci));
+                itemJSON.put(item.getItemclass().getId().toLowerCase(), writeItemShortVersion(valueJSON, ci, ci));
                 containedJSONArray.add(itemJSON);
 
                 if (ci.isHasCollection()) {
@@ -187,8 +187,10 @@ public class JSONFormatter implements Formatter {
         writeRegistryAndRegister(regItemJsonObject, item);
 
         JSONArray containedItemsJSONArray = new JSONArray();
-        if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
-            for (ContainedItem ci : item.getContainedItems()) {
+        
+         List<ContainedItem> narrower = item.getNarrower();
+        if (narrower != null && !narrower.isEmpty()) {
+            for (ContainedItem ci : narrower) {
                 JSONObject containedItemsJSON = createOrderedJSONObject();
                 JSONObject valuecontainedItemsJSON = createOrderedJSONObject();
                 if (item.getItemclass().getParentItemClassType().equals("register")
@@ -199,23 +201,23 @@ public class JSONFormatter implements Formatter {
                 }
                 containedItemsJSONArray.add(containedItemsJSON);
 
-                if (ci.isHasCollection()) {
-                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItems()) {
-                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
-                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
-                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
-                            containedItemsJSONArray.add(containedCollectionItemsJSON);
-                        }
-                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItems()) {
-                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
-                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
-                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
-                            containedItemsJSONArray.add(containedCollectionItemsJSON);
-                        }
-                    }
-                }
+//                if (ci.isHasCollection()) {
+//                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItems()) {
+//                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
+//                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
+//                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
+//                            containedItemsJSONArray.add(containedCollectionItemsJSON);
+//                        }
+//                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItems()) {
+//                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
+//                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
+//                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
+//                            containedItemsJSONArray.add(containedCollectionItemsJSON);
+//                        }
+//                    }
+//                }
             }
         } else if (item.getContainedItemsBeeingParentItemClass() != null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
             for (ContainedItem ci : item.getContainedItemsBeeingParentItemClass()) {
@@ -229,23 +231,23 @@ public class JSONFormatter implements Formatter {
                 }
                 containedItemsJSONArray.add(containedItemsJSON);
 
-                if (ci.isHasCollection()) {
-                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItems()) {
-                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
-                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
-                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
-                            containedItemsJSONArray.add(containedCollectionItemsJSON);
-                        }
-                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItems()) {
-                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
-                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
-                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
-                            containedItemsJSONArray.add(containedCollectionItemsJSON);
-                        }
-                    }
-                }
+//                if (ci.isHasCollection()) {
+//                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItems()) {
+//                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
+//                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
+//                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
+//                            containedItemsJSONArray.add(containedCollectionItemsJSON);
+//                        }
+//                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItems()) {
+//                            JSONObject containedCollectionItemsJSON = createOrderedJSONObject();
+//                            JSONObject valuecontainedCollectionItemsJSON = createOrderedJSONObject();
+//                            containedCollectionItemsJSON.put("value", writeItemShortVersion(valuecontainedCollectionItemsJSON, c, ci));
+//                            containedItemsJSONArray.add(containedCollectionItemsJSON);
+//                        }
+//                    }
+//                }
             }
         }
         if (containedItemsJSONArray != null && !containedItemsJSONArray.isEmpty()) {

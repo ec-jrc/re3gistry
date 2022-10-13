@@ -28,6 +28,7 @@ package eu.europa.ec.re3gistry2.restapi.format;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.BasicContainedItem;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ContainedItem;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
@@ -173,7 +174,7 @@ public class XMLFormatter implements Formatter {
         if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
             xml.writeStartElement("containeditems");
             for (ContainedItem ci : item.getContainedItems()) {
-                writeItemShortVersion(xml, ci, ci.getItemclass().getId(), ci);
+                writeItemShortVersion(xml, ci, item.getItemclass().getId().toLowerCase(), ci);
             }
             xml.writeEndElement();
         }
@@ -183,7 +184,7 @@ public class XMLFormatter implements Formatter {
     }
 
     private void writeItemShortVersion(XMLStreamWriter xml, ContainedItem item, String mainElementName, ContainedItem collectionItem) throws XMLStreamException {
-        xml.writeStartElement(mainElementName.toLowerCase());
+        xml.writeStartElement(mainElementName);
         xml.writeAttribute("id", item.getUri());
 //        xml.writeAttribute(NS_XML, "id", item.getUri());
 
@@ -209,10 +210,11 @@ public class XMLFormatter implements Formatter {
 //        writeIsDefinedBy(xml, item);
         writeRegistryAndRegister(xml, item);
 
-        if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
+        List<ContainedItem> narrower = item.getNarrower();
+        if (narrower != null && !narrower.isEmpty()) {
 
             xml.writeStartElement("containeditems");
-            for (ContainedItem ci : item.getContainedItems()) {
+            for (ContainedItem ci : narrower) {
 
                 if (item.getItemclass().getParentItemClassType().equals("register")
                         && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
@@ -220,17 +222,17 @@ public class XMLFormatter implements Formatter {
                 } else {
                     writeItemShortVersion(xml, ci, "value", item);
                 }
-                if (ci.isHasCollection()) {
-                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItems()) {
-                            writeItemShortVersion(xml, c, "value", item);
-                        }
-                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
-                            writeItemShortVersion(xml, c, "value", item);
-                        }
-                    }
-                }
+//                if (ci.isHasCollection()) {
+//                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItems()) {
+//                            writeItemShortVersion(xml, c, "value", item);
+//                        }
+//                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
+//                            writeItemShortVersion(xml, c, "value", item);
+//                        }
+//                    }
+//                }
             }
             xml.writeEndElement();
         } else if (item.getContainedItemsBeeingParentItemClass() != null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
@@ -244,17 +246,17 @@ public class XMLFormatter implements Formatter {
                     writeItemShortVersion(xml, ci, "value", item);
                 }
 
-                if (ci.isHasCollection()) {
-                    if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
-                            writeItemShortVersion(xml, c, "value", item);
-                        }
-                    } else if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItems()) {
-                            writeItemShortVersion(xml, c, "value", item);
-                        }
-                    }
-                }
+//                if (ci.isHasCollection()) {
+//                    if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
+//                            writeItemShortVersion(xml, c, "value", item);
+//                        }
+//                    } else if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItems()) {
+//                            writeItemShortVersion(xml, c, "value", item);
+//                        }
+//                    }
+//                }
             }
             xml.writeEndElement();
         }

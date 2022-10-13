@@ -163,9 +163,10 @@ public class ATOMFormatter implements Formatter {
         writeItemclass(xml, item);
         writeRegistryAndRegister(xml, item);
 
-        if (item.getContainedItems() != null && !item.getContainedItems().isEmpty()) {
+        List<ContainedItem> narrower = item.getNarrower();
+        if (narrower != null && !narrower.isEmpty()) {
 
-            for (ContainedItem ci : item.getContainedItems()) {
+            for (ContainedItem ci : narrower) {
 
                 if (item.getItemclass().getParentItemClassType().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)
                         && ci.getItemclass().getId().equals(item.getItemclass().getId())) {
@@ -173,17 +174,17 @@ public class ATOMFormatter implements Formatter {
                 } else {
                     writeItemShortVersion(xml, ci);
                 }
-                if (ci.isHasCollection()) {
-                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItems()) {
-                            writeItemShortVersion(xml, c);
-                        }
-                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
-                            writeItemShortVersion(xml, c);
-                        }
-                    }
-                }
+//                if (ci.isHasCollection()) {
+//                    if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItems()) {
+//                            writeItemShortVersion(xml, c);
+//                        }
+//                    } else if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
+//                            writeItemShortVersion(xml, c);
+//                        }
+//                    }
+//                }
             }
         } else if (item.getContainedItemsBeeingParentItemClass() != null && !item.getContainedItemsBeeingParentItemClass().isEmpty()) {
 
@@ -195,17 +196,17 @@ public class ATOMFormatter implements Formatter {
                     writeItemShortVersion(xml, ci);
                 }
 
-                if (ci.isHasCollection()) {
-                    if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
-                            writeItemShortVersion(xml, c);
-                        }
-                    } else if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
-                        for (ContainedItem c : ci.getContainedItems()) {
-                            writeItemShortVersion(xml, c);
-                        }
-                    }
-                }
+//                if (ci.isHasCollection()) {
+//                    if (ci.getContainedItemsBeeingParentItemClass() != null && !ci.getContainedItemsBeeingParentItemClass().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItemsBeeingParentItemClass()) {
+//                            writeItemShortVersion(xml, c);
+//                        }
+//                    } else if (ci.getContainedItems() != null && !ci.getContainedItems().isEmpty()) {
+//                        for (ContainedItem c : ci.getContainedItems()) {
+//                            writeItemShortVersion(xml, c);
+//                        }
+//                    }
+//                }
             }
         }
 
