@@ -100,7 +100,8 @@ public class BulkImport extends HttpServlet {
                     request.getRequestDispatcher("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + languageUuid).forward(request, response);
                 }
             } catch (Exception ex) {
-                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, ex.getMessage());
+//                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, ex.getMessage());
+                request.getRequestDispatcher("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + languageUuid).forward(request, response);
             }
         }
     }
