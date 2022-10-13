@@ -37,7 +37,7 @@ public class BasicContainedItem implements Serializable{
 
     private String uri;
     private String label;
-    private List <LocalizedPropertyValue> values = new ArrayList <LocalizedPropertyValue>();
+    private List <LocalizedPropertyValue> values = new ArrayList <>();
     private BasicContainedItem topConceptOf;
 
     public String getUri() {
