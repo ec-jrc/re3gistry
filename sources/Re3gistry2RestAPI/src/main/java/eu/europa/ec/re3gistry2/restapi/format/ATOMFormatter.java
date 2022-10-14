@@ -225,7 +225,7 @@ public class ATOMFormatter implements Formatter {
         xml.writeEndElement();
 
         xml.writeStartElement("link");
-        if (version!=null && version.getUri()!=null) {
+        if (version != null && version.getUri() != null) {
             xml.writeAttribute("href", version.getUri());
         }
         xml.writeAttribute("rel", "self");
@@ -236,7 +236,7 @@ public class ATOMFormatter implements Formatter {
         xml.writeAttribute("rel", "latest-version");
         xml.writeEndElement();
 
-        if (versionHistory!=null && !versionHistory.isEmpty()) {
+        if (versionHistory != null && !versionHistory.isEmpty()) {
             for (VersionInformation versionInformation : versionHistory) {
                 xml.writeStartElement("link");
                 xml.writeAttribute("href", versionInformation.getUri());
@@ -261,13 +261,13 @@ public class ATOMFormatter implements Formatter {
         // Get configuration properties
         final Properties configurationProperties = Configuration.getInstance().getProperties();
         String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
-        if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
+        if (legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
             writeEmptyElement(xml, "name", "INSPIRE Registry team");
             writeEmptyElement(xml, "email", "JRC-INSPIRE-SUPPORT@ec.europa.eu");
         } else {
             writeEmptyElement(xml, "name", "Registry team");
         }
-        
+
         switch (item.getType()) {
             case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY:
                 writeEmptyElement(xml, "uri", item.getUri());
@@ -287,6 +287,8 @@ public class ATOMFormatter implements Formatter {
 
         if (item.getEditdate() != null) {
             writeEmptyElement(xml, "updated", item.getEditdate());
+        } else {
+            writeEmptyElement(xml, "updated", item.getInsertdate());
         }
     }
 
@@ -326,7 +328,8 @@ public class ATOMFormatter implements Formatter {
                     xml.writeAttribute("rel", "up");
                     xml.writeEndElement();
                 } else if (fieldName != null && "label".equals(fieldLocalId)) {
-                    writeEmptyElement(xml, fieldLocalId, value);
+                    //writeEmptyElement(xml, fieldLocalId, value);
+                    writeEmptyElement(xml, "title", value);
                 } else if (href != null && !href.isEmpty()) {
                     xml.writeStartElement("link");
                     xml.writeAttribute("href", href);
@@ -364,8 +367,10 @@ public class ATOMFormatter implements Formatter {
                 break;
             default:
                 String itemClassName = item.getItemclass().getId();
-                xml.writeStartElement("term");
-                xml.writeAttribute("uriname", itemClassName);
+                //xml.writeStartElement("term");
+                //xml.writeAttribute("uriname", itemClassName);
+                xml.writeStartElement("category");
+                xml.writeAttribute("term", itemClassName);
                 xml.writeEndElement();
 
                 break;
@@ -383,10 +388,10 @@ public class ATOMFormatter implements Formatter {
                 xml.writeEndElement();
                 break;
             default:
-                xml.writeStartElement("link");
-                xml.writeAttribute("href", item.getRegistry().getUri());
-                xml.writeAttribute("rel", "up");
-                xml.writeEndElement();
+                //xml.writeStartElement("link");
+                //xml.writeAttribute("href", item.getRegistry().getUri());
+                //xml.writeAttribute("rel", "up");
+                //xml.writeEndElement();
 
                 xml.writeStartElement("link");
                 xml.writeAttribute("href", item.getRegister().getUri());
