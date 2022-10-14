@@ -156,26 +156,6 @@ public class ItemHistorySupplier {
     }
 
     public Item getItemHistoryByUri(String uri, Integer version) throws Exception {
-         try {
-             int i = uri.lastIndexOf('/');
-             if (i < 0) {
-                 throw new NoResultException();
-             }
-            String localidWithVersion = uri.substring(i + 1);
-            int uriCollection = uri.substring(0, i).lastIndexOf('/');
-            String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
-            RegItemclass regItemRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
-            RegItemclass parentRegItemRegItemClass = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
-            String localid = localidWithVersion.replace(":" + localidWithVersion.substring(localidWithVersion.lastIndexOf(":") + 1), "");
-            int minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(localid, parentRegItemRegItemClass).getVersionnumber();
-            if (minVersion == 0) {
-                int fixedVersion = version -1;
-                uri = uri.replace(":"+version, ":"+fixedVersion);
-                version = version - 1;
-            }
-        } catch (Exception ex) {
-            version = version;
-        }
         RegItemhistory item = getRegItemByUri(uri, version);
         if (item == null) {
             return null;
@@ -188,37 +168,40 @@ public class ItemHistorySupplier {
         if (i < 0) {
             throw new NoResultException();
         }
+
         String localidWithVersion = uri.substring(i + 1);
         int uriCollection = uri.substring(0, i).lastIndexOf('/');
         String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
         String localid = localidWithVersion.replace(":" + version, "");
-        RegItemclass parentRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+        RegItemhistory regItem;
+
         try {
+            RegItemclass parentRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
             RegItemclass childRegItemClass = regItemClassManager.getChildItemclass(parentRegItemClass).get(0);
-            RegItemhistory regItem;
-            try {
 
-                RegItemhistory minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(localid, childRegItemClass);
-                if (minVersion.getVersionnumber() == 0) {
-                    regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version - 1, childRegItemClass);
-                } else {
-                    regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, childRegItemClass);
-                }
+            RegItemhistory minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(localid, childRegItemClass);
+            if (minVersion.getVersionnumber() == 0) {
+                regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version - 1, childRegItemClass);
+            } else {
+                regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, childRegItemClass);
+            }
+            return regItem;
+        } catch (Exception ignore) {
+            int uriItemClassCollection = uri.substring(0, uriCollection).lastIndexOf('/');
+            String regItemClassCollectionLocalId = uri.substring(uriItemClassCollection + 1, uriCollection).replace("/" + regItemClassLocalId, "").replace("/" + localid, "");
+            RegItemclass parentClass = regItemClassManager.getByLocalid(regItemClassCollectionLocalId);
+            RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
 
-                return regItem;
-            } catch (Exception ex) {
-                List<RegItemhistory> regItemList = regItemhistoryManager.getByLocalidAndRegItemClass(localid, childRegItemClass);
-                if (regItemList.size() + 1 == version) {
-                    return null;
-                }
+            RegItemclass regItemRegItemClassChild = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
+
+            RegItemhistory minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(localid, regItemRegItemClassChild);
+            if (minVersion.getVersionnumber() == 0) {
+                regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version - 1, regItemRegItemClassChild);
+            } else {
+                regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, regItemRegItemClassChild);
             }
-        } catch (Exception e) {
-            RegItemhistory regItem = regItemhistoryManager.getByLocalidVersionnumberAndRegItemClass(localid, version, parentRegItemClass);
-            if (regItem != null && uri.equals(getURI(regItem) + ":" + regItem.getVersionnumber())) {
-                return regItem;
-            }
+            return regItem;
         }
-        return null;
     }
 
     public int sizeItemInHistory(String uri) throws Exception {
@@ -232,20 +215,27 @@ public class ItemHistorySupplier {
         int uriCollection = uri.substring(0, i).lastIndexOf('/');
         String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
         i = uri.indexOf(':', i + 1);
-        Integer version;
+        Integer version = Integer.parseInt(uri.substring(i + 1));
+        String localid = localidWithVersion.replace(":" + version, "");
         try {
-            version = Integer.parseInt(uri.substring(i + 1));
-
-            String localid = localidWithVersion.replace(":" + version, "");
             RegItemclass parentRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
             RegItemclass childRegItemClass = regItemClassManager.getChildItemclass(parentRegItemClass).get(0);
             List<RegItemhistory> regItemHistoryVersion = regItemhistoryManager.getByLocalidAndRegItemClass(localid, childRegItemClass);
 
             return regItemHistoryVersion.size();
 
-        } catch (NumberFormatException ignore) {
+        } catch (Exception ignore) {
+            int uriItemClassCollection = uri.substring(0, uriCollection).lastIndexOf('/');
+            String regItemClassCollectionLocalId = uri.substring(uriItemClassCollection + 1, uriCollection).replace("/" + regItemClassLocalId, "").replace("/" + localid, "");
+            RegItemclass parentClass = regItemClassManager.getByLocalid(regItemClassCollectionLocalId);
+            RegItemclass regItemRegItemClass = regItemClassManager.getChildItemclass(parentClass).get(0);
+
+            RegItemclass regItemRegItemClassChild = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
+            List<RegItemhistory> regItemHistoryVersion = regItemhistoryManager.getByLocalidAndRegItemClass(localid, regItemRegItemClassChild);
+
+            return regItemHistoryVersion.size();
+
         }
-        return 0;
     }
 
     public Integer getVersionFromUri(String uri) {
@@ -844,29 +834,15 @@ public class ItemHistorySupplier {
                     if (containedItemsList == null || containedItemsList.isEmpty()) {
                         containedItemsList = getRelatedItemsByObject(regItemhistory, hasParent);
                     }
-//                    }
-                    for (RegItem childItem : containedItemsList) {
-                        if (!childItem.getRegItemclass().getSystemitem()) {
-                            topConcepts.add(itemSupplier.toBasicContainedItem(childItem));
-                        }
-                    }
                 } catch (Exception exception) {
-                    for (RegItem childItem : getRelatedItemsByObject(regItemhistory, hasParent)) {
-                        if (!childItem.getRegItemclass().getSystemitem()) {
-                            topConcepts.add(itemSupplier.toBasicContainedItem(childItem));
-                        }
-                    }
-                }
-                if (!topConcepts.isEmpty()) {
-                    item.setTopConcepts(topConcepts);
                 }
 
                 if (containedItemsList != null && !containedItemsList.isEmpty()) {
                     for (RegItem containedItem : containedItemsList) {
 
-                        if (!containedItem.getRegItemclass().getSystemitem()) {
-                            containedItems.add(itemSupplier.toContainedItem(containedItem));
-                        }
+//                        if (!containedItem.getRegItemclass().getSystemitem()) {
+                        containedItems.add(itemSupplier.toContainedItem(containedItem));
+//                        }
                     }
                     if (!containedItems.isEmpty()) {
                         item.setContainedItems(containedItems);
@@ -939,9 +915,7 @@ public class ItemHistorySupplier {
 
         if (broaderList != null && !broaderList.isEmpty()) {
             for (RegItem childItem : broaderList) {
-                if (!childItem.getRegItemclass().getSystemitem()) {
-                    broader.add(itemSupplier.toBasicContainedItem(childItem));
-                }
+                broader.add(itemSupplier.toBasicContainedItem(childItem));
             }
             if (!broader.isEmpty()) {
                 containedItem.setBroader(broader);
@@ -950,7 +924,7 @@ public class ItemHistorySupplier {
     }
 
     private void setNarrowerFromRegItem(RegItemhistory regItemhistory, ContainedItem containedItem) throws Exception {
-        List<BasicContainedItem> narrower = new ArrayList<>();
+        List<ContainedItem> narrower = new ArrayList<>();
         List<RegItem> narrowerList = null;
         switch (regItemhistory.getRegItemclass().getRegItemclasstype().getLocalid()) {
             case TYPE_REGISTRY:
@@ -1064,7 +1038,9 @@ public class ItemHistorySupplier {
         List<RegRelationhistory> relations = regRelationhistoryManager.getAllByRegItemHistoryObjectAndPredicate(regItemhistory, predicate);
         List<RegItem> subjects = new ArrayList<>();
         relations.forEach((relation) -> {
-            subjects.add(relation.getRegItemSubject());
+            if (relation.getRegItemSubject() != null) {
+                subjects.add(relation.getRegItemSubject());
+            }
         });
         return subjects;
     }

@@ -182,15 +182,16 @@ public class XSDFormatter implements Formatter {
         writeFields(xml, itemClass.getType(), null, itemClass.getFields());
         writeRegistryAndRegister(xml, itemClass.getType());
 
-        xml.writeStartElement("xs:element");
-        xml.writeAttribute("name", "containeditems");
-        xml.writeStartElement("xs:complexType");
-        xml.writeStartElement("xs:sequence");
-        writeItemChildren(xml, itemClass, itemClass.getChildItemClassLocalId().toLowerCase());
-        xml.writeEndElement();
-        xml.writeEndElement();
-        xml.writeEndElement();
-
+        if (itemClass.getChildItemClassLocalId() != null) {
+            xml.writeStartElement("xs:element");
+            xml.writeAttribute("name", "containeditems");
+            xml.writeStartElement("xs:complexType");
+            xml.writeStartElement("xs:sequence");
+            writeItemChildren(xml, itemClass, itemClass.getId().toLowerCase());
+            xml.writeEndElement();
+            xml.writeEndElement();
+            xml.writeEndElement();
+        }
         xml.writeEndElement();
 
         xml.writeStartElement("xs:attribute");
@@ -293,7 +294,7 @@ public class XSDFormatter implements Formatter {
             writeDate(xml);
             writeVersions(xml);
             String registerlocalid;
-            if (itemClass.getRegisterLocalId()!=null && !itemClass.getRegisterLocalId().isEmpty()) {
+            if (itemClass.getRegisterLocalId() != null && !itemClass.getRegisterLocalId().isEmpty()) {
                 registerlocalid = itemClass.getRegisterLocalId();
             } else {
                 registerlocalid = itemClass.getStartElement();
@@ -344,9 +345,14 @@ public class XSDFormatter implements Formatter {
             String fieldLocalId = entry.getKey().replace("-item", "").toLowerCase();
             String fieldType = entry.getValue();
 
-            if (fieldLocalId != null
-                    && ("registry".equals(fieldLocalId) || "register".equals(fieldLocalId) || itemClassType.equals(fieldLocalId))) {
-                continue;
+            if (fieldType != null) {
+                String type = fieldType.toLowerCase();
+                if (type.equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)
+                        || type.equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)
+                        || fieldLocalId.equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)
+                        || fieldLocalId.equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) {
+                    continue;
+                }
             }
 
             if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
@@ -389,7 +395,9 @@ public class XSDFormatter implements Formatter {
                     xml.writeEndElement();
                     xml.writeEndElement();
                 } else if (fieldLocalId != null && "collection".equals(fieldLocalId)) {
-                    writeComplexeElementWithElementAndattribute(xml, registerLocalId, "id", "0", "1");
+                    if (!registerLocalId.equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER) && !registerLocalId.equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) {
+                        writeComplexeElementWithElementAndattribute(xml, registerLocalId, "id", "0", "1");
+                    }
                 } else if (fieldLocalId != null && "successor".equals(fieldLocalId)) {
                     writeComplexeListElements(xml, "successors", 0, 1, "successor");
                 } else if (fieldLocalId != null && "predecessor".equals(fieldLocalId)) {

@@ -55,7 +55,6 @@ public class Item extends ContainedItem implements Serializable {
    
     private ItemRef registry;
     private ItemRef register;
-    private List<ContainedItem> containedItems;
     private List<RegLanguagecode> activeLanguages;
 
     public ItemRef getRegistry() {
@@ -74,14 +73,6 @@ public class Item extends ContainedItem implements Serializable {
         this.register = register;
     }
 
-    public List<ContainedItem> getContainedItems() {
-        return containedItems;
-    }
-
-    public void setContainedItems(List<ContainedItem> containedItems) {
-        this.containedItems = containedItems;
-    }
-    
     public List<RegLanguagecode> getActiveLanguages() {
         return activeLanguages;
     }

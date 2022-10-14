@@ -62,7 +62,7 @@ public class ContainedItem extends BasicContainedItem implements Serializable {
 
     private List<ContainedItem> containedItemsBeeingParentItemClass;
     private List<ContainedItem> containedItems;
-    private List<BasicContainedItem> narrower;
+    private List<ContainedItem> narrower;
     private List<BasicContainedItem> broader;
     private List<BasicContainedItem> topConcepts;
 
@@ -237,11 +237,11 @@ public class ContainedItem extends BasicContainedItem implements Serializable {
         this.containedItems = containedItems;
     }
 
-    public List<BasicContainedItem> getNarrower() {
+    public List<ContainedItem> getNarrower() {
         return narrower;
     }
 
-    public void setNarrower(List<BasicContainedItem> narrower) {
+    public void setNarrower(List<ContainedItem> narrower) {
         this.narrower = narrower;
     }
 

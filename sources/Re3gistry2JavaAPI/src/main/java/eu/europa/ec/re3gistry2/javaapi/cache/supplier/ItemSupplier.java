@@ -281,14 +281,6 @@ public class ItemSupplier {
         setRegistryAndRegisterItemRef(regItem, item);
         setIsDefinedByFromRegItem(regItem, item);
 
-        //refactoring create once the lists and than add them to the list that needs them
-        //improve cache
-        if (regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(TYPE_ITEM)) {
-            List<RegItem> collection = ItemHelper.getRelatedItemsByObject(regItem, hasCollection, entityManager);
-            List<String> collectionNoParentList = getAllColectionsNoParentOfItem(regItem);
-            List<RegItem> parent = ItemHelper.getRelatedItemsByObject(regItem, hasParent, entityManager);
-        }
-
         //all the items of the codelist, so all items with hasCollection regItem
         setContainedItemsFromRegItem(regItem, item);
 
@@ -594,20 +586,7 @@ public class ItemSupplier {
                         containedItemsList = ItemHelper.getRelatedItemsByObject(regItem, hasParent, entityManager);
                     }
 //                    }
-                    for (RegItem childItem : containedItemsList) {
-                        if (!childItem.getRegItemclass().getSystemitem()) {
-                            topConcepts.add(toBasicContainedItem(childItem));
-                        }
-                    }
                 } catch (Exception exception) {
-                    for (RegItem childItem : ItemHelper.getRelatedItemsByObject(regItem, hasParent, entityManager)) {
-                        if (!childItem.getRegItemclass().getSystemitem()) {
-                            topConcepts.add(toBasicContainedItem(childItem));
-                        }
-                    }
-                }
-                if (!topConcepts.isEmpty()) {
-                    item.setTopConcepts(topConcepts);
                 }
 
                 if (containedItemsList != null && !containedItemsList.isEmpty()) {
@@ -755,7 +734,7 @@ public class ItemSupplier {
     }
 
     private void setNarrowerFromRegItem(RegItem regItem, ContainedItem containedItem) throws Exception {
-        List<BasicContainedItem> narrower = new ArrayList<>();
+        List<ContainedItem> narrower = new ArrayList<>();
         List<RegItem> narrowerList = null;
         if (regItem != null && containedItem != null) {
             switch (regItem.getRegItemclass().getRegItemclasstype().getLocalid()) {
