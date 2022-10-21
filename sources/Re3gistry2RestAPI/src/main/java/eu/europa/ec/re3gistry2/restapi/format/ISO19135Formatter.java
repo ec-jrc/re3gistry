@@ -61,7 +61,7 @@ public class ISO19135Formatter implements Formatter {
     @Override
     public void write(Item item, RegLanguagecode lang, OutputStream out) throws Exception {
         if (BaseConstants.KEY_ITEMCLASS_TYPE_ITEM.equals(item.getType())) {
-            if (item.getContainedItems() == null || item.getContainedItems().isEmpty()) {
+            if (item.getNarrower() == null || item.getNarrower().isEmpty()) {
                 // Not a Collection
                 writeRegisterItem(out, item, lang);
                 return;

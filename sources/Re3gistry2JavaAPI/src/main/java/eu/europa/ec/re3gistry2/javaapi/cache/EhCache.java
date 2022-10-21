@@ -53,10 +53,6 @@ public class EhCache implements ItemCache {
         return Collections.unmodifiableSet(languages);
     }
 
-    
-//    public Item getByUuid(String language, String uuid) {
-//        return getByUuid(language, uuid);
-//    }
     @Override
     public Item getByUuid(String language, String uuid) {
         synchronized (sync) {

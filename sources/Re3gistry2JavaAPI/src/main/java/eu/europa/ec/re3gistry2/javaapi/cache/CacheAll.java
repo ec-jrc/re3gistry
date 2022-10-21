@@ -96,7 +96,6 @@ public class CacheAll {
                                         em.getTransaction().begin();
                                     }
                                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
-//                                    cache.remove(languageCode.getIso6391code(), regItemclass.getUuid());
                                     Optional<Item> optItem = getItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
                                 } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
                                     if (!em.isOpen()) {
@@ -152,14 +151,17 @@ public class CacheAll {
 
     private Optional<Item> getItemByUuid(RegItem regItem, String language, ItemSupplier itemSupplier) throws Exception {
         Item cached = cache.getByUuid(language, regItem.getUuid());
-        if (cached != null) {
-            return Optional.of(cached);
-        }
+//        if (cached != null) {
+//            return Optional.of(cached);
+//        }
         Item item = itemSupplier.getItem(regItem);
         if (item == null) {
             return Optional.empty();
         }
 
+        if (cached != null) {
+            cache.remove(language, regItem.getUuid());
+        }
         cache.add(language, item, null);
         return Optional.of(item);
     }

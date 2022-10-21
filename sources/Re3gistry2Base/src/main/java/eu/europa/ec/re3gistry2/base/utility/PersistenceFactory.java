@@ -35,7 +35,7 @@ public class PersistenceFactory {
     public static EntityManagerFactory getEntityManagerFactory() throws Exception {
         
 //Retrieving the persistence unit name
-        String persistenceUnitName = Configuration.getInstance().getProperties().getProperty(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME, null);
+        String persistenceUnitName = Configuration.getInstance().getProperties().getProperty(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME, "");
         
         if (persistenceUnitName == null || persistenceUnitName.trim().length() <= 0) {
             throw new Exception("@@ Error while getting the persistence unit name; check the Application.properties file.");

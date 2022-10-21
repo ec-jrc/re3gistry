@@ -46,7 +46,7 @@ application.language.defaultLocale=en
 application.ecas.baseurl = https://webgate.ec.europa.eu
 
 # Cache
-application.cache.disk.path=/path/to/cache
+application.cache.disk.path=diskcachepath
 
 # Login type - ECAS | SHIRO
 application.login.type=SHIRO

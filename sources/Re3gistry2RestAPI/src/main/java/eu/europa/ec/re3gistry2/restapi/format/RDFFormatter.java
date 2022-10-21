@@ -469,7 +469,7 @@ public class RDFFormatter implements Formatter {
     }
 
     private void writeNarrower(XMLStreamWriter xml, ContainedItem containedItem) throws XMLStreamException {
-        List<BasicContainedItem> narrowerList = containedItem.getNarrower();
+        List<ContainedItem> narrowerList = containedItem.getNarrower();
         if (narrowerList != null && !narrowerList.isEmpty()) {
             for (BasicContainedItem narrower : narrowerList) {
                 writeEmptyElement(xml, SKOS, "narrower", RDF, "resource", narrower.getUri());

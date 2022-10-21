@@ -54,7 +54,7 @@ public class RecacheItems extends Thread {
     public void run() {
         try {
             if (!CacheHelper.checkCacheCompleteRunning()) {
-                cacheItems(regItems);
+                recacheItems(regItems);
             }
         } catch (Exception e) {
             CacheHelper.deleteCacheCompleteRunningFile();
@@ -66,7 +66,7 @@ public class RecacheItems extends Thread {
         }
     }
 
-    private void cacheItems(List<RegItem> regItems) throws Exception {
+    private void recacheItems(List<RegItem> regItems) throws Exception {
         CacheHelper.createCacheCompleteRunningFile();
         RegLanguagecodeManager languageManager = new RegLanguagecodeManager(em);
 
@@ -178,14 +178,15 @@ public class RecacheItems extends Thread {
 
     private Optional<Item> updateCacheForItemByUuid(RegItem regItem, String language, ItemSupplier itemSupplier) throws Exception {
         Item cached = cache.getByUuid(language, regItem.getUuid());
-        if (cached != null) {
-            cache.remove(language, regItem.getUuid());
-        }
+        
         Item item = itemSupplier.getItem(regItem);
         if (item == null) {
             return Optional.empty();
         }
 
+        if (cached != null) {
+            cache.remove(language, regItem.getUuid());
+        }
         cache.add(language, item, null);
         return Optional.of(item);
     }

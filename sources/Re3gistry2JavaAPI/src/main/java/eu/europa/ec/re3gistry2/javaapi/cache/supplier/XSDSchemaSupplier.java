@@ -123,6 +123,9 @@ public class XSDSchemaSupplier {
         for (RegFieldmapping fieldMappingsRegItemclas : fieldMappingsRegItemclass) {
             String fieldType = fieldMappingsRegItemclas.getRegField().getRegFieldtype().getLocalid();
             String fieldLocalId = fieldMappingsRegItemclas.getRegField().getLocalid();
+            if (fieldType.equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER) || fieldType.equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)){
+                continue;
+            }
             hash.put(fieldLocalId, fieldType);
         }
         return hash;
