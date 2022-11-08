@@ -193,3 +193,13 @@ The software comes with an engine that is creating automatically the cache for a
 ```
 curl --noproxy localhost -i -X GET http://localhost:8080/re3gistry2restapi/cacheall
 ```
+
+### Changing error messages
+
+You can change how the error messages are shown in your Re3gistry 2 local instance.
+The default error messages are changed in the language.json files in the 
+Re3gistry2ServiceWebapp/public_html/js-ecl-v2/i18n. The error messages are 
+"s-error-fetch", "s-error-404", "s-error-406" and "s-error-500". These 4 messages can be changed
+in each language, so make sure to change them in your desired languages.
+
+We highly recommend modifying these messages to reference your own helpdesk or your own contact emails.
