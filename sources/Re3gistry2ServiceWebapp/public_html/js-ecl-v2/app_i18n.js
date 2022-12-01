@@ -69,7 +69,29 @@ function initLocalization(selector) {
         currentLanguage = (storedLanguage !== val_emptyString) ? storedLanguage : getBrowserLanguage();
 
     }
+	
+	// Get the JSON that contains the active language list
+    let JSONLINK = registryApp.hostURL + "/rest?lang=active&format=jsonc"
+    unparsedLanguageJSON =  $.ajax({ 
+        url: JSONLINK, 
+        async: false
+     }).responseText;
 
+    var languageJSON = JSON.parse(unparsedLanguageJSON);
+	var languageAvailable = false;
+	
+	// Checking if the current language is active
+	for(var i=0; i<languageJSON.length;i++){
+		if(currentLanguage === languageJSON[i].iso6391code){
+			languageAvailable = true;
+		}
+	}
+	// If not available set default
+	if(! languageAvailable){
+		currentLanguage = 'en';
+	}
+	
+	
     // Storing the language to the cookie if needed
     if ((storedLanguage === null || typeof storedLanguage === val_undefined || storedLanguage === val_emptyString)
 //            && navigator.cookieEnabled
