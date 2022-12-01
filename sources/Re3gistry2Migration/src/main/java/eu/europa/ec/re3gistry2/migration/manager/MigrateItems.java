@@ -176,7 +176,6 @@ public class MigrateItems {
                 try {
                     Query queryItemByItemClass = entityManagerRe3gistry2Migration.createNativeQuery(ConstantsMigration.ITEMS_LATEST_VERSION_LIST_BY_ITEMCLASS.replace(":" + ConstantsMigration.KEY_PARAMETER_ITEMCLASS, "'" + itemclass.getUuid() + "'"), ConstantsMigration.KEY_PARAMETER_ITEMRESULT);
                     queryItemByItemClass.setParameter(ConstantsMigration.KEY_PARAMETER_ITEMCLASS, itemclass);
-
                     List<Item> itemsList;
                     try {
                         itemsList = queryItemByItemClass.getResultList();
@@ -184,11 +183,10 @@ public class MigrateItems {
                         logger.error("Error in  getting the result list for " + queryItemByItemClass + " " + ex.getMessage());
                         throw new Exception("Error in  getting the localization for " + queryItemByItemClass + " " + ex.getMessage());
                     }
-
+                    
                     for (Item item : itemsList) {
 
                         Item collection = getCollectionFromItem(item);
-
                         RegItem regItem = migrateItemLatestVersion.migrateItemLatestVersion(item, collection, regItemclass, regFieldsMap, item.getItemclass(), commit);
                         itemsToIndexSOLR.add(regItem);
                         /**
@@ -224,6 +222,7 @@ public class MigrateItems {
                     }
                 } catch (Exception ex) {
                     logger.error(ex.getMessage(), ex);
+//                    throw new Exception(ex.getMessage());
                 }
             }
 
@@ -288,6 +287,7 @@ public class MigrateItems {
                         if (itemVersion == 0) {
                             RegItem regItem = getRegItemFromItem(item);
                             if (collectionVersion == 0) {
+
                                 RegItem regItemCollection = getRegItemFromItem(collection);
                                 migrateItemLatestVersion.migrateRegRelation(regItem, regItemCollection, commit, key);
                             } else {
@@ -471,15 +471,16 @@ public class MigrateItems {
 
             String uuid = null;
             String localid = item.getUriname();
-            try {
-                if (collection == null) {
-                    uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
-                } else {
-                    uuid = RegItemUuidHelper.getUuid(localid, regItemManager.getByLocalidAndRegItemClass(collection.getUriname(), regItemclassManager.getByLocalid(collection.getItemclass().getUriname())), regItemclass);
-                }
-            } catch (Exception ex) {
-                uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
-            }
+//            try {
+//                if (collection == null) {
+//                    uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
+//                } else {
+//                    uuid = RegItemUuidHelper.getUuid(localid, regItemManager.getByLocalidAndRegItemClass(collection.getUriname(), regItemclassManager.getByLocalid(collection.getItemclass().getUriname())), regItemclass);
+//                }
+//            } catch (Exception ex) {
+//                uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
+//            }
+        uuid = item.getUuid();
 
             regItem = regItemManager.get(uuid);
 
@@ -505,17 +506,18 @@ public class MigrateItems {
 
             String uuid = null;
             String localid = item.getUriname();
-            try {
-                if (regCollection == null) {
-                    String relatedItemUuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
-                    uuid = RegItemhistoryUuidHelper.getUuid(localid, null, regItemclass, regItemManager.get(relatedItemUuid), itemVersion);
-                } else {
-                    String relatedItemUuid = RegItemUuidHelper.getUuid(localid, regCollection, regItemclass);
-                    uuid = RegItemhistoryUuidHelper.getUuid(localid, regCollection, regItemclass, regItemManager.get(relatedItemUuid), itemVersion);
-                }
-            } catch (Exception ex) {
-                uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
-            }
+//            try {
+//                if (regCollection == null) {
+//                    String relatedItemUuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
+//                    uuid = RegItemhistoryUuidHelper.getUuid(localid, null, regItemclass, regItemManager.get(relatedItemUuid), itemVersion);
+//                } else {
+//                    String relatedItemUuid = RegItemUuidHelper.getUuid(localid, regCollection, regItemclass);
+//                    uuid = RegItemhistoryUuidHelper.getUuid(localid, regCollection, regItemclass, regItemManager.get(relatedItemUuid), itemVersion);
+//                }
+//            } catch (Exception ex) {
+//                uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
+//            }
+uuid = item.getUuid();
 
             regItemhistory = regItemhistoryManager.get(uuid);
 
@@ -556,6 +558,7 @@ public class MigrateItems {
         RegItemclass regItemclass = new RegItemclass();
 
         regItemclass.setUuid(UuidHelper.createUuid(itemclass.getUriname(), RegItemclass.class));
+        regItemclass.setUuid(itemclass.getUuid());
         regItemclass.setLocalid(itemclass.getUriname());
 
         if (itemclass.getParent() != null) {
