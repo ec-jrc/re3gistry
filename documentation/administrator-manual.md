@@ -197,9 +197,9 @@ curl --noproxy localhost -i -X GET http://localhost:8080/re3gistry2restapi/cache
 ### Changing error messages
 
 You can change how the error messages are shown in your Re3gistry 2 local instance.
-The default error messages are changed in the language.json files in the 
-Re3gistry2ServiceWebapp/public_html/js-ecl-v2/i18n. The error messages are 
-"s-error-fetch", "s-error-404", "s-error-406" and "s-error-500". These 4 messages can be changed
-in each language, so make sure to change them in your desired languages.
+The default error messages are changed in the conf.js file in the 
+Re3gistry2ServiceWebapp/public_html/conf/conf.js . The error messages are changed by the 2 error message parameters
+in this file. The definition changes the text of reference to appear in the text shown in the error and the URL is the referenced link
+that will be accesible clicking that text.
 
 We highly recommend modifying these messages to reference your own helpdesk or your own contact emails.
