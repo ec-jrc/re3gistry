@@ -198,8 +198,8 @@ curl --noproxy localhost -i -X GET http://localhost:8080/re3gistry2restapi/cache
 
 You can change how the error messages are shown in your Re3gistry 2 local instance.
 The default error messages are changed in the conf.js file in the 
-[Re3gistry2ServiceWebapp/public_html/conf/conf.js](https://github.com/ec-jrc/re3gistry/blob/master/sources/Re3gistry2ServiceWebapp/public_html/conf/conf.js) . The error messages are changed by the 2 error message parameters
-in this file. The definition changes the text of reference to appear in the text shown in the error and the URL is the referenced link
-that will be accesible clicking that text.
+[Re3gistry2ServiceWebapp/public_html/conf/conf.js](https://github.com/ec-jrc/re3gistry/blob/master/sources/Re3gistry2ServiceWebapp/public_html/conf/conf.js). 
+The error messages are changed by the 2 error message parameters in this file. 
+The definition changes the text of reference to appear in the text shown in the error and the URL is the referenced link that will be accesible clicking that text.
 
 We highly recommend modifying these messages to reference your own helpdesk or your own contact emails.
