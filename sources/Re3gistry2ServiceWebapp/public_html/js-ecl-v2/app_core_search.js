@@ -724,7 +724,7 @@ function renderFetchError(data) {
     // Clearing the conatiner
     resultsContainer.empty();
 
-    resultsContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorFetch]));
+    resultsContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorFetch]).replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition));
 
     // Initializing the ECL Message component after creating it
     let elt = document.querySelector('[' + key_dataEclMessage + ']');
@@ -745,7 +745,7 @@ function renderServiceError(data) {
     // Clearing the conatiner
     resultsContainer.empty();
 
-    resultsContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorFetch]));
+    resultsContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorFetch]).replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition));
 
     // Initializing the ECL Message component after creating it
     let elt = document.querySelector('[' + key_dataEclMessage + ']');
