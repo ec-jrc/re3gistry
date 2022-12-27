@@ -724,12 +724,15 @@ function renderFetchError(data) {
     // Clearing the conatiner
     resultsContainer.empty();
 
-    resultsContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorFetch]));
-
-    // Initializing the ECL Message component after creating it
-    let elt = document.querySelector('[' + key_dataEclMessage + ']');
-    let message = new ECL.Message(elt);
-    message.init();
+    if(data.error.code = 400){
+        resultsContainer.append(htmlSnippet_infoMessage.replace('{0}', "Data was not found in the current selected language, please try again later or select another active language. If you think this is an error, please visit the <a href=\"{0}\">{1}</a> to try and give more information about your problem.".replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition)));
+    }else{
+        resultsContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorFetch]).replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition));
+    }
+            // Initializing the ECL Message component after creating it
+            let elt = document.querySelector('[' + key_dataEclMessage + ']');
+            let message = new ECL.Message(elt);
+            message.init();
 }
 
 /*
@@ -745,7 +748,7 @@ function renderServiceError(data) {
     // Clearing the conatiner
     resultsContainer.empty();
 
-    resultsContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorFetch]));
+    resultsContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorFetch]).replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition));
 
     // Initializing the ECL Message component after creating it
     let elt = document.querySelector('[' + key_dataEclMessage + ']');

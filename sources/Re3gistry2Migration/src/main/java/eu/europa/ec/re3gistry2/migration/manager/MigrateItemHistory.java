@@ -80,22 +80,23 @@ public class MigrateItemHistory {
 
     protected RegItemhistory migrateItemHistory(Item item, Item collectionHistory, RegItemclass regItemclass, HashMap<String, RegField> regFieldsMap, RegItem regItemLatestVersion, boolean commit) throws Exception {
         String uuid;
-        try {
-            if (collectionHistory == null) {
-                uuid = RegItemhistoryUuidHelper.getUuid(item.getUriname(), null, regItemclass, regItemLatestVersion, item.getVersionnumber());
-            } else {
-                String localid = item.getUriname();
-                int version = item.getVersionnumber();
+//        try {
+//            if (collectionHistory == null) {
+//                uuid = RegItemhistoryUuidHelper.getUuid(item.getUriname(), null, regItemclass, regItemLatestVersion, item.getVersionnumber());
+//            } else {
+//                String localid = item.getUriname();
+//                int version = item.getVersionnumber();
+//
+//                RegItemManager regItemManager = new RegItemManager(entityManagerRe3gistry2);
+//                RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
+//
+//                uuid = RegItemhistoryUuidHelper.getUuid(localid, regItemManager.getByLocalidAndRegItemClass(collectionHistory.getUriname(), regItemclassManager.getByLocalid(collectionHistory.getItemclass().getUriname())), regItemclass, regItemLatestVersion, version);
+//            }
+        uuid = item.getUuid();
 
-                RegItemManager regItemManager = new RegItemManager(entityManagerRe3gistry2);
-                RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
-
-                uuid = RegItemhistoryUuidHelper.getUuid(localid, regItemManager.getByLocalidAndRegItemClass(collectionHistory.getUriname(), regItemclassManager.getByLocalid(collectionHistory.getItemclass().getUriname())), regItemclass, regItemLatestVersion, version);
-            }
-
-        } catch (Exception ex) {
-            uuid = RegItemhistoryUuidHelper.getUuid(item.getUriname(), null, regItemclass, regItemLatestVersion, item.getVersionnumber());
-        }
+//        } catch (Exception ex) {
+//            uuid = RegItemhistoryUuidHelper.getUuid(item.getUriname(), null, regItemclass, regItemLatestVersion, item.getVersionnumber());
+//        }
 
         RegItemhistory regItemhistory = null;
 

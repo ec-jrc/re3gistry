@@ -87,7 +87,7 @@ public class MigrateItemLatestVersion {
 
     protected RegItem migrateItemLatestVersion(Item item, Item collection, RegItemclass regItemclass, HashMap<String, RegField> regFieldsMap, Itemclass itemclass, boolean commit) throws Exception {
         String uuid;
-        try {
+        /**try {
             if (collection == null) {
                 uuid = RegItemUuidHelper.getUuid(item.getUriname(), null, regItemclass);
             } else {
@@ -99,7 +99,8 @@ public class MigrateItemLatestVersion {
             }
         } catch (Exception ex) {
             uuid = RegItemUuidHelper.getUuid(item.getUriname(), null, regItemclass);
-        }
+        }**/
+        uuid = item.getUuid();
 
         RegItem regItem = null;
         try {
@@ -115,6 +116,7 @@ public class MigrateItemLatestVersion {
                 }
             } catch (Exception exce) {
                 regItem = createRegItemWithoutCollection(item, regItemclass, commit);
+                logger.info("Pruebas catch latestVersion",exce);
             }
 
             if (regItem != null) {
@@ -127,11 +129,14 @@ public class MigrateItemLatestVersion {
 
                 } catch (Exception exx) {
                     logger.error(exx.getMessage());
+                    logger.info("Pruebas catch latestVersionAddlocal",exx);
                     throw new Exception(exx.getMessage());
                 }
             }
         }
-
+        if(regItem == null){
+            throw new Exception("regItem NULL latestVersion");
+        }
         return regItem;
     }
 
@@ -243,6 +248,7 @@ public class MigrateItemLatestVersion {
         Query customattributevalueQuery = entityManagerRe3gistry2Migration.createQuery(ConstantsMigration.CUSTOMATTRIBUTEVALUE_BY_ITEM);
         customattributevalueQuery.setParameter("item", item);
         List<Customattributevalue> customattributesValueList;
+        logger.error("pruebas addCustomAttribute item = " + item.getUuid());
         try {
             customattributesValueList = customattributevalueQuery.getResultList();
         } catch (Exception ex) {
@@ -290,6 +296,7 @@ public class MigrateItemLatestVersion {
                     Localization customattributevalueLocalization = null;
                     try {
                         customattributevalueLocalization = (Localization) queryLocalizationByCustomattributevalue.getSingleResult();
+                        logger.error("pruebas addCustomAttribute localization  = " + customattributevalueLocalization.getUuid());
                     } catch (Exception ex) {
                         logger.error("Error in  " + ConstantsMigration.LOCALIZATION_BY_CUSTOMATTRIBUTEVALUE_AND_LANGUAGE + " for customattributevalue" + customattributevalue.getUuid() + " and language" + masterLanguagecode.getUuid() + ex.getMessage());
                         throw new Exception("Error in  " + ConstantsMigration.LOCALIZATION_BY_CUSTOMATTRIBUTEVALUE_AND_LANGUAGE + " for customattributevalue" + customattributevalue.getUuid() + " and language" + masterLanguagecode.getUuid() + ex.getMessage());
@@ -308,8 +315,9 @@ public class MigrateItemLatestVersion {
                             } else {
                                 customattribute = BaseConstants.KEY_ITEMCLASS_GOVERNANCELEVEL_ITEM;
                             }
+                            logger.error("pruebas addCustomAttribute preForeygnKeyRegItem");
                             RegItem foreygnKeyRegItem = regItemManager.getByLocalidAndRegItemClass(customattributevalueLocalization.getLabel(), regItemclassManager.getByLocalid(customattribute));
-
+                            logger.error("pruebas addCustomAttribute foreygnKeyRegItem  = " + foreygnKeyRegItem.getUuid());
                             createRegrelationFromRegItemAndRegfieldAndKoreygnKeyRegItem(regItem, regFieldsMap, foreygnKeyRegItem, customattributevalue, fieldIndex, commit);
 
                         } else if (customattributevalue.getCustomattribute().getMultivalue()) {
@@ -431,6 +439,7 @@ public class MigrateItemLatestVersion {
          */
         RegRelation regRelationForeignkey = new RegRelation();
         regRelationForeignkey.setUuid(RegRelationUuidHelper.getUuid(regItem, predicate, foreygnKeyRegItem));
+//        regRelationForeignkey.setUuid(regItem.getUuid());
         regRelationForeignkey.setRegItemSubject(regItem);
         regRelationForeignkey.setRegRelationpredicate(predicate);
         regRelationForeignkey.setRegItemObject(foreygnKeyRegItem);
@@ -487,7 +496,8 @@ public class MigrateItemLatestVersion {
     protected void migrateRegRelation(RegItem regItem, RegItem regitemRelation, boolean commit, String key) throws Exception {
         RegRelationpredicateManager regRelationpredicateManager = new RegRelationpredicateManager(entityManagerRe3gistry2);
         final RegRelationpredicate predicate = regRelationpredicateManager.get(key);
-        String uuid = RegRelationUuidHelper.getUuid(regItem, predicate, regitemRelation);
+//        String uuid = RegRelationUuidHelper.getUuid(regItem, predicate, regitemRelation);
+        String uuid = regItem.getUuid();
         try {
             RegRelationManager regRelationManager = new RegRelationManager(entityManagerRe3gistry2);
             regRelationManager.get(uuid);
@@ -515,7 +525,8 @@ public class MigrateItemLatestVersion {
     protected void migrateRegRelation(RegItem regItem, RegItemhistory regitemRelationHistory, boolean commit, String key) throws Exception {
         RegRelationpredicateManager regRelationpredicateManager = new RegRelationpredicateManager(entityManagerRe3gistry2);
         final RegRelationpredicate predicate = regRelationpredicateManager.get(key);
-        String uuid = RegRelationhistoryUuidHelper.getUuid(null, regItem, predicate, regitemRelationHistory, null);
+//        String uuid = RegRelationhistoryUuidHelper.getUuid(null, regItem, predicate, regitemRelationHistory, null);
+        String uuid = regItem.getUuid();
         try {
             RegRelationhistoryManager regRelationhistoryManager = new RegRelationhistoryManager(entityManagerRe3gistry2);
             regRelationhistoryManager.get(uuid);
@@ -554,7 +565,7 @@ public class MigrateItemLatestVersion {
             final RegRelationpredicate predicate = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_REGISTRY);
             RegRelation regRelationRegisterRegistry = new RegRelation();
 
-            regRelationRegisterRegistry.setUuid(RegRelationUuidHelper.getUuid(regItem, predicate, registryItem));
+            regRelationRegisterRegistry.setUuid(RegRelationUuidHelper.getUuid(regItem, predicate, registryItem)); 
             regRelationRegisterRegistry.setRegItemSubject(regItem);
             regRelationRegisterRegistry.setRegRelationpredicate(predicate);
             regRelationRegisterRegistry.setRegItemObject(registryItem);
@@ -617,7 +628,8 @@ public class MigrateItemLatestVersion {
     public RegItem createRegItemWithoutCollection(Item item, RegItemclass regItemclass, boolean commit) throws Exception {
         RegItem regItem = new RegItem();
         String localid = item.getUriname();
-        final String uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
+        //final String uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
+        String uuid = item.getUuid();
 
         try {
             RegItemManager regItemManager = new RegItemManager(entityManagerRe3gistry2);
@@ -690,7 +702,8 @@ public class MigrateItemLatestVersion {
         RegItemManager regItemManager = new RegItemManager(entityManagerRe3gistry2);
         RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
 
-        final String uuid = RegItemUuidHelper.getUuid(localid, regItemManager.getByLocalidAndRegItemClass(itemcollection.getUriname(), regItemclassManager.getByLocalid(itemcollection.getItemclass().getUriname())), regItemclass);
+        //final String uuid = RegItemUuidHelper.getUuid(localid, regItemManager.getByLocalidAndRegItemClass(itemcollection.getUriname(), regItemclassManager.getByLocalid(itemcollection.getItemclass().getUriname())), regItemclass);
+        String uuid = item.getUuid();
 
         try {
             regItem = regItemManager.get(uuid);

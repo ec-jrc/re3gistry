@@ -6,6 +6,8 @@
 
 // Element name constants
 
+
+
 const elementId_searchForm = 'search-form';
 const elementId_buttonSearch = 'btn-search';
 
@@ -45,9 +47,12 @@ const val_falsee = 'false';
 
 // HTML snippet constants
 const htmlSnippet_errorMessage = '<div role="alert" class="ecl-message ecl-message--error" data-ecl-message="true" data-ecl-auto-init="Message"><svg focusable="false" aria-hidden="true" class="ecl-message__icon ecl-icon ecl-icon--l"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#notifications--error"></use></svg><div class="ecl-message__content"><button data-ecl-message-close="true" type="button" class="ecl-message__close ecl-button ecl-button--ghost"><span class="ecl-button__container"><span class="ecl-button__label" data-ecl-label="true">Close</span><svg focusable="false" aria-hidden="true" data-ecl-icon="true" class="ecl-button__icon ecl-button__icon--after ecl-icon ecl-icon--s"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#ui--close"></use></svg></span></button><div class="ecl-message__title">Error message</div><p class="ecl-message__description">{0}</p></div></div>';
+const htmlSnippet_infoMessage = '<div role="alert" class="ecl-message ecl-message--error" data-ecl-message="true" data-ecl-auto-init="Message"><svg focusable="false" aria-hidden="true" class="ecl-message__icon ecl-icon ecl-icon--l"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#notifications--information"></use></svg><div class="ecl-message__content"><button data-ecl-message-close="true" type="button" class="ecl-message__close ecl-button ecl-button--ghost"><span class="ecl-button__container"><span class="ecl-button__label" data-ecl-label="true">Close</span><svg focusable="false" aria-hidden="true" data-ecl-icon="true" class="ecl-button__icon ecl-button__icon--after ecl-icon ecl-icon--s"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#ui--close"></use></svg></span></button><div class="ecl-message__title">Information message</div><p class="ecl-message__description">{0}</p></div></div>';
 
 // Event name constants
 const eventName_click = 'click';
+
+
 
 // Regular expression constants
 

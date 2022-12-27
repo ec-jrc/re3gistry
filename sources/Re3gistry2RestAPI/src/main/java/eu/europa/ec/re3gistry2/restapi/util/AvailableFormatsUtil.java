@@ -19,6 +19,8 @@ public class AvailableFormatsUtil {
         formatList.add("iso19135xml");
         formatList.add("rdf");
         formatList.add("csv");
+        formatList.add("Atom");
+        formatList.add("Ror");
     }
 
     public List<String> getFormatList() {

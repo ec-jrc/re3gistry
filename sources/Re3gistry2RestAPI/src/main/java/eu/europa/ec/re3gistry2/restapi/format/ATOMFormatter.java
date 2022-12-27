@@ -57,7 +57,7 @@ public class ATOMFormatter implements Formatter {
 
     @Override
     public String getContentType() {
-        return "text/xml";
+        return "text/atom+xml";
     }
 
     @Override

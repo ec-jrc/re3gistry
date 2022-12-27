@@ -85,7 +85,7 @@ public class MigrationManager {
 
         this.entityManagerRe3gistry2 = entityManagerRe3gistry2;
 
-        if (entityManagerRe3gistry2Migration == null) {
+        if (entityManagerRe3gistry2Migration == null || !entityManagerRe3gistry2Migration.isOpen()) {
             Map emProperties = new HashMap();
             emProperties.put(JDBC_DRIVER, "org.postgresql.Driver");
             emProperties.put(JDBC_URL, "jdbc:postgresql://" + dbAddress + ":" + dbPort + "/" + dbName);

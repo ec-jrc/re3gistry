@@ -14,6 +14,10 @@ registryApp.maxSearchResultsPerPage = 10;
 // Force http URIs (even if the original call has https URIs)
 registryApp.forceHttpURIs=true;
 
+// Default Error message parameters (Change if needed to your own repository or link)
+registryApp.errorMessageDefinition = "Re3gistry Software repository";
+registryApp.errorMessageURL = "https://github.com/ec-jrc/re3gistry";
+
 // The app's base URL
 registryApp.domainURL = '//registry-test.eu';
 registryApp.hostURL = '//registry-test.eu/registry';
