@@ -532,7 +532,10 @@ Depending on the type of installation, using an external authentication provider
 ![User profile section - Editing details](images/userprofile.png)
 
 
+## Additional Notes
 
+### Default Language
+As of version 2.4.1-rc.1, if the default language set in the browser is not available, it will automaticalli change the re3gistry language to the master language on the running instance.
 
 
 
