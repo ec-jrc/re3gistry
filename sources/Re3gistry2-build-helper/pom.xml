@@ -44,7 +44,43 @@
         <module>../Re3gistry2RestAPI</module>
         <module>../Re3gistry2</module>
     </modules>
-    <profiles>        
+    <profiles>
+        <!-- Docker profile --> 
+        <profile>
+            <id>developer-docker</id>
+            <properties>
+                <profile.id>developer-docker</profile.id>
+                <persistence.db.port>5432</persistence.db.port>
+                <persistence.db.address>host.docker.internal</persistence.db.address>
+                <persistence.db.name>registrydb</persistence.db.name>
+                <persistence.jdbc.username>name</persistence.jdbc.username>
+                <persistence.jdbc.password>password</persistence.jdbc.password>
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>
+                <application.login.provider>SHIRO</application.login.provider>
+                <application.rooturl>http://localhost/re3gistry2/</application.rooturl>
+                <ecas.filter.serverName>localhost</ecas.filter.serverName>
+                <header.message.class>alert-warning</header.message.class>
+                <header.message.text><![CDATA[This is the <strong>local environment</strong> of the Re3gistry 2 software <br/> If you would like to participate to the testing check out the software repository <a class="ecl-link" href="https://github.com/ec-jrc/re3gistry">Re3gistry - localhost Instance - frontend view</a>]]></header.message.text>
+                <application.cache.disk.path>work/ehcache</application.cache.disk.path>
+                <!-- <application.releasenote.rss.path>C:/Devel/re3gistry_application/rss</application.releasenote.rss.path> -->
+                <application.releasenote.rss.path>webapps/re3gistry2/WEB-INF/classes</application.releasenote.rss.path>
+                <application.logging.path>work/registrylogger.log</application.logging.path>
+                <application.privacy>OFF</application.privacy>
+                <application.selected.interface>ecl</application.selected.interface>
+                <mail.smtp.host>localhost</mail.smtp.host>
+                <mail.smtp.port>2500</mail.smtp.port> 
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.starttls.enable>false</mail.smtp.starttls.enable>
+                <mail.user>name</mail.user>
+                <mail.password>password</mail.password>
+                <mail.sender>admin@example.com</mail.sender>
+                <web.session.cookie.secure>false</web.session.cookie.secure>
+                <application.selected.interface>neutral</application.selected.interface>
+                <application.legacy.flag>ON</application.legacy.flag>
+                <application.schemas.path>/schemas/2.0</application.schemas.path>
+                <!--<persistence.eclipselink.logging.file>path/to/catalina/base/logs/eclipselink.log</persistence.eclipselink.logging.file>-->
+            </properties>
+        </profile>        
         <!-- Development profile --> 
         <profile>
             <id>developer-example-profile</id>                   

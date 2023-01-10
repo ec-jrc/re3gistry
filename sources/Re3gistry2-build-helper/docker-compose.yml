@@ -1,0 +1,99 @@
+## YAML Template.
+---
+version: '3.3'
+
+services:
+    db:
+        image: postgres:10.20-alpine
+        container_name: reg-postgres
+        healthcheck:
+              test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+              interval: 30s
+              timeout: 60s
+              retries: 5
+              start_period: 80s
+        restart: always
+        environment:
+          - POSTGRES_USER=name
+          - POSTGRES_PASSWORD=password
+          - POSTGRES_DB=registrydb
+          - ALLOW_IP_RANGE="0.0.0.0/0"
+        volumes:
+          - ../../dist/db-scripts/registry2_drop-and-create-and-init.sql.orig:/docker-entrypoint-initdb.d/init.sql
+#          - ../../dist/customize-interface/example-profile-developer-docker/dbdumpv1.sql:/docker-entrypoint-initdb.d/init.sql
+          # Test database tu use it without installation
+          # Be sure file sources-main/resources-configurations_files/system.installed
+          #  is removed from the war file. If not, installation will be not detected.
+#          - ../../dist/customize-interface/example-profile-developer-docker/dbdumpv1.sql:/docker-entrypoint-initdb.d/init_backup.sql
+          - ../../dist/customize-interface/example-profile-developer-docker/dump-docker-202205180929.sql:/docker-entrypoint-initdb.d/init_backup.sql
+#          - ../../dist/customize-interface/example-profile-developer-docker/fulldump.sql:/docker-entrypoint-initdb.d/init_backup.sql
+          # login from example db: name@example.com password
+        expose: 
+          - "5432"
+        ports:
+          - 5432:5432
+        networks:
+          - main
+                
+    web:
+        depends_on:
+          - db
+          - solr
+        image: tomcat:7.0.109-jdk8-adoptopenjdk-hotspot
+        #image: tomcat:8.5.81-jdk8
+        container_name: reg-tomcat
+        # Take war files from compiled 
+        volumes:
+          - ../Re3gistry2/target/re3gistry2.war:/usr/local/tomcat/webapps/re3gistry2.war
+          - ../Re3gistry2RestAPI/target/re3gistry2restapi.war:/usr/local/tomcat/webapps/re3gistry2restapi.war
+        ports:
+          - 8080:8080 
+          - 8888:8888
+          - 9000:9000
+          - 8000:8000
+        restart: always
+        networks:
+          - main
+        # Allows debug application
+        environment:
+          JPDA_ADDRESS: 8000
+          JPDA_TRANSPORT: dt_socket
+        entrypoint: /usr/local/tomcat/bin/catalina.sh jpda run
+    apache:
+        image: httpd:2.4.53-alpine
+        container_name: reg-httpd
+        ports:
+            - 80:80
+        depends_on:
+          - db
+          - solr
+          - web
+        volumes:
+             - ../../dist/webapp/httpd.conf:/usr/local/apache2/conf/httpd.conf
+             - ../../dist/webapp/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+             - ../Re3gistry2ServiceWebapp/public_html:/var/www/host.docker.internal/public_html
+        restart: always
+        networks:
+          - main
+         
+    solr:
+        image: solr:8.11.1
+        container_name: reg-solr 
+        ports:
+         - "9983:9983"
+         - "8983:8983"
+#        volumes:
+#          - ../../../solr:/opt/solr/server/solr/re3gistry2
+        entrypoint:
+          - docker-entrypoint.sh
+          - solr-precreate
+          - re3gistry
+    mailserver:
+      image: marcopas/docker-mailslurper
+      container_name: mailserver
+      ports:
+        - 2500:2500
+        - 8081:8080 # http://localhost:8081/
+        - 8085:8085
+networks:
+  main:
