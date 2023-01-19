@@ -2,12 +2,9 @@
 
 ## Table of contents
 
-- [Release strategy](#release-strategy)
-  - [Table of contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Objective and Summary](#objective-and-summary)
-  - [Release Planning](#release-planning)
-    - [Major and minor releases](#major-and-minor-releases)
+  - [Release Planning and Milestones](#release-planning-and-milestones)
 
 ## Introduction
 
@@ -36,7 +33,7 @@ Register Federation Tool (RoR):
 
 In particular, all the **_breaking changes_** (changed that imply importants modifications in the application) are only included in the major versions, while the **_non-breaking changes_** are included in any version (major or minor). In addition, **_hotfixes_** (i.e. fixes to major bugs or faults) are released as quickly as possible, even creating a new minor release outside the roadmap.
 
-## Release Planning: Milestones
+## Release Planning and Milestones
 
 As mentioned above, several releases of the Re3gistry software are scheduled each year. The scheduled annual releases will be described in detail in the next sub-sections.
 
