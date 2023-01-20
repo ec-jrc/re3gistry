@@ -43,12 +43,13 @@ In particular, all the **_breaking changes_** (changed that imply importants mod
 
  Annual releases, **plan for 2023**:
 
-- **v0.1.0 - February**: Minor release
+- **v0.1.0 - February/March**: Minor release
 - **v0.1.1 - May**: Minor release
 - **v0.1.2 - June**: Major release
 - **v0.1.3 - August**: Minor release 
 - **v0.2.0 - November**: Major release
 
+*Clarify that the first version of the Register Federation Tool (RoR) has been postponed to the first trimester of 2023.
 
 To inform users in advance about when the solution to each issue will be included in the release of the Re3gistry software, each issue is assigned to a specific milestone. Milestones are listed on [this page](https://github.com/ec-jrc/re3gistry/milestones). Once a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones.
 
