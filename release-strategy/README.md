@@ -5,6 +5,7 @@
   - [Introduction](#introduction)
   - [Objective and Summary](#objective-and-summary)
   - [Release Planning and Milestones](#release-planning-and-milestones)
+  - [Release Delivery](#release-delivery)
 
 ## Introduction
 
@@ -49,5 +50,24 @@ In particular, all the **_breaking changes_** (changed that imply importants mod
 - **v0.2.0 - November**: Major release
 
 
-To inform users in advance about when the solution to each issue will be included in the release of the Re3gistry software, each issue is assigned to a specific milestone. Milestones are listed on [this page](https://github.com/ec-jrc/re3gistry/milestones). Once a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones. All the information on each of the releases carried out, is available [here](https://github.com/ec-jrc/re3gistry/releases). 
+To inform users in advance about when the solution to each issue will be included in the release of the Re3gistry software, each issue is assigned to a specific milestone. Milestones are listed on [this page](https://github.com/ec-jrc/re3gistry/milestones). Once a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones.
+
+## Release Delivery
+
+All the information on each of the releases carried out, is available [here](https://github.com/ec-jrc/re3gistry/releases). 
+
+Each release of the Re3gistry software is fully managed and made available to the INSPIRE community through the following set of GitHub artifacts:
+
+- A GitHub milestone, named in the same way as the relevant release at that moment (vx.x.x), and published on the Milestones section of the community repository; the milestone lists the issues whose solutions are included in the corresponding vx.x.x release.
+
+- A GitHub release, named vx.x.x and published on the [Release section](https://github.com/ec-jrc/re3gistry/releases) of the community repository. The release notes include:
+
+  - a list of aproved change proposals
+  - a list of fixed issues
+  - a list of the enhancements
+  - the new documentation produced, if any
+
+- Update of the GitHub issue tracker of the community repository by closing the issues with label "SOLVED" and the corresponding milestone.
+
+- Create announcements in [GitHub Discussions](https://github.com/ec-jrc/re3gistry/discussions) and in [joinup](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry) related to the release.
 
