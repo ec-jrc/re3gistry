@@ -34,7 +34,7 @@ In particular, all the **_breaking changes_** (changed that imply importants mod
 - **v2.4.2 - March**: Minor release
 - **v2.5.0 - June**: Major release
 - **v2.5.1 - September**: Minor release 
-- **v2.5.5 - December**: Minor release
+- **v2.5.2 - December**: Minor release
 
 ### Register Federation Tool (RoR):
 
