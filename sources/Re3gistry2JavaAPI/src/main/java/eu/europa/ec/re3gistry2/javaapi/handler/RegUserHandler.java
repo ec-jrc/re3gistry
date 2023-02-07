@@ -147,9 +147,9 @@ public class RegUserHandler {
         } catch (Exception e) {
             logger.error("@ RegUserHandler.removeUserFromGroup: generic error.", e);
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+//            if (entityManager != null) {
+//                entityManager.close();
+//            }
         }
         return operationResult;
     }
@@ -179,9 +179,9 @@ public class RegUserHandler {
         } catch (Exception e) {
             logger.error("@ RegUserHandler.addUserFromGroup: generic error.", e);
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+//            if (entityManager != null) {
+//                entityManager.close();
+//            }
         }
         return operationResult;
     }

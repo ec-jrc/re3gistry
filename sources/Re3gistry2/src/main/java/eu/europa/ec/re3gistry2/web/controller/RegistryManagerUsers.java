@@ -26,6 +26,7 @@ package eu.europa.ec.re3gistry2.web.controller;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.InputSanitizerHelper;
+import eu.europa.ec.re3gistry2.base.utility.MailManager;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.base.utility.UserHelper;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
@@ -37,15 +38,20 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegUserRegGroupMappingManager;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegUserHandler;
 import eu.europa.ec.re3gistry2.model.RegGroup;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
+import eu.europa.ec.re3gistry2.model.RegStatuslocalization;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegUserRegGroupMappingUuidHelper;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -75,18 +81,19 @@ public class RegistryManagerUsers extends HttpServlet {
         RegUserRegGroupMappingManager regUserRegGroupMappingManager = new RegUserRegGroupMappingManager(entityManager);
         RegUserHandler regUserHandler = new RegUserHandler();
         RegGroupManager regGroupManager = new RegGroupManager(entityManager);
+        
 
         // Getting form parameter
         String formRegUserUuid = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_USERUUID);
         String formSubmitAction = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_SUBMITACTION);
         String formName = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_USER_NAME);
-        
+
         formRegUserUuid = (formRegUserUuid != null) ? InputSanitizerHelper.sanitizeInput(formRegUserUuid) : null;
         formSubmitAction = (formSubmitAction != null) ? InputSanitizerHelper.sanitizeInput(formSubmitAction) : null;
-        
+
         // Handling charset for the textual contents
         byte[] bytes;
-        if (formName!=null) {
+        if (formName != null) {
             bytes = formName.getBytes(Charset.defaultCharset());
             formName = new String(bytes, StandardCharsets.UTF_8);
             formName = InputSanitizerHelper.sanitizeInput(formName);
@@ -94,19 +101,30 @@ public class RegistryManagerUsers extends HttpServlet {
 
         // Getting request parameter
         String regUserDetailUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERDETAIL_UUID);
-        String regUserRegGroupMappingUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERGROUPMAPPING_UUID);
         String languageUUID = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
         String actionType = request.getParameter(BaseConstants.KEY_REQUEST_ACTIONTYPE);
-        String checkBoxChecked = request.getParameter(BaseConstants.KEY_REQUEST_CHECKED);
-        String selectedRegGroupUUID = request.getParameter(BaseConstants.KEY_REQUEST_GROUP_UUID);
-        
+
+        String[] checkBoxCheckedNoFormat = request.getParameterValues(BaseConstants.KEY_REQUEST_CHECKED);
+        String[] selectedRegGroupUUIDNoFormat = request.getParameterValues(BaseConstants.KEY_REQUEST_GROUP_UUID);
+        String[] regUserRegGroupMappingUUIDNoFormat = request.getParameterValues(BaseConstants.KEY_REQUEST_USERGROUPMAPPING_UUID);
+        List<String> checkBoxChecked = null;
+        List<String> selectedRegGroupUUID = null;
+        List<String> regUserRegGroupMappingUUID = null;
+
+        if (checkBoxCheckedNoFormat != null) {
+            checkBoxChecked = Arrays.asList(checkBoxCheckedNoFormat[0].split(","));
+        }
+        if (selectedRegGroupUUIDNoFormat != null) {
+            selectedRegGroupUUID = Arrays.asList(selectedRegGroupUUIDNoFormat[0].split(","));
+        }
+        if (regUserRegGroupMappingUUIDNoFormat != null) {
+            regUserRegGroupMappingUUID = Arrays.asList(regUserRegGroupMappingUUIDNoFormat[0].split(","));
+        }
+
         regUserDetailUUID = (regUserDetailUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserDetailUUID) : null;
-        regUserRegGroupMappingUUID = (regUserRegGroupMappingUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserRegGroupMappingUUID) : null;
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
         actionType = (actionType != null) ? InputSanitizerHelper.sanitizeInput(actionType) : null;
-        selectedRegGroupUUID = (selectedRegGroupUUID != null) ? InputSanitizerHelper.sanitizeInput(selectedRegGroupUUID) : null;
-        checkBoxChecked = (checkBoxChecked != null) ? InputSanitizerHelper.sanitizeInput(checkBoxChecked) : null;
-                
+
         //Getting the master language
         RegLanguagecode masterLanguage = regLanguagecodeManager.getMasterLanguage();
         request.setAttribute(BaseConstants.KEY_REQUEST_MASTERLANGUAGE, masterLanguage);
@@ -136,7 +154,7 @@ public class RegistryManagerUsers extends HttpServlet {
 
         if (permissionManageSystem) {
 
-            if (((formRegUserUuid != null && formRegUserUuid.length() > 0) || (regUserDetailUUID != null && regUserDetailUUID.length() > 0) || (regUserRegGroupMappingUUID != null && regUserRegGroupMappingUUID.length() > 0)) && ((formSubmitAction != null && formSubmitAction.length() > 0) || (actionType != null && actionType.length() > 0))) {
+            if (((formRegUserUuid != null && formRegUserUuid.length() > 0) || (regUserDetailUUID != null && regUserDetailUUID.length() > 0) || (regUserRegGroupMappingUUID != null && !regUserRegGroupMappingUUID.isEmpty())) && ((formSubmitAction != null && formSubmitAction.length() > 0) || (actionType != null && actionType.length() > 0))) {
                 // This is a save request
 
                 boolean result = false;
@@ -160,26 +178,103 @@ public class RegistryManagerUsers extends HttpServlet {
                             regUserDetail.setName(formName);
                             result = regUserHandler.updateUser(regUserDetail);
                         } else if (actionType != null && actionType.equals(BaseConstants.KEY_ACTION_TYPE_REMOVEUSERGROUP)) {
-
-                            if (checkBoxChecked.equals(BaseConstants.KEY_BOOLEAN_STRING_FALSE)) {
-                                // Removing the selected group from the user
-                                RegUserRegGroupMapping regUserRegGroupMapping = regUserRegGroupMappingManager.get(regUserRegGroupMappingUUID);
-                                result = regUserHandler.removeUserFromGroup(regUserRegGroupMapping);
+                            List<String> addedGroups = new ArrayList<>();
+                             List<String> removedGroups = new ArrayList<>();
+                            if (checkBoxChecked != null) {
+                                List<RegUserRegGroupMapping> activeGroupsList = regUserRegGroupMappingManager.getAll(regUserDetail);
+                                for (int i = 0; i < checkBoxChecked.size(); i++) {
+                                    if (checkBoxChecked.get(i).equals(BaseConstants.KEY_BOOLEAN_STRING_FALSE)) {
+                                        // Removing the selected group from the user
+                                        if (regUserRegGroupMappingUUID != null && !regUserRegGroupMappingUUID.isEmpty() && regUserRegGroupMappingUUID.size() >= i) {
+                                            if (!regUserRegGroupMappingUUID.get(i).isEmpty()) {
+                                                try{
+                                                   RegUserRegGroupMapping regUserRegGroupMapping = regUserRegGroupMappingManager.get(regUserRegGroupMappingUUID.get(i));
+                                                for (RegUserRegGroupMapping r : activeGroupsList) {
+                                                    if (r.getUuid().equals(regUserRegGroupMapping.getUuid())) {
+                                                        result = regUserHandler.removeUserFromGroup(regUserRegGroupMapping);
+                                                        if (selectedRegGroupUUID != null && !selectedRegGroupUUID.isEmpty() && selectedRegGroupUUID.size() >= i) {
+                                                            RegGroup selectedRegGroup = regGroupManager.get(selectedRegGroupUUID.get(i));
+                                                            String group = selectedRegGroup.getName();
+                                                            removedGroups.add(group);
+                                                            break;
+                                                        }
+                                                    }
+                                                    
+                                                } 
+                                                }catch(Exception e){
+                                                    logger.error(e.getMessage(), e);
+                                                }
+                                            }
+                                        }
+                                    }else {
+                                        // Adding the selected group to the user
+                                        if(selectedRegGroupUUID != null && !selectedRegGroupUUID.isEmpty() && selectedRegGroupUUID.size() >= i){
+                                            //RegUserRegGroupMapping regUserRegGroupMapping = regUserRegGroupMappingManager.get(regUserRegGroupMappingUUID.get(i));
+                                            RegGroup selectedRegGroup = regGroupManager.get(selectedRegGroupUUID.get(i));
+                                            RegUserRegGroupMapping newMapping = new RegUserRegGroupMapping();
+                                            boolean b = false;
+                                            for (RegUserRegGroupMapping r : activeGroupsList) {
+                                                if (r.getRegGroup().getUuid().equals(selectedRegGroup.getUuid())) {
+                                                    b = true;
+                                                    break;
+                                                }
+                                            }
+                                            if(!b){
+                                                String newUUID = RegUserRegGroupMappingUuidHelper.getUuid(regUserDetail, selectedRegGroup);
+                                                newMapping.setUuid(newUUID);
+                                                newMapping.setRegUser(regUserDetail);
+                                                newMapping.setRegGroup(selectedRegGroup);
+                                                newMapping.setIsGroupadmin(true);
+                                                newMapping.setInsertdate(new Date());
+                                                result = regUserHandler.addUserFromGroup(newMapping);
+                                                String group = selectedRegGroup.getName();
+                                                addedGroups.add(group);
+                                            }
+                                            
+                                        }else{
+                                            logger.error("Error: Failed retrieving selected regGroup");
+                                        }
+                                    }
+                                }
                             } else {
-                                // Adding the selected group to the user
-                                RegGroup selectedRegGroup = regGroupManager.get(selectedRegGroupUUID);
-                                RegUserRegGroupMapping newMapping = new RegUserRegGroupMapping();
-                                String newUUID = RegUserRegGroupMappingUuidHelper.getUuid(regUserDetail, selectedRegGroup);
-                                newMapping.setUuid(newUUID);
-                                newMapping.setRegUser(regUserDetail);
-                                newMapping.setRegGroup(selectedRegGroup);
-                                newMapping.setIsGroupadmin(true);
-                                newMapping.setInsertdate(new Date());
-                                result = regUserHandler.addUserFromGroup(newMapping);
+                                logger.error("Error: Couldn't retrieve checkboxes");
+                            }
+                            //Send email to affected user/s
+                            LinkedHashSet<InternetAddress> users = new LinkedHashSet<>();
+                            users.add(new InternetAddress(regUserDetail.getEmail()));
+                            if (!users.isEmpty()) {
+                                InternetAddress[] recipient = new InternetAddress[users.size()];
+                                users.toArray(recipient);
+                                String subject = "User's group has changed.";
+                                String body = "<br/> Dear User <br/><br/> The groups assigned to " + regUserDetail.getEmail() + " have changed. <br/>";
+                                
+                                if (!addedGroups.isEmpty()) {
+                                    body += "The user "+regUserDetail.getEmail()+" has been added to the group(s): ";
+                                    for (int i = 0; i < addedGroups.size(); i++) {
+                                        if (i == addedGroups.size() - 1) {
+                                            body += addedGroups.get(i) + ". <br/>";
+                                        } else {
+                                            body += addedGroups.get(i) + ", ";
+                                        }
+                                    }
+                                }
+                                
+                                if (!removedGroups.isEmpty()) {
+                                    body += "The user "+regUserDetail.getEmail()+" has been removed from the group(s): ";
+                                    for (int y = 0; y < removedGroups.size(); y++) {
+                                        if (y == removedGroups.size() - 1) {
+                                            body += removedGroups.get(y) + ". ";
+                                        } else {
+                                            body += removedGroups.get(y) + ", ";
+                                        }
+                                    }
+                                }
+                                body += "<br/><br/> If you have any questions, please do not hesitate to contact [contact]. <br/><br/>";
+                                body += "Regards.";
+                                MailManager.sendMail(recipient, subject, body);
                             }
                         }
                     }
-
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
