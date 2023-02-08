@@ -164,10 +164,13 @@ mail.text.body.error=An error has occurred during the Re3gistry installation, pl
 mail.text.subject.newregistration=Re3gistry - Your account have been successfully added to the system
 mail.text.error.newregistration=Dear {name}, <br/><br/> Your account has been successfully created and it is now enabled.<br/><br/>You can access the management interface using the following credentials:<br/> Username: {email} <br/>Key: {key}<br/><br/> Please change your key after the first access.<br/>
 
-mail.text.subject.groupschanged=User's group has changed
-mail.text.body.groupschanged=The groups assigned to {name} have changed. 
-mail.text.body.groupschanged.add=User has been added to group(s): 
-mail.text.body.groupschanged.remove=User has been removed from the group(s): 
+mail.text.subject.groupschanged=User's group has changed.
+mail.text.body.groupschanged=<br/> Dear User <br/><br/> The groups assigned to {name} have changed. <br/> 
+mail.text.body.groupschanged.add=The user {name} has been added to the group(s):  
+mail.text.body.groupschanged.remove=The user {name} has been removed from the group(s):  
+mail.text.body.groupschanged.ending=<br/><br/> If you have any questions, please do not hesitate to contact <a href="{webpage}">{contact}</a>. <br/><br/> Regards.
+mail.text.body.groupschanged.ending.contact=Registry software
+mail.text.body.groupschanged.ending.contact.webpage=https://github.com/ec-jrc/re3gistry
 
 mail.text.subject.bulkimport.success=Re3gistry - bulk import {itemclass} success
 mail.text.subject.bulkimport.error=Re3gistry - bulk import {itemclass} error

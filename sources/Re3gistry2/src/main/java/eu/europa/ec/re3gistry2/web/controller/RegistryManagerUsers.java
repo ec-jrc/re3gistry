@@ -51,6 +51,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -82,6 +83,8 @@ public class RegistryManagerUsers extends HttpServlet {
         RegUserHandler regUserHandler = new RegUserHandler();
         RegGroupManager regGroupManager = new RegGroupManager(entityManager);
         
+        //System localization
+        ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
 
         // Getting form parameter
         String formRegUserUuid = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_USERUUID);
@@ -245,11 +248,18 @@ public class RegistryManagerUsers extends HttpServlet {
                             if (!users.isEmpty()) {
                                 InternetAddress[] recipient = new InternetAddress[users.size()];
                                 users.toArray(recipient);
-                                String subject = "User's group has changed.";
-                                String body = "<br/> Dear User <br/><br/> The groups assigned to " + regUserDetail.getEmail() + " have changed. <br/>";
+                                String subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_GROUPSCHANGED);
+                                String body = "";
+                                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED);
+                                body = (body != null)
+                                        ? body.replace("{name}", regUserDetail.getEmail())
+                                        : "";
                                 
                                 if (!addedGroups.isEmpty()) {
-                                    body += "The user "+regUserDetail.getEmail()+" has been added to the group(s): ";
+                                    body += systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ADD);
+                                    body = (body != null)
+                                        ? body.replace("{name}", regUserDetail.getEmail())
+                                        : "";
                                     for (int i = 0; i < addedGroups.size(); i++) {
                                         if (i == addedGroups.size() - 1) {
                                             body += addedGroups.get(i) + ". <br/>";
@@ -260,7 +270,10 @@ public class RegistryManagerUsers extends HttpServlet {
                                 }
                                 
                                 if (!removedGroups.isEmpty()) {
-                                    body += "The user "+regUserDetail.getEmail()+" has been removed from the group(s): ";
+                                    body += systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_REMOVE);
+                                    body = (body != null)
+                                        ? body.replace("{name}", regUserDetail.getEmail())
+                                        : "";
                                     for (int y = 0; y < removedGroups.size(); y++) {
                                         if (y == removedGroups.size() - 1) {
                                             body += removedGroups.get(y) + ". ";
@@ -269,9 +282,13 @@ public class RegistryManagerUsers extends HttpServlet {
                                         }
                                     }
                                 }
-                                body += "<br/><br/> If you have any questions, please do not hesitate to contact [contact]. <br/><br/>";
-                                body += "Regards.";
+                                body += systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING);
+                                body = (body != null)
+                                        ? body.replace("{contact}", systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME))
+                                        .replace("{webpage}",systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_WEBPAGE))
+                                        : "";
                                 MailManager.sendMail(recipient, subject, body);
+                                regUserHandler.closeEntityManager();
                             }
                         }
                     }
