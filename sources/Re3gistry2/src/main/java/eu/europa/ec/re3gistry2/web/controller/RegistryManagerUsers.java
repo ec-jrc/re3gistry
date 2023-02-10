@@ -48,9 +48,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
@@ -249,10 +251,15 @@ public class RegistryManagerUsers extends HttpServlet {
                                 InternetAddress[] recipient = new InternetAddress[users.size()];
                                 users.toArray(recipient);
                                 String subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_GROUPSCHANGED);
+                                subject = (subject != null)
+                                            ? subject.replace("{contact}",systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME))
+                                            : "";
+                                
                                 String body = "";
                                 body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED);
                                 body = (body != null)
-                                        ? body.replace("{name}", regUserDetail.getEmail())
+                                        ? body.replace("{user}", regUserDetail.getName())
+                                              .replace("{id}",regUserDetail.getEmail())
                                         : "";
                                 
                                 if (!addedGroups.isEmpty()) {
@@ -283,9 +290,14 @@ public class RegistryManagerUsers extends HttpServlet {
                                     }
                                 }
                                 body += systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING);
+                                
+                                
+                                String value = request.getHeader("host");
+                                value = value + "/re3gistry2/userProfile";
                                 body = (body != null)
-                                        ? body.replace("{contact}", systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME))
-                                        .replace("{webpage}",systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_WEBPAGE))
+                                        ? body.replace("{page}", value)
+                                        .replace("{name}", regUserDetail.getName())
+                                        .replace("{contact}",systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME))
                                         : "";
                                 MailManager.sendMail(recipient, subject, body);
                                 regUserHandler.closeEntityManager();
