@@ -335,6 +335,9 @@
                     %>  
                 </tbody>
             </table>
+                <div class="col-sm-3">
+                        <button type="submit" class="btn btn-success width100"><i class="far fa-save"></i> ${localization.getString("label.savechanges")}</button>
+                    </div>
             <%
                 }
             %>

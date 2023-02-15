@@ -125,7 +125,13 @@ public class WebConstants {
 
     public static final String PAGE_URINAME_ADDFIELD = "/addField";
     public static final String PAGE_PATH_ADDFIELD = "";
+    
+    public static final String PAGE_URINAME_ACTIVATE = "/activate";
+    public static final String PAGE_PATH_ACTIVATE = "";
 
+    public static final String PAGE_URINAME_DELETE_USER = "/userDeleted";
+    public static final String PAGE_PATH_DELETE_USER = "";
+    
     /**
      * installation steps
      */

@@ -28,8 +28,11 @@ import eu.europa.ec.re3gistry2.base.utility.localization.LocalizationMgr;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.servlet.ServletException;
@@ -218,12 +221,11 @@ public class Configuration {
                 request.setAttribute(BaseConstants.KEY_REQUEST_AVAILABLELANGUAGES, session.getAttribute(BaseConstants.KEY_SESSION_AVAILABLELANGUAGES));
             }
 
-            String uri = request.getRequestURI();
+            String uri = request.getRequestURL().toString();
             String currentPageName = "/" + uri.substring(uri.lastIndexOf("/") + 1);
             request.setAttribute(BaseConstants.KEY_REQUEST_CURRENTPAGENAME, currentPageName);
             Configuration.getInstance().getLogger().debug("Current page name=" + currentPageName);
-
-
+            
             //Getting logged user
             RegUser regUser = (RegUser) session.getAttribute(BaseConstants.KEY_SESSION_USER);
 

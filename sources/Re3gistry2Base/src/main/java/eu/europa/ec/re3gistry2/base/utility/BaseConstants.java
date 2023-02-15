@@ -94,6 +94,9 @@ public class BaseConstants {
 
     public static final String ATTRIBUTE_CACHE_KEY = "re3gistry-rest-api-cache";
     public static final String ATTRIBUTE_CACHE_QUEUE_KEY = "re3gistry-rest-api-cache-queue";
+    
+    public static final String KEY_PROPERTY_CODE = "code";
+    public static final String KEY_PROPERTY_HOST = "host";
 
     /**
      * Mail keys
@@ -125,7 +128,7 @@ public class BaseConstants {
     public static final String KEY_EMAIL_SUBJECT_ERROR = "mail.text.subject.error";
     public static final String KEY_EMAIL_BODY_ERROR = "mail.text.body.error";
     public static final String KEY_EMAIL_SUBJECT_NEW_REGISTRATION = "mail.text.subject.newregistration";
-    public static final String KEY_EMAIL_BODY_NEW_REGISTRATION = "mail.text.error.newregistration";
+    public static final String KEY_EMAIL_BODY_NEW_REGISTRATION = "mail.text.option.newregistration";
     public static final String KEY_EMAIL_BODY_ECAS_NEW_REGISTRATION = "mail.text.error.ecas.newregistration";
     public static final String KEY_EMAIL_SUBJECT_RESETPASSWORD = "mail.text.subject.resetpassword.registration";
     public static final String KEY_EMAIL_BODY_RESETPASSWORD = "mail.text.error.resetpassword.registration";
@@ -247,6 +250,8 @@ public class BaseConstants {
     public static final String KEY_USER_ACTION_APPROVEPROPOSAL = "ApproveProposal";
     public static final String KEY_USER_ACTION_PUBLISHPROPOSAL = "PublishProposal";
     public static final String KEY_USER_ACTION_MANAGESYSTEM = "ManageSystem";
+    public static final String KEY_USER_ACTION_ACTIVATE_USER = "ActivateUser";
+    public static final String KEY_USER_ACTION_DELETE_USER = "DeleteUser";
 
     /* - Request keys - */
     // Request parameters keys

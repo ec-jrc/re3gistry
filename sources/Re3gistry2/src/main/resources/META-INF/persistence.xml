@@ -30,6 +30,7 @@
         <class>eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping</class>       
         <class>eu.europa.ec.re3gistry2.model.RegItemproposedRegGroupRegRoleMapping</class>
         <class>eu.europa.ec.re3gistry2.model.RegItemhistoryRegGroupRegRoleMapping</class>
+        <class>eu.europa.ec.re3gistry2.model.RegUserCodes</class>
        
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         

@@ -29,6 +29,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegUserManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegUserRegGroupMappingManager;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.persistence.EntityManager;
 import org.apache.logging.log4j.Logger;
@@ -210,6 +211,48 @@ public class RegUserHandler {
 
         } catch (Exception e) {
             logger.error("@ RegUserHandler.addUser: generic error.", e);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return operationResult;
+    }
+    
+    public boolean removeUser(RegUser regUser){
+        // initializing managers
+        RegUserManager regUserManager = new RegUserManager(entityManager);
+
+        boolean operationResult = false;
+
+        try {
+            // The writing operation on the Database are synchronized
+            /* ## Start Synchronized ## */
+            synchronized (sync) {
+                if (!entityManager.getTransaction().isActive()) {
+                    entityManager.getTransaction().begin();
+                }
+                //First we delete all group mapping for the user
+                RegUserRegGroupMappingManager regUserRegGroupMappingManager = new RegUserRegGroupMappingManager(entityManager);
+                List<RegUserRegGroupMapping> groups = regUserRegGroupMappingManager.getAll(regUser);
+                if(!entityManager.getTransaction().isActive()){
+                    entityManager.getTransaction().begin();
+                }
+                for(RegUserRegGroupMapping group : groups){
+                    regUserRegGroupMappingManager.delete(group);
+                }
+                
+                // Remove the user
+                regUserManager.delete(regUser);
+                
+                operationResult = true;
+                
+                entityManager.getTransaction().commit();
+            }
+            /* ## End Synchronized ## */
+
+        } catch (Exception e) {
+            logger.error("@ RegUserHandler.removeUser: generic error.", e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();
