@@ -38,6 +38,11 @@ public class Initializer extends HttpServlet {
             Configuration.getInstance();
             String pathHelperFiles = getServletContext().getRealPath("/" + BaseConstants.KEY_FOLDER_NAME_WEBINF);
             Configuration.setPathHelperFiles(pathHelperFiles + File.separator + BaseConstants.KEY_FOLDER_NAME_CLASSES + File.separator + BaseConstants.KEY_FOLDER_NAME_CONFIGURATIONS);
+            
+            //Initialize the cronJobs
+            UserCodesJob userCodesJob = new UserCodesJob();
+            userCodesJob.deleteExpiredCodes();
+            
             System.out.println("### The system is now initialized. Path for the helper files: " + pathHelperFiles);
         } catch (Exception e) {
             //Error during system's copnfiguration

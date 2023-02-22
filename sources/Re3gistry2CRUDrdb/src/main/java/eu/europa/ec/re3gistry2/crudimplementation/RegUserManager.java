@@ -143,4 +143,25 @@ public class RegUserManager implements IRegUserManager {
         return (RegUser) q.getSingleResult();
     }
 
+    @Override
+    public boolean delete(RegUser regUser) throws Exception {
+        //Checking parameters
+        if (regUser == null) {
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, RegUser.class));
+        }
+
+        //Checking the DB managers
+        if (this.em == null) {
+            throw new Exception(ErrorConstants.ERROR_MANAGER_PERSISTENCE_LAYER_NULL);
+        }
+
+        if(!em.contains(regUser)){
+            regUser = em.merge(regUser);
+        }
+        //Saving the object
+        this.em.remove(regUser);
+
+        return true;
+    }
+
 }

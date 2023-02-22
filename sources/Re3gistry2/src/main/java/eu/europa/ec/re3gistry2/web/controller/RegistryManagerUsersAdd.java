@@ -34,16 +34,19 @@ import eu.europa.ec.re3gistry2.base.utility.WebConstants;
 import eu.europa.ec.re3gistry2.crudimplementation.RegGroupManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemRegGroupRegRoleMappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegUserCodesManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegUserManager;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegUserHandler;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegUserRegGrouprHandler;
 import eu.europa.ec.re3gistry2.model.RegGroup;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegUser;
+import eu.europa.ec.re3gistry2.model.RegUserCodes;
 import eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegUserRegGroupMappingUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegUserUuidHelper;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -172,7 +175,7 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                             newUser.setSsoreference(email);
                         }
                         newUser.setInsertdate(new Date());
-                        newUser.setEnabled(true);
+                        newUser.setEnabled(false);
 
                         String loginType = properties.getProperty(BaseConstants.KEY_PROPERTY_LOGIN_TYPE, BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO);
                         String key = "";
@@ -189,28 +192,46 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                         /**
                          * save group reference
                          */
-                        RegGroupManager regGroupManager = new RegGroupManager(entityManager);
-                        for (String selectedgroup : selectedgroups) {
-                            RegUserRegGroupMapping regUserRegGroupMapping = new RegUserRegGroupMapping();
-                            final RegGroup group = regGroupManager.get(selectedgroup);
-                            String newRegUserRegGroupUUID = RegUserRegGroupMappingUuidHelper.getUuid(newUser, group);
-                            regUserRegGroupMapping.setUuid(newRegUserRegGroupUUID);
-                            regUserRegGroupMapping.setRegUser(newUser);
-                            regUserRegGroupMapping.setRegGroup(group);
-                            regUserRegGroupMapping.setIsGroupadmin(Boolean.TRUE);
-                            regUserRegGroupMapping.setInsertdate(new Date());
+                        if(selectedgroups != null && selectedgroups.length > 0){
+                            RegGroupManager regGroupManager = new RegGroupManager(entityManager);
+                            for (String selectedgroup : selectedgroups) {
+                                RegUserRegGroupMapping regUserRegGroupMapping = new RegUserRegGroupMapping();
+                                final RegGroup group = regGroupManager.get(selectedgroup);
+                                String newRegUserRegGroupUUID = RegUserRegGroupMappingUuidHelper.getUuid(newUser, group);
+                                regUserRegGroupMapping.setUuid(newRegUserRegGroupUUID);
+                                regUserRegGroupMapping.setRegUser(newUser);
+                                regUserRegGroupMapping.setRegGroup(group);
+                                regUserRegGroupMapping.setIsGroupadmin(Boolean.TRUE);
+                                regUserRegGroupMapping.setInsertdate(new Date());
 
-                            try {
-                                if (!entityManager.getTransaction().isActive()) {
-                                    entityManager.getTransaction().begin();
+                                try {
+                                    if (!entityManager.getTransaction().isActive()) {
+                                        entityManager.getTransaction().begin();
+                                    }
+                                    entityManager.persist(regUserRegGroupMapping);
+                                    entityManager.getTransaction().commit();
+                                } catch (Exception ec) {
+                                    logger.error("@ RegUserHandler.addUser: generic error.", e);
                                 }
-                                entityManager.persist(regUserRegGroupMapping);
-                                entityManager.getTransaction().commit();
-                            } catch (Exception ec) {
-                                logger.error("@ RegUserHandler.addUser: generic error.", e);
                             }
                         }
-
+                        
+                        //Generate activation and deletion codes
+                        RegUserCodes codeActivation = new RegUserCodes(newUser.getUuid(),BaseConstants.KEY_USER_ACTION_ACTIVATE_USER,new Date());
+                        RegUserCodes codeDeletion = new RegUserCodes(newUser.getUuid(),BaseConstants.KEY_USER_ACTION_DELETE_USER,new Date());
+                        
+                        try{
+                            if (!entityManager.getTransaction().isActive()) {
+                                entityManager.getTransaction().begin();
+                            }
+                            //Persist both codes
+                            entityManager.persist(codeActivation);
+                            entityManager.persist(codeDeletion);
+                            entityManager.getTransaction().commit();
+                        } catch (Exception ec) {
+                                logger.error("@ RegUserHandler.addUser: generic error.", ec);
+                        }
+                        
                         // Prepare the email email to the user with the generated key
                         String recipientString = newUser.getEmail();
                         InternetAddress[] recipient = {
@@ -221,11 +242,17 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                         String body;
 
                         if (loginType.equals(BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO)) {
+                            String host = request.getHeader(BaseConstants.KEY_PROPERTY_HOST);
+                            URL activationUrl = new URL(host.concat(WebConstants.PAGE_PATH_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("="+codeActivation.getCode()));
+                            URL deletionUrl = new URL(host.concat(WebConstants.PAGE_PATH_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("="+codeDeletion.getCode()));
+                            
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_NEW_REGISTRATION);
                             body = (body != null)
                                     ? body.replace("{name}", name)
                                             .replace("{email}", email)
                                             .replace("{key}", key)
+                                            .replace("{acceptLink}",activationUrl.toString())
+                                            .replace("{deleteLink}",deletionUrl.toString())
                                     : "";
                         } else {
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ECAS_NEW_REGISTRATION);
