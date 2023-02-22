@@ -155,7 +155,7 @@ mail.smtp.starttls.enable=true
 mail.user=name
 mail.password=password
 mail.sender=jrc-inspire-support@ec.europa.eu
-mail.template=<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><title>%subject%</title></head><body><table style="width:100%;border-collapse:collapse"><tbody><tr style="background-color:#0065a2"><td style="padding:8px;color:#fff;font-size:14px;font-family:verdana">%subject%</td></tr><tr><td style="font-size:14px;font-family:verdana;padding:16px 0 16px 0"><p>%mailbody%</p><hr style="border:0;border-top:1px solid #777" /><p style="font-size:12px">This email has been automatically generated, please do not reply to it. For more details please access the <a href=\"%application.rooturl%\">management interface</a>.</p></td></tr><tr style="background-color:#0065a2"><td style="padding:8px;color:#fff;font-size:12px;font-family:verdana">Best regards, <br/>INSPIRE Re3gistry Team</td></tr></tbody></table></body></html>
+mail.template=<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/></head><body><table style="width:100%;border-collapse:collapse"><tbody><tr style="background-color:#0065a2"><td style="padding:8px;color:#fff;font-size:14px;font-family:verdana">%subject%</td></tr><tr><td style="font-size:14px;font-family:verdana;padding:16px 0 16px 0"><p>%mailbody%</p><hr style="border:0;border-top:1px solid #777" /><p style="font-size:12px"><em>This email has been automatically generated, please do not reply to it.</em></p></td></tr></tbody></table></body></html>
 
 mail.text.subject.success=Re3gistry - installation success
 mail.text.body.success=The Re3gistry software has been properly installed. You can start managing your registry content by signing in.
@@ -163,6 +163,14 @@ mail.text.subject.error=Re3gistry - installation error
 mail.text.body.error=An error has occurred during the Re3gistry installation, please review your settings. 
 mail.text.subject.newregistration=Re3gistry - Your account have been successfully added to the system
 mail.text.error.newregistration=Dear {name}, <br/><br/> Your account has been successfully created and it is now enabled.<br/><br/>You can access the management interface using the following credentials:<br/> Username: {email} <br/>Key: {key}<br/><br/> Please change your key after the first access.<br/>
+
+mail.text.subject.groupschanged=Changes to {contact} user groups
+mail.text.body.groupschanged=<br/> Dear {user}, <br/><br/> The group(s) associated with your user {id} have changed. <br/> 
+mail.text.body.groupschanged.add=You have been added to the group(s): 
+mail.text.body.groupschanged.remove=You are no longer in the group(s):  
+mail.text.body.groupschanged.ending=<br/><br/> Access your user profile page details in the management interface for more information: <br/><br/> <a href="{page}">{name}</a> <br/><br/> {contact} manager.
+mail.text.body.groupschanged.ending.contact=Registry software
+mail.text.body.groupschanged.ending.contact.webpage=https://github.com/ec-jrc/re3gistry
 
 mail.text.subject.bulkimport.success=Re3gistry - bulk import {itemclass} success
 mail.text.subject.bulkimport.error=Re3gistry - bulk import {itemclass} error

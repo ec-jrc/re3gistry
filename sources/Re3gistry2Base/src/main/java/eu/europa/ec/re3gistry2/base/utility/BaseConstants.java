@@ -140,6 +140,14 @@ public class BaseConstants {
     public static final String KEY_EMAIL_BODY_CACHE_ERROR = "mail.text.body.cache.error";
     public static final String KEY_EMAIL_SUBJECT_ITEM_PUBLISHED = "mail.text.subject.item.publised";
     public static final String KEY_EMAIL_BODY_ITEM_PUBLISHED = "mail.text.body.item.publised";
+    
+    public static final String KEY_EMAIL_SUBJECT_GROUPSCHANGED = "mail.text.subject.groupschanged";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED = "mail.text.body.groupschanged";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ADD = "mail.text.body.groupschanged.add";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_REMOVE = "mail.text.body.groupschanged.remove";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING = "mail.text.body.groupschanged.ending";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME = "mail.text.body.groupschanged.ending.contact";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_WEBPAGE = "mail.text.body.groupschanged.ending.contact.webpage";
 
     /**
      * mail subject and body bulk import
