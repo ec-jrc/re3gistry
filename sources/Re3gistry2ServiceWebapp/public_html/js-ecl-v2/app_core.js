@@ -175,9 +175,9 @@ function renderFetchError(data) {
     mainContainer.empty();
 
     if (data) {
-        mainContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorPrefix + data.error.code]));
+        mainContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorPrefix + data.error.code].replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition)));
     } else {
-        mainContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_genericError]));
+        mainContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_genericError].replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition)));
     }
 
     // Initializing the ECL Message component after creating it
@@ -196,7 +196,7 @@ function renderServiceError(data) {
 
     let htmlOutput = val_emptyString;
 
-    htmlOutput += htmlSnippet_errorMessage.replace('{0}', i18n[key_errorPrefix + data.error.code]);
+    htmlOutput += htmlSnippet_errorMessage.replace('{0}', i18n[key_errorPrefix + data.error.code].replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition));
 
     mainContainer.append(htmlOutput);
 

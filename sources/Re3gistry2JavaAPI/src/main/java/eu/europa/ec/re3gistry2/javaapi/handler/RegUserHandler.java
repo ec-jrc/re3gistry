@@ -147,10 +147,6 @@ public class RegUserHandler {
 
         } catch (Exception e) {
             logger.error("@ RegUserHandler.removeUserFromGroup: generic error.", e);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
         }
         return operationResult;
     }
@@ -179,10 +175,6 @@ public class RegUserHandler {
 
         } catch (Exception e) {
             logger.error("@ RegUserHandler.addUserFromGroup: generic error.", e);
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
         }
         return operationResult;
     }
@@ -218,7 +210,7 @@ public class RegUserHandler {
         }
         return operationResult;
     }
-    
+
     public boolean removeUser(RegUser regUser){
         // initializing managers
         RegUserManager regUserManager = new RegUserManager(entityManager);
@@ -259,5 +251,10 @@ public class RegUserHandler {
             }
         }
         return operationResult;
+    }
+    public void closeEntityManager(){
+        if (entityManager != null) {
+            entityManager.close();
+        }
     }
 }
