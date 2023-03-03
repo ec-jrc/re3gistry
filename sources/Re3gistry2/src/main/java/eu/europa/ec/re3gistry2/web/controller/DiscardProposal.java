@@ -26,6 +26,7 @@ package eu.europa.ec.re3gistry2.web.controller;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.InputSanitizerHelper;
+import eu.europa.ec.re3gistry2.base.utility.MailManager;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegItemproposedHandler;
 import eu.europa.ec.re3gistry2.model.RegUser;
@@ -120,6 +121,8 @@ public class DiscardProposal extends HttpServlet {
 
 //                    get all regItemProposed for this action
                     List<RegItemproposed> regItemproposedList = regItemproposedManager.getAll(regAction);
+                    
+                    MailManager.sendActionMail(regItemproposedList, regAction, BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS);
 
                     if (!regItemproposedList.isEmpty()) {
                         for (RegItemproposed regItemproposed : regItemproposedList) {

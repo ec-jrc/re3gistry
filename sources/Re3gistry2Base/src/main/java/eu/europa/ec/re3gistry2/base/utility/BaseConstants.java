@@ -148,7 +148,17 @@ public class BaseConstants {
     public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING = "mail.text.body.groupschanged.ending";
     public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME = "mail.text.body.groupschanged.ending.contact";
     public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_WEBPAGE = "mail.text.body.groupschanged.ending.contact.webpage";
-
+    
+    public static final String KEY_EMAIL_SUBJECT_ITEMACTION_CONTROLBODY = "mail.text.body.itemaction.basebody.controlbody";
+    public static final String KEY_EMAIL_SUBJECT_ITEMACTION_SUBMITTINGORG = "mail.text.body.itemaction.basebody.submitting";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_BASE = "mail.text.body.itemaction.basebody";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_ACCEPTEDWCHANGES = "mail.text.body.itemaction.acceptedwithchanges";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_NOTACCEPTED = "mail.text.body.itemaction.notaccepted";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_REJECTED = "mail.text.body.itemaction.rejected";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_PROPOSEDBY = "mail.text.body.itemaction.proposedby";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_WAS = "mail.text.body.itemaction.was";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_ACTIONMADEBY = "mail.text.body.itemaction.actionmadeby";
+    
     /**
      * mail subject and body bulk import
      */

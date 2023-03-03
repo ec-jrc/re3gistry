@@ -23,9 +23,15 @@
  */
 package eu.europa.ec.re3gistry2.base.utility;
 
+import eu.europa.ec.re3gistry2.model.RegAction;
+import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -157,4 +163,71 @@ public class MailManager {
             throw new MessagingException(e.getMessage());
         }
     }
+    
+    public static void sendActionMail(List<RegItemproposed> regItemproposeds, RegAction regAction, String originClass) throws AddressException{
+        
+                List<String> itemUserNames = new ArrayList <String>();
+                List<String> itemUserEmails = new ArrayList <String>();
+                List<String> actionMakerNames = new ArrayList <String>();
+                List<String> actionMakerEmails = new ArrayList <String>();
+                
+                if(regItemproposeds!=null && regAction!=null){
+                   for(RegItemproposed ri : regItemproposeds){
+                    
+                        itemUserNames.add(ri.getRegUser().getName());
+                        itemUserEmails.add(ri.getRegUser().getEmail());
+                        actionMakerNames.add(regAction.getRegUser().getName());
+                        actionMakerEmails.add(regAction.getRegUser().getEmail());
+                    }
+                   
+                   LinkedHashSet<InternetAddress> users = new LinkedHashSet<>();
+                   for(int i=0; i<itemUserEmails.size(); i++){
+                       if(!users.contains(new InternetAddress(itemUserEmails.get(i)))){
+                           users.add(new InternetAddress(itemUserEmails.get(i)));
+                       }
+                   }
+                   for(int y=0; y<actionMakerNames.size(); y++){
+                       if(!users.contains(new InternetAddress(actionMakerEmails.get(y)))){
+                           users.add(new InternetAddress(actionMakerEmails.get(y)));
+                       }
+                   }
+                   
+                   InternetAddress[] recipient = new InternetAddress[users.size()];
+                   users.toArray(recipient);
+                   
+                   String itemstatus =regAction.getRegStatus().getLocalid();
+                   
+                   String subject = "";
+                   String body = BaseConstants.KEY_EMAIL_BODY_ITEMACTION_BASE;
+                   
+                   if(itemstatus.equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT) && originClass.equals(BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS)){
+                       itemstatus = BaseConstants.KEY_EMAIL_BODY_ITEMACTION_REJECTED;
+                   }else if(itemstatus.equals(BaseConstants.KEY_STATUS_LOCALID_NOTACCEPTED)){
+                       itemstatus = BaseConstants.KEY_EMAIL_BODY_ITEMACTION_NOTACCEPTED;
+                   }else if(itemstatus.equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT)){
+                       itemstatus = BaseConstants.KEY_EMAIL_BODY_ITEMACTION_ACCEPTEDWCHANGES;
+                   }
+                   
+                   if(originClass.equalsIgnoreCase(BaseConstants.KEY_FIELD_MANDATORY_CONTROLBODY)){
+                       subject = BaseConstants.KEY_EMAIL_SUBJECT_ITEMACTION_CONTROLBODY;
+                       for(int i=0;i<regItemproposeds.size(); i++){
+                          body +="The item "+ regItemproposeds.get(i).getLocalid() + " proposed by " + itemUserNames.get(i) + " was "+ itemstatus + ". The action was made by " + actionMakerNames.get(i);
+                       }
+                   }else if(originClass.equalsIgnoreCase(BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS)){
+                       subject = BaseConstants.KEY_EMAIL_SUBJECT_ITEMACTION_SUBMITTINGORG;
+                       for(int i=0;i<regItemproposeds.size(); i++){
+                          body +="The item "+ regItemproposeds.get(i).getLocalid() + " proposed by " + itemUserNames.get(i) + " was "+ itemstatus + ". The action was made by " + actionMakerNames.get(i);
+                       }
+                   }
+
+                    try {
+                        MailManager.sendMail(recipient, subject, body);   
+                    } catch (InvalidParameterException ex) {
+                        java.util.logging.Logger.getLogger(MailManager.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (MessagingException ex) {
+                        java.util.logging.Logger.getLogger(MailManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+    }
+}
 }

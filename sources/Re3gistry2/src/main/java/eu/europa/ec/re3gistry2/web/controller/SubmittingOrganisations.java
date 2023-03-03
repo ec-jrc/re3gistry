@@ -26,6 +26,7 @@ package eu.europa.ec.re3gistry2.web.controller;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.InputSanitizerHelper;
+import eu.europa.ec.re3gistry2.base.utility.MailManager;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.base.utility.UserHelper;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
@@ -48,6 +49,7 @@ import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping;
+import eu.europa.ec.re3gistry2.web.utility.SendEmailFromAction;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -56,6 +58,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -276,7 +279,13 @@ public class SubmittingOrganisations extends HttpServlet {
                 request.setAttribute(BaseConstants.KEY_REQUEST_ITEM_PROPOSEDS, regItemproposeds);
                 request.setAttribute(BaseConstants.KEY_REQUEST_ITEM_HISTORYS, regItemhistorys);
                 request.setAttribute(BaseConstants.KEY_REQUEST_REGITEMS, regItems);
-
+                
+                if(regAction!=null){
+                if(regAction.getApprovedBy()!=null | regAction.getSubmittedBy()!=null | regAction.getRejectedBy()!=null){
+                    MailManager.sendActionMail(regItemproposeds, regAction, BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS);
+                }
+                }
+                
                 //Dispatch request
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_SUBMITTINGORGANISATIONS + WebConstants.PAGE_URINAME_SUBMITTINGORGANISATIONS + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 

@@ -26,6 +26,7 @@ package eu.europa.ec.re3gistry2.web.controller;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.InputSanitizerHelper;
+import eu.europa.ec.re3gistry2.base.utility.MailManager;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.base.utility.UserHelper;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
@@ -53,6 +54,7 @@ import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
 import eu.europa.ec.re3gistry2.model.RegRelationproposed;
 import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
+import eu.europa.ec.re3gistry2.web.utility.SendEmailFromAction;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -60,8 +62,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
@@ -167,53 +172,53 @@ public class ControlBody extends HttpServlet {
             // This is a view request
 
             
-            //Cache the parent of the proposed item
-            ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
-            if (cache == null) {
-                cache = new EhCache();
-                request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
-            }
-            if (formRegActionUuid != null){
-                RegAction regActionForCache;
-                List<RegItemproposed> regItemProposeds;
-                try{
-                    regActionForCache = regActionManager.get(formRegActionUuid);
-                    regItemProposeds = regItemproposedManager.getAll(regActionForCache);
-                }catch(Exception e){
-                    regItemProposeds = Collections.emptyList();
-                }
-                 
-                HashSet<String> parentsList = new HashSet <String>();
-                HashSet<String> collectionsList = new HashSet <String>();
-                for (RegItemproposed regItemProposed : regItemProposeds) {
-                    List<RegRelationproposed> collections = regRelationproposedManager.getAllByObject(regItemProposed);
-                    
-                    if(collections != null && collections.size() > 0 ){
-                        for (RegRelationproposed collection : collections) {
-                            if(collection.getRegRelationpredicate().getLocalid().equals(BaseConstants.KEY_PREDICATE_COLLECTION)){
-                                String uuid = collection.getRegItemObject().getUuid();
-                                collectionsList.add(uuid);
-                            }
-                        }
-                    }
-                    if(regItemProposed.getRegAction() != null && regItemProposed.getRegAction().getRegItemRegister() != null){
-                        if(regItemProposed.getRegAction().getRegItemRegister().getRegItemclass() != null && regItemProposed.getRegAction().getRegItemRegister().getRegItemclass().getUuid() != null){
-                            String uuid = regItemProposed.getRegAction().getRegItemRegister().getRegItemclass().getUuid();
-                            parentsList.add(uuid);
-                        } 
-                    } 
-                } 
-                EntityManager emCache = PersistenceFactory.getEntityManagerFactory().createEntityManager();
-                CacheAll cacheAll = new CacheAll(emCache, cache, null);
-                for (String uuid : parentsList) {
-//                    EntityManager emCache = Persistence.createEntityManagerFactory(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME).createEntityManager();   
-                    cacheAll.run(uuid); 
-                } 
-                for (String uuid : collectionsList) {
-//                    EntityManager emCache = Persistence.createEntityManagerFactory(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME).createEntityManager();   
-                    cacheAll.run(uuid); 
-                } 
-            }
+//            //Cache the parent of the proposed item
+//            ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
+//            if (cache == null) {
+//                cache = new EhCache();
+//                request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
+//            }
+//            if (formRegActionUuid != null){
+//                RegAction regActionForCache;
+//                List<RegItemproposed> regItemProposeds;
+//                try{
+//                    regActionForCache = regActionManager.get(formRegActionUuid);
+//                    regItemProposeds = regItemproposedManager.getAll(regActionForCache);
+//                }catch(Exception e){
+//                    regItemProposeds = Collections.emptyList();
+//                }
+//                 
+//                HashSet<String> parentsList = new HashSet <String>();
+//                HashSet<String> collectionsList = new HashSet <String>();
+//                for (RegItemproposed regItemProposed : regItemProposeds) {
+//                    List<RegRelationproposed> collections = regRelationproposedManager.getAllByObject(regItemProposed);
+//                    
+//                    if(collections != null && collections.size() > 0 ){
+//                        for (RegRelationproposed collection : collections) {
+//                            if(collection.getRegRelationpredicate().getLocalid().equals(BaseConstants.KEY_PREDICATE_COLLECTION)){
+//                                String uuid = collection.getRegItemObject().getUuid();
+//                                collectionsList.add(uuid);
+//                            }
+//                        }
+//                    }
+//                    if(regItemProposed.getRegAction() != null && regItemProposed.getRegAction().getRegItemRegister() != null){
+//                        if(regItemProposed.getRegAction().getRegItemRegister().getRegItemclass() != null && regItemProposed.getRegAction().getRegItemRegister().getRegItemclass().getUuid() != null){
+//                            String uuid = regItemProposed.getRegAction().getRegItemRegister().getRegItemclass().getUuid();
+//                            parentsList.add(uuid);
+//                        } 
+//                    } 
+//                } 
+//                EntityManager emCache = PersistenceFactory.getEntityManagerFactory().createEntityManager();
+//                CacheAll cacheAll = new CacheAll(emCache, cache, null);
+//                for (String uuid : parentsList) {
+////                    EntityManager emCache = Persistence.createEntityManagerFactory(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME).createEntityManager();   
+//                    cacheAll.run(uuid); 
+//                } 
+//                for (String uuid : collectionsList) {
+////                    EntityManager emCache = Persistence.createEntityManagerFactory(BaseConstants.KEY_PROPERTY_PERSISTENCE_UNIT_NAME).createEntityManager();   
+//                    cacheAll.run(uuid); 
+//                } 
+//            }
 
             
             // Getting the submitting organization RegRole
@@ -269,12 +274,23 @@ public class ControlBody extends HttpServlet {
                     } catch (NoResultException e) {
                     }
                 }
-
+                
+                
+                if (regItemproposeds == null && regAction!=null) {
+                    regItemproposeds = (List<RegItemproposed>) regItemproposedManager.getAll(regAction);
+                }
+                
                 request.setAttribute(BaseConstants.KEY_REQUEST_ACTION_LIST, regActions);
                 request.setAttribute(BaseConstants.KEY_REQUEST_ACTION, regAction);
                 request.setAttribute(BaseConstants.KEY_REQUEST_ITEM_PROPOSEDS, regItemproposeds);
                 request.setAttribute(BaseConstants.KEY_REQUEST_ITEM_HISTORYS, regItemhistorys);
                 request.setAttribute(BaseConstants.KEY_REQUEST_REGITEMS, regItems);
+                
+                if(regAction!=null){
+                   if(regAction.getApprovedBy()!=null | regAction.getRejectedBy()!=null){
+                    MailManager.sendActionMail(regItemproposeds, regAction, BaseConstants.KEY_FIELD_MANDATORY_CONTROLBODY);
+                } 
+                }
 
                 //Dispatch request
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_CONTROLBODY + WebConstants.PAGE_URINAME_CONTROLBODY + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
