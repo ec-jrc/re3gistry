@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -164,7 +165,7 @@ public class MailManager {
         }
     }
     
-    public static void sendActionMail(List<RegItemproposed> regItemproposeds, RegAction regAction, String originClass) throws AddressException{
+    public static void sendActionMail(List<RegItemproposed> regItemproposeds, RegAction regAction, ResourceBundle systemLocalization, String originClass) throws AddressException{
         
                 List<String> itemUserNames = new ArrayList <String>();
                 List<String> itemUserEmails = new ArrayList <String>();
@@ -198,14 +199,14 @@ public class MailManager {
                    String itemstatus =regAction.getRegStatus().getLocalid();
                    
                    String subject = "";
-                   String body = BaseConstants.KEY_EMAIL_BODY_ITEMACTION_BASE;
+                   String body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ITEMACTION_BASE);
                    
                    if(itemstatus.equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT) && originClass.equals(BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS)){
-                       itemstatus = BaseConstants.KEY_EMAIL_BODY_ITEMACTION_REJECTED;
+                       itemstatus = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ITEMACTION_REJECTED);
                    }else if(itemstatus.equals(BaseConstants.KEY_STATUS_LOCALID_NOTACCEPTED)){
-                       itemstatus = BaseConstants.KEY_EMAIL_BODY_ITEMACTION_NOTACCEPTED;
+                       itemstatus = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ITEMACTION_NOTACCEPTED);
                    }else if(itemstatus.equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT)){
-                       itemstatus = BaseConstants.KEY_EMAIL_BODY_ITEMACTION_ACCEPTEDWCHANGES;
+                       itemstatus = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ITEMACTION_ACCEPTEDWCHANGES);
                    }
                    
                    if(originClass.equalsIgnoreCase(BaseConstants.KEY_FIELD_MANDATORY_CONTROLBODY)){
@@ -214,7 +215,7 @@ public class MailManager {
                           body +="The item "+ regItemproposeds.get(i).getLocalid() + " proposed by " + itemUserNames.get(i) + " was "+ itemstatus + ". The action was made by " + actionMakerNames.get(i);
                        }
                    }else if(originClass.equalsIgnoreCase(BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS)){
-                       subject = BaseConstants.KEY_EMAIL_SUBJECT_ITEMACTION_SUBMITTINGORG;
+                       subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_ITEMACTION_SUBMITTINGORG);
                        for(int i=0;i<regItemproposeds.size(); i++){
                           body +="The item "+ regItemproposeds.get(i).getLocalid() + " proposed by " + itemUserNames.get(i) + " was "+ itemstatus + ". The action was made by " + actionMakerNames.get(i);
                        }

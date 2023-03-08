@@ -280,12 +280,10 @@ public class SubmittingOrganisations extends HttpServlet {
                 request.setAttribute(BaseConstants.KEY_REQUEST_ITEM_HISTORYS, regItemhistorys);
                 request.setAttribute(BaseConstants.KEY_REQUEST_REGITEMS, regItems);
                 
-                if(regAction!=null){
-                if(regAction.getApprovedBy()!=null | regAction.getSubmittedBy()!=null | regAction.getRejectedBy()!=null){
-                    MailManager.sendActionMail(regItemproposeds, regAction, BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS);
+                if (formRegActionUuid != null && formRegActionUuid.length() > 0 && formSubmitAction != null && formSubmitAction.length() > 0) {
+                    MailManager.sendActionMail(regItemproposeds, regAction, Configuration.getInstance().getLocalization(), BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS);
                 }
-                }
-                
+                   
                 //Dispatch request
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_SUBMITTINGORGANISATIONS + WebConstants.PAGE_URINAME_SUBMITTINGORGANISATIONS + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 

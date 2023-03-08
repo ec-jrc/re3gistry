@@ -286,12 +286,10 @@ public class ControlBody extends HttpServlet {
                 request.setAttribute(BaseConstants.KEY_REQUEST_ITEM_HISTORYS, regItemhistorys);
                 request.setAttribute(BaseConstants.KEY_REQUEST_REGITEMS, regItems);
                 
-                if(regAction!=null){
-                   if(regAction.getApprovedBy()!=null | regAction.getRejectedBy()!=null){
-                    MailManager.sendActionMail(regItemproposeds, regAction, BaseConstants.KEY_FIELD_MANDATORY_CONTROLBODY);
-                } 
+                if (formRegActionUuid != null && formRegActionUuid.length() > 0 && formSubmitAction != null && formSubmitAction.length() > 0 && formActionType != null && formActionType.length() > 0) {
+                MailManager.sendActionMail(regItemproposeds, regAction, Configuration.getInstance().getLocalization(), BaseConstants.KEY_FIELD_MANDATORY_CONTROLBODY);
                 }
-
+                
                 //Dispatch request
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_CONTROLBODY + WebConstants.PAGE_URINAME_CONTROLBODY + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 

@@ -122,7 +122,7 @@ public class DiscardProposal extends HttpServlet {
 //                    get all regItemProposed for this action
                     List<RegItemproposed> regItemproposedList = regItemproposedManager.getAll(regAction);
                     
-                    MailManager.sendActionMail(regItemproposedList, regAction, BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS);
+                    MailManager.sendActionMail(regItemproposedList, regAction, Configuration.getInstance().getLocalization(), BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS);
 
                     if (!regItemproposedList.isEmpty()) {
                         for (RegItemproposed regItemproposed : regItemproposedList) {
