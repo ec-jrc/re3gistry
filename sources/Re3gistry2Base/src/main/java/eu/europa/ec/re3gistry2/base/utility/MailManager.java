@@ -198,8 +198,9 @@ public class MailManager {
                    
                    String itemstatus =regAction.getRegStatus().getLocalid();
                    
-                   String subject = "";
-                   String body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ITEMACTION_BASE);
+                   //Subject: Updates on [Registry name variable] change proposals +systemLocalization.getString(BaseConstants.KEY_PROPERTY_APP_DEFAULT_NAME)+
+                   String subject = "Updates on "+ systemLocalization.getString(BaseConstants.KEY_PROPERTY_APP_DEFAULT_NAME) +" change proposals";
+                   String body = "<br> Dear " + regAction.getRegUser().getName()+", <br><br> Changes have ocurred on the following item(s): <br><br>";
                    
                    if(itemstatus.equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT) && originClass.equals(BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS)){
                        itemstatus = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ITEMACTION_REJECTED);
@@ -210,14 +211,12 @@ public class MailManager {
                    }
                    
                    if(originClass.equalsIgnoreCase(BaseConstants.KEY_FIELD_MANDATORY_CONTROLBODY)){
-                       subject = BaseConstants.KEY_EMAIL_SUBJECT_ITEMACTION_CONTROLBODY;
                        for(int i=0;i<regItemproposeds.size(); i++){
-                          body +="The item "+ regItemproposeds.get(i).getLocalid() + " proposed by " + itemUserNames.get(i) + " was "+ itemstatus + ". The action was made by " + actionMakerNames.get(i);
+                           body += "A change proposal for item " + regItemproposeds.get(i).getLocalid() + " has been proposed by Submitting Organisation member " + actionMakerNames.get(i)+". <br><br>";  
                        }
                    }else if(originClass.equalsIgnoreCase(BaseConstants.KEY_FIELD_MANDATORY_SUBMITTINGORGANIZATIONS)){
-                       subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_ITEMACTION_SUBMITTINGORG);
                        for(int i=0;i<regItemproposeds.size(); i++){
-                          body +="The item "+ regItemproposeds.get(i).getLocalid() + " proposed by " + itemUserNames.get(i) + " was "+ itemstatus + ". The action was made by " + actionMakerNames.get(i);
+                          body += "The item "+ regItemproposeds.get(i).getLocalid() + " proposed by " + itemUserNames.get(i) + " has been " + itemstatus + " by the control body member "+ actionMakerNames.get(i)+". <br><br>";
                        }
                    }
 

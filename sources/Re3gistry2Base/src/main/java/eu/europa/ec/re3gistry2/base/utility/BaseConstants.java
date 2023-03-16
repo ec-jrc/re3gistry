@@ -84,6 +84,8 @@ public class BaseConstants {
     public static final String KEY_PROPERTY_LOGIN_TYPE = "application.login.type";
     public static final String KEY_PROPERTY_LOGIN_TYPE_SHIRO = "SHIRO";
     public static final String KEY_PROPERTY_LOGIN_TYPE_ECAS = "ECAS";
+    
+    public static final String KEY_PROPERTY_APP_DEFAULT_NAME = "application.default.name";
 
     public static final String KEY_PROPERTY_INTERFACE_TYPE = "application.selected.interface";
     public static final String KEY_PROPERTY_INTERFACE_NEUTRAL_TYPE = "neutral";

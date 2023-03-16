@@ -145,6 +145,8 @@ role.permissions.registerOwner=ManageUser,ManageGroup,MapUserToGroup
 role.permissions.controlBody=ApproveProposal
 role.permissions.submittingOrganization=ManageItemProposal,SubmitProposal
 
+application.default.name
+
 #### End Roles and permissions section #########################################
 
 ### Mail ###
