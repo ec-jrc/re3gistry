@@ -293,8 +293,18 @@ public class ISO19135Formatter implements Formatter {
         writeXLink(xml, "additionInformation", item.getUri());
     }
 
-    private void writeStatus(XMLStreamWriter xml, ContainedItem item) {
-        // TODO Auto-generated method stub
+    private void writeStatus(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
+        Optional<LocalizedProperty> val = item.getProperty("status");
+        if (!val.isPresent()) {
+            writeGcoNilReason(xml, "status", "missing");
+        } else {
+            LocalizedProperty prop = val.get();
+            if (prop.getValues().isEmpty()) {
+                writeGcoNilReason(xml, "status", "missing");
+            } else {
+                writeGcoCharacterString(xml, "status", prop.getValues().get(0).getValue());
+            }
+        }
     }
 
     private void writeDefinition(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
