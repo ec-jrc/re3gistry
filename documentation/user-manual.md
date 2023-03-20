@@ -532,6 +532,10 @@ Depending on the type of installation, using an external authentication provider
 ![User profile section - Editing details](images/userprofile.png)
 
 
+## Email notifications
+
+Users can receive different email notifications, indicating different statuses and actions done to the items and actions they're related to. These notifications indicate the status of the items (Item's been submitted, published etc.) and some of the actions done in the instance such as permissions and roles given to a user.
+
 
 
 
