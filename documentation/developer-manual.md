@@ -178,3 +178,11 @@ For tomcat, add two files to the tomcat lib folder: ecas-tomcat-x.y.z.jar and lo
 Verify that the JDK trusts the [ECAS certificates](https://webgate.ec.europa.eu/CITnet/confluence/display/IAM/Downloads-Certificates) else import them on the keystore of the JVM.
 
 Restart the service and check the authentication menchanism.
+
+### Email notifications and templates
+
+You can currently change some of the variables of the different email templates such as the instance/organisation name. 
+To change those you can access the [configuration.properties](https://github.com/ec-jrc/re3gistry/blob/master/sources/Re3gistry2/src/main/resources/configurations_files/configuration.properties) file, where you can search the mail template data under [mail.text]. 
+You can there see the different subjects and text that you can change. Have in account that some of these may need some proper code changing in their respective java classes.
+
+
