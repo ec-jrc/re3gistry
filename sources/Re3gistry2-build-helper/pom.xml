@@ -45,6 +45,7 @@
         <module>../Re3gistry2</module>
     </modules>
     <profiles>
+        <!-- Docker profile --> 
         <profile>
             <id>developer-docker</id>
             <properties>

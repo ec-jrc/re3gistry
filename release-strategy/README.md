@@ -25,8 +25,8 @@ Expected releases
 
 Re3gistry software:
 
-- Major releases: September 2022, September 2023, September 2024
-- Minor releases every three months between major releases. December, March, June.
+- **Major releases**: June 2022, June 2023, June 2024
+- **Minor releases**: Every three months between major releases. December, March, September.
 
 Register Federation Tool (RoR):
 
@@ -40,21 +40,21 @@ In particular, all the **_breaking changes_** (changed that imply importants mod
 
 As mentioned above, several releases of the Re3gistry software are scheduled each year. The scheduled annual releases will be described in detail in the next sub-sections.
 
-To inform users in advance about when the solution to each issue will be included in the release of the Re3gistry software, each issue is assigned to a specific milestone. Milestones are listed on [this page](https://github.com/ec-jrc/re3gistry/milestones). The release schedule of the Re3gistry software, which lists the expected release dates for each specific version, is available [here](https://github.com/ec-jrc/re3gistry/tree/management-draft/release-strategy). Once a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones.
+To inform users in advance about when the solution to each issue will be included in the release of the Re3gistry software, each issue is assigned to a specific milestone. Milestones are listed on [this page](https://github.com/ec-jrc/re3gistry/milestones). Once a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones. All the information on each of the releases carried out, is available [here](https://github.com/ec-jrc/re3gistry/releases). 
 
 Schedule of next Major and Minor releases of the Re3gistry software. Plan for 2022-2024:
 
-- Minor release: June 2022 (v2.3.2 30/6/2022)
-- Major release: September 2022 (v2.4.0 09/2022)
-  - Minor release: December 2022 (v2.4.1 12/2022)
+- **Major release: June 2022 (v2.3.2 30/6/2022)**
+- **Major release: October 2022 (v2.4.0 21/10/2022)**
+  - Minor release: January 2023 (v2.4.1 10/01/2023)
   - Minor release: March 2023 (v2.4.2 3/2023)
-  - Minor release: June 2023 (v2.4.3 6/2023)
-- Major release: September 2023 (v2.5.0 09/2023)
-  - Minor release: December 2023 (v2.5.1 12/2023)
-  - Minor release: March 2024 (v2.5.2 3/2024)
-  - Minor release: June 2024 (v2.5.3 6/2024)
-- Major release: September 2024 (v2.6.0 09/2024)
-  - Minor release: December 2024 (v2.6.1 12/2024)
+- **Major release: June 2023 (v2.5.0 6/2023)**
+  - Minor release: September 2023 (v2.5.1 09/2023)
+  - Minor release: December 2023 (v2.5.2 12/2023)
+  - Minor release: March 2024 (v2.5.3 3/2024)
+- **Major release: June 2024 (v2.6.0 6/2024)**
+  - Minor release: September 2024 (v2.6.1 09/2024)
+  - Minor release: December 2024 (v2.6.2 12/2024)
 
 Schedule of next Major and Minor releases of the Register Federation Tool (RTF). Plan for 2022-2024:
 
