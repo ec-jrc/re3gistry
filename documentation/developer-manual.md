@@ -182,7 +182,9 @@ Restart the service and check the authentication menchanism.
 ### Email notifications and templates
 
 You can currently change some of the variables of the different email templates such as the instance/organisation name. 
-To change those you can access the [configuration.properties](https://github.com/ec-jrc/re3gistry/blob/master/sources/Re3gistry2/src/main/resources/configurations_files/configuration.properties) file, where you can search the mail template data under [mail.text]. 
+
+To change those you can access the [configuration.properties](https://github.com/ec-jrc/re3gistry/blob/master/sources/Re3gistry2/src/main/resources/configurations_files/configuration.properties) file, where you can search the mail template variables by searching the "mail.text" variables.
 You can there see the different subjects and text that you can change. Have in account that some of these may need some proper code changing in their respective java classes.
+App's default name is Re3gistry2, this variable is used in some email templates that show the instance name. The property that manages this name is called "application.default.name". This variable can be found in the same [configuration.properties](https://github.com/ec-jrc/re3gistry/blob/master/sources/Re3gistry2/src/main/resources/configurations_files/configuration.properties) file.
 
 
