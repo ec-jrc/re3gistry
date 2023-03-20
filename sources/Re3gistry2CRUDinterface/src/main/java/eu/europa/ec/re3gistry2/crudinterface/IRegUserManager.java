@@ -33,6 +33,7 @@ public interface IRegUserManager{
     
     public boolean add(RegUser i) throws Exception;
     public boolean update(RegUser i) throws Exception;
+    public boolean delete(RegUser i) throws Exception;
     
     public RegUser findByEmail(String email) throws Exception;
     

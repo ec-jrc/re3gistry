@@ -365,6 +365,14 @@ CREATE TABLE reg_user_reg_group_mapping
 	editdate TIMESTAMP WITHOUT TIME ZONE
 );
 
+CREATE TABLE reg_user_codes 
+(
+	uuid VARCHAR(50) NOT NULL,
+	reg_user VARCHAR(50) NOT NULL,
+	code VARCHAR(80),
+	action VARCHAR(50),
+	insertdate TIMESTAMP WITHOUT TIME ZONE NOT NULL   DEFAULT now() 
+);
 
 /* Create Primary Keys */
 
@@ -448,7 +456,9 @@ ALTER TABLE reg_user ADD CONSTRAINT PK_reg_user
 	
 ALTER TABLE reg_user_reg_group_mapping ADD CONSTRAINT PK_reg_user_reg_group_mapping
 	PRIMARY KEY (uuid);
-
+	
+ALTER TABLE reg_user_codes ADD CONSTRAINT PK_reg_user_codes
+	PRIMARY KEY (uuid); 
 	
 /* Create Uniques */
 
@@ -722,6 +732,8 @@ ALTER TABLE reg_user_reg_group_mapping ADD CONSTRAINT FK_reg_user_reg_group_mapp
 ALTER TABLE reg_user_reg_group_mapping ADD CONSTRAINT FK_reg_user_reg_group_mapping_reg_user
 	FOREIGN KEY (reg_user) REFERENCES reg_user (uuid) ON DELETE NO ACTION ON UPDATE CASCADE;
 
+ALTER TABLE reg_user_codes ADD CONSTRAINT FK_reg_user_code_reg_user 
+	FOREIGN KEY (reg_user) REFERENCES reg_user (uuid) ON DELETE NO ACTION ON UPDATE CASCADE;
 	
 /* Create functions and triggers */	
 	

@@ -24,7 +24,7 @@
 package eu.europa.ec.re3gistry2.base.utility;
 
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 
 public class InputSanitizerHelper {
@@ -39,23 +39,23 @@ public class InputSanitizerHelper {
         // Getting the sanitization level (defaut basic)
         String sanitizerLevel = configuration.getProperties().getProperty(BaseConstants.KEY_PROPERTY_INPUT_SANITIZER_LEVEL,BaseConstants.KEY_PROPERTY_INPUT_SANITIZER_LEVEL_BASIC);
         
-        Whitelist whitelist;
+        Safelist whitelist;
         
         switch(sanitizerLevel){
             case BaseConstants.KEY_PROPERTY_INPUT_SANITIZER_LEVEL_SIMPLETEXT:
-                whitelist = Whitelist.simpleText();
+                whitelist = Safelist.simpleText();
                 break;
             case BaseConstants.KEY_PROPERTY_INPUT_SANITIZER_LEVEL_BASIC:
-                whitelist = Whitelist.basic();
+                whitelist = Safelist.basic();
                 break;
             case BaseConstants.KEY_PROPERTY_INPUT_SANITIZER_LEVEL_BASICWITHIMAGES:
-                whitelist = Whitelist.basicWithImages();
+                whitelist = Safelist.basicWithImages();
                 break;
             case BaseConstants.KEY_PROPERTY_INPUT_SANITIZER_LEVEL_RELAXED:
-                whitelist = Whitelist.relaxed();
+                whitelist = Safelist.relaxed();
                 break;
             default:
-                whitelist = Whitelist.basic();
+                whitelist = Safelist.basic();
                 break;
         }
         

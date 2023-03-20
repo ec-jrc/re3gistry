@@ -20,21 +20,17 @@ services:
           - ALLOW_IP_RANGE="0.0.0.0/0"
         volumes:
           - ../../dist/db-scripts/registry2_drop-and-create-and-init.sql.orig:/docker-entrypoint-initdb.d/init.sql
-#          - ../../dist/customize-interface/example-profile-developer-docker/dbdumpv1.sql:/docker-entrypoint-initdb.d/init.sql
-          # Test database tu use it without installation
+          # Test database to use it without installation
           # Be sure file sources-main/resources-configurations_files/system.installed
           #  is removed from the war file. If not, installation will be not detected.
-#          - ../../dist/customize-interface/example-profile-developer-docker/dbdumpv1.sql:/docker-entrypoint-initdb.d/init_backup.sql
           - ../../dist/customize-interface/example-profile-developer-docker/dump-docker-202205180929.sql:/docker-entrypoint-initdb.d/init_backup.sql
-#          - ../../dist/customize-interface/example-profile-developer-docker/fulldump.sql:/docker-entrypoint-initdb.d/init_backup.sql
-          # login from example db: name@example.com password
+          # login example db: name@example.com password
         expose: 
           - "5432"
         ports:
           - 5432:5432
         networks:
           - main
-                
     web:
         depends_on:
           - db
@@ -84,6 +80,7 @@ services:
          - "8983:8983"
 #        volumes:
 #          - ../../../solr:/opt/solr/server/solr/re3gistry2
+
         entrypoint:
           - docker-entrypoint.sh
           - solr-precreate

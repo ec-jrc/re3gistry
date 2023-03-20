@@ -251,8 +251,8 @@ public class RDFFormatter implements Formatter {
         writeDescription(xml, item);
 
         writeNarrower(xml, item);
-        writeBroader(xml, item);//WRONG
-//        writeHasPartsTopConcepts(xml, item);
+//        writeBroader(xml, item);//WRONG
+        writeHasPartsTopConcepts(xml, item);
 
         writeIsDefinedBy(xml, item);
         writeStatus(xml, item);
@@ -423,22 +423,19 @@ public class RDFFormatter implements Formatter {
     }
 
     private void writeHasPartsTopConcepts(XMLStreamWriter xml, ContainedItem containedItem) throws XMLStreamException {
-        if (containedItem.getTopConcepts() != null) {
-            for (BasicContainedItem ci : containedItem.getTopConcepts()) {
-                switch (containedItem.getType()) {
-                    case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY: {
-                        writeEmptyElement(xml, DCAT, "dataset", RDF, "resource", ci.getUri());
-                    }
-                    break;
-                    default:
-                        writeEmptyElement(xml, DCT, "hasPart", RDF, "resource", ci.getUri());
-                        break;
+        switch (containedItem.getType()) {
+            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY: {
+            }
+            break;
+            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
+                writeEmptyElement(xml, SKOS, "hasTopConcept", RDF, "resource", containedItem.getRegistry().getUri());
+                break;
+            default:
+                if (containedItem.getTopConceptOf() != null) {
+                    writeEmptyElement(xml, SKOS, "hasTopConcept", RDF, "resource", containedItem.getTopConceptOf().getUri());
                 }
-            }
-            for (BasicContainedItem ci : containedItem.getTopConcepts()) {
-                writeEmptyElement(xml, SKOS, "hasTopConcept", RDF, "resource", ci.getUri());
-            }
-        }
+                break;
+        }   
     }
 
     private XMLStreamWriter getXMLWriter(OutputStream out, String rootNS, String rootElement) throws XMLStreamException {
@@ -502,18 +499,21 @@ public class RDFFormatter implements Formatter {
     }
 
     private void writeTopConceptOf(XMLStreamWriter xml, ContainedItem item) throws XMLStreamException {
-        switch (item.getType()) {
-            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY: {
-            }
-            break;
-            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
-                writeEmptyElement(xml, SKOS, "topConceptOf", RDF, "resource", item.getRegistry().getUri());
-                break;
-            default:
-                if (item.getTopConceptOf() != null) {
-                    writeEmptyElement(xml, SKOS, "topConceptOf", RDF, "resource", item.getTopConceptOf().getUri());
+        if (item.getTopConcepts() != null) {
+            for (BasicContainedItem ci : item.getTopConcepts()) {
+                switch (item.getType()) {
+                    case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY: {
+                        writeEmptyElement(xml, DCAT, "dataset", RDF, "resource", ci.getUri());
+                    }
+                    break;
+                    default:
+                        writeEmptyElement(xml, DCT, "hasPart", RDF, "resource", ci.getUri());
+                        break;
                 }
-                break;
+            }
+            for (BasicContainedItem ci : item.getTopConcepts()) {
+                writeEmptyElement(xml, SKOS, "topConceptOf", RDF, "resource", ci.getUri());
+            }
         }
     }
 

@@ -84,6 +84,8 @@ public class BaseConstants {
     public static final String KEY_PROPERTY_LOGIN_TYPE = "application.login.type";
     public static final String KEY_PROPERTY_LOGIN_TYPE_SHIRO = "SHIRO";
     public static final String KEY_PROPERTY_LOGIN_TYPE_ECAS = "ECAS";
+    
+    public static final String KEY_PROPERTY_APP_DEFAULT_NAME = "application.default.name";
 
     public static final String KEY_PROPERTY_INTERFACE_TYPE = "application.selected.interface";
     public static final String KEY_PROPERTY_INTERFACE_NEUTRAL_TYPE = "neutral";
@@ -94,6 +96,9 @@ public class BaseConstants {
 
     public static final String ATTRIBUTE_CACHE_KEY = "re3gistry-rest-api-cache";
     public static final String ATTRIBUTE_CACHE_QUEUE_KEY = "re3gistry-rest-api-cache-queue";
+    
+    public static final String KEY_PROPERTY_CODE = "code";
+    public static final String KEY_PROPERTY_HOST = "host";
 
     /**
      * Mail keys
@@ -125,7 +130,7 @@ public class BaseConstants {
     public static final String KEY_EMAIL_SUBJECT_ERROR = "mail.text.subject.error";
     public static final String KEY_EMAIL_BODY_ERROR = "mail.text.body.error";
     public static final String KEY_EMAIL_SUBJECT_NEW_REGISTRATION = "mail.text.subject.newregistration";
-    public static final String KEY_EMAIL_BODY_NEW_REGISTRATION = "mail.text.error.newregistration";
+    public static final String KEY_EMAIL_BODY_NEW_REGISTRATION = "mail.text.option.newregistration";
     public static final String KEY_EMAIL_BODY_ECAS_NEW_REGISTRATION = "mail.text.error.ecas.newregistration";
     public static final String KEY_EMAIL_SUBJECT_RESETPASSWORD = "mail.text.subject.resetpassword.registration";
     public static final String KEY_EMAIL_BODY_RESETPASSWORD = "mail.text.error.resetpassword.registration";
@@ -140,7 +145,25 @@ public class BaseConstants {
     public static final String KEY_EMAIL_BODY_CACHE_ERROR = "mail.text.body.cache.error";
     public static final String KEY_EMAIL_SUBJECT_ITEM_PUBLISHED = "mail.text.subject.item.publised";
     public static final String KEY_EMAIL_BODY_ITEM_PUBLISHED = "mail.text.body.item.publised";
-
+    
+    public static final String KEY_EMAIL_SUBJECT_GROUPSCHANGED = "mail.text.subject.groupschanged";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED = "mail.text.body.groupschanged";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ADD = "mail.text.body.groupschanged.add";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_REMOVE = "mail.text.body.groupschanged.remove";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING = "mail.text.body.groupschanged.ending";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME = "mail.text.body.groupschanged.ending.contact";
+    public static final String KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_WEBPAGE = "mail.text.body.groupschanged.ending.contact.webpage";
+    
+    public static final String KEY_EMAIL_SUBJECT_ITEMACTION_CONTROLBODY = "mail.text.body.itemaction.basebody.controlbody";
+    public static final String KEY_EMAIL_SUBJECT_ITEMACTION_SUBMITTINGORG = "mail.text.body.itemaction.basebody.submitting";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_BASE = "mail.text.body.itemaction.basebody";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_ACCEPTEDWCHANGES = "mail.text.body.itemaction.acceptedwithchanges";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_NOTACCEPTED = "mail.text.body.itemaction.notaccepted";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_REJECTED = "mail.text.body.itemaction.rejected";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_PROPOSEDBY = "mail.text.body.itemaction.proposedby";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_WAS = "mail.text.body.itemaction.was";
+    public static final String KEY_EMAIL_BODY_ITEMACTION_ACTIONMADEBY = "mail.text.body.itemaction.actionmadeby";
+    
     /**
      * mail subject and body bulk import
      */
@@ -247,6 +270,8 @@ public class BaseConstants {
     public static final String KEY_USER_ACTION_APPROVEPROPOSAL = "ApproveProposal";
     public static final String KEY_USER_ACTION_PUBLISHPROPOSAL = "PublishProposal";
     public static final String KEY_USER_ACTION_MANAGESYSTEM = "ManageSystem";
+    public static final String KEY_USER_ACTION_ACTIVATE_USER = "ActivateUser";
+    public static final String KEY_USER_ACTION_DELETE_USER = "DeleteUser";
 
     /* - Request keys - */
     // Request parameters keys
