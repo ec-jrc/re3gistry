@@ -61,6 +61,11 @@ Managing reference codes setting up registries (systems of registers) helps:
 
 Version 2 of the software was developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
+## Stay tuned
+Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to notifications.
+
+Subscribe to the [Re3gistry Joinup solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join)
+
 # Re3gistry governance and Contributions (Under development)
 
 The Re3gistry project has established a governance model with well-defined processes to ensure the best use and sustainability of the software by the contributors and the community at large. The governance is overseen by the Re3gistry managers.
