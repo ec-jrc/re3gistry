@@ -66,6 +66,9 @@ Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to not
 
 Subscribe to the [Re3gistry Joinup solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join)
 
+## Re3gistry survey
+There is available a [Re3gistry survey](https://ec.europa.eu/eusurvey/runner/Re3gistry_Survey). Please, complete it and let us know your opinion.
+
 # Re3gistry governance and Contributions (Under development)
 
 The Re3gistry project has established a governance model with well-defined processes to ensure the best use and sustainability of the software by the contributors and the community at large. The governance is overseen by the Re3gistry managers.
