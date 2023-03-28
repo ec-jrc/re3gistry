@@ -45,6 +45,7 @@
                     <li class="ecl-footer-standardised__list-item"><a href="https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Re3gistry features</a></li>
                     <li class="ecl-footer-standardised__list-item"><a href="https://github.com/ec-jrc/re3gistry/releases" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Get the code</a></li>
                     <li class="ecl-footer-standardised__list-item"><a href="https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/best-practices-registers-and-registries" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Best practices</a></li>
+                    <li class="ecl-footer-standardised__list-item"><a href="https://ec.europa.eu/eusurvey/runner/Re3gistry_Survey" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Fill the survey</a></li>
                 </ul>
             </section>
             <section class="ecl-footer-standardised__section">
