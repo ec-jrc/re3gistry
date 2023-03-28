@@ -34,7 +34,7 @@
             <div class="ecl-footer-core__description"><a data-i18n-link="l-ec-website" class="ecl-link ecl-link--standalone" 
                                                          href="https://inspire-sandbox.jrc.ec.europa.eu/registry"
                                                          aria-label="European Commission">
-                    <img class="mt-2" src="./res/img/logo-2.png" alt="" width="30%" height="50%">
+                    <img class="mt-2" src="./res/img/logo-2.png" alt="">
                 </a></div>
             <div class="ecl-footer-core__description">Reference codes management tool</div>
         </section>
