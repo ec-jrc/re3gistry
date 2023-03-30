@@ -4,7 +4,7 @@
 
 var registryApp = {};
 
-// The default language of the app (used as a fallback if the language is not
+// The default language of the app (used as a fallback if the language is not 
 // passed by URL or cannot be retrieved by Browser language)
 registryApp.defaultLanguage = 'en';
 
@@ -12,13 +12,9 @@ registryApp.defaultLanguage = 'en';
 registryApp.maxSearchResultsPerPage = 10;
 
 // Force http URIs (even if the original call has https URIs)
-registryApp.forceHttpURIs = true;
+registryApp.forceHttpURIs=true;
 
-// Default Error message parameters (Change if needed to your own repository or link)
-registryApp.errorMessageDefinition = "Re3gistry Software repository";
-registryApp.errorMessageURL = "https://github.com/ec-jrc/re3gistry";
-
-// The app's base URLs
+// The app's base URL
 registryApp.domainURL = '//registry-test.eu';
 registryApp.hostURL = '//registry-test.eu/registry';
 registryApp.searchURL = '//registry-test.eu/registry/search';
