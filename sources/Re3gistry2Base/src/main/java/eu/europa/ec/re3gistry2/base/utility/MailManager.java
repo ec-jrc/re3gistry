@@ -25,6 +25,7 @@ package eu.europa.ec.re3gistry2.base.utility;
 
 import eu.europa.ec.re3gistry2.model.RegAction;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
+import eu.europa.ec.re3gistry2.model.RegUser;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -230,4 +231,21 @@ public class MailManager {
         
     }
 }
+    
+        public static void sendUserActivatedEmail(RegUser user, ResourceBundle systemLocalization) throws AddressException{
+            LinkedHashSet<InternetAddress> users = new LinkedHashSet<>();
+            users.add(new InternetAddress(user.getEmail()));
+            InternetAddress[] recipient = new InternetAddress[users.size()];
+            users.toArray(recipient);
+            try {
+            String subject= " User has been successfully activated";
+            String body= " </br> The user "+user.getName()+" has been successfully activated and can now be freely used.</br>";
+            MailManager.sendMail(recipient, subject, body);   
+                    } catch (InvalidParameterException ex) {
+                        java.util.logging.Logger.getLogger(MailManager.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (MessagingException ex) {
+                        java.util.logging.Logger.getLogger(MailManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            
+        }
 }

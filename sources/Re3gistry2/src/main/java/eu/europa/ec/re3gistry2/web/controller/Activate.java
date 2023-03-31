@@ -6,6 +6,7 @@ package eu.europa.ec.re3gistry2.web.controller;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
+import eu.europa.ec.re3gistry2.base.utility.MailManager;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.base.utility.WebConstants;
 import eu.europa.ec.re3gistry2.crudimplementation.RegUserCodesManager;
@@ -18,6 +19,7 @@ import eu.europa.ec.re3gistry2.model.RegUserCodes;
 import eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping;
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -64,6 +66,10 @@ public class Activate extends HttpServlet {
                 for(RegUserCodes r:regCodeAux){                    
                     regUserCodesHandler.deleteCode(r);
                 }
+
+                ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
+                MailManager.sendUserActivatedEmail(regUser, systemLocalization);
+                
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_ACTIVATE+ WebConstants.PAGE_URINAME_ACTIVATE + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
             }else{
                 //Dispatch request

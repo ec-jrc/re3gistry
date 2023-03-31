@@ -30,11 +30,11 @@
     <div class="ecl-container ecl-footer-standardised__container">
         <section class="ecl-footer-core__section ecl-footer-core__section1">
             <a href="https://github.com/ec-jrc/re3gistry/releases"
-               class="ecl-footer-core__title ecl-link ecl-link--standalone">Re3gistry version 2.3.0</a>
+               class="ecl-footer-core__title ecl-link ecl-link--standalone">Re3gistry version 2.4.2</a>
             <div class="ecl-footer-core__description"><a data-i18n-link="l-ec-website" class="ecl-link ecl-link--standalone" 
                                                          href="https://inspire-sandbox.jrc.ec.europa.eu/registry"
                                                          aria-label="European Commission">
-                    <img class="mt-2" src="./res/img/logo-2.png" alt="" width="30%" height="50%">
+                    <img class="mt-2" src="./res/img/logo-2.png" alt="">
                 </a></div>
             <div class="ecl-footer-core__description">Reference codes management tool</div>
         </section>
@@ -45,6 +45,7 @@
                     <li class="ecl-footer-standardised__list-item"><a href="https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Re3gistry features</a></li>
                     <li class="ecl-footer-standardised__list-item"><a href="https://github.com/ec-jrc/re3gistry/releases" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Get the code</a></li>
                     <li class="ecl-footer-standardised__list-item"><a href="https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/best-practices-registers-and-registries" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Best practices</a></li>
+                    <li class="ecl-footer-standardised__list-item"><a href="https://ec.europa.eu/eusurvey/runner/Re3gistry_Survey" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Fill the survey</a></li>
                 </ul>
             </section>
             <section class="ecl-footer-standardised__section">
