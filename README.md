@@ -53,8 +53,6 @@ Managing reference codes setting up registries (systems of registers) helps:
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
 
-> Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join) to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
-
 ## Acknowledgements
 
 > The development of the Re3gistry began in 2013 under the [Are3na action](https://joinup.ec.europa.eu/collection/are3na/about) (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/about) of the [ISA2 Programme](https://ec.europa.eu/isa2/isa2_en/). Starting 2022, the **[Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme)** is funding its development.
@@ -64,7 +62,7 @@ Version 2 of the software was developed in cooperation with the [National Land S
 ## Stay tuned
 Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to notifications.
 
-Subscribe to the [Re3gistry Joinup solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join)
+> Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join) to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
 
 ## Re3gistry survey
 There is available a [Re3gistry survey](https://ec.europa.eu/eusurvey/runner/Re3gistry_Survey). Please, complete it and let us know your opinion.
