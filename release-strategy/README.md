@@ -5,65 +5,63 @@
 - [Release strategy](#release-strategy)
   - [Table of contents](#table-of-contents)
   - [Introduction](#introduction)
-  - [Objective and Summary](#objective-and-summary)
-  - [Release Planning](#release-planning)
-    - [Major and minor releases](#major-and-minor-releases)
+  - [Planned release calendar](#planned-release-calendar)
 
 ## Introduction
+This page informs about the release strategy for the Re3gistry software and the Register Federation Tool. It aims at clarifying the release planning process openly and transparently to the community.
 
-This document illustrates the release planning strategy for the Re3gistry software, including all its components (Re3gistry and RoR). The document explains the rationale behind the plan and details the foreseen release dates throughout the year together with their main expected changes. It also lists a number of resources for users to get informed on the future expected changes (future releases) in the Re3gistry and to check in detail the content of each released version (past releases).
+The annual release plan comprises:
+* A **major annual release** of the Re3gistry software is expected by the **end of June**, including major developments and bug fixes.
+* The Re3gistry major release is followed **two months later** by the **Register Federation Tool standalone major release**. 
+* In addition to these major releases, at least **two other minor releases** are expected for each tool throughout each year.
+## Summary of expected releases
 
-## Objective and Summary
-
-The objective of this document is to explain the release planning process for the Re3gistry in an open, clear and transparent way to the community in order to ensure that stable validation criteria are provided and communicated efficiently. The release plan is beneficial to the whole community.
-
-The core of the release plan is **the annual major release** of the Re3gistry software. This release includes all the fixed issues and complete developments until that date. Each year the major release of the Re3gistry software is published two months in advance of the release of the Register Federation Tool (RoR).
-
-In addition to this major release, every year **a number of minor releases** are also published (in January, March and September).
-
-Expected releases
-
-Re3gistry software:
+###  Re3gistry software:
 
 - **Major releases**: June 2022, June 2023, June 2024
 - **Minor releases**: Every three months between major releases. December, March, September.
 
-Register Federation Tool (RoR):
+###  Register Federation Tool:
 
-- Major releases: November 2022, November 2023, November 2024
-- Minor releases every three months between major releases. February, May, August.
+- **Major releases**: November 2022, November 2023, November 2024
+- **Minor releases** every three months between major releases. February, May, August.
 
+**Notes**: 
+* All the **_breaking changes_**, which imply important application modifications, are only included in the major versions. In contrast, the **_non-breaking changes_** are included in any version (major or minor). 
+* **_Hotfixes_**, fixes to major bugs or faults, are released as quickly as possible, even creating a new minor release outside the roadmap.
 
-In particular, all the **_breaking changes_** (changed that imply importants modifications in the application) are only included in the major versions, while the **_non-breaking changes_** are included in any version (major or minor). In addition, **_hotfixes_** (i.e. fixes to major bugs or faults) are released as quickly as possible, even creating a new minor release outside the roadmap.
+## Planned release calendar
+Issues are assigned specific milestones to inform users which issues will be included in each release.
 
-## Release Planning: Milestones
+Milestones are available at [this page](https://github.com/ec-jrc/re3gistry/milestones). 
+When a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones. 
+More information on published releases is available [here](https://github.com/ec-jrc/re3gistry/releases). 
 
-As mentioned above, several releases of the Re3gistry software are scheduled each year. The scheduled annual releases will be described in detail in the next sub-sections.
+###  Re3gistry software - Plan for 2022-2024:
+| Release type | Expected by | Milestone         |
+| ------------ | ----------- | ----------------- |
+| Major        | Jun 22      | v2.3.2 30/6/2022  |
+| Major        | Oct 22      | v2.4.0 21/10/2022 |
+| Minor        | Jan 23      | v2.4.1 10/01/2023 |
+| Minor        | Mar 23      | v2.4.2 03/2023    |
+| Major        | Jun 23      | v2.5.0 06/2023    |
+| Minor        | Sep 23      | v2.5.1 09/2023    |
+| Minor        | Dec 23      | v2.5.2 12/2023    |
+| Minor        | Mar 24      | v2.5.3 03/2024    |
+| Major        | Jun 24      | v2.6.0 06/2024    |
+| Minor        | Sep 24      | v2.6.1 09/2024    |
+| Minor        | Dec 24      | v2.6.2 12/2024    |
 
-To inform users in advance about when the solution to each issue will be included in the release of the Re3gistry software, each issue is assigned to a specific milestone. Milestones are listed on [this page](https://github.com/ec-jrc/re3gistry/milestones). Once a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones. All the information on each of the releases carried out, is available [here](https://github.com/ec-jrc/re3gistry/releases). 
+###  Register Federation Tool - Plan for 2022-2024 [Under review]:
 
-Schedule of next Major and Minor releases of the Re3gistry software. Plan for 2022-2024:
-
-- **Major release: June 2022 (v2.3.2 30/6/2022)**
-- **Major release: October 2022 (v2.4.0 21/10/2022)**
-  - Minor release: January 2023 (v2.4.1 10/01/2023)
-  - Minor release: March 2023 (v2.4.2 3/2023)
-- **Major release: June 2023 (v2.5.0 6/2023)**
-  - Minor release: September 2023 (v2.5.1 09/2023)
-  - Minor release: December 2023 (v2.5.2 12/2023)
-  - Minor release: March 2024 (v2.5.3 3/2024)
-- **Major release: June 2024 (v2.6.0 6/2024)**
-  - Minor release: September 2024 (v2.6.1 09/2024)
-  - Minor release: December 2024 (v2.6.2 12/2024)
-
-Schedule of next Major and Minor releases of the Register Federation Tool (RTF). Plan for 2022-2024:
-
-- Major release: November 2022 (0.1.0)
-  - Minor release: February 2022 (0.1.1)
-  - Minor release: May 2023 (0.1.2)
-  - Minor release: August 2023 (0.1.3)
-- Major release: November 2023 (0.2.0)
-  - Minor release: February 2024 (0.2.1)
-  - Minor release: May 2024 (0.2.2)
-  - Minor release: August 2024 0.2.3)
-- Major release: November 2024 (0.3.0)
+| Release type | Expected by | Milestone |
+| ------------ | ----------- | --------- |
+| Major        | Nov 22      | v0.1.0    |
+| Minor        | Feb 22      | v0.1.1    |
+| Minor        | May 23      | v0.1.2    |
+| Minor        | Aug 23      | v0.1.3    |
+| Major        | Nov 23      | v0.2.0    |
+| Minor        | Feb 24      | v0.2.1    |
+| Minor        | May 24      | v0.2.2    |
+| Minor        | Aug 24      | v0.2.3    |
+| Major        | Nov 24      | v0.3.0    |
