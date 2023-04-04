@@ -4,17 +4,20 @@
 
 - [Release strategy](#release-strategy)
   - [Table of contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Planned release calendar](#planned-release-calendar)
+    - [The release plan in a nutshell](#the-release-plan-in-a-nutshell)
+    - [Release plan calendar](#release-plan-calendar)
+      - [Re3gistry software calendar for 2022-2024](#re3gistry-software-calendar-for-2022-2024)
+      - [Register Federation Tool calendar for 2022-2024](#register-federation-tool-calendar-for-2022-2024)
 
-## Introduction
+
 This page informs about the release strategy for the Re3gistry software and the Register Federation Tool. It aims at clarifying the release planning process openly and transparently to the community.
+
+## The release plan in a nutshell
 
 The annual release plan comprises:
 * A **major annual release** of the Re3gistry software is expected by the **end of June**, including major developments and bug fixes.
 * The Re3gistry major release is followed **two months later** by the **Register Federation Tool standalone major release**. 
 * In addition to these major releases, at least **two other minor releases** are expected for each tool throughout each year.
-## Summary of expected releases
 
 ###  Re3gistry software:
 
@@ -30,14 +33,14 @@ The annual release plan comprises:
 * All the **_breaking changes_**, which imply important application modifications, are only included in the major versions. In contrast, the **_non-breaking changes_** are included in any version (major or minor). 
 * **_Hotfixes_**, fixes to major bugs or faults, are released as quickly as possible, even creating a new minor release outside the roadmap.
 
-## Planned release calendar
+## Release plan calendar
 Issues are assigned specific milestones to inform users which issues will be included in each release.
 
 Milestones are available at [this page](https://github.com/ec-jrc/re3gistry/milestones). 
 When a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones. 
 More information on published releases is available [here](https://github.com/ec-jrc/re3gistry/releases). 
 
-###  Re3gistry software - Plan for 2022-2024:
+###  Re3gistry software calendar for 2022-2024
 | Release type | Expected by | Milestone         |
 | ------------ | ----------- | ----------------- |
 | Major        | Jun 22      | v2.3.2 30/6/2022  |
@@ -52,7 +55,9 @@ More information on published releases is available [here](https://github.com/ec
 | Minor        | Sep 24      | v2.6.1 09/2024    |
 | Minor        | Dec 24      | v2.6.2 12/2024    |
 
-###  Register Federation Tool - Plan for 2022-2024 [Under review]:
+###  Register Federation Tool calendar for 2022-2024
+
+**Under review*
 
 | Release type | Expected by | Milestone |
 | ------------ | ----------- | --------- |
