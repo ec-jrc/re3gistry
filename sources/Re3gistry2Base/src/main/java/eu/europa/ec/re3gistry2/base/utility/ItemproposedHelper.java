@@ -52,95 +52,59 @@ public class ItemproposedHelper {
     }
 
     public static String getProposedURI(RegItemproposed regItemproposed, RegItem regItemRegister, RegRelationpredicate regRelationpredicateCollection, RegRelationproposedManager regRelationproposedManager, RegRelationManager regRelationManager) throws Exception {
+
         // Creating the full URI
-        String uri = regItemproposed.getLocalid();
+        if (regItemproposed != null && regItemproposed.getLocalid() != null) {
+            String uri = regItemproposed.getLocalid();
 
-        if (regItemproposed.getExternal() != null) {
-            if (regItemproposed.getExternal()) {
-            return uri;
-        }
-        }else{
-            
-        }
-        // URI for external items
-//         if (regItemproposed.getExternal()) {
-//            return uri;
-//        }
-
-        List<RegRelationproposed> regRelationproposeds = regRelationproposedManager.getAll(regItemproposed, regRelationpredicateCollection);
-//        List<RegRelation> regRelations = null;
-//
-//        while (true) {
-//
-//            if (regRelationproposeds == null || regRelationproposeds.isEmpty() || (regRelations != null && regRelations.isEmpty())) {
-//                break;
-//            }
-//            // Setting the localid of the collection
-//            if (regRelations == null) {
-//                uri = regRelationproposeds.get(0).getRegItemObject().getLocalid() + "/" + uri;
-//                regRelations = regRelationManager.getAll(regRelationproposeds.get(0).getRegItemObject(), regRelationpredicateCollection);
-//            } else {
-//                uri = regRelations.get(0).getRegItemObject().getLocalid() + "/" + uri;
-//                regRelations = regRelationManager.getAll(regRelations.get(0).getRegItemObject(), regRelationpredicateCollection);
-//            }
-//
-//            // Checking for other collections at an upper level.
-//            // For proposed items only one collecion is in RegRelationproposed (the one related to the current oproposed items)
-//            // The eventual other upper cololectionare in the RegRelation
-//        }
-        
-       
-
-        while (true) {
-
-            if (regRelationproposeds == null || regRelationproposeds.isEmpty()) {
-                break;
+            if (regItemproposed.getExternal() != null) {
+                if (regItemproposed.getExternal()) {
+                    return uri;
+                }
             }
-            // Setting the localid of the collection
-            uri = regRelationproposeds.get(0).getRegItemproposedObject().getLocalid() + "/" + uri;
 
-            // Checking for other collections at an upper level.
-            regRelationproposeds = regRelationproposedManager.getAll(regRelationproposeds.get(0).getRegItemproposedObject(), regRelationpredicateCollection);
+            List<RegRelationproposed> regRelationproposeds = regRelationproposedManager.getAll(regItemproposed, regRelationpredicateCollection);
+            if (regRelationproposeds != null && !regRelationproposeds.isEmpty()) {
+                boolean cond = true;
+                do {
+                    // Setting the localid of the collection
+                    if (regRelationproposeds.get(0).getRegItemproposedObject() != null) {
+                        uri = regRelationproposeds.get(0).getRegItemproposedObject().getLocalid() + "/" + uri;
+                    } else if (regRelationproposeds.get(0).getRegItemObject() != null) {
+                        uri = regRelationproposeds.get(0).getRegItemObject().getLocalid() + "/" + uri;
+                    }
 
+                    // Checking for other collections at an upper level.
+                    regRelationproposeds = regRelationproposedManager.getAll(regRelationproposeds.get(0).getRegItemproposedObject(), regRelationpredicateCollection);
+
+                    // Checking if all relations have been read
+                    if (regRelationproposeds == null || regRelationproposeds.isEmpty()) {
+                        cond = false;
+                    }
+                } while (cond);
+            }
+
+            switch (regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid()) {
+                case BaseConstants.KEY_ITEMCLASS_TYPE_ITEM:
+                    uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
+                    break;
+                case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
+                    uri = regItemproposed.getRegItemclass().getBaseuri() + "/" + uri;
+                    break;
+                case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY:
+                    uri = regItemproposed.getRegItemclass().getBaseuri() + "/" + uri;
+                    break;
+                default:
+                    break;
+            }
+            return uri;
+
+        } else {
+            return null;
         }
-        
 
-        switch (regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid()) {
-            case BaseConstants.KEY_ITEMCLASS_TYPE_ITEM:
-                
-
-                
-//                NOT VALID : TEST APPROACH
-//                if(regItemRegister.getRegItemclass().getBaseuri() == null){
-//                    uri = regItemRegister.getRegItemclass().getRegItemclassParent().getBaseuri() + "/" + regItemRegister.getRegItemclass().getRegItemclassParent().getLocalid() + "/" + uri;
-//                }else{
-//                    uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
-//                }
-//                uri = regItemRegister.getRegItemclass().getRegItemclassParent().getBaseuri();
-                
-                
-//                if(regItemRegister.getRegItemclass().getBaseuri() == null){
-//                uri = regItemRegister.getRegItemclass().getRegItemclassParent().getBaseuri() + regItemRegister.getRegItemclass().getRegItemclassParent().getLocalid();
-//                }else{
-//                    uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
-//                }
-                
-//                uri = regItemproposed.getRegItemclass().getBaseuri() + "/" + uri;
-                uri = regItemRegister.getRegItemclass().getBaseuri() + "/" + regItemRegister.getLocalid() + "/" + uri;
-                
-                break;
-            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
-                uri = regItemproposed.getRegItemclass().getBaseuri() + "/" + uri;
-                break;
-            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY:
-                uri = regItemproposed.getRegItemclass().getBaseuri() + "/" + uri;
-                break;
-            default:
-                break;
-        }
-        return uri;
     }
-    
+
     public static String getProposedURI(RegItemproposed regItem) throws Exception {
         // Getting the DB manager
         EntityManager entityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
@@ -184,8 +148,8 @@ public class ItemproposedHelper {
                 throw new RuntimeException("Invalid type");
         }
     }
-    
-     private static List<RegItemproposed> getCollectionChain(RegItemproposed regItem, EntityManager entityManager) throws Exception {
+
+    private static List<RegItemproposed> getCollectionChain(RegItemproposed regItem, EntityManager entityManager) throws Exception {
         RegRelationpredicateManager regRelationpredicateManager = new RegRelationpredicateManager(entityManager);
         RegRelationpredicate hasCollection = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_COLLECTION);
         RegItemproposed collection = getRelatedItemProposedBySubject(regItem, hasCollection, entityManager);
@@ -316,16 +280,16 @@ public class ItemproposedHelper {
 
         }
     }
-    
-     protected static RegItemproposed getRelatedItemProposedBySubject(RegItemproposed regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
+
+    protected static RegItemproposed getRelatedItemProposedBySubject(RegItemproposed regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
         List<RegItemproposed> list = getRelatedItemsProposedBySubject(regItem, predicate, entityManager);
         if (list != null && !list.isEmpty()) {
             return list.stream().findAny().orElse(null);
         }
         return null;
     }
-     
-     private static List<RegItemproposed> getRelatedItemsProposedBySubject(RegItemproposed regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
+
+    private static List<RegItemproposed> getRelatedItemsProposedBySubject(RegItemproposed regItem, RegRelationpredicate predicate, EntityManager entityManager) throws Exception {
         RegRelationproposedManager regRelationManager = new RegRelationproposedManager(entityManager);
         if (regRelationManager != null && regItem != null && predicate != null
                 && regRelationManager.getAll(regItem, predicate) != null) {
