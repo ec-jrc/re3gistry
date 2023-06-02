@@ -27,6 +27,7 @@ Below is a summary of some of the technologies used to implement the software.
   * Bootstrap 4.x
 
 ### Initialisation of the project
+At this time, NetBeans is the only IDE that can open and build this project correctly.
 
 Because the library *ecas-tomcat-client*  is not available in any public maven repositories, it is included in the Re3gistry2Base module within the "dependencies" folder.
 To initialise the local maven repository, the first step is to launch the maven "initialize" goal on the Re3gistry2Base project (&lt;package-root&gt;/sources/Re3gistry2Base).
