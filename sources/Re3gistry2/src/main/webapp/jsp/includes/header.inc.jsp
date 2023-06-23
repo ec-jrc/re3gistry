@@ -37,6 +37,11 @@
                aria-label="European Commission">
                 <img src="./res/img/logo-1.png" alt="" width="50%" height="50%">
             </a>
+            
+<!--            <div >
+                <h3><a href="https://github.com/ec-jrc/re3gistry" class="mt-5 mb-5 text-center">Frontend panel</a></h3>
+            </div>-->
+            
             <div class="ecl-site-header__selector"><a class="ecl-link ecl-link--standalone ecl-site-header__selector-link"
                                                       href="" data-ecl-language-selector="true">English<span class="ecl-site-header__language-icon"><svg
                             focusable="false" aria-hidden="true" class="ecl-icon ecl-icon--m">

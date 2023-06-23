@@ -108,6 +108,9 @@ function initLocalization(selector) {
         selector = $('.' + elementClassName_languageListButton + '[' + elementAttributeName_lang + '="' + currentLanguage + '"]');
     }
 
+    //Setting the backend link to the footer href from conf.js
+    loadBackendLink();
+
     // Loading the localization file for the current language
     loadI18nFile(currentLanguage);
 
@@ -281,4 +284,12 @@ function getBrowserLanguage() {
     }
 
     return userLang;
+}
+
+function loadBackendLink(){
+
+    var footerHref = document.getElementsByClassName("backend-link");
+    for(var i=0; i<footerHref.length; i++){
+        footerHref[i].href = registryApp.backendURL;
+    }
 }

@@ -18,9 +18,13 @@ registryApp.forceHttpURIs=true;
 registryApp.errorMessageDefinition = "Re3gistry Software repository";
 registryApp.errorMessageURL = "https://github.com/ec-jrc/re3gistry";
 
+// Default backend link (To put on links and access to the admin interface)
+registryApp.backendURL = "//localhost:8080/re3gistry2";
+
 // The app's base URL
-registryApp.domainURL = '//registry-test.eu';
-registryApp.hostURL = '//registry-test.eu/registry';
-registryApp.searchURL = '//registry-test.eu/registry/search';
-registryApp.searchApiURL = '//registry-test.eu/registry/searchapi';
-registryApp.dataServiceURL = '//registry-test.eu/registry/rest';
+registryApp.hostURL = '//host.docker.internal/registry';
+registryApp.searchURL = '//host.docker.internal/registry/search';
+registryApp.searchApiURL = '//host.docker.internal/registry/searchapi';
+registryApp.staticResourcesPath = '/ecl-v2/static/media/';
+registryApp.dataServiceURL = '//host.docker.internal/registry/rest';
+
