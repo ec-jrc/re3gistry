@@ -147,6 +147,8 @@ public class ItemListLoaderServlet extends HttpServlet {
         //Getting the master language
         RegLanguagecode masterLanguage = regLanguagecodeManager.getMasterLanguage();
         request.setAttribute(BaseConstants.KEY_REQUEST_MASTERLANGUAGE, masterLanguage);
+        
+        RegLanguagecode english = regLanguagecodeManager.getByIso6391code("en");
 
         // Getting the language by parameter (if not available the master language is used)
         RegLanguagecode regLanguagecode;
@@ -488,7 +490,11 @@ public class ItemListLoaderServlet extends HttpServlet {
                                 try {
                                     regStatusLocalization = regStatuslocalizationManager.get(regStatus, regLanguagecode);
                                 } catch (NoResultException e) {
-                                    regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage);
+                                    try{
+                                        regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage); 
+                                    } catch (Exception ex){
+                                        regStatusLocalization = regStatuslocalizationManager.get(regStatus, english);
+                                    }
                                 }
 
                                 String statusURI = regStatusgroup.getBaseuri()+ "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();

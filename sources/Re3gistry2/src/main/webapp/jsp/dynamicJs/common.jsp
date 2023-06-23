@@ -185,21 +185,18 @@ function loadAndRender(itemUuid,languageUuid,obj,isRegItem){
             "ajax": {
                 url:config.baseurl+"<%=WebConstants.PAGE_URINAME_ITEMLISTLOADER %>?<%=BaseConstants.KEY_REQUEST_ITEMUUID %>=" + itemUuid + "&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID %>=" + languageUuid,
                 complete:function(data){
-                    if(data.responseJSON.languageNotAvailable){
+                if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && Object.hasOwn(data.responseJSON, "languageNotAvailable") && data.responseJSON.languageNotAvailable){
                         $("#langMessage").show();
                     }else{
                         $("#langMessage").hide();
                     }
-                }
+                }                      
             },
             "language": {
                 "processing": "<div class=\"loader\"></div>"
             },
             "processing": true,
             "serverSide": true,
-            "searching": true,
-            "search": {"smart": false},
-            "searchDelay": 3000,
             "ordering": false
         });
         
@@ -208,14 +205,14 @@ function loadAndRender(itemUuid,languageUuid,obj,isRegItem){
             "ajax": {
                 url:config.baseurl+"<%=WebConstants.PAGE_URINAME_ITEMPROPOSEDLISTLOADER %>?<%=BaseConstants.KEY_REQUEST_ITEMUUID %>=" + itemUuid + "&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID %>=" + languageUuid,
                 complete:function(data){
-                    if(data.responseJSON.languageNotAvailable){
+                        if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && data.responseJSON.languageNotAvailable !=null && data.responseJSON.languageNotAvailable){
                         $("#langMessage").show();
                     }else{
                         $("#langMessage").hide();
                     }                    
-                    if(data.responseJSON.data.length<1){
+                    if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && data.responseJSON.data !=null && data.responseJSON.data.length<1){
                         $("#proposedShow").hide();
-                    } 
+                    }
                 }                    
             },
             "language": {
@@ -231,14 +228,14 @@ function loadAndRender(itemUuid,languageUuid,obj,isRegItem){
             "ajax": {
                 url:config.baseurl+"<%=WebConstants.PAGE_URINAME_ITEMCHILDRENLISTLOADER %>?<%=BaseConstants.KEY_REQUEST_ITEMUUID %>=" + itemUuid + "&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID %>=" + languageUuid,
                 complete:function(data){
-                    if(data.responseJSON.languageNotAvailable){
+                        if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && data.responseJSON.languageNotAvailable !=null && data.responseJSON.languageNotAvailable){
                         $("#langMessage").show();
                     }else{
                         $("#langMessage").hide();
-                    }
-                    if(data.responseJSON.data.length<1){
-                        $("#childrenShow").hide();
                     }                    
+                    if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && data.responseJSON.data !=null && data.responseJSON.data.length<1){
+                         $("#childrenShow").hide();
+                    }
                 }                    
             },
             "language": {

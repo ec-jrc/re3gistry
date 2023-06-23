@@ -1,7 +1,7 @@
 # Re3gistry software
 
 [![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
-[![Latest version](https://img.shields.io/badge/latest%20version-2.4.1-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
+[![Latest version](https://img.shields.io/badge/latest%20version-2.4.2-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
 
 &copy; 2020-2023 European Union. Licensed under the EUPL.
 
@@ -53,13 +53,19 @@ Managing reference codes setting up registries (systems of registers) helps:
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
 
-> Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join) to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
-
 ## Acknowledgements
 
 > The development of the Re3gistry began in 2013 under the [Are3na action](https://joinup.ec.europa.eu/collection/are3na/about) (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/about) of the [ISA2 Programme](https://ec.europa.eu/isa2/isa2_en/). Starting 2022, the **[Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme)** is funding its development.
 
 Version 2 of the software was developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
+
+## Stay tuned
+Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to notifications.
+
+> Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join) to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
+
+## Re3gistry survey
+There is available a [Re3gistry survey](https://ec.europa.eu/eusurvey/runner/Re3gistry_Survey). Please, complete it and let us know your opinion.
 
 # Re3gistry governance and Contributions (Under development)
 
