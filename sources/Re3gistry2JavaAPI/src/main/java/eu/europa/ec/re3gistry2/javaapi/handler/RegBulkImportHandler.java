@@ -133,12 +133,18 @@ public class RegBulkImportHandler {
             if (checkIfFieldTypeIsParentReferenceOrString(regFieldUuid)) {
                 regFieldMappingListWithoutSomeFields.add(regFieldMapping);
             }
+            /**
+            if(!regFieldUuid.equals(BaseConstants.KEY_FIELDTYPE_STATUS_UUID)){
+                regFieldMappingListWithoutSomeFields.add(regFieldMapping);
+            }
+            **/    
+            
         }
 
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;filename=" + regItemclassChild.getLocalid() + ".csv");
 
-        try (ServletOutputStream output = response.getOutputStream()) {
+        try ( ServletOutputStream output = response.getOutputStream()) {
             StringBuilder sb = generateCsvFileBuffer(regFieldMappingListWithoutSomeFields);
 
             InputStream input = new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
@@ -166,6 +172,8 @@ public class RegBulkImportHandler {
         for (RegFieldmapping field : regFieldMappingListWithoutStatus) {
             writer.append("|");
 
+            //Adds CollectionTheme field to the csv when there is a Theme field on the item
+            /**
             if (field.getRegField().getRegFieldtype().getUuid().equals(BaseConstants.KEY_FIELDTYPE_RELATIONREFERENCE_UUID)) {
                 writer.append(field.getRegField().getLocalid());
                 writer.append("|");
@@ -174,6 +182,8 @@ public class RegBulkImportHandler {
             } else {
                 writer.append(field.getRegField().getLocalid());
             }
+            **/
+            writer.append(field.getRegField().getLocalid());
         }
 
         return writer;
@@ -209,6 +219,7 @@ public class RegBulkImportHandler {
                 LOGGER.info("###");
                 LOGGER.info("### ANALIZE FILE ###");
                 HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport = analyzeFile(headerListSplitted, additionLines, regItem);
+                checkRequired(additionLines, regItem);
                 LOGGER.info("### THE FILE HAS BEEN ANALIZED ###");
                 LOGGER.info("###");
                 LOGGER.info("### START STORING ITEMS ###");
@@ -261,6 +272,30 @@ public class RegBulkImportHandler {
                 : "";
         // Sending the mail
         MailManager.sendMail(recipient, subject, body);
+    }
+    
+    private boolean checkRequired(List<String> additionLines, RegItem regItem){
+        RegFieldmappingManager regFieldmappingManager = new RegFieldmappingManager(entityManager);
+        List<RegFieldmapping> regFieldMappingList = new ArrayList<>();
+        try{
+          RegItemclass regItemclassChild = getItemClassChildren(regItem);  
+          regFieldMappingList = regFieldmappingManager.getAll(regItemclassChild);
+          
+          
+          for(int i = 0; i < additionLines.size();i++){
+              String[] addLineSplitted = additionLines.get(i).split("\\|", -1);
+              List<String> linesListSplitted = new ArrayList<>(Arrays.asList(addLineSplitted));
+              for(int j = 0; j < regFieldMappingList.size(); j++){
+                  if(regFieldMappingList.get(j).getRequired()==true && linesListSplitted.get(i).equalsIgnoreCase("")){
+                      System.out.println("Cascaste");
+                  }
+              }
+          }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return false;
     }
 
     private String[] readFileFromServletFileUpload(HttpServletRequest request) throws IOException, FileUploadException {
@@ -943,9 +978,10 @@ public class RegBulkImportHandler {
         } else {
             relationReferenceList.add(fieldValue);
         }
-
+        
+        int i = 0;
         for (String valueOfTheField : relationReferenceList) {
-
+            
             try {
                 RegItemclass itemClassRelationReference = regField.getRegItemclassReference();
                 String relationreferenceuuid = "";
@@ -977,7 +1013,7 @@ public class RegBulkImportHandler {
 
 //                                            create localization for red relation proposed
                     RegLocalizationproposed regLocalizationproposed = new RegLocalizationproposed();
-                    regLocalizationproposed.setUuid(RegLocalizationproposedUuidHelper.getUuid(0, fieldLanguage, regItemproposed, regField));
+                    regLocalizationproposed.setUuid(RegLocalizationproposedUuidHelper.getUuid(i, fieldLanguage, regItemproposed, regField));
                     regLocalizationproposed.setRegLanguagecode(fieldLanguage);
                     regLocalizationproposed.setRegItemproposed(regItemproposed);
                     regLocalizationproposed.setRegField(regField);
@@ -1007,6 +1043,7 @@ public class RegBulkImportHandler {
                         .replace(SUBSTITUTE_LINE, String.valueOf(fieldsBulkImport.getLine()));
                 operationResult = operationResult + BR_HTML + relation_error;
             }
+            i++;
         }
     }
 
