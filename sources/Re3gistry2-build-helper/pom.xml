@@ -68,7 +68,7 @@
                 <application.privacy>OFF</application.privacy>
                 <application.selected.interface>ecl</application.selected.interface>
                 <mail.smtp.host>example-smtp.eu</mail.smtp.host>
-                <mail.smtp.port>25</mail.smtp.port> 
+                <mail.smtp.port>25</mail.smtp.port>
                 <mail.smtp.auth>false</mail.smtp.auth>
                 <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
                 <mail.user></mail.user>
