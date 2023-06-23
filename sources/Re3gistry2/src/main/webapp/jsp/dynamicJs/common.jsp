@@ -39,7 +39,8 @@ var config={
     baseurl:".",
     reloadDelay:5000,
     sessionCheckInterval:30000,
-    sessionCheckWarningTreshold:600000
+    sessionCheckWarningTreshold:600000,
+    afkTimer:600000
 };
 
 // Variable to handle the unsaved data alert
@@ -92,21 +93,21 @@ $(document).ready(function(){
     });
     
     //Session expiration message
-    setInterval(function(){ 
         <%
-        HttpSession sessionCheck = request.getSession();
-        Date expiry = new Date(session.getLastAccessedTime() + session.getMaxInactiveInterval()*1000);
+        Date expiry = new Date(session.getLastAccessedTime());
         %>
         var sessionExpiration = <%= expiry.getTime() %>
-        var now = new Date();
-        var nowTime = now.getTime()
+        
+        // AFK timer function
+    setInterval(function(){    
+            var now = new Date();
+            if((now - sessionExpiration) > config.afkTimer){
+                $('#expirationWarning').modal('show');
+                sessionExpiration = sessionExpiration + config.afkTimer;
+            }
+            //console.log(sessionExpiration - now);
 
-        if((sessionExpiration - now) < config.sessionCheckWarningTreshold){
-            $('#expirationWarning').modal('show');
-        }
-        //console.log(sessionExpiration - now);
-
-    }, config.sessionCheckInterval);
+        }, config.sessionCheckInterval, sessionExpiration);    
  
 });
 
