@@ -194,6 +194,18 @@ The software has an engine that automatically creates the cache for all the elem
 curl --noproxy localhost -i -X GET http://localhost:8080/re3gistry2restapi/cacheall
 ```
 
+### Swagger OpenAPI interactive UI
+
+To access the swagger openapi interactive interface you will have to change the parameters
+found in the [docker-compose]("https://github.com/ec-jrc/re3gistry/blob/develop/sources/Re3gistry2-build-helper/docker-compose.yml") file. The default value and ports for the UI are
+localhost:8082.
+
+These value can also be found in the respective footer elements in the backend and the frontend
+interfaces, you may have to change these values from the default ones too.
+
+You can manually add, edit and remove some of the options of the openapi interface by editing
+the existing [openapi.json]("https://github.com/ec-jrc/re3gistry/blob/develop/sources/Re3gistry2-build-helper/swagger/openapi.json") file.
+
 ### Changing error messages
 
 You can change how the error messages are shown in your Re3gistry local instance.
