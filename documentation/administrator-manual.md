@@ -200,8 +200,7 @@ To access the swagger openapi interactive interface you will have to change the 
 found in the [docker-compose]("https://github.com/ec-jrc/re3gistry/blob/develop/sources/Re3gistry2-build-helper/docker-compose.yml") file. The default value and ports for the UI are
 localhost:8082.
 
-These value can also be found in the respective footer elements in the backend and the frontend
-interfaces, you may have to change these values from the default ones too.
+The frontend and backend interfaces both have a "Access API" hyperlink on the footer element. These links point to the default swagger URL, you might have to change it afterwards.
 
 You can manually add, edit and remove some of the options of the openapi interface by editing
 the existing [openapi.json]("https://github.com/ec-jrc/re3gistry/blob/develop/sources/Re3gistry2-build-helper/swagger/openapi.json") file.
