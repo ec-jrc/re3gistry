@@ -53,7 +53,7 @@
                     ${properties.getProperty('application.default.name')} management 
                 </div>
                 <ul class="ecl-footer-standardised__list ecl-footer-standardised__list--inline">
-                    <li class="ecl-footer-standardised__list-item"><a href="https://inspire-sandbox.jrc.ec.europa.eu/registry/api.html" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Access API</a></li>
+                    <li class="ecl-footer-standardised__list-item"><a href="http://localhost:8082/" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Access API</a></li>
                     <li class="ecl-footer-standardised__list-item"><a href="${properties.getProperty('application.default.frontend.link')}" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Go to public interface</a></li>
                 </ul>
             </section>

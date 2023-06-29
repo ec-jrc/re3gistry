@@ -2,12 +2,12 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Re3gistry2 API",
-    "description": "Re3gistry2 API",
+    "description": "Welcome to the Re3gistry2 Swagger API interactive documentation. In this tool you will be able to try and interact with the different endpoints and API procedures of the application. For a deeper understanding on the behaviour of the API and how to use it you can consult the different <a href='https://github.com/ec-jrc/re3gistry/tree/master/documentation'>documentation manuals</a>. Any issues and questions can be reported in the <a href='https://github.com/ec-jrc/re3gistry'>Re3gistry2 GitHub repository</a>.",
     "contact": {
       "name": "JRC Registry team",
       "url": "https://github.com/ec-jrc/re3gistry"
     },
-    "version": "2.4.2"
+    "version": "2.5.0"
   },
   "servers": [
     {
@@ -21,12 +21,13 @@
     "/rest": {
       "description": "Register and item resources",
       "get": {
-        "description": "Fetch Register or Item",
+        "description": "Fetch a Register or Item",
         "parameters": [
           {
             "in": "query",
             "name": "uri",
             "required": false,
+            "description": "Uniform Resource Identifier",
             "schema": {
               "type": "string"
             }
@@ -35,6 +36,7 @@
             "in": "query",
             "name": "uuid",
             "required": false,
+            "description": "Unique Item Identifier",
             "schema": {
               "type": "string"
             }
@@ -43,6 +45,7 @@
             "in": "query",
             "name": "lang",
             "required": false,
+            "description": "Language that content is returned in",
             "schema": {
               "type": "string",
               "example": "en"
@@ -52,6 +55,7 @@
             "in": "query",
             "name": "format",
             "required": false,
+            "description": "Format of the returned content",
             "schema": {
               "type": "string",
               "example": "jsonc"
@@ -61,6 +65,7 @@
             "in": "query",
             "name": "status",
             "required": false,
+            "description": "Acceptance status of the returned Items",            
             "schema": {
               "type": "string",
               "example": "proposed"
@@ -69,6 +74,7 @@
           {
             "in": "query",
             "name": "itemclass",
+            "description": "Type of the returned item",            
             "required": false,
             "schema": {
               "type": "string"
