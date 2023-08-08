@@ -316,7 +316,10 @@ public class MigrateItemLatestVersion {
                                 customattribute = BaseConstants.KEY_ITEMCLASS_GOVERNANCELEVEL_ITEM;
                             }
                             logger.error("pruebas addCustomAttribute preForeygnKeyRegItem");
-                            RegItem foreygnKeyRegItem = regItemManager.getByLocalidAndRegItemClass(customattributevalueLocalization.getLabel(), regItemclassManager.getByLocalid(customattribute));
+                            logger.error("regItemclassManager.getByLocalid(" + customattribute + ")");
+                            RegItemclass customattributeItemclass = regItemclassManager.getByLocalid(customattribute);
+                            logger.error("getByLocalidAndRegItemClass(" + customattributevalueLocalization.getLabel() + ", " + customattributeItemclass + ")");
+                            RegItem foreygnKeyRegItem = regItemManager.getByLocalidAndRegItemClass(customattributevalueLocalization.getLabel(), customattributeItemclass);
                             logger.error("pruebas addCustomAttribute foreygnKeyRegItem  = " + foreygnKeyRegItem.getUuid());
                             createRegrelationFromRegItemAndRegfieldAndKoreygnKeyRegItem(regItem, regFieldsMap, foreygnKeyRegItem, customattributevalue, fieldIndex, commit);
 

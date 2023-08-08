@@ -25,7 +25,7 @@
 
 [main]
 authc.loginUrl = /login
-authc.successUrl = /index
+authc.successUrl = /admin
 logout.redirectUrl = /login
 
 # ------------------------
@@ -44,7 +44,7 @@ jdbcRealm.credentialsMatcher = $sha256Matcher
 
 # User Query
 # default is "select password from users where username = ?"
-jdbcRealm.authenticationQuery = SELECT shiropassword, shirosalt FROM RegUser WHERE email = ?
+jdbcRealm.authenticationQuery = SELECT shiropassword, shirosalt FROM reg_user WHERE email = ?
 
 # permissions
 # jdbcRealm.permissionsLookupEnabled = true
