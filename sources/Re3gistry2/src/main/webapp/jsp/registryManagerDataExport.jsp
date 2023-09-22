@@ -75,6 +75,7 @@
 <!DOCTYPE html>
 <html lang="${localization.getString("property.localeid")}" role="document">
     <%@include file="includes/head.inc.jsp" %>
+    <link rel="stylesheet" href="res/css/css-loader.css">
     <body>
         <%@include file="includes/header.inc.jsp"%>
 
@@ -129,7 +130,7 @@
                     <h5 class="card-title"></h5>
                     <p class="card-text">${localization.getString("label.solrdescription")}</p>
                     <% if (SolrHandler.checkSolrCompleteIndexinglRunning()) { %>
-                    <p class="card-text mt-3 alert alert-warning">${localization.getString("label.solrrunning")}</p>
+                    <div class="card-text mt-3 alert alert-warning"><p>${localization.getString("label.solrrunning")}</p> <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div> </div>
                     <% } else {%>
                     <a id="startSolrIndexing" class="btn btn-primary btn-md<%=buttonDisabled%>" href="?<%=BaseConstants.KEY_REQUEST_STARTINDEX%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.solrstartindexing")}</a>
                     <script>
@@ -157,8 +158,9 @@
                 <div class="card-body">
                     <h5 class="card-title"></h5>
                     <p class="card-text">${localization.getString("label.cachingdescription")}</p>
-                    <% if (CacheHelper.checkCacheCompleteRunning()) { %>
-                    <p class="card-text mt-3 alert alert-warning">${localization.getString("label.cacheallrunning")}</p>
+                    <% if (CacheHelper.checkCacheCompleteRunning()) {                
+                    %>
+                    <div class="card-text mt-3 alert alert-warning"><p>${localization.getString("label.cacheallrunning")}</p> <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div> </div>
                     <% } else {%>
                     <div class="row">
                         <div class="col-sm-4">
