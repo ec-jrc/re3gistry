@@ -23,7 +23,7 @@ services:
           # Test database to use it without installation
           # Be sure file sources-main/resources-configurations_files/system.installed
           #  is removed from the war file. If not, installation will be not detected.
-          - ../../dist/customize-interface/example-profile-developer-docker/dump-docker-202205180929.sql:/docker-entrypoint-initdb.d/init_backup.sql
+          # - ../../dist/customize-interface/example-profile-developer-docker/dump-docker-202205180929.sql:/docker-entrypoint-initdb.d/init_backup.sql
           # login example db: name@example.com password
         expose: 
           - "5432"

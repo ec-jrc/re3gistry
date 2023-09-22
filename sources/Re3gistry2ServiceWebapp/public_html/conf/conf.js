@@ -22,9 +22,9 @@ registryApp.errorMessageURL = "https://github.com/ec-jrc/re3gistry";
 registryApp.backendURL = "//localhost:8080/re3gistry2";
 
 // The app's base URL
-registryApp.hostURL = '//host.docker.internal/registry';
-registryApp.searchURL = '//host.docker.internal/registry/search';
-registryApp.searchApiURL = '//host.docker.internal/registry/searchapi';
-registryApp.staticResourcesPath = '/ecl-v2/static/media/';
-registryApp.dataServiceURL = '//host.docker.internal/registry/rest';
+registryApp.domainURL = '//registry-test.eu';
+registryApp.hostURL = '//registry-test.eu/registry';
+registryApp.searchURL = '//registry-test.eu/registry/search';
+registryApp.searchApiURL = '//registry-test.eu/registry/searchapi';
+registryApp.dataServiceURL = '//registry-test.eu/registry/rest';
 

@@ -656,21 +656,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
+                            <div id="browseLoaderModalFooter" class="modal-footer">
                                 <div class="col-sm-6">
                                     <button type="reset" class="btn btn-danger width100"><i class="fas fa-sync-alt"></i> ${localization.getString("reset")}</button>                                    
                                 </div>
                                 <div class="col-sm-6">
-                                    <button type="submit" class="btn btn-primary width100">
+                                    <button id="btnStartBulkImport" type="submit" class="btn btn-primary width100">
                                         <i class="fas fa-upload"></i> ${localization.getString("label.start.bulkimport")}
                                     </button>
-                                </div>
+                                    <script>
+            $(document).on('click', '#btnStartBulkImport', function (e) {
+                $('#bufferLoader').html('<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>');
+            });
+        </script>
+                                    
+                                </div> 
+
                             </div>
+                                                                        <div id="bufferLoader"></div>
                         </div>
                     </form>
                 </div>
-            </div>
-
+            </div>                                                        
             <% } else { %>
             <div class="col-sm-6"></div>
             <%}%>
