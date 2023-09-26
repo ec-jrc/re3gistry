@@ -516,7 +516,7 @@ CACHE:
 
 ![Registry manager - Data export](images/data_export_registry_manager.PNG)
 
-## User profile
+### User profile
 
 The user can manage his details on his/her profile page. To access this section, the button is at the right side of the menu with the user's name logged in.
 
@@ -526,9 +526,24 @@ Depending on the type of installation, using an external authentication provider
 
 ![User profile section - Editing details](images/userprofile.png)
 
-## Email notifications
+### Email notifications
 
 Users can receive different email notifications to inform them about statuses and actions done to the items and actions they have taken part in. These notifications indicate the status of the items (Item's been submitted, published etc.) and some of the actions done in the instance, such as permissions and roles given to a user.
+
+### Bulk Edit
+
+This feature allows the user to make modifications to multiple existing items.
+These massive modifications are made using the bulk import tool:
+
+![Bulk import tool](images/Bulk.png)
+
+The edition process starts by loading a .csv file containing the specific fields to be modified.
+Within this file, it is mandatory to enter the ID of the item and the language. Fields that remain unchanged should be left blank.
+
+When clicking on the "Start bulk import" button, the automated process starts and the items will be updated.
+
+In the available items table the modified items will be displayed in the table with Valid/Draft status.
+
 
 ## Additional Notes
 
