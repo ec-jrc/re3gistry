@@ -1222,6 +1222,92 @@ public class RegItemproposedHandler {
             regLocalizationproposedManager.add(regLocalizationproposed);
         }
     }
+private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, RegItemproposed regItemproposed, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language) throws Exception {
+        RegRelationManager regRelationManager = new RegRelationManager(entityManager);
+        RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
+        RegRelationproposedManager regRelationproposedManager = new RegRelationproposedManager(entityManager);
+        RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
+        RegItemManager regItemManager = new RegItemManager(entityManager);
+        RegItemclassManager regItemclassManager = new RegItemclassManager(entityManager);
+        try {
+
+            regItemManager.getByLocalid(language);
+            // Getting all the relations related to that object
+            List<RegRelation> regRelations = regRelationManager.getAllBySubject(regItem);
+
+            // Copying RegRelations to RegRelationProposeds
+            HashMap<String, RegRelationproposed> tempHashmap = new HashMap();
+
+            for (int j = 0; j < regRelations.size(); j++) {
+                List<RegLocalization> localizations = regRelations.get(j).getRegLocalizationList();
+                RegItem regItemCurrent = regRelations.get(j).getRegItemObject();
+                RegItem regItemObject = new RegItem();
+                for (Map.Entry<RegField, String> entry : fields.entrySet()) {
+                    for (int i = 0; i < localizations.size(); i++) {
+                        if (localizations.get(i).getRegField().getLocalid().equalsIgnoreCase(entry.getKey().getLocalid())) {
+                            if(!entry.getValue().equalsIgnoreCase("")){
+                                RegItemclass regItemClassObject = regItemclassManager.getByLocalid(entry.getKey().getLocalid());
+                                regItemObject = regItemManager.getByLocalidAndRegItemClass(entry.getValue(), regItemClassObject);
+                                regRelations.get(j).setRegItemObject(regItemCurrent);
+                            }
+                            
+                        }
+
+                    }
+                }
+
+                if (regItemObject.getUuid() == null){
+                    regItemObject = regItemCurrent;
+                }
+               
+                RegRelationproposed regRelationproposed = new RegRelationproposed();
+                String regRelationproposedUuid = RegRelationproposedUuidHelper.getUuid(regItemproposed, null, regRelations.get(j).getRegRelationpredicate(), null, regItemCurrent);
+                //String regRelationproposedUuid2 = RegRelationproposedUuidHelper.getUuid(regItemproposed, null, regRelations.get(j).getRegRelationpredicate(), null, regRelations.get(j).getRegItemObject());
+               
+                regRelationproposed.setUuid(regRelationproposedUuid);
+                regRelationproposed.setRegItemSubject(null);
+                regRelationproposed.setRegItemproposedSubject(regItemproposed);
+                regRelationproposed.setRegItemObject(regItemObject);
+                regRelationproposed.setRegItemproposedObject(null);
+                regRelationproposed.setRegRelationReference(regRelations.get(j));
+                regRelationproposed.setRegRelationpredicate(regRelations.get(j).getRegRelationpredicate());
+                regRelationproposed.setInsertdate(new Date());
+
+                regRelationproposedManager.add(regRelationproposed);
+
+                tempHashmap.put(regRelations.get(j).getUuid(), regRelationproposed);
+
+            }
+           
+                // Replicating the relevant Reglocalizationproposeds pointing to the
+                //  RegRelationproposed copyied above
+                // Getting all the localization with a reference to a reg relation
+                // related to the current RegItem
+            List<RegLocalization> regLocalizations = regLocalizationManager.getAllWithRelationReference(regItem);
+            for (RegLocalization regLocalization : regLocalizations) {
+                // Creating the regLocalizationproposed for the regRelationreference
+
+                RegLocalizationproposed regLocalizationproposed = new RegLocalizationproposed();
+                String newUuid = RegLocalizationproposedUuidHelper.getUuid(regLocalization.getFieldValueIndex(), regLocalization.getRegLanguagecode(), regItemproposed, regLocalization.getRegField());
+                regLocalizationproposed.setUuid(newUuid);
+                regLocalizationproposed.setFieldValueIndex(regLocalization.getFieldValueIndex());
+                regLocalizationproposed.setHref(regLocalization.getHref());
+                regLocalizationproposed.setRegField(regLocalization.getRegField());
+                regLocalizationproposed.setRegItemproposed(regItemproposed);
+                regLocalizationproposed.setRegLanguagecode(regLocalization.getRegLanguagecode());
+                regLocalizationproposed.setRegLocalizationReference(regLocalization);
+                regLocalizationproposed.setRegRelationproposedReference(tempHashmap.get(regLocalization.getRegRelationReference().getUuid()));
+                regLocalizationproposed.setValue(regLocalization.getValue());
+                regLocalizationproposed.setInsertdate(new Date());
+                regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
+
+                regLocalizationproposedManager.add(regLocalizationproposed);
+            }
+           
+        } catch (Exception e) {
+            System.out.println("eu.europa.ec.re3gistry2.javaapi.handler.RegItemproposedHandler.copyRegRelationsToRegRelationproposedsBulkEdit()");
+        }
+    }
 
     // Copy all the RegItemRegGroupRegRoleMapping related to the item passed by parameter
     // to RegItemproposedRegGroupRegRoleMapping
@@ -2002,7 +2088,7 @@ public class RegItemproposedHandler {
         return regItemproposed;
     }
 
-    public RegItemproposed completeCopyRegItemToRegItemporposedBulkEdit(RegItem regItem, RegUser regUser, HashMap<RegField, String> fields) throws Exception {
+   public RegItemproposed completeCopyRegItemToRegItemporposedBulkEdit(RegItem regItem, RegUser regUser, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language) throws Exception {
         RegItemproposed regItemproposed = null;
         synchronized (sync) {
             if (!entityManager.getTransaction().isActive()) {
@@ -2023,7 +2109,7 @@ public class RegItemproposedHandler {
                 entityManager.getTransaction().begin();
             }
             if (regItem != null && regItemproposed != null) {
-                copyRegRelationsToRegRelationproposeds(regItem, regItemproposed);
+              copyRegRelationsToRegRelationproposedsBulkEdit(regItem, regItemproposed, fields, additionLines, language);  
             }
             entityManager.getTransaction().commit();
 
