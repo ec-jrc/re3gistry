@@ -2,27 +2,27 @@
 
 ## Introduction
 
-The establishment of proper communication with the Re3gistry community is a key asset for the operation, maintenance and update of the Re3gistry software. The [helpdesk of the Re3gistry](https://github.com/ec-jrc/re3gistry/issues) is the core of the communication strategy since it is the platform where users can report bugs, propose new features and start discussions on the Re3gistry software. The objective of this document is to illustrate the systematic workflow adopted by the Re3gistry team to organize, address and manage the issues reported by users in the Re3gistry helpdesk.
+Establishing proper communication with the Re3gistry community is a key asset for operating, maintaining and updating the Re3gistry software. The [helpdesk of the Re3gistry](https://github.com/ec-jrc/re3gistry/issues) is the core of the communication strategy since it is the platform where users can report bugs, propose new features and start discussions on the Re3gistry software. This document aims to illustrate the systematic workflow adopted by the Re3gistry team to organize, address and manage the issues reported by users in the Re3gistry helpdesk.
 
 ## Helpdesk management workflow
 
-The helpdesk management workflow defines the actions performed by the Re3gistry team to address and solve the problems reported by the users of the Re3gistry software. The workflow makes use of a number of GitHub artefacts: labels, milestones, status and the project boards.
+The helpdesk management workflow defines the actions performed by the Re3gistry team to address and solve the problems reported by the users of the Re3gistry software. The workflow uses several GitHub artefacts: labels, milestones, status and the project boards.
 
-A set of [issue forms](<https://github.com/ec-jrc/re3gistry/tree/master/.github/ISSUE_TEMPLATE>) has been created to help the user to select the appropriate type of template for its issue. These forms will help the user to properly fill the issue with all the information required. A label or an assignation to a specific user will be also applied automatically depending on the configuration of each form.
+A set of [issue forms](<https://github.com/ec-jrc/re3gistry/tree/master/.github/ISSUE_TEMPLATE>) has been created to help the user select the appropriate type of template for its issue. These forms will help the user to fill the issue with all the information required properly. A label or an assignation to a specific user will also be applied automatically, depending on the configuration of each form.
 
 ### GitHub labels
 
-To be able to know the status of each issue reported in the helpdesk (from the initial assessment to the final implementation of a solution for it), a number of labels are used. These are listed on [this page](https://github.com/ec-jrc/re3gistry/issues/labels) and are described in more detail below in the chronological order in which they are used while managing each Re3gistry issue:
+To know the status of each issue reported in the helpdesk (from the initial assessment to the final implementation of a solution for it), several labels are used. These are listed on [this page](https://github.com/ec-jrc/re3gistry/issues/labels) and are described in more detail below in the chronological order in which they are used while managing each Re3gistry issue:
 
 - **_question_**: In case the issue requires further information from the user, the Re3gistry Team asks the user to provide it in the issue.
-- **_under analysis_**: This label is assigned after the issue has been opened, and indicates that the Re3gistry Team is performing a first analysis to figure out what is the problem and how to address it; in case this requires further information from the user, the Re3gistry Team asks the user to provide it in the issue discussion.
+- **_under analysis_**: This label is assigned after the issue has been opened and indicates that the Re3gistry Team is performing a first analysis to figure out what the problem is and how to address it; in case this requires further information from the user, the Re3gistry Team asks the user to provide it in the issue discussion.
 - **_type:bug_**: This label is assigned when something isn’t working. The main purpose of this label is to obtain info about the typology of the issues and include this in reports.
-- **_type:enhancement_**: This label is assigned when is a new feature or request. As well as bug label, the purpose of this label is to extract information for reports.
-- **_under development_**: in case the initial analysis reveals that a change in the Re3gistry software is needed, this label is assigned to the issue to indicate that the Re3gistry team is developing a solution for the problem reported.
+- **_type:enhancement_**: This label is assigned when there is a new feature or request.
+- **_under development_**: If the initial analysis reveals that a change in the Re3gistry software is needed, this label is assigned to the issue to indicate that the Re3gistry team is developing a solution for the reported problem.
 - **_ready for testing_**: The solution is ready to test.
-- **_solved_**: After the issue is internally tested and confirmed that it works, this label is assigned.
+- **_solved_**: This label is assigned after the issue is internally tested and confirmed that it works.
 
-The diagram below shows the full helpdesk management cycle for each issue, from the initial stage when it is opened to the final stage when it is closed.  Also includes and identifies the actions of the Re3gistry team.
+The diagram below shows the full helpdesk management cycle for each issue, from the initial stage when it is opened to the final stage when it is closed.  It also includes and identifies the actions of the Re3gistry team.
 
 ```mermaid
 %%{init: {"themeVariables": {"fontSize": "14px" }}}%%
