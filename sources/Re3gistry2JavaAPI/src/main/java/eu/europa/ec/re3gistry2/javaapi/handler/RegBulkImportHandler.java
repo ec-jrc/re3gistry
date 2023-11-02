@@ -882,7 +882,7 @@ public class RegBulkImportHandler {
         RegItemclass regItemclassChild = getItemClassChildren(regItemContainer);
 
         if (regItemclassChild != null) {
-            RegAction regAction = new RegAction();
+            RegAction regAction = addRegActionForAllProposedItemsCSV(regUser, regItemContainer, regItemclassChild);
             if (regAction != null) {
                 storeProposedItems(itemsBulkImport, regItemContainer, regUser, regItemclassChild, regAction, request, additionLines);
                 try {
@@ -1251,7 +1251,8 @@ public class RegBulkImportHandler {
                     items.getValue().get(0).getRegFieldsHashMap().values();
                     HashMap<RegField, String> fields = items.getValue().get(0).getRegFieldsHashMap();
                     RegItem regItemIterator = regItemManager.getByLocalidAndRegItemClass(items.getKey(), regItemclassChild);
-                    regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields);
+                    String language = items.getValue().get(0).getLanguage().getUuid();
+                    regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language);
                 }
             } catch (Exception ex) {
 

@@ -189,6 +189,7 @@
     request.setCharacterEncoding("UTF-8");
 %>
 
+<link rel="stylesheet" href="res/css/css-loader.css">
 <ol class="breadcrumb m-0 p-0" vocab="http://schema.org/" typeof="BreadcrumbList" style="font-size: 1.0em; font-weight: 700">
 
     <%        if (!registryURI.isEmpty() && !registryLabel.isEmpty()) {

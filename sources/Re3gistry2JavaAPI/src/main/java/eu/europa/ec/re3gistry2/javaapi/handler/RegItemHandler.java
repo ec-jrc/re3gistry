@@ -209,6 +209,7 @@ public class RegItemHandler {
                 }
 
                 //  Copying the RegRelationproposed by object to RegRelation (if needed)
+                //Aqui no entra y no se cuando debería 
                 List<RegRelationproposed> regRelationnproposedsByObject = regRelationproposedManager.getAllByObject(regItemProposed);
                 for (RegRelationproposed tmpRegRelationproposed : regRelationnproposedsByObject) {
 
@@ -249,6 +250,17 @@ public class RegItemHandler {
 
                 // Copying the RegItemproposedLocalizations to RegItemLocalization and removing them
                 List<RegLocalizationproposed> regLocalizationproposeds = regLocalizationproposedManager.getAll(regItemProposed);
+                
+               
+                
+                /**
+                for(RegLocalization dltLocalization : dltLocalizations){
+                    if(tmpRegLocalizationproposed.getValue() == null){
+                        regLocalizationManager.delete(dltLocalization);
+                    }
+                }
+                **/
+                
                 for (RegLocalizationproposed tmpRegLocalizationproposed : regLocalizationproposeds) {
 
                     // Removingthe relation if it is a remove relation request
@@ -265,8 +277,10 @@ public class RegItemHandler {
                         }
 
                     } else {
-
                         String newUuid = RegLocalizationUuidHelper.getUuid(tmpRegLocalizationproposed.getFieldValueIndex(), tmpRegLocalizationproposed.getRegLanguagecode(), regItem, tmpRegLocalizationproposed.getRegField());
+                        if(tmpRegLocalizationproposed.getValue() == null && tmpRegLocalizationproposed.getRegLocalizationReference()!=null){
+                            newUuid = tmpRegLocalizationproposed.getRegLocalizationReference().getUuid();
+                    }
 
                         // Check if the RegLocalization is available
                         RegLocalization regLocalization = null;
