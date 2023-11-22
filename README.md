@@ -54,6 +54,7 @@ Managing reference codes and setting up registries (systems of registers) helps:
 * [User manual](documentation/user-manual.md)
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
+* [Registry Federation Tool](sources/Registry-Federation-Tool/README.md)
 
 ## Acknowledgements
 
