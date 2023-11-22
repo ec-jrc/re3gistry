@@ -54,7 +54,6 @@ Managing reference codes and setting up registries (systems of registers) helps:
 * [User manual](documentation/user-manual.md)
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
-* [Registry Federation Tool](sources/Registry-Federation-Tool/README.md)
 
 ## Acknowledgements
 
@@ -90,4 +89,13 @@ Re3gistry welcomes contributions from everyone; please read carefully the [contr
 
 ## Release plan
 Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2022-2024.
+
+# Registry-Federation-Tool
+Within this repository, there is also the tool [Registry-Federation-Tool](https://github.com/ec-jrc/re3gistry/tree/master/sources/Registry-Federation-Tool)
+The development of the INSPIRE Register Federation was undertaken by the JRC as part of ARE3NA, ISA Action 1.17 The European Commission is operating a (central) registry providing common INSPIRE registers
+
+## Documentation
+* [Administrator manual](sources/Registry-Federation-Tool/documentation/administrator-manual.md)
+* [Installation manual](sources/Registry-Federation-Tool/documentation/installation-manual.md)
+
 
