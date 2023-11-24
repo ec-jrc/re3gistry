@@ -1,11 +1,11 @@
-# Re3gistry software
-
-[![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
-[![Latest version](https://img.shields.io/badge/latest%20version-2.4.2-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
-
-&copy; 2020-2023 European Union. Licensed under the EUPL.
+# Re3gistry software & Registry Federation Tool
 
 ## About the Re3gistry
+
+[![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
+[![Latest version](https://img.shields.io/badge/latest%20version-2.5.1-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
+
+&copy; 2020-2023 European Union. Licensed under the EUPL.
 
 ![Logo](documentation/images/logo.png)
 
@@ -90,7 +90,7 @@ Re3gistry welcomes contributions from everyone; please read carefully the [contr
 ## Release plan
 Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2022-2024.
 
-# Registry-Federation-Tool
+# About the Registry Federation Tool
 Within this repository, there is also the tool [Registry-Federation-Tool](https://github.com/ec-jrc/re3gistry/tree/master/sources/Registry-Federation-Tool)
 The development of the INSPIRE Register Federation was undertaken by the JRC as part of ARE3NA, ISA Action 1.17 The European Commission is operating a (central) registry providing common INSPIRE registers
 
