@@ -1,7 +1,7 @@
 # Register Federation Tool
 
 
-The **Registry Federation Tool**, previously known as "Register of Registers (RoR)", is an online platform providing a central access point aiming to bring together or federate code lists or semantic asset registers. 
+The **Register Federation Tool**, previously known as "Register of Registers (RoR)", is an online platform providing a central access point to bring together or federate code lists or semantic asset registers. 
 
 ##Features:
 
@@ -18,7 +18,7 @@ The **Registry Federation Tool**, previously known as "Register of Registers (Ro
 
 
 ##Known instances:
-The [INSPIRE register federation](https://inspire.ec.europa.eu/register-federation/) is a distributed federation of registers related to the INSPIRE Directive operated by the European Commission. Where Member States need to extend INSPIRE agreed on code lists code lists, they must make available the extended values in local registers. Such local registers can also support other use cases, e.g. the management of organisations in a country that must implement INSPIRE or thematic vocabularies, such as those provided by EU institutions and bodies. 
+The [INSPIRE register federation](https://inspire.ec.europa.eu/register-federation/) is a distributed federation of registers related to the INSPIRE Directive operated by the European Commission. Where Member States need to extend INSPIRE agreed on code lists, they must make available the extended values in local registers. Such local registers can also support other use cases, e.g. the management of organisations in a country that must implement INSPIRE or thematic vocabularies, such as those provided by EU institutions and bodies. 
 
 
 # Registry federation tool architecture
