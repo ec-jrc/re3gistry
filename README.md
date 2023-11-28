@@ -79,7 +79,7 @@ The Re3gistry project has established a governance model with well-defined proce
     * If you want to discuss an idea before documenting a full IP, create a new issue using the [IP template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-improvement-proposal.md). Complete the template as much as possible and mention that this is not a complete proposal yet, but that you are looking for feedback. You will be asked to complete the proposal if the idea is supported.
    
 * **Bug fixing**
-    * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be analysed and added to the bug fixing project board. If the development team needs more information, you might be recontacted.
+    * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be analysed and added to the bug fixing project board. If the development team needs more information, you might be contacted.
     * The project board will be updated whenever the status of an issue changes.
     * Pull requests for bug fixes are welcome (see more in "Contribution" below)!
 
@@ -97,7 +97,7 @@ This tool allows you to **gather external records from third parties in one plac
 
 > Register interconnection is possible by connecting registers that implement the ROR data exchange specification. Re3gistry produces this exchange format automatically between its export formats.
 
-The European Commission Joint Research Center developed the INSPIRE Registry Federation as a testbed funded by the ISA Action 1.17 "ARE3NA". Since then, the European Commission has operated a federated registry to publish extensions to the INSPIRE code lists used in national and thematic contexts. This favours flexibility and the satisfaction of specific needs, guaranteeing the general interoperability of the INSPIRE spatial data infrastructure.
+The European Commission Joint Research Center developed the INSPIRE Registry Federation as a testbed funded by the ISA Action 1.17 "ARE3NA". Since then, the European Commission has operated a [**federated registry**](https://inspire.ec.europa.eu/register-federation/) to publish extensions to the INSPIRE code lists used in national and thematic contexts. This favours flexibility and the satisfaction of specific needs, guaranteeing the general interoperability of the INSPIRE spatial data infrastructure.
 
 ## Documentation
 * [Administrator manual](sources/Registry-Federation-Tool/documentation/administrator-manual.md)
