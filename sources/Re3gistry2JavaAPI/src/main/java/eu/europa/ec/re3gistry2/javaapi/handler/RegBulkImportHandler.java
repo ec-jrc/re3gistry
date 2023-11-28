@@ -79,7 +79,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -100,14 +99,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.Logger;
 
 public class RegBulkImportHandler {
@@ -137,7 +128,7 @@ public class RegBulkImportHandler {
         entityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
         LOGGER = Configuration.getInstance().getLogger();
 
-// System localization
+        //System localization
         systemLocalization = Configuration.getInstance().getLocalization();
 
         this.request = request;
@@ -232,6 +223,10 @@ public class RegBulkImportHandler {
 
         operationResult = "";
 
+        //Checking either Import/Edit process was requested
+        String isBulkEditString = request.getParameter(BaseConstants.KEY_REQUEST_ISBULKEDIT);
+        Boolean isBulkEdit = Boolean.parseBoolean(isBulkEditString);
+        
         try {
             String[] linesFile = readFileFromServletFileUpload(request);
             if (linesFile != null && linesFile.length != 0) {
@@ -264,27 +259,53 @@ public class RegBulkImportHandler {
                         }
                         
                         if(!emptyFields.isEmpty()){
-                            operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyrequired")
+                            //Printing and mailing the appropiate message depending on the process executed
+                            if(isBulkEdit){
+                            operationResult = "<b>" + systemLocalization.getString("bulk.edit.error.emptyrequired")
+                                .replace("{fields}", "<b>" + emptyFields.get(0) + "</b>")
+                                .replace("{line}", "<b>" + emptyFields.get(1) + "</b>")
+                                + "</b>" + BR_HTML + operationResult;
+                            request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                            subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKEDIT_ERROR);
+                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKEDIT_ERROR);
+                            }else{
+                                operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyrequired")
                                 .replace("{fields}", "<b>" + emptyFields.get(0) + "</b>")
                                 .replace("{line}", "<b>" + emptyFields.get(1) + "</b>")
                                 + "</b>" + BR_HTML + operationResult;
                             request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
                             subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
+                            }
                         }
                         else{
                             storeItems(itemsBulkImport, regItem, regUser, request, additionLines);
                             LOGGER.info("### END STORING ITEMS WITH SUCCESS ###");
                             LOGGER.info("###");
+                            //Printing and mailing the appropiate message depending on the process executed
                             if (!operationResult.isEmpty()) {
-                                operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                if(isBulkEdit){
+                                operationResult = "<b>" + systemLocalization.getString("bulk.edit.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                }else{
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                }
                             } else {
-                                operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>";
+                                if(isBulkEdit){
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.success") + "</b>";
+                                }else{
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>";
+                                }
+                                
                             }
-                            request.setAttribute(BaseConstants.KEY_REQUEST_BULK_SUCCESS, operationResult);
-
-                            subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_SUCCESS);
-                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_SUCCESS);
+                            if(isBulkEdit){
+                                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_SUCCESS, operationResult);
+                                subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKEDIT_SUCCESS);
+                                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKEDIT_SUCCESS);
+                            }else{
+                                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_SUCCESS, operationResult);
+                                subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_SUCCESS);
+                                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_SUCCESS);
+                            }                         
                         }
                         
                     }
@@ -296,11 +317,20 @@ public class RegBulkImportHandler {
                     body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
                 }
             } else {
-                operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyfile") + "</b>" + BR_HTML + operationResult;
+                //Printing and mailing the appropiate message depending on the process executed
+                if(isBulkEdit){
+                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.error.emptyfile") + "</b>" + BR_HTML + operationResult;
                 request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
 
                 subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
                 body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
+                }else{
+                    operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyfile") + "</b>" + BR_HTML + operationResult;
+                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
+                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
+                }
+                
             }
         } catch (Exception ex) {
 //            operationResult = BR_HTML + operationResult;
@@ -323,12 +353,7 @@ public class RegBulkImportHandler {
         // Sending the mail
         MailManager.sendMail(recipient, subject, body);
     }
-    
-    private boolean isEdit(RegItem regItem){
-        
-        return false;
-    }
-    
+      
     private ArrayList<String> checkRequired(List<String> additionLines, RegItem regItem){
         RegFieldmappingManager regFieldmappingManager = new RegFieldmappingManager(entityManager);
         List<RegFieldmapping> regFieldMappingList = new ArrayList<>();
@@ -2220,49 +2245,4 @@ public class RegBulkImportHandler {
         regActionManager.add(regAction);
         return regAction;
     }
-
-//    private void createRegItemProposedRegGroupRegRoleMapping(RegItemproposed regItemproposed, RegUser regUser) throws Exception {
-//        // Handling the group case
-//        RegUserRegGroupMappingManager regGroupMappingManager = new RegUserRegGroupMappingManager(entityManager);
-//        List<RegUserRegGroupMapping> regGroupMappingList = regGroupMappingManager.getAll(regUser);
-//
-//        RegGroup userRegGroup = null;
-//        for (RegUserRegGroupMapping regUserRegGroupMapping : regGroupMappingList) {
-//            if (regUserRegGroupMapping.getRegGroup().getUuid().equals(BaseConstants.SUBMITTING_ORGANIZATION_ROLE_UUID)) {
-//                userRegGroup = regUserRegGroupMapping.getRegGroup();
-//                break;
-//            }
-//        }
-//        if (userRegGroup == null && !regGroupMappingList.isEmpty()) {
-//            userRegGroup = regGroupMappingList.get(0).getRegGroup();
-//        }
-//
-//        RegItemproposedRegGroupRegRoleMappingManager regItemproposedRegGroupRegRoleMappingManager = new RegItemproposedRegGroupRegRoleMappingManager(entityManager);
-//        String newUuid = RegItemproposedRegGroupRegRoleMappingUuidHelper.getUuid(regItemproposed.getUuid(), userRegGroup.getUuid(), regFieldmapping.getRegField().getRegRoleReference().getUuid());
-//
-//        try {
-//            // Check if the mapping is already available
-//            regItemproposedRegGroupRegRoleMappingManager.get(newUuid);
-//
-//        } catch (NoResultException e) {
-//
-//            //Getting the reg group passed from parameter
-//            RegGroupManager regGroupManager = new RegGroupManager(entityManager);
-//            RegGroup regGroup = null;
-//            try {
-//                regGroup = regGroupManager.get(value);
-//
-//                RegItemproposedRegGroupRegRoleMapping regItemproposedRegGroupRegRoleMapping = new RegItemproposedRegGroupRegRoleMapping();
-//                regItemproposedRegGroupRegRoleMapping.setUuid(newUuid);
-//                regItemproposedRegGroupRegRoleMapping.setInsertdate(new Date());
-//                regItemproposedRegGroupRegRoleMapping.setRegGroup(regGroup);
-//                regItemproposedRegGroupRegRoleMapping.setRegItemproposed(regItemproposed);
-//                regItemproposedRegGroupRegRoleMapping.setRegRole(regFieldmapping.getRegField().getRegRoleReference());
-//
-//                regItemproposedRegGroupRegRoleMappingManager.add(regItemproposedRegGroupRegRoleMapping);
-//
-//            } catch (NoResultException e1) {
-//            }
-//        }
-//    }
 }
