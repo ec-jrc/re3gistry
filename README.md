@@ -91,9 +91,9 @@ Re3gistry welcomes contributions from everyone; please read carefully the [contr
 Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2022-2024.
 
 # About the Registry Federation Tool
-Within this repository, you will also find the **[Registry-Federation-Tool]**(https://github.com/ec-jrc/re3gistry/tree/master/sources/Registry-Federation-Tool).
+Within this repository, you will also find the [**Registry-Federation-Tool**](https://github.com/ec-jrc/re3gistry/tree/master/sources/Registry-Federation-Tool).
 
-This tool allows you to gather external records from third parties in one place. It also allows you to search across subscribed registers and find extensibility relationships between them. The tool, therefore, takes advantage of the reuse of existing semantic resources, reducing data redundancy and avoiding copying errors.
+This tool allows you to **gather external records from third parties in one place**. It also allows you to search across subscribed registers and find extensibility relationships between them. The tool, therefore, takes advantage of the reuse of existing semantic resources, reducing data redundancy and avoiding copying errors.
 
 > Register interconnection is possible by connecting registers that implement the ROR data exchange specification. Re3gistry produces this exchange format automatically between its export formats.
 
