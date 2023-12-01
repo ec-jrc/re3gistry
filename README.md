@@ -1,4 +1,4 @@
-# Re3gistry software & Registry Federation Tool
+# Re3gistry software & Register Federation Tool
 
 ## About the Re3gistry
 
