@@ -747,6 +747,7 @@ public class RegItemproposedHandler {
                         RegItemproposed regItemproposed = copyRegItemToRegItemproposed(regItem, regUser);
 
                         // Copy all the regRelations
+                        //AQUI CASCA AMIGO
                         copyRegRelationsToRegRelationproposeds(regItem, regItemproposed);
 
                         // Creating the RegLocalizationproposed copying them from
@@ -1237,9 +1238,14 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
 
             // Copying RegRelations to RegRelationProposeds
             HashMap<String, RegRelationproposed> tempHashmap = new HashMap();
-
+            RegRelationproposed regRelationproposedEditLcl = null;
+            String fieldName = "";
+            List<RegRelationproposed> relationsLcl = new ArrayList();
+            int x = 0;
+            Map<String, RegRelationproposed> localizationMap = new HashMap<>();
+            
             for (int j = 0; j < regRelations.size(); j++) {
-                List<RegLocalization> localizations = regRelations.get(j).getRegLocalizationList();
+                List<RegLocalization> localizations = regLocalizationManager.getAllByRelation(regRelations.get(j));
                 RegItem regItemCurrent = regRelations.get(j).getRegItemObject();
                 RegItem regItemObject = new RegItem();
                 for (Map.Entry<RegField, String> entry : fields.entrySet()) {
@@ -1250,7 +1256,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                                 regItemObject = regItemManager.getByLocalidAndRegItemClass(entry.getValue(), regItemClassObject);
                                 regRelations.get(j).setRegItemObject(regItemCurrent);
                             }
-                            
+                        
                         }
 
                     }
@@ -1269,10 +1275,18 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 regRelationproposed.setRegItemproposedSubject(regItemproposed);
                 regRelationproposed.setRegItemObject(regItemObject);
                 regRelationproposed.setRegItemproposedObject(null);
-                regRelationproposed.setRegRelationReference(regRelations.get(j));
                 regRelationproposed.setRegRelationpredicate(regRelations.get(j).getRegRelationpredicate());
                 regRelationproposed.setInsertdate(new Date());
-
+                
+                if(regItemObject != regRelations.get(j).getRegItemObject() || regRelations.get(j).getRegRelationpredicate().getUuid().equals("7")){
+                    regRelationproposed.setRegRelationReference(regRelations.get(j));
+                    relationsLcl.add(regRelationproposed);
+                } else{
+                    regRelationproposed.setRegRelationReference(regRelations.get(j)); 
+                    
+                }
+                
+                
                 regRelationproposedManager.add(regRelationproposed);
 
                 tempHashmap.put(regRelations.get(j).getUuid(), regRelationproposed);
@@ -1296,7 +1310,9 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 regLocalizationproposed.setRegItemproposed(regItemproposed);
                 regLocalizationproposed.setRegLanguagecode(regLocalization.getRegLanguagecode());
                 regLocalizationproposed.setRegLocalizationReference(regLocalization);
+               
                 regLocalizationproposed.setRegRelationproposedReference(tempHashmap.get(regLocalization.getRegRelationReference().getUuid()));
+                
                 regLocalizationproposed.setValue(regLocalization.getValue());
                 regLocalizationproposed.setInsertdate(new Date());
                 regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
@@ -1818,7 +1834,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 } else {
 
                     for (Map.Entry<RegField, String> entry : fields.entrySet()) {
-                        if (entry.getKey().getLocalid().equalsIgnoreCase(regLocalization.getRegField().getLocalid())) {
+                        if (entry.getKey().getLocalid().equalsIgnoreCase(regLocalization.getRegField().getLocalid()) && !regLocalization.getRegField().getRegFieldtype().getUuid().equals("10")) {
                             if (entry.getValue().equalsIgnoreCase("")) {
                                 newRegLocalizationproposed.setValue(regLocalization.getValue());
                             } else {

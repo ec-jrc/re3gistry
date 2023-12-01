@@ -55,6 +55,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.apache.logging.log4j.Logger;
 import eu.europa.ec.re3gistry2.javaapi.solr.SolrHandler;
+import java.util.ArrayList;
 
 public class RegItemHandler {
 
@@ -169,20 +170,26 @@ public class RegItemHandler {
                     regItemManager.update(regItem);
                 }
 
+            List <RegRelation> relationsDlt = new ArrayList();
                 //  Copying the RegRelationproposed to RegRelation (if needed)
                 List<RegRelationproposed> regRelationnproposeds = regRelationproposedManager.getAllBySubject(regItemProposed);
-                for (RegRelationproposed tmpRegRelationproposed : regRelationnproposeds) {
+            for (RegRelationproposed tmpRegRelationproposed : regRelationnproposeds) {
 
                     boolean relationNotFound = false;
 
                     // If this is not a new RegItem, updating the reg relation
                     if (newRegItem == null) {
                         try {
-                            if (tmpRegRelationproposed.getRegRelationReference() != null) {
+                            if (tmpRegRelationproposed.getRegRelationReference() != null && !tmpRegRelationproposed.getRegItemObject().equals(tmpRegRelationproposed.getRegRelationReference().getRegItemObject())) {
                                 RegRelation regRelationTmp = regRelationManager.get(tmpRegRelationproposed.getRegRelationReference().getUuid());
                                 regRelationTmp.setEditdate(tmpRegRelationproposed.getEditdate());
                                 regRelationTmp.setRegItemObject(tmpRegRelationproposed.getRegItemObject());
-                            } else {
+                                if(tmpRegRelationproposed.getRegRelationpredicate().getUuid().equals("7")){
+                                    relationsDlt.add(tmpRegRelationproposed.getRegRelationReference());
+                                    relationNotFound = true;
+                                }
+                            } 
+                            else if(tmpRegRelationproposed.getRegRelationReference() == null){
                                 relationNotFound = true;
                             }
                         } catch (NoResultException e) {
@@ -193,18 +200,20 @@ public class RegItemHandler {
                     // If this is a new RegItem or the relation was not found,
                     // creating the relation
                     if (newRegItem != null || relationNotFound) {
+                        
+                            RegRelation newRegRelation = new RegRelation();
+                            String newUuid = RegRelationUuidHelper.getUuid(regItem, tmpRegRelationproposed.getRegRelationpredicate(), tmpRegRelationproposed.getRegItemObject());
 
-                        RegRelation newRegRelation = new RegRelation();
-                        String newUuid = RegRelationUuidHelper.getUuid(regItem, tmpRegRelationproposed.getRegRelationpredicate(), tmpRegRelationproposed.getRegItemObject());
+                            newRegRelation.setUuid(newUuid);
+                            newRegRelation.setInsertdate(new Date());
+                            newRegRelation.setEditdate(tmpRegRelationproposed.getEditdate());
+                            newRegRelation.setRegItemObject(tmpRegRelationproposed.getRegItemObject());
+                            newRegRelation.setRegItemSubject(regItem);
+                            newRegRelation.setRegRelationpredicate(tmpRegRelationproposed.getRegRelationpredicate());
 
-                        newRegRelation.setUuid(newUuid);
-                        newRegRelation.setInsertdate(new Date());
-                        newRegRelation.setEditdate(tmpRegRelationproposed.getEditdate());
-                        newRegRelation.setRegItemObject(tmpRegRelationproposed.getRegItemObject());
-                        newRegRelation.setRegItemSubject(regItem);
-                        newRegRelation.setRegRelationpredicate(tmpRegRelationproposed.getRegRelationpredicate());
-
-                        regRelationManager.add(newRegRelation);
+                            regRelationManager.add(newRegRelation);
+                            
+                        
                     }
                 }
 
@@ -262,10 +271,12 @@ public class RegItemHandler {
                 **/
                 
                 for (RegLocalizationproposed tmpRegLocalizationproposed : regLocalizationproposeds) {
+                    RegLocalization tmpRegLocalization = tmpRegLocalizationproposed.getRegLocalizationReference();
+                    
 
                     // Removingthe relation if it is a remove relation request
                     if (tmpRegLocalizationproposed.getValue() == null && tmpRegLocalizationproposed.getRegRelationproposedReference() == null) {
-                        RegLocalization tmpRegLocalization = tmpRegLocalizationproposed.getRegLocalizationReference();
+                        tmpRegLocalization = tmpRegLocalizationproposed.getRegLocalizationReference();
                         RegRelation tmpRegRelation = tmpRegLocalization.getRegRelationReference();
 
                         // Removing the localization referencing to the RegRealtion
@@ -339,6 +350,7 @@ public class RegItemHandler {
                                 // Getting the related RegRelation
                                 try {
                                     RegRelation tmpRegRelation = regRelationManager.get(newUuidRelation);
+                                    //relationDlt.add(regLocalization.getRegRelationReference());
                                     regLocalization.setRegRelationReference(tmpRegRelation);
                                 } catch (NoResultException e) {
                                     regLocalization.setRegRelationReference(null);
@@ -352,7 +364,12 @@ public class RegItemHandler {
                     }
 
                     regLocalizationproposedManager.delete(tmpRegLocalizationproposed);
+                    
+                    
                 }
+                for(RegRelation relationDelete : relationsDlt){
+                        regRelationManager.delete(relationDelete);
+                    }
 
                 // The removal of the regRelationproposed needs to be done after
                 // the removal of the RegLocalizationproposed because of foreign
@@ -435,5 +452,41 @@ public class RegItemHandler {
 
         return operationSuccess;
     }
+           
+        public void removeUnusedRelations(RegItemproposed regItemproposed){
+            RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
+            RegRelationManager regRelationManager = new RegRelationManager(entityManager);
+            
+            try{
+                synchronized (sync) {
 
+                if (!entityManager.getTransaction().isActive()) {
+                    entityManager.getTransaction().begin();
+                }
+                RegItem regItem = regItemproposed.getRegItemReference();
+                List<RegRelation> itemRelations = new ArrayList();
+                itemRelations = regRelationManager.getAllBySubject(regItem);
+                RegLocalization tmpLocalization;
+                List<RegRelation> relationsDlt = new ArrayList();
+                //The method getAllByRelation can only find one localization. One relation cant be on 2 localizations
+                for(RegRelation relation : itemRelations){
+                    tmpLocalization = null;
+                    if(relation.getRegRelationpredicate().getUuid().equals("7")){
+                       if(regLocalizationManager.getAllByRelation(relation).isEmpty()){
+                            relationsDlt.add(relation);
+                        }
+                    }
+                    
+                }
+                for(RegRelation relationDlt : relationsDlt){
+                    regRelationManager.delete(relationDlt);
+                }
+                entityManager.getTransaction().commit();
+            }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            
+               
+        }
 }

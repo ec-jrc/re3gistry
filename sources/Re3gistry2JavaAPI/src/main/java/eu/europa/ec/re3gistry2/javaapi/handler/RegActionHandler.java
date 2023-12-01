@@ -441,7 +441,9 @@ public class RegActionHandler {
                     //regItemproposed = regItemproposedManager.getByLocalidAndRegItemClass(regItemproposed.getLocalid(), regItemproposed.getRegItemclass());
                     // Move the RegItemproposed to RegItem
                     regItemHandler.regItemProposedToRegItem(regItemproposed);
-
+                    regItemHandler.removeUnusedRelations(regItemproposed);
+                    
+                    
                     //Remove old regItem
                     if (regItemproposed.getRegItemReference() != null) {
                         cleanupRegItemAfterStorycization(regItemproposed.getRegItemReference());
