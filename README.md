@@ -1,7 +1,7 @@
 # Re3gistry software
 
 [![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
-[![Latest version](https://img.shields.io/badge/latest%20version-2.4.2-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
+[![Latest version](https://img.shields.io/badge/latest%20version-2.5.1-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
 
 &copy; 2020-2023 European Union. Licensed under the EUPL.
 
