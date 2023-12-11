@@ -849,7 +849,7 @@ public class RegBulkImportHandler {
                 try {
 //                get item by regItemclassChild, language and local ID
                     RegItemManager regItemManager = new RegItemManager(entityManager);
-                    regItemManager.get(RegItemUuidHelper.getUuid(localId, regItemCollection, regItemclassChild));
+                    regItemManager.get(RegItemUuidHelper.getUuid(localId, null, regItemclassChild));
                     containMasterLanguage = true;
                 } catch (Exception ex) {
 
