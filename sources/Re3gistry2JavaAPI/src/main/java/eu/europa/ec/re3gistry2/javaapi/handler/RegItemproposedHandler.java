@@ -1238,6 +1238,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
 
             // Copying RegRelations to RegRelationProposeds
             HashMap<String, RegRelationproposed> tempHashmap = new HashMap();
+
             RegRelationproposed regRelationproposedEditLcl = null;
             String fieldName = "";
             List<RegRelationproposed> relationsLcl = new ArrayList();
@@ -1256,7 +1257,6 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                                 regItemObject = regItemManager.getByLocalidAndRegItemClass(entry.getValue(), regItemClassObject);
                                 regRelations.get(j).setRegItemObject(regItemCurrent);
                             }
-                        
                         }
 
                     }
@@ -1275,6 +1275,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 regRelationproposed.setRegItemproposedSubject(regItemproposed);
                 regRelationproposed.setRegItemObject(regItemObject);
                 regRelationproposed.setRegItemproposedObject(null);
+              
                 regRelationproposed.setRegRelationpredicate(regRelations.get(j).getRegRelationpredicate());
                 regRelationproposed.setInsertdate(new Date());
                 
@@ -1283,10 +1284,8 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                     relationsLcl.add(regRelationproposed);
                 } else{
                     regRelationproposed.setRegRelationReference(regRelations.get(j)); 
-                    
                 }
-                
-                
+
                 regRelationproposedManager.add(regRelationproposed);
 
                 tempHashmap.put(regRelations.get(j).getUuid(), regRelationproposed);
@@ -1310,9 +1309,9 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 regLocalizationproposed.setRegItemproposed(regItemproposed);
                 regLocalizationproposed.setRegLanguagecode(regLocalization.getRegLanguagecode());
                 regLocalizationproposed.setRegLocalizationReference(regLocalization);
-               
+
                 regLocalizationproposed.setRegRelationproposedReference(tempHashmap.get(regLocalization.getRegRelationReference().getUuid()));
-                
+
                 regLocalizationproposed.setValue(regLocalization.getValue());
                 regLocalizationproposed.setInsertdate(new Date());
                 regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
