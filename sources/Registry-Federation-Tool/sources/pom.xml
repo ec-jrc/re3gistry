@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>eu.europa.ec</groupId>
+    <artifactId>ror</artifactId>
+    <version>0.1</version>
+    <packaging>war</packaging>
+    <name>ror</name>
+     
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <compilerArguments>
+                        <endorseddirs>${endorsed.dir}</endorseddirs>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+            
+            <!-- Without this warnings are generated during the build -->
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+            
+            <!-- Enabling deployments to the staging server -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                        <version>1.7.5</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <charset>UTF-8</charset>
+                    <url>${server.url}</url>
+                    <server>${server.name}</server>
+                    <path>${webapp.path}</path>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${endorsed.dir}</outputDirectory>
+                            <silent>true</silent>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>javax</groupId>
+                                    <artifactId>javaee-endorsed-api</artifactId>
+                                    <version>7.0</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Configuration of a plugin to execute SQL scripts -->
+            <plugin> 
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>${dependency.postgres.group.id}</groupId>
+                        <artifactId>${dependency.postgres.artifact.id}</artifactId>
+                        <version>${dependency.postgres.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>${persistence.jdbc.driver}</driver>
+                    <url>${persistence.jdbc.url}</url>
+                    <username>${persistence.jdbc.username}</username>
+                    <password>${persistence.jdbc.password}</password>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>${base.ror.path}\database\drop-tables.sql</srcFile>
+                                <srcFile>${base.ror.path}\database\create-tables.sql</srcFile>
+                                
+                                <!--test items-->
+                                <srcFile>${base.ror.path}\database\insert-test.sql</srcFile>
+                            </srcFiles>                     
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources> 
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.7</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.digit.iam.ecas.client</groupId>
+            <artifactId>ecas-tomcat-7.0</artifactId>
+            <version>4.61.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-servlet</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20141113</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.17.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+        <dependency>
+            <groupId>${dependency.postgres.group.id}</groupId>
+            <artifactId>${dependency.postgres.artifact.id}</artifactId>
+            <version>${dependency.postgres.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>4.8.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.6</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.2</version>
+        </dependency>
+    </dependencies>
+    
+    <properties>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <persistence.unitname>RoR</persistence.unitname>
+        <persistence.transactiontpye>RESOURCE_LOCAL</persistence.transactiontpye>
+        
+        <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+        <eclipselink.ddl-generation>create-tables</eclipselink.ddl-generation>
+        <dependency.postgres.group.id>org.postgresql</dependency.postgres.group.id>
+        <dependency.postgres.artifact.id>postgresql</dependency.postgres.artifact.id>
+        <dependency.postgres.version>9.3-1100-jdbc4</dependency.postgres.version>
+        
+        <netbeans.hint.license>ror-license</netbeans.hint.license>
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+        
+    </properties>
+
+    <profiles>
+         <!-- Development profile --> 
+        <profile>
+            <id>developer-example-profile</id>
+            <properties>
+                
+                <!-- Analytics config [Piwik installation needed] -->
+                <analytics.id></analytics.id>
+                <analytics.url></analytics.url>
+                
+                <!-- Base application URL -->
+                <application_root_url>http://localhost:8080/ror-0.1/</application_root_url>
+                
+                <!-- Validators path -->
+                <!--remeember to add this information -->
+                <registry_validator_path>C:/Workspace/RoR/re3gistry/sources/RoR/descriptors/validators/Registry_descriptor_validator.xsl</registry_validator_path>
+                <register_validator_path>C:/Workspace/RoR/re3gistry/sources/RoR/descriptors/validators/Register_descriptor_validator.xsl</register_validator_path>
+                
+                <!-- Solr endpoint -->
+                <solr_url>http://localhost:8983/solr/rortest</solr_url>
+                <solr_url_autocomplete>http://localhost:8983/solr/rortest</solr_url_autocomplete>
+                
+                <!-- Directories configurations -->
+                <!--base.ror.path>C:\Program Files\Apache Software Foundation\Tomcat 9.0\webapps\ror-0.1/RegisterFederation</base.ror.path-->             
+                <base.ror.path>C:\Workspace\RoR\re3gistry/RegisterFederation</base.ror.path>  
+                <default.log.file.dir>C:\Program Files\Apache Software Foundation\Tomcat 9.0\logs/RoR.log</default.log.file.dir>
+                <!--default.log.file.dir>C:\Program Files\Apache Software Foundation\Tomcat 9.0\logs/RegisterFederation/logs/RoR.log</default.log.file.dir-->
+                
+                <!-- Database configurations -->
+                <persistence.jdbc.url>jdbc:postgresql://localhost:5439/ror</persistence.jdbc.url>
+                <persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>
+                <persistence.jdbc.username>inspirergd</persistence.jdbc.username>
+                <persistence.jdbc.password>inspirergd</persistence.jdbc.password>               
+
+            </properties>
+            <build>
+                <plugins> <!-- The plugins must be in the profile. Otherwise they break Hudson -->
+                    <plugin> <!-- Required for automatic tagging with the current SVN version -->
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>1.5.2</version>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>                   
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <regex>false</regex>
+                            <includes>
+                                <file>target/classes/ecas-config.properties</file>
+                            </includes>
+                            <replacements>
+                                <replacement> <!-- configuration needed due to the usage of the reverse proxy -->
+                                    <token>#edu.yale.its.tp.cas.client.filter.serverName=replace-me</token>
+                                    <value>edu.yale.its.tp.cas.client.filter.serverName=d01ri1801342.jrc.it:8080</value>
+                                </replacement>         
+                                <replacement>
+                                    <token>#eu.cec.digit.ecas.client.filter.serverPort=replace-me</token>
+                                    <value>eu.cec.digit.ecas.client.filter.serverPort=80</value>
+                                </replacement>    
+                            </replacements>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+  
+        <!-- Server profile -->
+        <profile>
+            <id>server-example-profile</id>
+            <properties>
+                <profile.id>server-example-profile</profile.id>
+                
+                <!-- Analytics config [Piwik installation needed] -->
+                <analytics.id></analytics.id>
+                <analytics.url></analytics.url>
+                
+                <base.ror.path>PATH_TO_FOLDER_PROJECT\RegisterFederation</base.ror.path>
+                <default.log.file.dir>PATH_TO_LOGS/RoR.log</default.log.file.dir>
+                <application.rooturl>http://localhost/register-federation</application.rooturl>
+                
+                <!-- Validators path -->
+                <registry_validator_path>PATH_TO_DESCRIPTORS/Registry_descriptor_validator.xsl</registry_validator_path>
+                <register_validator_path>PATH_TO_DESCRIPTORS/Register_descriptor_validator.xsl</register_validator_path>
+                
+                <!-- Solr endpoint -->
+                <solr_url>https://registry-test.eu/solr/federation</solr_url>
+                <solr_url_autocomplete>https://registry-test.eu/solr/federation</solr_url_autocomplete>
+                
+                <server.url>http://127.0.0.1:7983/manager/text</server.url>
+                <server.name>staging</server.name>
+                <webapp.path>/register-federation</webapp.path>
+                                
+                <application_root_url>https://registry-test.eu/register-federation/</application_root_url>               
+                                
+                <!-- Database configurations -->
+                <persistence.jdbc.url>jdbc:postgresql://${persistence.db.address}:${persistence.db.port}/${persistence.db.name}</persistence.jdbc.url>       
+		<persistence.jdbc.driver>org.postgresql.Driver</persistence.jdbc.driver>				
+                <persistence.jdbc.username>postgres</persistence.jdbc.username>
+                <persistence.jdbc.password>password</persistence.jdbc.password> 
+                <persistence.db.port>5432</persistence.db.port>
+                <persistence.db.address>localhost</persistence.db.address>  
+                <!-- / -->
+            </properties>
+            <build>
+                <plugins> 
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-war</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>exploded</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-war</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>war</goal>
+                                </goals>
+                                <configuration>
+                                    <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin> <!-- Required for automatic tagging with the current SVN version -->
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>1.5.2</version>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>                   
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <regex>false</regex>
+                            <includes>
+                                <file>target/classes/configurations/Application.properties</file>
+                                <file>target/classes/ecas-config.properties</file>
+                            </includes>
+                            <replacements>
+                                <!--<replacement>
+                                    <token>SVN_NUMBER</token>
+                                    <value>${buildNumber}</value>
+                                </replacement>-->
+                                <replacement> <!-- configuration needed due to the usage of the reverse proxy -->
+                                    <token>#edu.yale.its.tp.cas.client.filter.serverName=replace-me</token>
+                                    <value>edu.yale.its.tp.cas.client.filter.serverName=inspire.ec.europa.eu</value>
+                                </replacement>         
+                                <replacement>
+                                    <token>#eu.cec.digit.ecas.client.filter.serverPort=replace-me</token>
+                                    <value>eu.cec.digit.ecas.client.filter.serverPort=80</value>
+                                </replacement>  
+                            </replacements>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+</project>

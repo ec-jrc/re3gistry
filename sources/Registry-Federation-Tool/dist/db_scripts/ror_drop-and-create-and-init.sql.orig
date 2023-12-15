@@ -1,0 +1,178 @@
+/*
+ * Copyright 2010,2015 EUROPEAN UNION
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ *
+ * Date: __/__/____
+ * Authors: European Commission, Joint Research Centre
+ * inspire-registry-dev@jrc.ec.europa.eu
+ *
+ * This work was supported by the EU  Interoperability Solutions for
+ * European Public Administrations Programme (http://ec.europa.eu/isa)
+ * through Action 1.17: Re-usable INSPIRE Reference Platform 
+ */
+
+DROP TABLE IF EXISTS organization CASCADE;
+DROP TABLE IF EXISTS "descriptor" CASCADE;
+DROP TABLE IF EXISTS registry CASCADE;
+DROP TABLE IF EXISTS register CASCADE;
+DROP TABLE IF EXISTS relation CASCADE;
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "procedure" CASCADE;
+DROP TABLE IF EXISTS procedurehistory CASCADE;
+
+
+CREATE TABLE organization ( 
+	uuid varchar(32) NOT NULL,
+	uri varchar(400),
+	name varchar(250) NOT NULL,
+	email varchar(250),
+	active boolean, 
+	dbcreationdate timestamp,
+	dblasteditdate timestamp
+);
+
+CREATE TABLE "descriptor" ( 
+	uuid varchar(32) NOT NULL,
+	url varchar(400) NOT NULL,
+	parentdescriptor varchar(32),
+	organization varchar(32) NOT NULL,
+	descriptortype varchar (100) NOT NULL,
+	addedby varchar(32) NOT NULL,
+	dbcreationdate timestamp
+);
+
+CREATE TABLE "procedure" ( 
+	uuid varchar(32) NOT NULL,
+	"descriptor" varchar(32) NOT NULL,
+	organization varchar(32) NOT NULL,
+	startedby varchar(32) NOT NULL,
+	status varchar(100),
+	message TEXT,
+	lastharvestdate timestamp,
+	nextharvestdate timestamp,
+	dbcreationdate timestamp
+);
+
+CREATE TABLE procedurehistory ( 
+	uuid varchar(32) NOT NULL,
+	"procedure" varchar(32) NOT NULL,
+	startedby varchar(32) NOT NULL,
+	status varchar(100),
+	message TEXT,
+	startdate timestamp,
+	enddate timestamp
+);
+
+CREATE TABLE registry ( 
+	uuid varchar(32) NOT NULL,
+	uri varchar(400) NOT NULL,
+	label varchar(250) NOT NULL,
+	description TEXT,
+	publisheruri varchar(400),
+	publishername varchar(250),
+	publisheremail varchar(250),
+	publisherhomepage varchar(400),
+	"descriptor" varchar(32) NOT NULL,
+	updatefrequency varchar(300),
+	dbcreationdate timestamp ,
+	dblasteditdate timestamp
+);
+
+CREATE TABLE register ( 
+	uuid varchar(32) NOT NULL,
+	uri varchar(400) NOT NULL,
+	registry varchar(32) NOT NULL,
+	label varchar(250) NOT NULL,
+	description TEXT,
+	publisheruri varchar(400),
+	publishername varchar(250),
+	publisheremail varchar(250),
+	publisherhomepage varchar(400),
+	"descriptor" varchar(32) NOT NULL,	
+	updatefrequency varchar(400),
+	dbcreationdate timestamp,
+	dblasteditdate timestamp
+);
+
+CREATE TABLE relation ( 
+	uuid varchar(32) NOT NULL,
+	subjectasset varchar(32) NOT NULL,
+	predicate varchar(32) NOT NULL,
+	objectasset varchar(32) NOT NULL,
+	status varchar(250) NOT NULL,
+	dbcreationdate timestamp,
+	dblasteditdate timestamp
+);
+
+CREATE TABLE "user" ( 
+	uuid varchar(32) NOT NULL,
+	ecasid varchar(250) NOT NULL,
+	organization varchar(32),
+	userlevel integer,
+	active boolean, 
+	dbcreationdate timestamp,
+	dblasteditdate timestamp
+);
+
+ALTER TABLE registry ADD CONSTRAINT PK_registry PRIMARY KEY (uuid);
+ALTER TABLE register ADD CONSTRAINT PK_register PRIMARY KEY (uuid);
+ALTER TABLE relation ADD CONSTRAINT PK_relation PRIMARY KEY (uuid);
+ALTER TABLE "user" ADD CONSTRAINT PK_user PRIMARY KEY (uuid);
+ALTER TABLE organization ADD CONSTRAINT PK_organization PRIMARY KEY (uuid);
+ALTER TABLE "descriptor" ADD CONSTRAINT PK_descriptor PRIMARY KEY (uuid);
+ALTER TABLE "procedure" ADD CONSTRAINT PK_procedure PRIMARY KEY (uuid);
+ALTER TABLE procedurehistory ADD CONSTRAINT PK_procedurehistory PRIMARY KEY (uuid);
+
+ALTER TABLE registry ADD CONSTRAINT UNIQUE_registry_uri UNIQUE (uri);
+ALTER TABLE register ADD CONSTRAINT UNIQUE_register_uri UNIQUE (uri);
+
+ALTER TABLE registry ADD CONSTRAINT FK_registry_descriptor
+	FOREIGN KEY ("descriptor") REFERENCES "descriptor" (uuid) ON DELETE CASCADE;
+ALTER TABLE register ADD CONSTRAINT FK_register_descriptor
+	FOREIGN KEY ("descriptor") REFERENCES "descriptor" (uuid) ON DELETE CASCADE;
+ALTER TABLE register ADD CONSTRAINT FK_registry_register 
+	FOREIGN KEY (registry) REFERENCES registry (uuid) ON DELETE CASCADE;
+ALTER TABLE relation ADD CONSTRAINT FK_relation_register_subject 
+	FOREIGN KEY (subjectasset) REFERENCES register (uuid) ON DELETE CASCADE;
+ALTER TABLE relation ADD CONSTRAINT FK_relation_register_object 
+	FOREIGN KEY (objectasset) REFERENCES register (uuid) ON DELETE CASCADE;
+ALTER TABLE "user" ADD CONSTRAINT FK_user_organization 
+	FOREIGN KEY (organization) REFERENCES organization (uuid);
+ALTER TABLE "descriptor" ADD CONSTRAINT FK_descriptor_descriptor
+	FOREIGN KEY (parentdescriptor) REFERENCES "descriptor" (uuid) ON DELETE CASCADE;
+ALTER TABLE "descriptor" ADD CONSTRAINT FK_descriptor_user
+	FOREIGN KEY (addedby) REFERENCES "user" (uuid) ON DELETE CASCADE;
+ALTER TABLE "descriptor" ADD CONSTRAINT FK_descriptor_organization
+	FOREIGN KEY (organization) REFERENCES organization (uuid);
+ALTER TABLE "procedure" ADD CONSTRAINT FK_procedure_descriptor
+	FOREIGN KEY ("descriptor") REFERENCES "descriptor" (uuid) ON DELETE CASCADE;
+ALTER TABLE "procedure" ADD CONSTRAINT FK_procedure_user
+	FOREIGN KEY (startedby) REFERENCES "user" (uuid) ON DELETE CASCADE;
+ALTER TABLE "procedure" ADD CONSTRAINT FK_procedure_organization
+	FOREIGN KEY (organization) REFERENCES organization (uuid);
+ALTER TABLE procedurehistory ADD CONSTRAINT FK_procedurehistory_procedure
+	FOREIGN KEY ("procedure") REFERENCES "procedure" (uuid) ON DELETE CASCADE;
+ALTER TABLE procedurehistory ADD CONSTRAINT FK_procedurehistory_user
+	FOREIGN KEY (startedby) REFERENCES "user" (uuid) ON DELETE CASCADE;
+
+
+
+
+/* ORGANIZATION */
+INSERT INTO organization VALUES ('1','URI_ORGANIZATION_CHANGE','ORGANIZATION_NAME_CHANGE','ADD_USER@EMAIL.CHANGE', true,'2016-01-20 00:00:00', NULL);
+
+
+/* USERS */
+INSERT INTO "user" VALUES ('0','autoharvest','1',1,true,'2016-01-12 00:00:00',NULL);
+

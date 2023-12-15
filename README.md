@@ -11,22 +11,24 @@
 
 The Re3gistry software is a reusable open-source solution for **managing and sharing ‘reference codes’** through persistent URIs, ensuring that concepts are unambiguously referenced in any domain.
 
-> Reference codes can be sets of permissible values for a data field or to provide a reference or context for the data being exchanged between applications. Examples of reference codes are enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
+> Reference codes can be sets of permissible values for a data field or to provide a reference or context for the data being exchanged between applications. Reference codes include enumerations, controlled vocabularies, taxonomies, thesauri or, simply, ‘lists of things’.
 
-Licensed under the **[EUPL](http://ec.europa.eu/idabc/eupl.html)**, Re3gistry is an open-source project that can be deployed and further developed by contributors from any sector, check out the Re3gistry Governance and contribution guidelines below.
-A copy of the license is available in the repository's [LICENSE](https://github.com/ec-jrc/re3gistry/blob/master/LICENSE) file.
+Licensed under the **[EUPL](http://ec.europa.eu/idabc/eupl.html)**, Re3gistry is an open-source project that can be deployed and further developed by contributors from any sector; check out the Re3gistry Governance and contribution guidelines below.
+A license copy is available in the repository's [LICENSE](https://github.com/ec-jrc/re3gistry/blob/master/LICENSE) file.
 
 ## What Re3gistry offers you?
 
 > The Re3gistry provides a central access point where labels and descriptions for reference codes are easily accessible by both humans and machines while fostering **semantic interoperability across organisations**.
 
-Managing reference codes setting up registries (systems of registers) helps:
+Managing reference codes and setting up registries (systems of registers) helps:
 
 * **Avoiding common mistakes** such as misspellings, entering synonyms, or filling out online forms.
 * **Facilitating the internationalisation of user interfaces** by providing multilingual labels.
 * **Ensuring semantic interoperability** when exchanging data between systems and applications.
-* **Tracing changes over time** throuhg a well documented versioning system.
+* **Tracing changes over time** through a well-documented versioning system.
 * **Increasing the value of the reference codes**, if widely reused and referenced
+
+> Check out the **[Re3gistry promotional video](https://youtu.be/6Y_KAhibGas?si=uGkaXRJmFUiGv_5C)** and **[Re3gistry demo playlist](https://www.youtube.com/watch?v=Nm4kWxp882M)** for a taster of the software's functionalities.
 
 ## Re3gistry features
 
@@ -52,12 +54,13 @@ Managing reference codes setting up registries (systems of registers) helps:
 * [User manual](documentation/user-manual.md)
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
+* [Registry Federation Tool](sources/Registry-Federation-Tool/README.md)
 
 ## Acknowledgements
 
-> The development of the Re3gistry began in 2013 under the [Are3na action](https://joinup.ec.europa.eu/collection/are3na/about) (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/about) of the [ISA2 Programme](https://ec.europa.eu/isa2/isa2_en/). Starting 2022, the **[Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme)** is funding its development.
+> The development of the Re3gistry began in 2013 under the [Are3na action](https://joinup.ec.europa.eu/collection/are3na/about) (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/about) of the [ISA2 Programme](https://ec.europa.eu/isa2/isa2_en/). Starting in 2022, the **[Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme)** is funding its development.
 
-Version 2 of the software was developed in cooperation with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
+Version 2 of the software was developed with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
 ## Stay tuned
 Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to notifications.
@@ -65,11 +68,11 @@ Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to not
 > Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join) to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
 
 ## Re3gistry survey
-There is available a [Re3gistry survey](https://ec.europa.eu/eusurvey/runner/Re3gistry_Survey). Please, complete it and let us know your opinion.
+There is available a [Re3gistry survey](https://ec.europa.eu/eusurvey/runner/Re3gistry_Survey). Please complete it and let us know your opinion.
 
 # Re3gistry governance and Contributions (Under development)
 
-The Re3gistry project has established a governance model with well-defined processes to ensure the best use and sustainability of the software by the contributors and the community at large. The governance is overseen by the Re3gistry managers.
+The Re3gistry project has established a governance model with well-defined processes to ensure the best use and sustainability of the software by the contributors and the community. The governance is overseen by the Re3gistry managers.
 
 ## Project boards
 
@@ -83,7 +86,7 @@ The Re3gistry project has established a governance model with well-defined proce
 
 ## Contributions
 
-Re3gistry welcomes contributions from everyone, please read carefully the [contribution guidelines](contribution.md) and follow our [Code of Conduct](https://github.com/ec-jrc/re3gistry/blob/master/CODE_OF_CONDUCT.adoc).
+Re3gistry welcomes contributions from everyone; please read carefully the [contribution guidelines](contribution.md) and follow our [Code of Conduct](https://github.com/ec-jrc/re3gistry/blob/master/CODE_OF_CONDUCT.adoc).
 
 ## Release plan
 Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2022-2024.
