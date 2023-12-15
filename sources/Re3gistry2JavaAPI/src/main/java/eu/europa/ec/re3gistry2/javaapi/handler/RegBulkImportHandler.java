@@ -314,7 +314,6 @@ public class RegBulkImportHandler {
 
                             operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyfile") + "</b>" + BR_HTML + operationResult;
                             request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
-
                             subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
                         }
@@ -1281,13 +1280,22 @@ public class RegBulkImportHandler {
         Boolean bulkEdit = false;
 
         try {
-            //Code for when the action is bulk edit
-            Map.Entry<String, ArrayList<FieldsBulkImport>> any = itemsBulkImport.entrySet().iterator().next();
-            //String regItemExistentAlready = RegItemUuidHelper.getUuid(localId, regItemContainer, regItemclassChild);
-            RegItem regItemExistentAlready = regItemManager.getByLocalidAndRegItemClass(any.getKey(), regItemclassChild);
-            bulkEdit = true;
-            for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
-
+        //Code for when the action is bulk edit
+        Map.Entry<String, ArrayList<FieldsBulkImport>> any = itemsBulkImport.entrySet().iterator().next();
+        //String regItemExistentAlready = RegItemUuidHelper.getUuid(localId, regItemContainer, regItemclassChild);
+        RegItem regItemExistentAlready = regItemManager.getByLocalidAndRegItemClass(any.getKey(), regItemclassChild);
+        bulkEdit = true;
+        for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
+            try {
+                //String regItemExistentAlready = RegItemUuidHelper.getUuid(localId, regItemContainer, regItemclassChild);
+                if (regItemExistentAlready != null) {
+                    items.getValue().get(0).getRegFieldsHashMap().values();
+                    HashMap<RegField, String> fields = items.getValue().get(0).getRegFieldsHashMap();
+                    RegItem regItemIterator = regItemManager.getByLocalidAndRegItemClass(items.getKey(), regItemclassChild);
+                    String language = items.getValue().get(0).getLanguage().getUuid();
+                    regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language);
+                }
+            } catch (Exception ex) {
                 try {
                     try {
                         if (items.getValue().size() > 1) {
