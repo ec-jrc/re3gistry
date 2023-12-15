@@ -438,7 +438,6 @@ public class RegActionHandler {
                             || regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)))) {
                         regItemproposed.setRegStatus(regStatusUpdateValid);
                     }
-                    //regItemproposed = regItemproposedManager.getByLocalidAndRegItemClass(regItemproposed.getLocalid(), regItemproposed.getRegItemclass());
                     // Move the RegItemproposed to RegItem
                     regItemHandler.regItemProposedToRegItem(regItemproposed);
                     regItemHandler.removeUnusedRelations(regItemproposed);

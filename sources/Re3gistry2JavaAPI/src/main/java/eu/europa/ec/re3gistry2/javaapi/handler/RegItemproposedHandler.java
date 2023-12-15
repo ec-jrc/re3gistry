@@ -747,7 +747,6 @@ public class RegItemproposedHandler {
                         RegItemproposed regItemproposed = copyRegItemToRegItemproposed(regItem, regUser);
 
                         // Copy all the regRelations
-                        //AQUI CASCA AMIGO
                         copyRegRelationsToRegRelationproposeds(regItem, regItemproposed);
 
                         // Creating the RegLocalizationproposed copying them from

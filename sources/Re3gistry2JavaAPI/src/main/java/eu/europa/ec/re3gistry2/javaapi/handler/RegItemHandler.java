@@ -217,8 +217,7 @@ public class RegItemHandler {
                     }
                 }
 
-                //  Copying the RegRelationproposed by object to RegRelation (if needed)
-                //Aqui no entra y no se cuando debería 
+                //Copying the RegRelationproposed by object to RegRelation (if needed)
                 List<RegRelationproposed> regRelationnproposedsByObject = regRelationproposedManager.getAllByObject(regItemProposed);
                 for (RegRelationproposed tmpRegRelationproposed : regRelationnproposedsByObject) {
 
@@ -260,20 +259,9 @@ public class RegItemHandler {
                 // Copying the RegItemproposedLocalizations to RegItemLocalization and removing them
                 List<RegLocalizationproposed> regLocalizationproposeds = regLocalizationproposedManager.getAll(regItemProposed);
                 
-               
-                
-                /**
-                for(RegLocalization dltLocalization : dltLocalizations){
-                    if(tmpRegLocalizationproposed.getValue() == null){
-                        regLocalizationManager.delete(dltLocalization);
-                    }
-                }
-                **/
-                
                 for (RegLocalizationproposed tmpRegLocalizationproposed : regLocalizationproposeds) {
                     RegLocalization tmpRegLocalization = tmpRegLocalizationproposed.getRegLocalizationReference();
                     
-
                     // Removingthe relation if it is a remove relation request
                     if (tmpRegLocalizationproposed.getValue() == null && tmpRegLocalizationproposed.getRegRelationproposedReference() == null) {
                         tmpRegLocalization = tmpRegLocalizationproposed.getRegLocalizationReference();
@@ -350,7 +338,6 @@ public class RegItemHandler {
                                 // Getting the related RegRelation
                                 try {
                                     RegRelation tmpRegRelation = regRelationManager.get(newUuidRelation);
-                                    //relationDlt.add(regLocalization.getRegRelationReference());
                                     regLocalization.setRegRelationReference(tmpRegRelation);
                                 } catch (NoResultException e) {
                                     regLocalization.setRegRelationReference(null);
