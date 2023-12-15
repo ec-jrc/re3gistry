@@ -1242,10 +1242,10 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
             String fieldName = "";
             List<RegRelationproposed> relationsLcl = new ArrayList();
             int x = 0;
-            Map<String, RegRelationproposed> localizationMap = new HashMap<>();
-            
+            Map<String, RegRelationproposed> localizationMap = new HashMap<>();            
             for (int j = 0; j < regRelations.size(); j++) {
                 List<RegLocalization> localizations = regLocalizationManager.getAllByRelation(regRelations.get(j));
+
                 RegItem regItemCurrent = regRelations.get(j).getRegItemObject();
                 RegItem regItemObject = new RegItem();
                 for (Map.Entry<RegField, String> entry : fields.entrySet()) {
@@ -1308,9 +1308,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 regLocalizationproposed.setRegItemproposed(regItemproposed);
                 regLocalizationproposed.setRegLanguagecode(regLocalization.getRegLanguagecode());
                 regLocalizationproposed.setRegLocalizationReference(regLocalization);
-
                 regLocalizationproposed.setRegRelationproposedReference(tempHashmap.get(regLocalization.getRegRelationReference().getUuid()));
-
                 regLocalizationproposed.setValue(regLocalization.getValue());
                 regLocalizationproposed.setInsertdate(new Date());
                 regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
@@ -1772,13 +1770,13 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
         return regLocalizationproposed;
     }
 
-    private void copyRegLocalizationsToRegLocalizationproposedBulkEdit(RegItem regItem, RegItemproposed regItemproposed, String checkDeleteUuid, HashMap<RegField, String> fields) throws Exception {
+    private void copyRegLocalizationsToRegLocalizationproposedBulkEdit(RegItem regItem, RegItemproposed regItemproposed, String checkDeleteUuid, HashMap<RegField, String> fields, String language) throws Exception {
 
         RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
         RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
         RegRelationproposedManager regRelationproposedManager = new RegRelationproposedManager(entityManager);
         RegLanguagecodeManager regLanguacecodeManager = new RegLanguagecodeManager(entityManager);
-        RegLanguagecode masterLanguage = regLanguacecodeManager.getMasterLanguage();
+        RegLanguagecode masterLanguage = regLanguacecodeManager.getByIso6391code(language);
 
         // Getting all the regLocalizations realted to the RegItem (in the master language)
         List<RegLocalization> regLocalizations = regLocalizationManager.getAll(regItem, masterLanguage);
@@ -2130,7 +2128,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
-            copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fields);
+            copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fields, language);
             entityManager.getTransaction().commit();
         }
         return regItemproposed;

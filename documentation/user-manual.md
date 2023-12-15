@@ -4,9 +4,9 @@
 
 This manual is aimed at any user using an instance of the Re3gistry software to manage and publish reference codes.
 
-The following documentation focuses on how to make use of the Re3gistry software. For information on installing or configuring the software, refer to the [Administrator documentation](administrator-manual.md).
+The following documentation focuses on how to make use of the Re3gistry software. If you would like information on installing or configuring the software, please refer to the [Administrator documentation](administrator-manual.md).
 
-This is a live document; it is under continuous improvement. To get the last version please visit https://github.com/ec-jrc/re3gistry.
+This is a live document; it is under continuous improvement. To get the latest version, please visit https://github.com/ec-jrc/re3gistry.
 
 Please report any issue or feedback related to the documentation in the dedicated [GitHub issue tracker](https://github.com/ec-jrc/re3gistry/issues).
 
@@ -44,7 +44,7 @@ The Re3gistry is released under the [European Union Public License - EUPL v.1.2]
 
 ### Acknowledgments
 
-The development of the Re3gistry began in 2013 under the Are3na action (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/elise-re3gistry-software) of the ISA2 Programme. Starting 2022, the [Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme) is funding its development.
+The development of the Re3gistry began in 2013 under the Are3na action (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/elise-re3gistry-software) of the ISA2 Programme. Starting in 2022, the [Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme) is funding its development.
 
 ## Introduction to the Re3gistry
 
@@ -78,9 +78,9 @@ The possible user roles that re3gistry manages are:
 * Control body 
 * Submitting organisations
 
-The system is highly flexible in managing the **roles** since it is not assigning the role directly to the **user**. Instead, the user is assigned to one or more **groups**. Then this group is associated to one or more **registers**, specifying the role for each of the group. This means that a group can have different roles on different registers. Each user in the system can be associated to one or more groups. 
+The system is highly flexible in managing the **roles** since it does not assign the role directly to the **user**. Instead, the user is assigned to one or more **groups**. Then, this group is associated with one or more **registers**, specifying the role of each group. This means that a group can have different roles on different registers. Each user in the system can be associated with one or more groups. 
 
-An example on roles and groups assignment is provided in the following box.
+An example of roles and group assignments is provided in the following box.
 ---
 
 **Groups**
@@ -123,7 +123,7 @@ This role can perform three different tasks:
 
 It is an organisation establishing its own register.
 
-In the Re3gistry software, the *register owner* can access the reference code management system to see the actions that are performed on the registers. 
+In the Re3gistry software, the *register owner* can access the reference code management system to see the actions performed on the registers. 
 
 It is a "formal" role, often controlled by users granted the register manager role.
 
@@ -135,7 +135,7 @@ In the Re3gistry 2 software, the register manager can use the interface to verif
 
 ### Control body
 
-It is a technical expert or group making decisions on a register's content. At least one user with the control body role shall be available in the system to approve the changes to apply to the reference codes.
+It is a technical expert or group deciding on a register's content. At least one user with the control body role shall be available in the system to approve the changes to apply to the reference codes.
 
 The control body can use the interface provided by the Re3gistry 2 software to:
 
@@ -211,7 +211,7 @@ This section provides detailed information on the functionalities available in t
 
 ### Content editing and browsing section
 
-The content tab is the main part of the system. It allows browsing and editing of any registers and reference codes in the system.
+The content tab is the main part of the system. It allows browsing and editing any registers and reference codes in the system.
 
 ![Menu item, content browse and edit](images/menu-contentediting.png)
 
@@ -231,17 +231,17 @@ The actions available for the "submitting organisation" role are listed below.
 
 ##### Edit/change the existing reference codes 
 
-The change of an existing reference code is done directly using the **input box** available in the interface. After performing a change, the interface switches to a **two columns layout** to better highlight the changes: the proposed changes appear on the left column while the original values are shown on the right column. The use of a yellow background also underlines the differences between both versions.
+The change of an existing reference code is done directly using the **input box** available in the interface. After performing a change, the interface switches to a **two-column layout** to highlight better the changes: the proposed changes appear on the left column while the original values are shown on the right column. The use of a yellow background also underlines the differences between both versions.
 
 ![The 2 column layouts](images/contentediting-2columnslayout.png)
 
 ##### Register federation export
 
-The editing interface also provides a flag to allow the system to expose the reference code in the RoR format. In this way, it can eventually be imported in the [INSPIRE register federation](https://inspire-regadmin.jrc.ec.europa.eu/ror/).
+The editing interface also provides a flag to allow the system to expose the reference code in the RoR format. In this way, it can eventually be imported into the [INSPIRE register federation](https://inspire-regadmin.jrc.ec.europa.eu/ror/).
 
 ##### Add new reference codes
 
-To propose adding a new reference code in a specific register, click on the "Add item" button available in the interface. A page containing the predefined structure of the siblings' reference codes will show up with the empty fields to be completed.
+To propose adding a new reference code in a specific register, click the "Add item" button in the interface. A page containing the predefined structure of the siblings' reference codes will show up with the empty fields to be completed.
 
 ![Add new reference code](images/contentediting-newreferencecode.png)
 
@@ -261,13 +261,13 @@ The users with the "registry manager" role can use this interface to edit the **
 
 ##### Edit registry information
 
-The registry-related information can uniquely be modified by a user with the registry manager role. **These changes do not need to undergo the change proposal workflow**.
+A user with the registry manager role can uniquely modify the registry-related information. **These changes do not need to undergo the change proposal workflow**.
 
 ##### Add a new register
 
-To add a new register, click "Add register". A new page will appear, asking to complete the information fields of the new register. A first list of standard fields will be associated with the recently created register. To add fields or customise pre-existing ones, please check the **structure** related information, explained later in this manual.
+To add a new register, click "Add register". A new page will appear, asking to complete the information fields of the new register. A first list of standard fields will be associated with the recently created register. To add fields or customise pre-existing ones, please look at the **structure** related information, explained later in this manual.
 
-The addition of a new register within the registry can uniquely be done by a user with the registry manager role. These changes do not need to undergo the change proposal workflow.
+Adding a new register within the registry can uniquely be done by a user with the registry manager role. These changes do not need to undergo the change proposal workflow.
 
 ![Add a new register](images/contentediting-addnewregister.png)
 
@@ -292,7 +292,7 @@ By managing the content class details it is possible to:
 
 ![Structure section - Content class page](images/structure-mainpage.png)
 
-When clicking on the name of the content class or the "eye" icon, the **fields' management** page is opened, showing the list of associated fields to the selected **content class**.
+When clicking on the name of the content class or the "eye" icon, the **fields' management** page opens, showing the list of associated fields to the selected **content class**.
 
 Check next the actions available for the field management pages.
 
@@ -326,7 +326,7 @@ This property is only available for the fields of type **text** or **long text**
 
 This property, if checked, hides the field in the public interface. This property is useful if information related to a reference code (or a register/registry) needs to be stored but kept private.
 
-Note that even when active, the field keeps being displayed in the editing interface.
+Note that even when active, the field is displayed in the editing interface.
 
 ##### Multivalued
 
@@ -410,7 +410,7 @@ The actions available on this page are submitting the proposed changes to the **
 
 ![Submitting organisation section - List and actions](images/submittingorganisations-list.png)
 
-By entering in the details of one specific listed action, the user can also discard changes at the item level.
+By entering the details of one specific listed action, the user can also discard changes at the item level.
 
 ![Submitting organisations section - Action details](images/submittingorganisations-actiondetail.png)
 
@@ -443,7 +443,7 @@ With this action, the **control body** accepts all the changes contained in that
 
 #### Accept with changes
 
-In this case, the **control body** requires to make changes to accept the proposal. 
+In this case, the **control body** is required to make changes to accept the proposal. 
 
 In this case, the control body has to describe the requested changes in a dialogue that will appear after pressing the "**Accept with changes**" button.
 
@@ -528,7 +528,7 @@ Depending on the type of installation, using an external authentication provider
 
 ### Email notifications
 
-Users can receive different email notifications to inform them about statuses and actions done to the items and actions they have taken part in. These notifications indicate the status of the items (Item's been submitted, published etc.) and some of the actions done in the instance, such as permissions and roles given to a user.
+Users can receive different email notifications to inform them about statuses and actions done to the items and actions they have taken part in. These notifications indicate the status of the items (Items been submitted, published etc.) and some of the actions done in the instance, such as permissions and roles given to a user.
 
 ### Bulk Edit
 
@@ -549,16 +549,3 @@ In the available items table the modified items will be displayed in the table w
 
 ### Default Language
 If the default language set in the browser is not available, it will automatically change the re3gistry language to the master language on the running instance.
-
-
-
-
-
-
-
-
-
-
-
-
-

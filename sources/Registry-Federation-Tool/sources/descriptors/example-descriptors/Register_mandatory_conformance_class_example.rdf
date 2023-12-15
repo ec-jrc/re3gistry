@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:adms = "http://www.w3.org/ns/adms#"
+	xmlns:dcat = "http://www.w3.org/ns/dcat#"
+	xmlns:dct  = "http://purl.org/dc/terms/"
+	xmlns:foaf = "http://xmlns.com/foaf/0.1/"
+	xmlns:rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos = "http://www.w3.org/2004/02/skos/core#"
+	xmlns:voaf = "http://purl.org/vocommons/voaf#"
+>
+<!-- ## Register descriptor: Mandatory Conformance Class ## -->
+
+<!-- URI / URL of the register -->
+<rdf:Description rdf:about="http://dd.eionet.europa.eu/vocabulary/inspire/DesignationSchemeValue">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+
+<!-- Reference to the registry operating the register -->
+	<dct:isPartOf>
+		<dcat:Catalog rdf:about="http://dd.eionet.europa.eu/vocabularies"/>
+	</dct:isPartOf>
+
+<!-- Reference to the external register on which this register relies on -->
+	<voaf:reliesOn rdf:resource="http://inspire.ec.europa.eu/codelist/DesignationSchemeValue"/>
+
+<!-- Name of the register -->
+	<skos:prefLabel xml:lang="en">Designation Scheme</skos:prefLabel>
+
+<!-- Register publisher / responsible / contact point -->
+	<dct:publisher>
+
+<!-- This is the URI for the organisation taken from the MDR Corporate Bodies register maintained by
+     the EU Publications Office: http://publications.europa.eu/mdr/authority/corporate-body/
+     These URIs should be used for EU institutions and bodies.
+     Organisation not included in the MDR Corporate Bodies register should use their official URI (e.g.,
+     maintained by a national register), if any or use a well defined URI-pattern (an example could be a
+	 DBpedia URI)  
+-->
+		<foaf:Agent rdf:about="http://publications.europa.eu/resource/authority/corporate-body/EEA">
+			<foaf:name xml:lang="en">European Environment Agency</foaf:name>
+			<foaf:mbox rdf:resource="mailto:cr@eionet.europa.eu"/>
+			<foaf:homepage rdf:resource="http://www.eea.europa.eu/"/>
+		</foaf:Agent>
+
+	</dct:publisher>
+
+</rdf:Description>
+
+</rdf:RDF>

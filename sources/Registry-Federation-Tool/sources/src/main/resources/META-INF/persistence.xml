@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="${persistence.unitname}" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>eu.europa.ec.ror.model.Registry</class>
+    <class>eu.europa.ec.ror.model.Register</class>
+    <class>eu.europa.ec.ror.model.Relation</class>
+    <class>eu.europa.ec.ror.model.Organization</class>
+    <class>eu.europa.ec.ror.model.Descriptor</class>
+    <class>eu.europa.ec.ror.model.User</class>
+    <class>eu.europa.ec.ror.model.Procedure</class>
+    <class>eu.europa.ec.ror.model.Procedurehistory</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="${persistence.jdbc.url}"/>
+      <property name="javax.persistence.jdbc.password" value="${persistence.jdbc.password}"/>
+      <property name="javax.persistence.jdbc.driver" value="${persistence.jdbc.driver}"/>
+      <property name="javax.persistence.jdbc.user" value="${persistence.jdbc.username}"/>
+      <property name="eclipselink.ddl-generation" value="${eclipselink.ddl-generation}"/>
+    </properties>
+  </persistence-unit>
+</persistence>

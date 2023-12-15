@@ -1,0 +1,47 @@
+{
+"footer":[
+{
+	"titlekey":"ft-c1-title",
+	"visible":"true",
+	"items":[
+		{"link":"#__lng__","labelkey":"ft-c1-i1","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c1-i2","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c1-i3","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c1-i4","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c1-i5","active":"true"}
+	]
+},
+{
+	"titlekey":"ft-c2-title",
+	"visible":"true",
+	"items":[
+		{"link":"#__lng__","labelkey":"ft-c2-i1","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c2-i2","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c2-i3","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c2-i4","active":"true"}
+	]
+},
+{
+	"titlekey":"ft-c3-title",
+	"visible":"true",
+	"items":[
+		{"link":"#__lng__","labelkey":"ft-c3-i1","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c3-i2","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c3-i3","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c3-i4","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c3-i5","active":"true"}
+	]
+},
+{
+	"titlekey":"ft-c4-registry-title",
+	"visible":"true",
+	"items":[
+		{"link":"#__lng__","labelkey":"ft-c4-registry-i1","active":"true"},
+		{"link":"/registry/search","labelkey":"ft-c4-registry-i2","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c4-registry-i3","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c4-registry-i4","active":"true"},
+		{"link":"#__lng__","labelkey":"ft-c4-registry-i5","active":"true"}
+	]
+}
+]
+}

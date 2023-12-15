@@ -314,7 +314,6 @@ public class RegBulkImportHandler {
 
                             operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyfile") + "</b>" + BR_HTML + operationResult;
                             request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
-
                             subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
                         }
@@ -849,7 +848,7 @@ public class RegBulkImportHandler {
                 try {
 //                get item by regItemclassChild, language and local ID
                     RegItemManager regItemManager = new RegItemManager(entityManager);
-                    regItemManager.get(RegItemUuidHelper.getUuid(localId, regItemCollection, regItemclassChild));
+                    regItemManager.get(RegItemUuidHelper.getUuid(localId, null, regItemclassChild));
                     containMasterLanguage = true;
                 } catch (Exception ex) {
 
