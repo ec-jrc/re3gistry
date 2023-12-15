@@ -125,7 +125,9 @@ public class RemoveFieldValue extends HttpServlet {
 
                 try {
                     regItemproposed = regItemproposedManager.getByRegItemReference(regItem);
+                    
                 } catch (NoResultException e1) {
+                    System.out.println("eu.europa.ec.re3gistry2.web.controller.RemoveFieldValue.processRequest()");
                 }
             } catch (NoResultException e1) {
 
