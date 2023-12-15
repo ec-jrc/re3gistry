@@ -32,6 +32,8 @@ import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegLocalization;
+import eu.europa.ec.re3gistry2.model.RegLocalizationproposed;
+import eu.europa.ec.re3gistry2.model.RegRelation;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -350,6 +352,13 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_FIELDS_BY_REGFIELD_ITEMCLASS_HREFNORNULL);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGFIELD, regField);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemclass);
+        return (List<RegLocalization>) q.getResultList();
+    }
+    
+    @Override
+    public List<RegLocalization> getAllByRelation(RegRelation relation) throws Exception{
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_LOCALIZATION_BY_RELATION);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_RELATION, relation);
         return (List<RegLocalization>) q.getResultList();
     }
 
