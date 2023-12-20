@@ -103,9 +103,4 @@
     crossorigin="anonymous"
 ></script>
 
-<script>
-    ECL.autoInit();
-</script>
-
-
 </head>
