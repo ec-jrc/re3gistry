@@ -228,7 +228,11 @@ public class RegBulkImportHandler {
                 LOGGER.info("### START STORING ITEMS ###");
                 try {
                     if(itemsBulkImport != null && !itemsBulkImport.isEmpty()) {
-                        ArrayList<String> emptyFields = checkRequired(additionLines, regItem);
+
+                        ArrayList<String> emptyFields = new ArrayList();
+                        if(!isBulkEdit){
+                            emptyFields = checkRequired(additionLines, regItem);
+                        }
   
                         if(!emptyFields.isEmpty()){
                             //Printing and mailing the appropiate message depending on the process executed
@@ -249,8 +253,7 @@ public class RegBulkImportHandler {
                             subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
                             }
-                        }
-                        else{
+                        }else{
                             storeItems(itemsBulkImport, regItem, regUser, request, additionLines, isBulkEdit);
                             LOGGER.info("### END STORING ITEMS WITH SUCCESS ###");
                             LOGGER.info("###");
@@ -335,18 +338,6 @@ public class RegBulkImportHandler {
             for (int i = 0; i < additionLines.size(); i++) {
                 String[] addLineSplitted = additionLines.get(i).split("\\|", -1);
                 List<String> linesListSplitted = new ArrayList<>(Arrays.asList(addLineSplitted));
-                /* if (linesListSplitted.get(0).trim().equalsIgnoreCase("")) {
-                    emptyFields.add("LocalId");
-                    emptyFields.add(Integer.toString(i + 1));
-                    return emptyFields;
-                }
-
-                if (linesListSplitted.get(1).trim().equalsIgnoreCase("")) {
-                    emptyFields.add("Language");
-                    emptyFields.add(Integer.toString(i + 1));
-                    return emptyFields;
-                }*/
-
                 linesListSplitted.remove(1);
                 linesListSplitted.remove(0);
                 for (int j = 0; j < linesListSplitted.size(); j++) {
