@@ -272,6 +272,7 @@ public class RegBulkImportHandler {
                                 }
                                 
                             }
+                            
                             if(isBulkEdit){
                                 request.setAttribute(BaseConstants.KEY_REQUEST_BULK_SUCCESS, operationResult);
                                 subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKEDIT_SUCCESS);
@@ -743,6 +744,12 @@ public class RegBulkImportHandler {
                 request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
                 /* subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR); */
+            }else if(localId.contains(" ")){
+                 operationResult = "<b>" + systemLocalization.getString("bulk.import.localId.spaces")
+                                    .replace("{localid}", "<b>" + localId + "</b>")
+                                    + "</b>" + BR_HTML + operationResult;
+                            request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                           
             } else {
                 try {
                     regLanguage = regLanguagecodeManager.getByIso6391code(language2Letters);
@@ -1255,7 +1262,6 @@ public class RegBulkImportHandler {
                     operationResult = "<b>" + systemLocalization.getString("bulk.import.error.duplicate").replace("{localid}", "<b>" + items.getKey() + "</b>")
                             + "</b>" + BR_HTML + operationResult;
                     request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
-                    break;
                 }
                 String localId = items.getKey();
                 regItemproposed = createItemProposed(regItemContainer, regItemclassChild, localId, regUser, regAction, request);
@@ -1304,7 +1310,7 @@ public class RegBulkImportHandler {
                         operationResult = "<b>" + systemLocalization.getString("bulk.import.error.duplicate").replace("{localid}", "<b>" + items.getKey() + "</b>")
                                 + "</b>" + BR_HTML + operationResult;
                         request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
-                        break;
+                        throw new Exception();
                     }
                     if (regItemExistentAlready != null) {
                         items.getValue().get(0).getRegFieldsHashMap().values();
@@ -1314,7 +1320,7 @@ public class RegBulkImportHandler {
                         regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language);
                     }
                 } catch (Exception ex) {
-                    
+                    throw new Exception();
                 }
             }
         
