@@ -625,7 +625,7 @@
                 
                <div class="col-sm-6">
             <div class="dropdown d-inline"> 
-                    <button type="button" class="btn btn-primary float-right mr-2 width100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Start bulk process</button>
+                    <button type="button" class="btn btn-primary float-right width100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Start bulk process</button>
                 <ul class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 32px, 0px);">              
                     <a class="dropdown-item" data-target="#exampleModalLong" data-toggle="modal"> ${localization.getString("label.bulkimport")}</a>
                     <a class="dropdown-item" data-target="#exampleModalLongEdit" data-toggle="modal"> ${localization.getString("label.bulkedit")}</a>
