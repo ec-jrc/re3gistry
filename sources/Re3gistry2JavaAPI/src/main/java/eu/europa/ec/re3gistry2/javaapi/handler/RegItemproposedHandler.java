@@ -1229,6 +1229,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
         RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegItemclassManager regItemclassManager = new RegItemclassManager(entityManager);
+        RegFieldManager regFieldManager = new RegFieldManager(entityManager);
         try {
 
             regItemManager.getByLocalid(language);
@@ -1252,9 +1253,10 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                     for (int i = 0; i < localizations.size(); i++) {
                         if (localizations.get(i).getRegField().getLocalid().equalsIgnoreCase(entry.getKey().getLocalid())) {
                             if(!entry.getValue().equalsIgnoreCase("")){
-                                RegItemclass regItemClassObject = regItemclassManager.getByLocalid(entry.getKey().getLocalid());
-                                regItemObject = regItemManager.getByLocalidAndRegItemClass(entry.getValue(), regItemClassObject);
-                                regRelations.get(j).setRegItemObject(regItemCurrent);
+                                    RegField regField = regFieldManager.get(entry.getKey().getUuid());
+                                    RegItemclass regItemClassObject = regItemclassManager.get(regField.getRegItemclassReference().getUuid());
+                                    regItemObject = regItemManager.getByLocalidAndRegItemClass(entry.getValue(), regItemClassObject);
+                                    regRelations.get(j).setRegItemObject(regItemCurrent);
                             }
                         }
 
