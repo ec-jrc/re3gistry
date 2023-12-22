@@ -516,6 +516,11 @@ CACHE:
 
 ![Registry manager - Data export](images/data_export_registry_manager.PNG)
 
+When the cache process is active, no new publication will be possible.
+
+![Registry manager - No publication](images/cache-nopublication.png)
+
+
 ### User profile
 
 The user can manage his details on his/her profile page. To access this section, the button is at the right side of the menu with the user's name logged in.
