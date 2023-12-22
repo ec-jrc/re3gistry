@@ -171,6 +171,11 @@ public class BaseConstants {
     public static final String KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR = "mail.text.subject.bulkimport.error";
     public static final String KEY_EMAIL_BODY_BULKIMPORT_SUCCESS = "mail.text.body.bulkimport.success";
     public static final String KEY_EMAIL_BODY_BULKIMPORT_ERROR = "mail.text.body.bulkimport.error";
+    
+    public static final String KEY_EMAIL_SUBJECT_BULKEDIT_SUCCESS = "mail.text.subject.bulkedit.success";
+    public static final String KEY_EMAIL_SUBJECT_BULKEDIT_ERROR = "mail.text.subject.bulkedit.error";
+    public static final String KEY_EMAIL_BODY_BULKEDIT_SUCCESS = "mail.text.body.bulkedit.success";
+    public static final String KEY_EMAIL_BODY_BULKEDIT_ERROR = "mail.text.body.bulkedit.error";
 
     // Input sanitizer keys
     public static final String KEY_PROPERTY_INPUT_SANITIZER_LEVEL = "application.input.sanitizer.level";
@@ -379,6 +384,7 @@ public class BaseConstants {
     public static final String KEY_REQUEST_LOAD_FILE_BULK = "fileUpload.csv";
     public static final String KEY_REQUEST_BULK_ERROR = "bulkError";
     public static final String KEY_REQUEST_BULK_SUCCESS = "bulkSuccess";
+    public static final String KEY_REQUEST_ISBULKEDIT = "isBulkEdit";
 
     public static final String KEY_REQUEST_CSRF_PREVENTIONSALTCACHE = "csrfPreventionSaltCache";
     public static final String KEY_REQUEST_CSRF_PREVENTIONSALT = "csrfPreventionSalt";
