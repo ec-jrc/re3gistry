@@ -144,23 +144,25 @@
                 }
 
                 if (regActions.size() > 0) {
-                
+
+                boolean showActionPublishCacheMessage = false;
+                boolean showMessageOnce = true;
+
                     for (RegAction pubAction : regActions) {
 
                         // Checking the status of the action
-                                boolean showActionPublish = false;
-
                                 if (pubAction.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_ACCEPTED)
                                         || (pubAction.getRegItemRegistry() != null && pubAction.getRegItemRegister() == null && !pubAction.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_PUBLISHED))) {
-                                    showActionPublish = true;
+                                    showActionPublishCacheMessage = true;
                                 }
 
-                        if(CacheHelper.checkCacheCompleteRunning() && showActionPublish){
+                        if(CacheHelper.checkCacheCompleteRunning() && showActionPublishCacheMessage && showMessageOnce){
                     %>
                     
                     <p style="display: inline-block; margin-left: 35rem; font-style: italic;"><svg style="display: inline-block;" width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.032 17.025c-.774 0-1.407-.674-1.407-1.499V11.03c0-.825.633-1.5 1.407-1.5s1.406.675 1.406 1.5v4.496c0 .825-.632 1.5-1.406 1.5zm0 4.497c-.774 0-1.407-.674-1.407-1.499 0-.825.633-1.499 1.407-1.499s1.406.674 1.406 1.499c0 .825-.632 1.499-1.406 1.499zm0-21.517L0 24h23.995L12.032.005z"/></svg> The publication will remain disabled until the caching process is completed.</p>
                     
                     <%
+                        showMessageOnce = false;
                     }
 }
 
