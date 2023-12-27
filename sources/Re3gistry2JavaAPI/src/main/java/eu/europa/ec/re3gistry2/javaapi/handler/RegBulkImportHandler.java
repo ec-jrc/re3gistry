@@ -780,7 +780,14 @@ public class RegBulkImportHandler {
             fieldsBulkImport.setLanguage(regLanguage);
             fieldsBulkImport.setRegFieldsHashMap(hashMap);
             fieldsBulkImport.setRegFieldsCollectionHashMap(hashCollectionMap);
+            if (!regLanguage.getMasterlanguage()) {
+                for (Map.Entry<RegField, String> entry : hashMap.entrySet()) {
+                    if (entry.getKey().getRegFieldtype().getUuid().equalsIgnoreCase("10")) {
+                        entry.setValue("");
+                    }
 
+                }
+            }
             if (itemsBulkImport.containsKey(localId)) {
                 itemsBulkImport.get(localId).add(fieldsBulkImport);
             } else {
@@ -814,7 +821,7 @@ public class RegBulkImportHandler {
                 try {
 //                get item by regItemclassChild, language and local ID
                     RegItemManager regItemManager = new RegItemManager(entityManager);
-                    regItemManager.get(RegItemUuidHelper.getUuid(localId, regItemCollection, regItemclassChild));
+                    regItemManager.get(RegItemUuidHelper.getUuid(localId, null, regItemclassChild));
                     containMasterLanguage = true;
                 } catch (Exception ex) {
 
