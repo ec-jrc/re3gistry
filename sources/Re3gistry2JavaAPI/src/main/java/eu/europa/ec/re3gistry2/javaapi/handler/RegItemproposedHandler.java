@@ -1772,13 +1772,13 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
         return regLocalizationproposed;
     }
 
-    private void copyRegLocalizationsToRegLocalizationproposedBulkEdit(RegItem regItem, RegItemproposed regItemproposed, String checkDeleteUuid, HashMap<RegField, String> fields, String language) throws Exception {
+    private void copyRegLocalizationsToRegLocalizationproposedBulkEdit(RegItem regItem, RegItemproposed regItemproposed, String checkDeleteUuid, HashMap<RegField, String> fields) throws Exception {
 
         RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
         RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
         RegRelationproposedManager regRelationproposedManager = new RegRelationproposedManager(entityManager);
         RegLanguagecodeManager regLanguacecodeManager = new RegLanguagecodeManager(entityManager);
-        RegLanguagecode masterLanguage = regLanguacecodeManager.getByIso6391code(language);
+        RegLanguagecode masterLanguage = regLanguacecodeManager.getMasterLanguage();
 
         // Getting all the regLocalizations realted to the RegItem (in the master language)
         List<RegLocalization> regLocalizations = regLocalizationManager.getAll(regItem, masterLanguage);
@@ -2130,7 +2130,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
-            copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fields, language);
+            copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fields);
             entityManager.getTransaction().commit();
         }
         return regItemproposed;
