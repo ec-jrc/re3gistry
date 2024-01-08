@@ -1,11 +1,11 @@
-# Re3gistry software
+# Re3gistry software & Register Federation Tool
+
+## About the Re3gistry
 
 [![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
 [![Latest version](https://img.shields.io/badge/latest%20version-2.5.1-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
 
 &copy; 2020-2023 European Union. Licensed under the EUPL.
-
-## About the Re3gistry
 
 ![Logo](documentation/images/logo.png)
 
@@ -54,7 +54,6 @@ Managing reference codes and setting up registries (systems of registers) helps:
 * [User manual](documentation/user-manual.md)
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
-* [Registry Federation Tool](sources/Registry-Federation-Tool/README.md)
 
 ## Acknowledgements
 
@@ -80,7 +79,7 @@ The Re3gistry project has established a governance model with well-defined proce
     * If you want to discuss an idea before documenting a full IP, create a new issue using the [IP template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-improvement-proposal.md). Complete the template as much as possible and mention that this is not a complete proposal yet, but that you are looking for feedback. You will be asked to complete the proposal if the idea is supported.
    
 * **Bug fixing**
-    * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be analysed and added to the bug fixing project board. If additional information is required, you might be contacted.
+    * If you would like to submit a bug report, please create a new issue in the Re3gistry repository using the [Bug report template](https://github.com/ec-jrc/re3gistry/issues/new?assignees=&labels=&template=re3gistry-problem.md). The issue will be analysed and added to the bug fixing project board. If the development team needs more information, you might be contacted.
     * The project board will be updated whenever the status of an issue changes.
     * Pull requests for bug fixes are welcome (see more in "Contribution" below)!
 
@@ -90,4 +89,21 @@ Re3gistry welcomes contributions from everyone; please read carefully the [contr
 
 ## Release plan
 Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2022-2024.
+
+# About the Register Federation Tool
+Within this repository, you will also find the [**Register-Federation-Tool**](https://github.com/ec-jrc/re3gistry/tree/master/sources/Registry-Federation-Tool).
+
+This tool allows you to **gather external records from third parties in one place**. It also allows you to search across subscribed registers and find extensibility relationships between them. The tool, therefore, takes advantage of the reuse of existing semantic resources, reducing data redundancy and avoiding copying errors.
+
+> Register interconnection is possible by connecting registers that implement the ROR data exchange specification. Re3gistry produces this exchange format automatically between its export formats.
+
+The European Commission Joint Research Center developed the Register Federation Tool as a testbed funded by the ISA Action 1.17 "ARE3NA" to test the feasibility of creating and declaring code list extensions that accommodate specific semantic needs while guaranteeing interoperability of the systems that use them.
+Since then, the European Commission has operated the [**INSPIRE federated registry**] (https://inspire.ec.europa.eu/register-federation/) to publish extensions to the INSPIRE code lists used in national and thematic contexts. This favours flexibility and the satisfaction of specific needs, guaranteeing the general interoperability of the INSPIRE spatial data infrastructure.
+
+**However, this tool can be used in any domain that uses semantic assets, so it is freely distributed as an open source for anyone who needs to cover this gap.**
+
+## Documentation
+* [Administrator manual](sources/Registry-Federation-Tool/documentation/administrator-manual.md)
+* [Installation manual](sources/Registry-Federation-Tool/documentation/installation-manual.md)
+
 
