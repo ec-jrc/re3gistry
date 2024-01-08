@@ -61,6 +61,29 @@ Managing reference codes and setting up registries (systems of registers) helps:
 
 Version 2 of the software was developed with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
+# About the Register Federation Tool
+
+[![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
+
+&copy; 2020-2023 European Union. Licensed under the EUPL.
+
+![Logo](https://github.com/ec-jrc/re3gistry/blob/master/sources/Registry-Federation-Tool/documentation/images/RFT-Logo.png)
+
+Within this repository, you will also find the [**Register-Federation-Tool**](https://github.com/ec-jrc/re3gistry/tree/master/sources/Registry-Federation-Tool).
+
+This tool allows you to **gather external records from third parties in one place**. It also allows you to search across subscribed registers and find extensibility relationships between them. The tool, therefore, takes advantage of the reuse of existing semantic resources, reducing data redundancy and avoiding copying errors.
+
+> Register interconnection is possible by connecting registers that implement the ROR data exchange specification. Re3gistry produces this exchange format automatically between its export formats.
+
+The European Commission Joint Research Center developed the Register Federation Tool as a testbed funded by the ISA Action 1.17 "ARE3NA" to test the feasibility of creating and declaring code list extensions that accommodate specific semantic needs while guaranteeing interoperability of the systems that use them.
+Since then, the European Commission has operated the [**INSPIRE federated registry**] (https://inspire.ec.europa.eu/register-federation/) to publish extensions to the INSPIRE code lists used in national and thematic contexts. This favours flexibility and the satisfaction of specific needs, guaranteeing the general interoperability of the INSPIRE spatial data infrastructure.
+
+**However, this tool can be used in any domain that uses semantic assets, so it is freely distributed as an open source for anyone who needs to cover this gap.**
+
+## Documentation
+* [RoR descriptor file](sources/Registry-Federation-Tool/documentation/administrator-manual.md)
+* [Installation manual](sources/Registry-Federation-Tool/documentation/installation-manual.md)
+
 ## Stay tuned
 Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to notifications.
 
@@ -89,21 +112,4 @@ Re3gistry welcomes contributions from everyone; please read carefully the [contr
 
 ## Release plan
 Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2022-2024.
-
-# About the Register Federation Tool
-Within this repository, you will also find the [**Register-Federation-Tool**](https://github.com/ec-jrc/re3gistry/tree/master/sources/Registry-Federation-Tool).
-
-This tool allows you to **gather external records from third parties in one place**. It also allows you to search across subscribed registers and find extensibility relationships between them. The tool, therefore, takes advantage of the reuse of existing semantic resources, reducing data redundancy and avoiding copying errors.
-
-> Register interconnection is possible by connecting registers that implement the ROR data exchange specification. Re3gistry produces this exchange format automatically between its export formats.
-
-The European Commission Joint Research Center developed the Register Federation Tool as a testbed funded by the ISA Action 1.17 "ARE3NA" to test the feasibility of creating and declaring code list extensions that accommodate specific semantic needs while guaranteeing interoperability of the systems that use them.
-Since then, the European Commission has operated the [**INSPIRE federated registry**] (https://inspire.ec.europa.eu/register-federation/) to publish extensions to the INSPIRE code lists used in national and thematic contexts. This favours flexibility and the satisfaction of specific needs, guaranteeing the general interoperability of the INSPIRE spatial data infrastructure.
-
-**However, this tool can be used in any domain that uses semantic assets, so it is freely distributed as an open source for anyone who needs to cover this gap.**
-
-## Documentation
-* [Administrator manual](sources/Registry-Federation-Tool/documentation/administrator-manual.md)
-* [Installation manual](sources/Registry-Federation-Tool/documentation/installation-manual.md)
-
 
