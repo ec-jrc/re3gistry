@@ -53,6 +53,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "RegLocalization.findByValue", query = "SELECT r FROM RegLocalization r WHERE r.value = :value")
     , @NamedQuery(name = "RegLocalization.findByHref", query = "SELECT r FROM RegLocalization r WHERE r.href = :href")
     , @NamedQuery(name = "RegLocalization.findByInsertdate", query = "SELECT r FROM RegLocalization r WHERE r.insertdate = :insertdate")
+    , @NamedQuery(name = "RegLocalization.findByRegRelationReference", query = "SELECT r FROM RegLocalization r WHERE r.regRelationReference = :relation")
     , @NamedQuery(name = "RegLocalization.findByEditdate", query = "SELECT r FROM RegLocalization r WHERE r.editdate = :editdate")})
 public class RegLocalization implements Serializable {
 

@@ -47,6 +47,7 @@ public class SQLConstants {
     public static final String SQL_PARAMETERS_REGITEM_LIST = "regitemList";
     public static final String SQL_PARAMETERS_ACTION = "regaction";
     public static final String SQL_PARAMETERS_REGFIELD = "regfield";
+    public static final String SQL_PARAMETERS_RELATION = "relation";
     public static final String SQL_PARAMETERS_REGLANGUAGECODE = "regLanguagecode";
     public static final String SQL_PARAMETERS_LABEL = "label";
     public static final String SQL_PARAMETERS_PREDICATE = "predicate";
@@ -133,7 +134,7 @@ public class SQLConstants {
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMCLASS = "SELECT r FROM RegLocalization r WHERE r.regItemclass = :regItemclass";
    
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_REGFIELD_ITEMCLASS_HREFNORNULL = "SELECT * FROM RegLocalization r INNER JOIN RegItem ri ON ri.uuid = r.regItem AND ri.regItemclass = :regItemclass WHERE r.regField = :regfield AND r.href IS NOT NULL";
-    
+    public static final String SQL_GET_LOCALIZATION_BY_RELATION = "SELECT r FROM RegLocalization r WHERE r.regRelationReference = :relation";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem IS NULL";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD_LANGUAGECODE = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regLanguagecode = :regLanguagecode AND r.regItem IS NULL";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD_ITEM = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem = :regitem";
