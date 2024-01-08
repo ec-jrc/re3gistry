@@ -74,7 +74,8 @@
     <script src="${properties.get("web.cdn_url")}js/bootstrap.min.js"></script>
     <script src="${properties.get("web.cdn_url")}js/bootstrap-select.min.js" defer></script>
     <!--<script src="${properties.get("web.cdn_url")}js/jquery.cookieNotice.js" defer></script>-->
-    <script src="//ec.europa.eu/wel/cookie-consent/consent.js" type="text/javascript"></script>
+    <!-- consent.js is no longer available at this URL: --> 
+    <!-- script src="//ec.europa.eu/wel/cookie-consent/consent.js" type="text/javascript"></script -->
     <script data-search-pseudo-elements src="${properties.get("web.cdn_url")}js/fontawesome.all.min.js"></script>
 
     <%-- JS specific to the project --%>

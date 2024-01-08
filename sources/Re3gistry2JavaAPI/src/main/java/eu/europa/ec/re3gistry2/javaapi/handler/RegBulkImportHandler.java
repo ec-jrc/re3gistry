@@ -71,18 +71,20 @@ import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemproposedRegGroupRegRole
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemproposedUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegLocalizationproposedUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegRelationproposedUuidHelper;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -100,14 +102,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.Logger;
 
 public class RegBulkImportHandler {
@@ -126,7 +120,7 @@ public class RegBulkImportHandler {
 
     // Synchronization object
     private static final Object sync = new Object();
-    
+
     private final String BR_HTML = "<br/>";
     private final String SUBSTITUTE_LOCALID = "{localid}";
     private final String SUBSTITUTE_LINE = "{line}";
@@ -137,7 +131,7 @@ public class RegBulkImportHandler {
         entityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
         LOGGER = Configuration.getInstance().getLogger();
 
-// System localization
+        //System localization
         systemLocalization = Configuration.getInstance().getLocalization();
 
         this.request = request;
@@ -149,23 +143,16 @@ public class RegBulkImportHandler {
         RegFieldmappingManager regFieldmappingManager = new RegFieldmappingManager(entityManager);
         List<RegFieldmapping> regFieldMappingListWithoutSomeFields = new ArrayList<>();
 
-//        get itemclass with parent regItemclass
+        //Get itemclass with parent regItemclass
         List<RegItemclass> child = regItemclassManager.getChildItemclass(regItemclass);
         RegItemclass regItemclassChild = child.get(0);
         List<RegFieldmapping> regFieldMappingList = regFieldmappingManager.getAllOrderAscByListorder(regItemclassChild);
 
         for (RegFieldmapping regFieldMapping : regFieldMappingList) {
             final String regFieldUuid = regFieldMapping.getRegField().getRegFieldtype().getUuid();
-
             if (checkIfFieldTypeIsParentReferenceOrString(regFieldUuid)) {
                 regFieldMappingListWithoutSomeFields.add(regFieldMapping);
             }
-            /**
-            if(!regFieldUuid.equals(BaseConstants.KEY_FIELDTYPE_STATUS_UUID)){
-                regFieldMappingListWithoutSomeFields.add(regFieldMapping);
-            }
-            **/    
-            
         }
 
         response.setContentType("application/octet-stream");
@@ -173,7 +160,6 @@ public class RegBulkImportHandler {
 
         try ( ServletOutputStream output = response.getOutputStream()) {
             StringBuilder sb = generateCsvFileBuffer(regFieldMappingListWithoutSomeFields);
-
             InputStream input = new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
 
             byte[] buffer = new byte[10240];
@@ -195,21 +181,9 @@ public class RegBulkImportHandler {
         writer.append("|");
         writer.append(BaseConstants.KEY_BULK_LANGUAGE);
 
-//        add all the fields in the order of order list
+        //Add all the fields in the order of order list
         for (RegFieldmapping field : regFieldMappingListWithoutStatus) {
             writer.append("|");
-
-            //Adds CollectionTheme field to the csv when there is a Theme field on the item
-            /**
-            if (field.getRegField().getRegFieldtype().getUuid().equals(BaseConstants.KEY_FIELDTYPE_RELATIONREFERENCE_UUID)) {
-                writer.append(field.getRegField().getLocalid());
-                writer.append("|");
-                String collectionField = BaseConstants.KEY_BULK_COLLECTION + field.getRegField().getLocalid();
-                writer.append(collectionField);
-            } else {
-                writer.append(field.getRegField().getLocalid());
-            }
-            **/
             writer.append(field.getRegField().getLocalid());
         }
 
@@ -229,9 +203,11 @@ public class RegBulkImportHandler {
         String registryLink = properties.getProperty(BaseConstants.KEY_MAIL_APPLICATION_ROOTURL);
         String subject = null;
         String body = null;
-
         operationResult = "";
 
+        //Checking either Import/Edit process was requested
+        String isBulkEditString = request.getParameter(BaseConstants.KEY_REQUEST_ISBULKEDIT);
+        Boolean isBulkEdit = Boolean.parseBoolean(isBulkEditString);
         try {
             String[] linesFile = readFileFromServletFileUpload(request);
             if (linesFile != null && linesFile.length != 0) {
@@ -246,64 +222,91 @@ public class RegBulkImportHandler {
                 LOGGER.info("###");
                 LOGGER.info("### ANALIZE FILE ###");
                 HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport = analyzeFile(headerListSplitted, additionLines, regItem);
-                
+
                 LOGGER.info("### THE FILE HAS BEEN ANALIZED ###");
                 LOGGER.info("###");
                 LOGGER.info("### START STORING ITEMS ###");
                 try {
-                    ArrayList<String> emptyFields = new ArrayList();
-                    if(itemsBulkImport != null && !itemsBulkImport.isEmpty()) {
-                        try {
-                            //Code for when the action is bulk edit
-                            RegItemManager regItemManager = new RegItemManager(entityManager);
-                            Map.Entry<String, ArrayList<FieldsBulkImport>> any = itemsBulkImport.entrySet().iterator().next();
-                            RegItemclass regItemclassChild = getItemClassChildren(regItem);
-                            RegItem regItemExistentAlready = regItemManager.getByLocalidAndRegItemClass(any.getKey(), regItemclassChild);    
-                        }catch(Exception e){
+                    if (itemsBulkImport != null && !itemsBulkImport.isEmpty()) {
+
+                        ArrayList<String> emptyFields = new ArrayList();
+                        if (!isBulkEdit) {
                             emptyFields = checkRequired(additionLines, regItem);
                         }
-                        
-                        if(!emptyFields.isEmpty()){
-                            operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyrequired")
-                                .replace("{fields}", "<b>" + emptyFields.get(0) + "</b>")
-                                .replace("{line}", "<b>" + emptyFields.get(1) + "</b>")
-                                + "</b>" + BR_HTML + operationResult;
-                            request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
-                            subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
-                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
-                        }
-                        else{
-                            storeItems(itemsBulkImport, regItem, regUser, request, additionLines);
+
+                        if (!emptyFields.isEmpty()) {
+                            //Printing and mailing the appropiate message depending on the process executed
+                            if (isBulkEdit) {
+                                operationResult = "<b>" + systemLocalization.getString("bulk.edit.error.emptyrequired")
+                                        .replace("{fields}", "<b>" + emptyFields.get(0) + "</b>")
+                                        .replace("{line}", "<b>" + emptyFields.get(1) + "</b>")
+                                        + "</b>" + BR_HTML + operationResult;
+                                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                                subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKEDIT_ERROR);
+                                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKEDIT_ERROR);
+                            } else {
+                                operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyrequired")
+                                        .replace("{fields}", "<b>" + emptyFields.get(0) + "</b>")
+                                        .replace("{line}", "<b>" + emptyFields.get(1) + "</b>")
+                                        + "</b>" + BR_HTML + operationResult;
+                                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                                subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
+                                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
+                            }
+                        } else {
+                            storeItems(itemsBulkImport, regItem, regUser, request, additionLines, isBulkEdit);
                             LOGGER.info("### END STORING ITEMS WITH SUCCESS ###");
                             LOGGER.info("###");
+                            //Printing and mailing the appropiate message depending on the process executed
                             if (!operationResult.isEmpty()) {
-                                operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                if (isBulkEdit) {
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                } else {
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                }
                             } else {
-                                operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>";
-                            }
-                            request.setAttribute(BaseConstants.KEY_REQUEST_BULK_SUCCESS, operationResult);
+                                if (isBulkEdit) {
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.success") + "</b>";
+                                } else {
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>";
+                                }
 
-                            subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_SUCCESS);
-                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_SUCCESS);
+                            }
+
+                            if (isBulkEdit) {
+                                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_SUCCESS, operationResult);
+                                subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKEDIT_SUCCESS);
+                                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKEDIT_SUCCESS);
+                            } else {
+                                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_SUCCESS, operationResult);
+                                subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_SUCCESS);
+                                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_SUCCESS);
+                            }
                         }
-                        
+
                     }
                 } catch (Exception ex) {
-//                    operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyfile") + "</b>" + BR_HTML + operationResult;
                     request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
-
                     subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
                     body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
                 }
             } else {
-                operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyfile") + "</b>" + BR_HTML + operationResult;
-                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                //Printing and mailing the appropiate message depending on the process executed
+                if (isBulkEdit) {
+                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.error.emptyfile") + "</b>" + BR_HTML + operationResult;
+                    request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                    subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
+                    body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
+                } else {
+                    operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyfile") + "</b>" + BR_HTML + operationResult;
+                    request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                    subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
+                    body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
+                }
 
-                subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
-                body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR);
             }
+
         } catch (Exception ex) {
-//            operationResult = BR_HTML + operationResult;
             request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
 
             subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
@@ -323,50 +326,33 @@ public class RegBulkImportHandler {
         // Sending the mail
         MailManager.sendMail(recipient, subject, body);
     }
-    
-    private boolean isEdit(RegItem regItem){
-        
-        return false;
-    }
-    
-    private ArrayList<String> checkRequired(List<String> additionLines, RegItem regItem){
+
+    private ArrayList<String> checkRequired(List<String> additionLines, RegItem regItem) {
         RegFieldmappingManager regFieldmappingManager = new RegFieldmappingManager(entityManager);
         List<RegFieldmapping> regFieldMappingList = new ArrayList<>();
         ArrayList<String> emptyFields = new ArrayList();
-        try{
-          RegItemclass regItemclassChild = getItemClassChildren(regItem);  
-          regFieldMappingList = regFieldmappingManager.getAll(regItemclassChild);
-          regFieldMappingList.remove(2);
-          
-          for(int i = 0; i < additionLines.size();i++){
-              String[] addLineSplitted = additionLines.get(i).split("\\|", -1);
-              List<String> linesListSplitted = new ArrayList<>(Arrays.asList(addLineSplitted));
-              if(linesListSplitted.get(0).equalsIgnoreCase("")){
-                  emptyFields.add("LocalId");
-                  emptyFields.add(Integer.toString(i+1));
-                  return emptyFields;
-              }
-              
-              if(linesListSplitted.get(1).equalsIgnoreCase("")){
-                  emptyFields.add("Language");
-                  emptyFields.add(Integer.toString(i+1));
-                  return emptyFields;
-              }
-              
-              linesListSplitted.remove(1);
-              linesListSplitted.remove(0);
-              for(int j = 0; j < linesListSplitted.size(); j++){
-                  if(regFieldMappingList.get(j).getRequired()==true && linesListSplitted.get(j).equalsIgnoreCase("")){
-                      emptyFields.add(regFieldMappingList.get(j).getRegField().getLocalid());
-                      emptyFields.add(Integer.toString(i+1));
-                      return emptyFields;
-                  }
-              }
-          }
-        } catch(Exception e){
+        try {
+            RegItemclass regItemclassChild = getItemClassChildren(regItem);
+            regFieldMappingList = regFieldmappingManager.getAll(regItemclassChild);
+            regFieldMappingList.remove(2);
+
+            for (int i = 0; i < additionLines.size(); i++) {
+                String[] addLineSplitted = additionLines.get(i).split("\\|", -1);
+                List<String> linesListSplitted = new ArrayList<>(Arrays.asList(addLineSplitted));
+                linesListSplitted.remove(1);
+                linesListSplitted.remove(0);
+                for (int j = 0; j < linesListSplitted.size(); j++) {
+                    if (regFieldMappingList.get(j).getRequired() == true && linesListSplitted.get(j).equalsIgnoreCase("")) {
+                        emptyFields.add(regFieldMappingList.get(j).getRegField().getLocalid());
+                        emptyFields.add(Integer.toString(i + 1));
+                        return emptyFields;
+                    }
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return emptyFields;
     }
 
@@ -739,6 +725,7 @@ public class RegBulkImportHandler {
         HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport = new HashMap<>();
 
         int line = 2;
+        int count = 0;
         for (String additionLine : additionLines) {
             String[] lineSplitted = additionLine.split("\\|", -1);
             List<String> listListSplitted = new ArrayList<>(Arrays.asList(lineSplitted));
@@ -748,18 +735,41 @@ public class RegBulkImportHandler {
 
             RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManager);
             RegLanguagecode regLanguage = null;
-            try {
-                regLanguage = regLanguagecodeManager.getByIso6391code(language2Letters);
-            } catch (Exception ex) {
-                String error_language = systemLocalization.getString("bulk.import.error.language.notexistent")
+            count++;
+            if (localId.trim().equalsIgnoreCase("")) {
+                operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptyrequired")
+                        .replace("{fields}", "<b>" + "LocalId" + "</b>")
+                        .replace("{line}", "<b>" + count + "</b>")
+                        + "</b>" + BR_HTML + operationResult;
+                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                /* subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_BULKIMPORT_ERROR);
+                            body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_BULKIMPORT_ERROR); */
+            } else if (localId.contains(" ")) {
+                operationResult = "<b>" + systemLocalization.getString("bulk.import.localId.spaces")
+                        .replace("{localid}", "<b>" + localId + "</b>")
+                        + "</b>" + BR_HTML + operationResult;
+                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+
+            } else {
+                try {
+                    regLanguage = regLanguagecodeManager.getByIso6391code(language2Letters);
+                } catch (Exception ex) {
+                    if (language2Letters.trim().equalsIgnoreCase("")) {
+                        operationResult = "<b>" + systemLocalization.getString("bulk.import.error.emptylanguage").replace("{line}", "<b>" + count + "</b>") + "</b>" + BR_HTML + operationResult;
+                        request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                    } else {
+                        operationResult = "<b>" + systemLocalization.getString("bulk.import.error.wronglanguage").replace("{line}", "<b>" + count + "</b>") + "</b>" + BR_HTML + operationResult;
+                        request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                    }
+                    /* String error_language = systemLocalization.getString("bulk.import.error.language.notexistent")
                         .replace(SUBSTITUTE_LANGUAGE, language2Letters)
                         .replace(SUBSTITUTE_LINE, String.valueOf(line));
                 LOGGER.error(error_language);
-                operationResult = operationResult + BR_HTML + error_language;
+                operationResult = operationResult + BR_HTML + error_language; */
 
-                continue;
+                    continue;
+                }
             }
-
             HashMap<RegField, String> hashMap = new HashMap<>();
             HashMap<RegField, RegItem> hashCollectionMap = new HashMap<>();
 
@@ -770,7 +780,14 @@ public class RegBulkImportHandler {
             fieldsBulkImport.setLanguage(regLanguage);
             fieldsBulkImport.setRegFieldsHashMap(hashMap);
             fieldsBulkImport.setRegFieldsCollectionHashMap(hashCollectionMap);
+            if (!regLanguage.getMasterlanguage()) {
+                for (Map.Entry<RegField, String> entry : hashMap.entrySet()) {
+                    if (entry.getKey().getRegFieldtype().getUuid().equalsIgnoreCase("10")) {
+                        entry.setValue("");
+                    }
 
+                }
+            }
             if (itemsBulkImport.containsKey(localId)) {
                 itemsBulkImport.get(localId).add(fieldsBulkImport);
             } else {
@@ -804,7 +821,7 @@ public class RegBulkImportHandler {
                 try {
 //                get item by regItemclassChild, language and local ID
                     RegItemManager regItemManager = new RegItemManager(entityManager);
-                    regItemManager.get(RegItemUuidHelper.getUuid(localId, regItemCollection, regItemclassChild));
+                    regItemManager.get(RegItemUuidHelper.getUuid(localId, null, regItemclassChild));
                     containMasterLanguage = true;
                 } catch (Exception ex) {
 
@@ -867,24 +884,23 @@ public class RegBulkImportHandler {
                         }
                     }
                 }
-            }
-                else{
-                    if (object instanceof RegField) {
-                        RegField field = (RegField) object;
-                    
-                        hashMap.put(field, value);
+            } else {
+                if (object instanceof RegField) {
+                    RegField field = (RegField) object;
+
+                    hashMap.put(field, value);
                 }
             }
         }
     }
 
-    private void storeItems(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegItem regItemContainer, RegUser regUser, HttpServletRequest request, ArrayList<String> additionLines) throws Exception {
+    private void storeItems(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegItem regItemContainer, RegUser regUser, HttpServletRequest request, ArrayList<String> additionLines, Boolean isBulkEdit) throws Exception {
         RegItemclass regItemclassChild = getItemClassChildren(regItemContainer);
 
         if (regItemclassChild != null) {
             RegAction regAction = addRegActionForAllProposedItemsCSV(regUser, regItemContainer, regItemclassChild);
             if (regAction != null) {
-                storeProposedItems(itemsBulkImport, regItemContainer, regUser, regItemclassChild, regAction, request, additionLines);
+                storeProposedItems(itemsBulkImport, regItemContainer, regUser, regItemclassChild, regAction, request, additionLines, isBulkEdit);
                 try {
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
@@ -903,12 +919,10 @@ public class RegBulkImportHandler {
         }
     }
 
-    
     public void handleBulkRegItemproposedSave(RegUser regUser, Map requestParameters) throws Exception {
 
-        
         String regItemUuid = (String) requestParameters.get("form_item-uuid");
-        
+
         // Getting the RegItem on which the proposal is done
         RegItem regItem = null;
         try {
@@ -990,7 +1004,7 @@ public class RegBulkImportHandler {
             }
         }
     }
-    
+
     // Copy all the RegItemRegGroupRegRoleMapping related to the item passed by parameter
     // to RegItemproposedRegGroupRegRoleMapping
     private void copyRegItemRegGroupRegRoleMappingToRegItemproposedRegGroupRegRoleMapping(RegItem regItem, RegItemproposed regItemproposed) throws Exception {
@@ -1016,7 +1030,7 @@ public class RegBulkImportHandler {
             regItemproposedRegGroupRegRoleMappingManager.add(regItemproposedRegGroupRegRoleMapping);
         }
     }
-    
+
     // Copy all the RegRelation related to the item passed by parameter and all the
     // RegLocalization to RegRelationproposed and RegLocalizationproposed
     private void copyRegRelationsToRegRelationproposeds(RegItem regItem, RegItemproposed regItemproposed) throws Exception {
@@ -1075,7 +1089,7 @@ public class RegBulkImportHandler {
             regLocalizationproposedManager.add(regLocalizationproposed);
         }
     }
-    
+
     /* -- Supporting methods -- */
     // Create the new RegItemproposed
     private RegItemproposed copyRegItemToRegItemproposed(RegItem regItem, RegUser regUser) throws Exception {
@@ -1154,7 +1168,7 @@ public class RegBulkImportHandler {
             return null;
         }
     }
-    
+
     private RegAction regActionCheck(RegUser regUser, RegItem regItemRegister, RegItem regItemRegistry) throws Exception {
         RegAction regAction = null;
 
@@ -1221,32 +1235,96 @@ public class RegBulkImportHandler {
         return regAction;
     }
 
-    
     /**
      * DELETE THIS METHOD ENEKO
+     *
      * @param itemsBulkImport
      * @param regItemContainer
      * @param regUser
      * @param regItemclassChild
      * @param regAction
      * @param request
-     * @throws Exception 
+     * @throws Exception
      */
-    private void storeProposedItems(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegItem regItemContainer, RegUser regUser, RegItemclass regItemclassChild, RegAction regAction, HttpServletRequest request, ArrayList<String> additionLines) throws Exception {
-        RegItemManager regItemManager = new RegItemManager(entityManager);
-        RegItemproposed regItemproposed = null;
-        RegItemproposedHandler regItemproposedHandler = new RegItemproposedHandler();
-        Boolean bulkEdit = false;
-        
-        try {
-        //Code for when the action is bulk edit
-        Map.Entry<String, ArrayList<FieldsBulkImport>> any = itemsBulkImport.entrySet().iterator().next();
-        //String regItemExistentAlready = RegItemUuidHelper.getUuid(localId, regItemContainer, regItemclassChild);
-        RegItem regItemExistentAlready = regItemManager.getByLocalidAndRegItemClass(any.getKey(), regItemclassChild);
-        bulkEdit = true;
+    private void storeProposedItems(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulk, RegItem regItemContainer, RegUser regUser, RegItemclass regItemclassChild, RegAction regAction, HttpServletRequest request, ArrayList<String> additionLines, Boolean isBulkEdit) throws Exception {
+
+        if (isBulkEdit) {
+            storeProposedItemsBulkEdit(itemsBulk, regUser, regItemclassChild, request, additionLines);
+        } else {
+            storeProposedItemsBulkImport(itemsBulk, regItemContainer, regUser, regItemclassChild, regAction, request);
+        }
+    }
+
+    private void storeProposedItemsBulkImport(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegItem regItemContainer, RegUser regUser, RegItemclass regItemclassChild, RegAction regAction, HttpServletRequest request) throws Exception {
+
+        RegItemproposed regItemproposed;
+
         for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
             try {
-                //String regItemExistentAlready = RegItemUuidHelper.getUuid(localId, regItemContainer, regItemclassChild);
+                if (items.getValue().size() > 1) {
+                    throw new Exception();
+                }
+            } catch (Exception ex) {
+                operationResult = "<b>" + systemLocalization.getString("bulk.import.error.duplicate").replace("{localid}", "<b>" + items.getKey() + "</b>")
+                        + "</b>" + BR_HTML + operationResult;
+                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                throw new Exception();
+            }
+            String localId = items.getKey();
+            regItemproposed = createItemProposed(regItemContainer, regItemclassChild, localId, regUser, regAction, request);
+            ArrayList<FieldsBulkImport> array = items.getValue();
+
+            RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManager);
+            RegLanguagecode masterLanguage = regLanguagecodeManager.getMasterLanguage();
+
+            ArrayList<FieldsBulkImport> fieldsBulkImportListLocal = new ArrayList<>();
+            for (FieldsBulkImport fieldsBulkImport : array) {
+                RegLanguagecode fieldLanguage = fieldsBulkImport.getLanguage();
+                if (fieldLanguage.equals(masterLanguage)) {
+                    storeItemFromBulk(fieldsBulkImport, regItemContainer, regItemclassChild, regItemproposed, localId, array, fieldLanguage, masterLanguage);
+                } else {
+                    fieldsBulkImportListLocal.add(fieldsBulkImport);
+                }
+            }
+
+            if (!fieldsBulkImportListLocal.isEmpty()) {
+                for (FieldsBulkImport fieldsBulkImport : fieldsBulkImportListLocal) {
+                    RegLanguagecode fieldLanguage = fieldsBulkImport.getLanguage();
+                    storeItemFromBulk(fieldsBulkImport, regItemContainer, regItemclassChild, regItemproposed, localId, array, fieldLanguage, masterLanguage);
+                }
+            }
+        }
+
+    }
+
+    private void storeProposedItemsBulkEdit(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegUser regUser, RegItemclass regItemclassChild, HttpServletRequest request, ArrayList<String> additionLines) throws Exception {
+
+        RegItemManager regItemManager = new RegItemManager(entityManager);
+        RegItemproposedHandler regItemproposedHandler = new RegItemproposedHandler();
+
+        RegItem regItemExistentAlready = null;
+
+        Map.Entry<String, ArrayList<FieldsBulkImport>> any = itemsBulkImport.entrySet().iterator().next();
+        try {
+            regItemExistentAlready = regItemManager.getByLocalidAndRegItemClass(any.getKey(), regItemclassChild);
+        } catch (Exception ex) {
+            operationResult = "<b>" + systemLocalization.getString("bulk.edit.error.localId").replace("{localid}", "<b>" + any.getKey() + "</b>")
+                    + "</b>" + BR_HTML + operationResult;
+            request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+            throw new Exception();
+        }
+        for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
+            try {
+                try {
+                    if (items.getValue().size() > 1) {
+                        throw new Exception();
+                    }
+                } catch (Exception ex) {
+                    operationResult = "<b>" + systemLocalization.getString("bulk.import.error.duplicate").replace("{localid}", "<b>" + items.getKey() + "</b>")
+                            + "</b>" + BR_HTML + operationResult;
+                    request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+                    throw new Exception();
+                }
                 if (regItemExistentAlready != null) {
                     items.getValue().get(0).getRegFieldsHashMap().values();
                     HashMap<RegField, String> fields = items.getValue().get(0).getRegFieldsHashMap();
@@ -1255,37 +1333,10 @@ public class RegBulkImportHandler {
                     regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language);
                 }
             } catch (Exception ex) {
-
+                throw new Exception();
             }
         }
-        //Code for when the action is bulk import
-        } catch (Exception e) {
-            for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
-                String localId = items.getKey();
-                regItemproposed = createItemProposed(regItemContainer, regItemclassChild, localId, regUser, regAction, request);
-                ArrayList<FieldsBulkImport> array = items.getValue();
 
-                RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManager);
-                RegLanguagecode masterLanguage = regLanguagecodeManager.getMasterLanguage();
-
-                ArrayList<FieldsBulkImport> fieldsBulkImportListLocal = new ArrayList<>();
-                for (FieldsBulkImport fieldsBulkImport : array) {
-                    RegLanguagecode fieldLanguage = fieldsBulkImport.getLanguage();
-                    if (fieldLanguage.equals(masterLanguage)) {
-                        storeItemFromBulk(fieldsBulkImport, regItemContainer, regItemclassChild, regItemproposed, localId, array, fieldLanguage, masterLanguage);
-                    } else {
-                        fieldsBulkImportListLocal.add(fieldsBulkImport);
-                    }
-                }
-                
-                if (!fieldsBulkImportListLocal.isEmpty()) {
-                    for (FieldsBulkImport fieldsBulkImport : fieldsBulkImportListLocal) {
-                        RegLanguagecode fieldLanguage = fieldsBulkImport.getLanguage();
-                        storeItemFromBulk(fieldsBulkImport, regItemContainer, regItemclassChild, regItemproposed, localId, array, fieldLanguage, masterLanguage);
-                    }
-                }
-            }
-        }
     }
 
     private void storeItemFromBulk(FieldsBulkImport fieldsBulkImport, RegItem regItemContainer, RegItemclass regItemclassChild, RegItemproposed regItemproposed, String localId, ArrayList<FieldsBulkImport> array, RegLanguagecode fieldLanguage, RegLanguagecode masterLanguage) throws Exception {
@@ -1323,12 +1374,11 @@ public class RegBulkImportHandler {
     private RegItemproposed createItemProposed(RegItem regItemContainer, RegItemclass regItemclassChild, String localId, RegUser regUser, RegAction regAction, HttpServletRequest request) throws Exception {
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegItemproposed regItemproposed = null;
-        
-       
+
         try {
             //String regItemExistentAlready = RegItemUuidHelper.getUuid(localId, regItemContainer, regItemclassChild);
             RegItem regItemExistentAlready = regItemManager.getByLocalidAndRegItemClass(localId, regItemclassChild);
-            if(regItemExistentAlready != null){
+            if (regItemExistentAlready != null) {
                 //            check if item exist already, if yes copy the item in itemproposed
                 String regItemExistentUuid;
                 if (regItemContainer.getRegItemclass().equals(regItemclassChild)) {
@@ -1339,15 +1389,12 @@ public class RegBulkImportHandler {
                 RegItem regItemExist = regItemManager.get(regItemExistentUuid);
 
                 RegItemproposedHandler regItemproposedHandler = new RegItemproposedHandler();
-                regItemproposed = regItemproposedHandler.completeCopyRegItemToRegItemporposed(regItemExist, regUser); 
+                regItemproposed = regItemproposedHandler.completeCopyRegItemToRegItemporposed(regItemExist, regUser);
+            } else {
+                regItemproposed = createRegItemProposed(localId, regItemclassChild, regUser, regAction);
+                addRegistryRegisterRelation(regItemContainer, regItemproposed);
+                addCollectionRelation(regItemContainer, regItemproposed);
             }
-            
-            else{
-               regItemproposed = createRegItemProposed(localId, regItemclassChild, regUser, regAction);
-               addRegistryRegisterRelation(regItemContainer, regItemproposed);
-               addCollectionRelation(regItemContainer, regItemproposed);
-            }
-            
 
         } catch (Exception ex) {
 //                    create propose item
@@ -1357,7 +1404,7 @@ public class RegBulkImportHandler {
         }
         return regItemproposed;
     }
-    
+
     public void handleRegItemproposedNewSave(Map requestParameters, RegUser regUser) throws Exception {
 
         // Getting the ID of the RegItem (original item)
@@ -1403,7 +1450,7 @@ public class RegBulkImportHandler {
             }
         }
     }
-    
+
     // Update an existing RegItemproposed
     private void updateRegItemproposed(RegItemproposed regItemproposed, Map requestParameters) throws Exception {
 
@@ -1429,8 +1476,8 @@ public class RegBulkImportHandler {
         updateFields(regItemproposed, requestParameters);
 
     }
-    
-     // Update fields
+
+    // Update fields
     private String updateFields(RegItemproposed regItemproposed, Map requestParameters) throws Exception {
 
         // Init variables        
@@ -1470,7 +1517,6 @@ public class RegBulkImportHandler {
             String referenceRegLocalizationUuid = tmp[2];
 
             // Getting the value
-
             String[] values = entry.getValue();
             String value = values[0];
 
@@ -1785,7 +1831,7 @@ public class RegBulkImportHandler {
         return errors;
 
     }
-    
+
     private String processFieldHrefName(String key) {
         String fieldHrefName;
 
@@ -1800,7 +1846,7 @@ public class RegBulkImportHandler {
 
         return fieldHrefName;
     }
-    
+
     private RegLocalizationproposed getRegLocalizationproposedInCurrentLanguage(RegLocalizationproposed regLocalizationproposed, RegLocalizationproposedManager regLocalizationproposedManager, RegLanguagecode regLanguagecode) throws Exception {
 
         String tmpUuid = RegLocalizationproposedUuidHelper.getUuid(
@@ -1813,7 +1859,7 @@ public class RegBulkImportHandler {
 
         return regLocalizationproposed;
     }
-    
+
     // This method handles the fields name (composed by multiple parts)
     private String[] processFieldName(String key) {
         String fieldUuid;
@@ -1851,7 +1897,6 @@ public class RegBulkImportHandler {
 
         return outs;
     }
-
 
     private void storeLocalization(RegLanguagecode fieldLanguage, RegItemproposed regItemproposed, RegField regField, RegLanguagecode masterLanguage, String fieldValue, String localId, ArrayList<FieldsBulkImport> array) throws Exception {
         RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
@@ -1914,10 +1959,10 @@ public class RegBulkImportHandler {
         } else {
             relationReferenceList.add(fieldValue);
         }
-        
+
         int i = 0;
         for (String valueOfTheField : relationReferenceList) {
-            
+
             try {
                 RegItemclass itemClassRelationReference = regField.getRegItemclassReference();
                 String relationreferenceuuid = "";
@@ -2220,49 +2265,4 @@ public class RegBulkImportHandler {
         regActionManager.add(regAction);
         return regAction;
     }
-
-//    private void createRegItemProposedRegGroupRegRoleMapping(RegItemproposed regItemproposed, RegUser regUser) throws Exception {
-//        // Handling the group case
-//        RegUserRegGroupMappingManager regGroupMappingManager = new RegUserRegGroupMappingManager(entityManager);
-//        List<RegUserRegGroupMapping> regGroupMappingList = regGroupMappingManager.getAll(regUser);
-//
-//        RegGroup userRegGroup = null;
-//        for (RegUserRegGroupMapping regUserRegGroupMapping : regGroupMappingList) {
-//            if (regUserRegGroupMapping.getRegGroup().getUuid().equals(BaseConstants.SUBMITTING_ORGANIZATION_ROLE_UUID)) {
-//                userRegGroup = regUserRegGroupMapping.getRegGroup();
-//                break;
-//            }
-//        }
-//        if (userRegGroup == null && !regGroupMappingList.isEmpty()) {
-//            userRegGroup = regGroupMappingList.get(0).getRegGroup();
-//        }
-//
-//        RegItemproposedRegGroupRegRoleMappingManager regItemproposedRegGroupRegRoleMappingManager = new RegItemproposedRegGroupRegRoleMappingManager(entityManager);
-//        String newUuid = RegItemproposedRegGroupRegRoleMappingUuidHelper.getUuid(regItemproposed.getUuid(), userRegGroup.getUuid(), regFieldmapping.getRegField().getRegRoleReference().getUuid());
-//
-//        try {
-//            // Check if the mapping is already available
-//            regItemproposedRegGroupRegRoleMappingManager.get(newUuid);
-//
-//        } catch (NoResultException e) {
-//
-//            //Getting the reg group passed from parameter
-//            RegGroupManager regGroupManager = new RegGroupManager(entityManager);
-//            RegGroup regGroup = null;
-//            try {
-//                regGroup = regGroupManager.get(value);
-//
-//                RegItemproposedRegGroupRegRoleMapping regItemproposedRegGroupRegRoleMapping = new RegItemproposedRegGroupRegRoleMapping();
-//                regItemproposedRegGroupRegRoleMapping.setUuid(newUuid);
-//                regItemproposedRegGroupRegRoleMapping.setInsertdate(new Date());
-//                regItemproposedRegGroupRegRoleMapping.setRegGroup(regGroup);
-//                regItemproposedRegGroupRegRoleMapping.setRegItemproposed(regItemproposed);
-//                regItemproposedRegGroupRegRoleMapping.setRegRole(regFieldmapping.getRegField().getRegRoleReference());
-//
-//                regItemproposedRegGroupRegRoleMappingManager.add(regItemproposedRegGroupRegRoleMapping);
-//
-//            } catch (NoResultException e1) {
-//            }
-//        }
-//    }
 }

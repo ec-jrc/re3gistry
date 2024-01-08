@@ -421,7 +421,7 @@ public class RegActionHandler {
 
                 // Managing the RegItemproposeds related to the current RegAction
                 for (RegItemproposed regItemproposed : regItemProposeds) {
-
+                    
                     if (regItemproposed.getRegItemReference() != null) {
                         //Move the related RegItem to RegItemhistory
                         regItemhistoryHandler.copyRegItemToRegItemhistory(regItemproposed.getRegItemReference());
@@ -438,10 +438,11 @@ public class RegActionHandler {
                             || regItemproposed.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER)))) {
                         regItemproposed.setRegStatus(regStatusUpdateValid);
                     }
-
                     // Move the RegItemproposed to RegItem
                     regItemHandler.regItemProposedToRegItem(regItemproposed);
-
+                    regItemHandler.removeUnusedRelations(regItemproposed);
+                    
+                    
                     //Remove old regItem
                     if (regItemproposed.getRegItemReference() != null) {
                         cleanupRegItemAfterStorycization(regItemproposed.getRegItemReference());
