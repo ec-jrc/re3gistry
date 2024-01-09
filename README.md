@@ -1,6 +1,8 @@
 # Re3gistry software & Register Federation Tool
 
-## About the Re3gistry
+## Re3gistry
+
+### About the Re3gistry
 
 [![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
 [![Latest version](https://img.shields.io/badge/latest%20version-2.5.1-blue.svg)](https://github.com/ec-jrc/re3gistry/releases)
@@ -16,7 +18,7 @@ The Re3gistry software is a reusable open-source solution for **managing and sha
 Licensed under the **[EUPL](http://ec.europa.eu/idabc/eupl.html)**, Re3gistry is an open-source project that can be deployed and further developed by contributors from any sector; check out the Re3gistry Governance and contribution guidelines below.
 A license copy is available in the repository's [LICENSE](https://github.com/ec-jrc/re3gistry/blob/master/LICENSE) file.
 
-## What Re3gistry offers you?
+### What Re3gistry offers you?
 
 > The Re3gistry provides a central access point where labels and descriptions for reference codes are easily accessible by both humans and machines while fostering **semantic interoperability across organisations**.
 
@@ -30,7 +32,7 @@ Managing reference codes and setting up registries (systems of registers) helps:
 
 > Check out the **[Re3gistry promotional video](https://youtu.be/6Y_KAhibGas?si=uGkaXRJmFUiGv_5C)** and **[Re3gistry demo playlist](https://www.youtube.com/watch?v=Nm4kWxp882M)** for a taster of the software's functionalities.
 
-## Re3gistry features
+### Re3gistry features
 
 * Ready-to-use & customisable interface interface​ 
 * Intuitive editing interface
@@ -49,19 +51,21 @@ Managing reference codes and setting up registries (systems of registers) helps:
 
 > The Re3gistry software version numbers comply with the [Semantic Versioning Specification 2.0.0](http://semver.org/spec/v2.0.0.html).
 
-## Documentation
+### Documentation
 
 * [User manual](documentation/user-manual.md)
 * [Administrator manual](documentation/administrator-manual.md)
 * [Developer manual](documentation/developer-manual.md)
 
-## Acknowledgements
+### Acknowledgements
 
 > The development of the Re3gistry began in 2013 under the [Are3na action](https://joinup.ec.europa.eu/collection/are3na/about) (ISA Programme), continuing since 2016 under the [ELISE action](https://joinup.ec.europa.eu/collection/elise-european-location-interoperability-solutions-e-government/about) of the [ISA2 Programme](https://ec.europa.eu/isa2/isa2_en/). Starting in 2022, the **[Digital Europe Programme](https://digital-strategy.ec.europa.eu/en/activities/digital-programme)** is funding its development.
 
 Version 2 of the software was developed with the [National Land Survey of Finland](https://www.maanmittauslaitos.fi/en).
 
-# About the Register Federation Tool
+## Register Federation Tool
+
+### About the Register Federation Tool
 
 [![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
 
@@ -80,11 +84,11 @@ Since then, the European Commission has operated the [**INSPIRE federated regist
 
 **However, this tool can be used in any domain that uses semantic assets, so it is freely distributed as an open source for anyone who needs to cover this gap.**
 
-## Documentation
+### Documentation
 * [RoR descriptor file](sources/Registry-Federation-Tool/documentation/administrator-manual.md)
 * [Installation manual](sources/Registry-Federation-Tool/documentation/installation-manual.md)
 
-## Stay tuned
+# Stay tuned
 Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to notifications.
 
 > Get [registered and subscribe](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/authenticate-to-join) to the [Re3gistry solution](https://joinup.ec.europa.eu/collection/are3na/solution/re3gistry/about) in Joinup to get all updates about the software.
