@@ -188,6 +188,9 @@ mail.text.subject.bulkimport.success=Re3gistry - bulk import {itemclass} success
 mail.text.subject.bulkimport.error=Re3gistry - bulk import {itemclass} error
 mail.text.body.bulkimport.success=Dear {name}, <br/><br/> The bulk import has been completed with success. 
 mail.text.body.bulkimport.error=Dear {name}, <br/><br/> The bulk import has been completed with some error(s) when importing the file. <br/>{errors} Than retry to load the file. 
+
+mail.text.option.newregistration=Dear {name}, <br/><br/> Your account within Re3gistry has been successfully created.<br/><br/>Use the following credentials to access the management interface and set your password:<br/> Username: {email} <br/> Password: {key}<br/><br/> Please change your password after the first access.<br/><br/>Click <a class="nav-link" href="{acceptLink}" role="tab">here</a> to activate your account.<br/>To ignore this invitation, please click <a class="nav-link" href="{deleteLink}" role="tab">here</a>.<br/>This activation code will expire in 24 hours<br/><br/> Re3gistry manager<br/><br/><p><em>This email has been automatically generated, please do not reply to it.</em></p>
+
   
 ### Webapp properties ####
 web.application_root_url=applicationrooturl
