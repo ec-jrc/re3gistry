@@ -24,7 +24,7 @@ const key_languageLogoPattern = 'logo--{0}.ec.svg';
 // Value constants
 
 // HTML snippet constants
-const htmlSnippet_iconSelected = '<svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#ui--check"></use></svg>';
+const htmlSnippet_iconSelected = '<svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + '/media/' + 'icons.svg#ui--check"></use></svg>';
 
 // Event name constants
 
@@ -186,7 +186,7 @@ function refreshSelectedLanguages(selector) {
     $(elementName_html).attr(elementAttributeName_lang, currentLanguage);
 
     // Update the main logo
-    $('.' + elementClassName_eclsiteHeaderLogoImage).attr(key_src, registryApp.hostURL + registryApp.staticResourcesPath + key_languageLogoPattern.replace('{0}', currentLanguage));
+    $('.' + elementClassName_eclsiteHeaderLogoImage).attr(key_src, registryApp.hostURL + registryApp.staticResourcesPath + '/logo/' + key_languageLogoPattern.replace('{0}', currentLanguage));
 
     // Updating the selected text label and code
     let currentLanguageLabel = selector.text();
