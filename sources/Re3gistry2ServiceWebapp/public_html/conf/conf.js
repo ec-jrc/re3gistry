@@ -28,4 +28,4 @@ registryApp.searchURL = '//registry-test.eu/registry/search';
 registryApp.searchApiURL = '//registry-test.eu/registry/searchapi';
 registryApp.dataServiceURL = '//registry-test.eu/registry/rest';
 // required for logo to work
-registryApp.staticResourcesPath = '/ecl-v2/static/logo/';
+registryApp.staticResourcesPath = '/ecl-v2/static';
