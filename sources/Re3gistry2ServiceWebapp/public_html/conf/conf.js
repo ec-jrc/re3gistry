@@ -18,13 +18,18 @@ registryApp.forceHttpURIs=true;
 registryApp.errorMessageDefinition = "Re3gistry Software repository";
 registryApp.errorMessageURL = "https://github.com/ec-jrc/re3gistry";
 
+var myDomain = "//registry-test.eu";
 // Default backend link (To put on links and access to the admin interface)
-registryApp.backendURL = "//localhost:8080/re3gistry2";
+registryApp.backendURL = myDomain + "/re3gistry2";
 
 // The app's base URL
-registryApp.domainURL = '//registry-test.eu';
-registryApp.hostURL = '//registry-test.eu/registry';
-registryApp.searchURL = '//registry-test.eu/registry/search';
-registryApp.searchApiURL = '//registry-test.eu/registry/searchapi';
-registryApp.dataServiceURL = '//registry-test.eu/registry/rest';
-
+registryApp.domainURL = myDomain;
+registryApp.frontendPath = '/registry';
+registryApp.hostURL = registryApp.domainURL + registryApp.frontendPath;
+registryApp.searchURL = registryApp.hostURL + '/search';
+// should point towards /solr/re3gistry2/select
+registryApp.searchApiURL = registryApp.hostURL + '/searchapi';
+// should point towards /re3gistry2restapi/items/any webapp url/or forward to it
+registryApp.dataServiceURL = registryApp.hostURL + '/re3gistry2restapi/items/any';
+// should be the URI for the base registry in re3gistry2 webapp (defaults to frontend URL)
+registryApp.defaultRegisterURI = registryApp.hostURL;
