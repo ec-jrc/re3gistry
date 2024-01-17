@@ -27,5 +27,5 @@ registryApp.hostURL = '//registry-test.eu/registry';
 registryApp.searchURL = '//registry-test.eu/registry/search';
 registryApp.searchApiURL = '//registry-test.eu/registry/searchapi';
 registryApp.dataServiceURL = '//registry-test.eu/registry/rest';
-// required for logo to work
+// required for icons to work
 registryApp.staticResourcesPath = '/ecl-v2/static/media/';
