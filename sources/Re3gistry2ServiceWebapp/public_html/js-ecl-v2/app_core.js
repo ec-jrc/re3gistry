@@ -43,7 +43,7 @@ const htmlSnippet_tr = '<tr class="ecl-table__row">{0}</tr>';
 const htmlSnippet_td = '<td data-ecl-table-header="{1}" class="ecl-table__cell">{0}</td>';
 const htmlSnippet_ul = '<ul class="ecl-unordered-list ecl-unordered-list--no-bullet">{0}</ul>';
 const htmlSnippet_li = '<li class="ecl-unordered-list__item">{0}</li>';
-const htmlSnippet_href = '<a href="{0}" class="ecl-link ecl-link--standalone" onClick="fetchData(this.href);return false;">{1}</a>';
+const htmlSnippet_href = '<a href="{0}" class="ecl-link ecl-link--standalone">{1}</a>';
 const htmlSnippet_href_external_link = '<a href="{0}" class="ecl-link ecl-link--standalone">{1} <svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#ui--external"></use></svg></a>';
 const htmlSnippet_href_format = '<li class="ecl-social-media-follow__item"><a href="{0}" class="ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-before ecl-social-media-follow__link"><svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#general--file"></use></svg> {1}</a></li>';
 const htmlSnippet_field = '<div class="ecl-row"><div class="ecl-col-lg-3 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m">{0}</span></div><div class="ecl-col-lg-9 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m {2}">{1}</span></div></div>';
