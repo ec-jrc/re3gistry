@@ -64,8 +64,8 @@
     "l-ec-other-social":"https://europa.eu/european-union/contact/social-networks_{0}#n:+i:4+e:1+t:+s:",
     "l-ec-website":"https://ec.europa.eu/info/index_{0}",
     "s-other-formats":"Saatavilla olevat muodot:",
-    "s-insert-date":"Lisää päivämäärä",
-    "s-edit-date":"Muokkaa päivämäärää",
+    "s-insert-date":"Lisäys päivämäärä",
+    "s-edit-date":"Muokkaus päivämäärä",
     "c-refine-results":"Tarkenna tuloksia",
     "c-clear-all":"Tyhjennä kaikki",
     "translatenotavailable":"Käännöstä ei ole tarjolla suomeksi"
