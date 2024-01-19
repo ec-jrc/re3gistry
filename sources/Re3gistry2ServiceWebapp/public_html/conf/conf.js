@@ -23,11 +23,13 @@ registryApp.backendURL = "//registry-test.eu/re3gistry2";
 
 // The app's base URL
 registryApp.domainURL = '//registry-test.eu';
+// the path where the frontend app is located in (Note! there are hardcoded refs to /registry path as well)
 registryApp.hostURL = '//registry-test.eu/registry';
+// requires forward/redirect to search.html on httpd
 registryApp.searchURL = '//registry-test.eu/registry/search';
-// should point towards /solr/re3gistry2/select
+// requires forward/redirect to /solr/re3gistry2/select on httpd
 registryApp.searchApiURL = '//registry-test.eu/registry/searchapi';
-// should point towards /re3gistry2restapi/items/any webapp url/or forward to it
+// requires forward/redirect to /re3gistry2restapi/items/any webapp on httpd
 registryApp.dataServiceURL = '//registry-test.eu/registry/rest';
-// should be the URI for the base registry in re3gistry2 webapp (defaults to frontend URL)
+// should match the URI for the base registry in re3gistry2 webapp (defaults to frontend URL)
 registryApp.defaultRegisterURI = registryApp.hostURL;
