@@ -672,6 +672,10 @@ public class JspHelperNewProposedItem {
                 ? ((currentLanguageLocalizationproposed.getValue() != null && currentLanguageLocalizationproposed.getValue().length() > 0)
                 ? currentLanguageLocalizationproposed.getValue() : "")
                 : "");
+        
+        if (inputValue.contains("\"")) {
+                inputValue = inputValue.replace("\"", "&quot;");
+                }
 
         // Calculating if it is a new or updated content
         String newContentClass = "";
