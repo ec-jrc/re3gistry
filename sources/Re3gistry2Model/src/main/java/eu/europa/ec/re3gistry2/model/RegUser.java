@@ -50,7 +50,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "RegUser.findByUuid", query = "SELECT r FROM RegUser r WHERE r.uuid = :uuid")
     , @NamedQuery(name = "RegUser.findBySsoreference", query = "SELECT r FROM RegUser r WHERE r.ssoreference = :ssoreference")
     , @NamedQuery(name = "RegUser.findByName", query = "SELECT r FROM RegUser r WHERE r.name = :name")
-    , @NamedQuery(name = "RegUser.findByEmail", query = "SELECT r FROM RegUser r WHERE r.email = :email")
+    , @NamedQuery(name = "RegUser.findByEmail", query = "SELECT r FROM RegUser r WHERE LOWER(r.email) = LOWER(:email)")
     , @NamedQuery(name = "RegUser.findByEnabled", query = "SELECT r FROM RegUser r WHERE r.enabled = :enabled")
     , @NamedQuery(name = "RegUser.findByInsertdate", query = "SELECT r FROM RegUser r WHERE r.insertdate = :insertdate")
     , @NamedQuery(name = "RegUser.findByEditdate", query = "SELECT r FROM RegUser r WHERE r.editdate = :editdate")})
