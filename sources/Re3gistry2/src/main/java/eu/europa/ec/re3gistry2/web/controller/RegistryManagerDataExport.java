@@ -78,6 +78,8 @@ public class RegistryManagerDataExport extends HttpServlet {
         String startCaching = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING);
         String startCachingMasterLanguage = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING_MASTERLANGUAGE);
         String removeCaching = request.getParameter(BaseConstants.KEY_REQUEST_REMOVECACHING);
+        String startCachingSelectedLanguages = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING_SELECTEDLANGUAGES);
+        
 
         // Getting request parameter
         String regUserDetailUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERDETAIL_UUID);
@@ -89,6 +91,7 @@ public class RegistryManagerDataExport extends HttpServlet {
         startIndex = (startIndex != null) ? InputSanitizerHelper.sanitizeInput(startIndex) : null;
         startCaching = (startCaching != null) ? InputSanitizerHelper.sanitizeInput(startCaching) : null;
         startCachingMasterLanguage = (startCachingMasterLanguage != null) ? InputSanitizerHelper.sanitizeInput(startCachingMasterLanguage) : null;
+        startCachingSelectedLanguages = (startCachingSelectedLanguages != null) ? InputSanitizerHelper.sanitizeInput(startCachingSelectedLanguages) : null;
         regUserDetailUUID = (regUserDetailUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserDetailUUID) : null;
         regUserRegGroupMappingUUID = (regUserRegGroupMappingUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserRegGroupMappingUUID) : null;
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
@@ -155,14 +158,29 @@ public class RegistryManagerDataExport extends HttpServlet {
 
                 String subject;
                 String body;
-                CacheAll cacheall;
+                CacheAll cacheall = null;
+                
+                //Regular all language cache
                 if (startCaching != null) {
-                    cacheall = new CacheAll(entityManager, cache, null);
-                } else {
-                    cacheall = new CacheAll(entityManager, cache, regLanguagecodeManager.getMasterLanguage());
+                    cacheall = new CacheAll(entityManager, cache, null, null);
                 }
+  
+                //Master language Cache
+                if(startCachingMasterLanguage != null){
+                    cacheall = new CacheAll(entityManager, cache, regLanguagecodeManager.getMasterLanguage(), null);
+                }
+                
+                //Selected languages Cache
+                if(startCachingSelectedLanguages != null){
+                    cacheall = new CacheAll(entityManager, cache, regLanguagecodeManager.getMasterLanguage(), null);
+                }
+                
+                if(cacheall == null){
+                    cacheall = new CacheAll(entityManager, cache, regLanguagecodeManager.getMasterLanguage(), null);
+                }
+                
                 boolean result;
-
+                
                 try {
                     if (cacheClassUUID!=null) {
                         cacheall.run(cacheClassUUID);
