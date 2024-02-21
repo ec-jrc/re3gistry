@@ -7,12 +7,14 @@ package eu.europa.ec.re3gistry2.javaapi.cache;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
+import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemSupplier;
 import eu.europa.ec.re3gistry2.model.RegItem;
+import eu.europa.ec.re3gistry2.model.RegItemhistory;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegRelation;
 import java.util.ArrayList;
@@ -88,7 +90,7 @@ public class RecacheItems extends Thread {
                     System.out.println("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
 
                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
-                    Optional<Item> optItem = updateCacheForItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
+                    updateCacheForItemByUuidCache(regItem, languageCode.getIso6391code(), itemSupplier);
 
                     switch (regItem.getRegItemclass().getRegItemclasstype().getLocalid()) {
                         case TYPE_REGISTRY:
@@ -151,7 +153,7 @@ public class RecacheItems extends Thread {
                     System.out.println("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
 
                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
-                    Optional<Item> optItem = updateCacheForItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
+                    updateCacheForItemByUuidCache(regItem, languageCode.getIso6391code(), itemSupplier);
                 }
             } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
                 if (!em.isOpen()) {
@@ -178,7 +180,7 @@ public class RecacheItems extends Thread {
 
     private Optional<Item> updateCacheForItemByUuid(RegItem regItem, String language, ItemSupplier itemSupplier) throws Exception {
         Item cached = cache.getByUuid(language, regItem.getUuid());
-        
+
         Item item = itemSupplier.getItem(regItem);
         if (item == null) {
             return Optional.empty();
@@ -189,6 +191,34 @@ public class RecacheItems extends Thread {
         }
         cache.add(language, item, null);
         return Optional.of(item);
+    }
+
+    private void updateCacheForItemByUuidCache(RegItem regItem, String language, ItemSupplier itemSupplier) throws Exception {
+        RegItemhistoryManager regItemHistoryManager = new RegItemhistoryManager(em);
+        RegItemhistory regItemHistoryFound = null;
+        Item cached = cache.getByUuid(language, regItem.getUuid());
+        //Validate if the item is already in cache
+        if (cached != null) {
+            //If the item is on cache, check if this item has been modified
+            regItemHistoryFound = regItemHistoryManager.getMaxVersionByLocalidAndRegItemClass(regItem.getLocalid(), regItem.getRegItemclass());
+            //Check if the modification is already stored in cached
+            if (cached.getVersionHistory() != null && regItemHistoryFound != null) {
+                if (cached.getVersionHistory().size() == regItemHistoryFound.getVersionnumber()) {
+                    //If it is stores, establish regItemHistoryFound as null
+                    regItemHistoryFound = null;
+                }
+            }
+        }
+        //If an item has been modified or it isn't in cached, find it
+        if (regItemHistoryFound != null || cached == null) {
+            Item item = itemSupplier.getItem(regItem);
+            //If the item was a modification, delete the old one.
+            if (cached != null) {
+                cache.remove(language, regItem.getUuid());
+            }
+            //Add the item to cache
+            cache.add(language, item, null);
+        }
     }
 
 }

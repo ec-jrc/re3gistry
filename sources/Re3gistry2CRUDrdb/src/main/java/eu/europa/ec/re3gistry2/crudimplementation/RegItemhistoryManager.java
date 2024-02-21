@@ -36,6 +36,7 @@ import eu.europa.ec.re3gistry2.model.RegStatus;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class RegItemhistoryManager implements IRegItemhistoryManager {
@@ -219,7 +220,7 @@ public class RegItemhistoryManager implements IRegItemhistoryManager {
 
         return (List<RegItemhistory>) q.getResultList();
     }
-    
+
     public List<RegItemhistory> getByRegItemReferenceProposed(RegItemproposed regItemReference) throws Exception {
         //Checking parameters
         if (regItemReference == null) {
@@ -232,7 +233,7 @@ public class RegItemhistoryManager implements IRegItemhistoryManager {
 
         return (List<RegItemhistory>) q.getResultList();
     }
-    
+
     /**
      * Find the RegItemhistory specified by parameter. Returns RegItemhistory if
      * the operation succeed.
@@ -249,13 +250,17 @@ public class RegItemhistoryManager implements IRegItemhistoryManager {
         if (localid == null || regItemclass == null) {
             throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, SQLConstants.SQL_PARAMETERS_LOCALID));
         }
+        try {
+            //Preparing query
+            Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEMHISTORY_BY_LOCALID_REGITEMCLASS_MAX_VERSION);
+            q.setParameter(SQLConstants.SQL_PARAMETERS_LOCALID, localid);
+            q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemclass);
 
-        //Preparing query
-        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEMHISTORY_BY_LOCALID_REGITEMCLASS_MAX_VERSION);
-        q.setParameter(SQLConstants.SQL_PARAMETERS_LOCALID, localid);
-        q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemclass);
+            return (RegItemhistory) q.getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
 
-        return (RegItemhistory) q.getSingleResult();
     }
 
     /**
