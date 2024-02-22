@@ -52,14 +52,18 @@ public class CacheAll {
         }
 
         try {
-            List<RegLanguagecode> availableLanguages;
             RegLanguagecode masterLanguage = languageManager.getMasterLanguage();
-            if (regMasterLanguagecode != null) {
-                availableLanguages = new ArrayList<>();
-                availableLanguages.add(regMasterLanguagecode);
-            } else {
-                availableLanguages = regLanguagecodeManager.getAllActive();
+                    
+            if (availableLanguages==null) {
+                if (regMasterLanguagecode != null) {
+                    availableLanguages = new ArrayList<>();
+                    availableLanguages.add(regMasterLanguagecode);
+                } else {
+                    availableLanguages = regLanguagecodeManager.getAllActive();
+                }
             }
+            
+            
 
             try {
                 logger.trace("---[ STARTING CACHE ALL]--- @ " + new Date());

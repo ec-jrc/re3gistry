@@ -171,18 +171,8 @@
                         <div class="col-sm-3">
                             <a id="startCaching" class="buttoncache btn btn-success width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing")}</a>
                         </div>
-                        <script>
-                            $(".buttoncache").on('click', function () {
-                                //                        $('#startCaching').on('click', function () {
-                                $(".buttoncache").addClass('disabled');
-                                //                            $(this).addClass('disabled');
-                                setTimeout(function () {
-                                    location.reload();
-                                }, 3000);
-                            });
-                        </script>
                         <div class="col-sm-3">
-                            <a id="CacheLanguages" onclick="return modifyHrefLanguages();" style="background-color: #7fa1c9;" class="buttoncache btn width100" <%=buttonCacheDisabled%> role="button">Cache Selected Languages</a>
+                            <a id="CacheLanguages" onclick="return modifyHrefLanguages();" style="background-color: #7fa1c9;" class="buttoncache btn width100 btn-md<%=buttonCacheDisabled%> " role="button">Cache Selected Languages</a>
                         <div class="multiselect" id="countries" multiple="multiple" data-target="multi-0">
                             <div class="title noselect">
                                 <span class="text" id="languagesText">Select language(s)</span>
@@ -235,7 +225,7 @@
     function modifyHrefLanguages () {
         
         if(document.getElementById("languagesText").innerHTML !== "Select language(s)"){
-            document.getElementById("CacheLanguages").href = "?startCachingSelectedLanguages="+document.getElementById("languagesText").innerHTML;
+            document.getElementById("CacheLanguages").href = "?startCaching="+document.getElementById("languagesText").innerHTML;
             return true;
         }
         return false;
@@ -249,6 +239,15 @@
                                 rootSelector: '[data-toggle=confirmation]'
                             });
         </script>
-
+<script>
+                            $(".buttoncache").on('click', function () {
+                                //                        $('#startCaching').on('click', function () {
+                                $(".buttoncache").addClass('disabled');
+                                //                            $(this).addClass('disabled');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 3000);
+                            });
+                        </script>
     </body>
 </html>
