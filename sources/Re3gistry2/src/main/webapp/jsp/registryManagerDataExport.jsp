@@ -166,13 +166,10 @@
                     <% } else {%>
                     <div class="row">
                         <div class="col-sm-3">
-                            <a id="startCachingMasterLanguage" class="buttoncache btn btn-warning width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING_MASTERLANGUAGE%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing.masterlanguage")}</a>
+                                                        <a id="startCaching" class="buttoncache btn btn-success width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing")}</a>
                         </div>
                         <div class="col-sm-3">
-                            <a id="startCaching" class="buttoncache btn btn-success width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing")}</a>
-                        </div>
-                        <div class="col-sm-3">
-                            <a id="CacheLanguages" onclick="return modifyHrefLanguages();" style="background-color: #7fa1c9;" class="buttoncache btn width100 btn-md<%=buttonCacheDisabled%> " role="button">Cache Selected Languages</a>
+                            <a id="CacheLanguages" onclick="return modifyHrefLanguages();" class="buttoncache btn btn-warning width100 btn-md<%=buttonCacheDisabled%> " role="button">Cache Selected Languages</a>
                         <div class="multiselect" id="countries" multiple="multiple" data-target="multi-0">
                             <div class="title noselect">
                                 <span class="text" id="languagesText">Select language(s)</span>
@@ -185,14 +182,24 @@
                                 EntityManager localLanguageEntityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
                                 RegLanguagecodeManager localLanguageManager = new RegLanguagecodeManager(localLanguageEntityManager);
                                 List<RegLanguagecode> localActiveLanguages = localLanguageManager.getAllActive();
+                                RegLanguagecode masterLang = localLanguageManager.getMasterLanguage();
                                 
                                 for (int k = 0; k < localActiveLanguages.size(); k++) {
+                                if(localActiveLanguages.get(k).getIso6391code() == masterLang.getIso6391code()){
                                 
+                                %>
+                                <option value='<%=localActiveLanguages.get(k).getIso6391code()%>'><%= localActiveLanguages.get(k).getLabel() %> [MASTER]</option>
+                                <%
+                                
+                                    }else{
+                                    
+                                    
                                 %>
                                 
                                 <option value='<%=localActiveLanguages.get(k).getIso6391code()%>'><%= localActiveLanguages.get(k).getLabel() %></option>
-                                
+                                 
                                 <%
+                                    }
                                     }
                                 %>
                             </div>

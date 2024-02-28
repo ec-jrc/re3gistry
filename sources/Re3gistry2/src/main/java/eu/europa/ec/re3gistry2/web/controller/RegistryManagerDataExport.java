@@ -77,10 +77,8 @@ public class RegistryManagerDataExport extends HttpServlet {
         // Getting form parameter
         String startIndex = request.getParameter(BaseConstants.KEY_REQUEST_STARTINDEX);
         String startCaching = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING);
-        String startCachingMasterLanguage = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING_MASTERLANGUAGE);
         String removeCaching = request.getParameter(BaseConstants.KEY_REQUEST_REMOVECACHING);
-//        String startCachingSelectedLanguages = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING_SELECTEDLANGUAGES);
-        
+      
 
         // Getting request parameter
         String regUserDetailUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERDETAIL_UUID);
@@ -91,8 +89,6 @@ public class RegistryManagerDataExport extends HttpServlet {
 
         startIndex = (startIndex != null) ? InputSanitizerHelper.sanitizeInput(startIndex) : null;
         startCaching = (startCaching != null) ? InputSanitizerHelper.sanitizeInput(startCaching) : null;
-        startCachingMasterLanguage = (startCachingMasterLanguage != null) ? InputSanitizerHelper.sanitizeInput(startCachingMasterLanguage) : null;
-//        startCachingSelectedLanguages = (startCachingSelectedLanguages != null) ? InputSanitizerHelper.sanitizeInput(startCachingSelectedLanguages) : null;
         regUserDetailUUID = (regUserDetailUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserDetailUUID) : null;
         regUserRegGroupMappingUUID = (regUserRegGroupMappingUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserRegGroupMappingUUID) : null;
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
@@ -146,8 +142,7 @@ public class RegistryManagerDataExport extends HttpServlet {
                 sendMail(request, subject, body);
 
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
-            } else if ((startCaching != null)
-                    || (startCachingMasterLanguage != null && startCachingMasterLanguage.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE))) {
+            } else if (startCaching != null) {
                 // This is a save request
 
                 ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
@@ -155,24 +150,18 @@ public class RegistryManagerDataExport extends HttpServlet {
                     cache = new EhCache();
                     request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
                 }
-//                cache.removeAll();
 
                 String subject;
                 String body;
                 CacheAll cacheall = null;
                 
                 //Regular all language cache
-                if (startCaching != null && startCaching.equalsIgnoreCase("true")) {
-                    cacheall = new CacheAll(entityManager, cache, null, null);
-                }
-  
-                //Master language Cache
-                if(startCachingMasterLanguage != null){
-                    cacheall = new CacheAll(entityManager, cache, regLanguagecodeManager.getMasterLanguage(), null);
+                if (startCaching.equalsIgnoreCase("true")) {
+                    cacheall = new CacheAll(entityManager, cache, null);
                 }
                 
                 //Selected languages Cache
-                if(startCaching !=null && !startCaching.equalsIgnoreCase("true")){
+                if(!startCaching.equalsIgnoreCase("true")){
                     
                     String[] res = startCaching.split("[,]", 0);
                     List<RegLanguagecode> localActiveLanguages = new ArrayList<>();
@@ -189,11 +178,11 @@ public class RegistryManagerDataExport extends HttpServlet {
                         
                     }
 
-                    cacheall = new CacheAll(entityManager, cache, null, localActiveLanguages);
+                    cacheall = new CacheAll(entityManager, cache, localActiveLanguages);
                 }
                 
                 if(cacheall == null){
-                    cacheall = new CacheAll(entityManager, cache, regLanguagecodeManager.getMasterLanguage(), null);
+                    cacheall = new CacheAll(entityManager, cache, null);
                 }
                 
                 boolean result;
