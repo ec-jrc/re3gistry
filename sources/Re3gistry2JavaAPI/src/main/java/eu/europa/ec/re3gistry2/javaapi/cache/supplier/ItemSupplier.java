@@ -26,6 +26,7 @@
  */
 package eu.europa.ec.re3gistry2.javaapi.cache.supplier;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,6 +47,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegGroupManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegItemRegGroupRegRoleMappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
@@ -79,10 +81,13 @@ import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.StatusLocalization;
 import eu.europa.ec.re3gistry2.model.RegGroup;
+import eu.europa.ec.re3gistry2.model.RegItemRegGroupRegRoleMapping;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLocalizationproposed;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 import javax.persistence.EntityManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -288,13 +293,13 @@ public class ItemSupplier {
 
         //all the item of codelist without a parent 
         setTopConceptsFromRegItem(regItem, item);
-        
+
         //get che codelist
         setInSchemeAndTopConceptOfFromRegItem(regItem, item);
-        
+
         //all direct suns, so all that have the item as parent hasParent
         setNarrowerFromRegItem(regItem, item);
-        
+
         //direct Parent hasParent
         setBroaderFromRegItem(regItem, item);
 
@@ -403,7 +408,7 @@ public class ItemSupplier {
         item.setUri(ItemHelper.getURI(regItem));
         item.setLocalid(regItem.getLocalid());
         item.setLatest(true);
-        if (regItem.getExternal()){
+        if (regItem.getExternal()) {
             item.setExternal(true);
         }
 
@@ -979,7 +984,7 @@ public class ItemSupplier {
         int order = fieldmapping.getListorder();
         boolean tablevisible = fieldmapping.getTablevisible();
 
-        List<LocalizedPropertyValue> values = Collections.emptyList();
+        List<LocalizedPropertyValue> values = new ArrayList();
 
         //Get Property for allowing to return null value fields
         String allowEmptyFields = Configuration.getInstance().getProperties().getProperty(BaseConstants.KEY_ALLOW_NULL_FIELDS, BaseConstants.KEY_BOOLEAN_STRING_FALSE);
@@ -1107,39 +1112,49 @@ public class ItemSupplier {
                             break;
                         }
                     }
-                    // fallback to master language localization for this field for this reg item. Whan do i need this?
-//                    RegLocalization localization = this.reglocalizationManager.get(field, masterLanguage);
-//                    if (localization != null) {
-//                        localizations = new ArrayList<>();
-//                        localizations.add(localization);
-//                    }
-                    try {
+                    
+                    if (fieldmapping.getRegField().getRegRoleReference() == null) {
                         rolLabel = this.regGroupManager.getByLocalid(regFieldManager.get(key).getLocalid());
-                    } catch (Exception e) {
+                    } else {
+                        RegItemRegGroupRegRoleMappingManager regItemRegGroupRegRoleMappingManager = new RegItemRegGroupRegRoleMappingManager(entityManager);
+                        List<RegItemRegGroupRegRoleMapping> regItemRegGroupRegRoleMappingManagerList = regItemRegGroupRegRoleMappingManager.getAll(regItem, fieldmapping.getRegField().getRegRoleReference());
+
+                        if (regItemRegGroupRegRoleMappingManagerList.size() > 1) {
+                            for (int i = 0; i < regItemRegGroupRegRoleMappingManagerList.size(); i++) {
+                                rolLabel = this.regGroupManager.get(regItemRegGroupRegRoleMappingManagerList.get(i).getRegGroup().getUuid());
+                                LocalizedPropertyValue localizedPropertyValue = new LocalizedPropertyValue(rolLabel.getName(), null);
+                                values.add(localizedPropertyValue);
+                            }
+                        } else {
+                            rolLabel = this.regGroupManager.get(regItemRegGroupRegRoleMappingManagerList.get(0).getRegGroup().getUuid());
+                        }
+
                     }
 
-//                    if (localization == null) {
-//                        break;
-//                    }
+//            
                 }
                 if (localizations != null && !localizations.isEmpty()) {
                     values = localizations.stream()
                             .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
                             .collect(Collectors.toList());
                 }
-                if (rolLabel != null) {
-                    if (!values.isEmpty()) {
-                        values.clear();
+                try {
+                    if (rolLabel != null) {
+                        if (!values.isEmpty() && fieldmapping.getRegField().getRegRoleReference().toString().equals("5")) {
+                            values.clear();
+                        }
+                        if (values.isEmpty()) {
+                            values = Collections.singletonList(new LocalizedPropertyValue(rolLabel.getName(), null));
+                        }
+
                     }
-                    values = Collections.singletonList(new LocalizedPropertyValue(rolLabel.getName(), null));
+                } catch (Exception e) {
+                    throw new Exception();
                 }
+
                 break;
         }
 
-//        if (values.isEmpty() && !allowEmptyFields.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
-//            // Don't add properties that have no zero value/href pairs
-//            return null;
-//        }
         return new LocalizedProperty(lang, id, istitle, label, values, order, tablevisible);
     }
 
@@ -1311,4 +1326,5 @@ public class ItemSupplier {
         List<RegLanguagecode> activeLanguages = regLanguagecodeManager.getAllActive();
         item.setActiveLanguages(activeLanguages);
     }
+
 }
