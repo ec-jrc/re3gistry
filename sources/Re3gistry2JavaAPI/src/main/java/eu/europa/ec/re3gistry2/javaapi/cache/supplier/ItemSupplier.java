@@ -57,6 +57,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationproposedManager
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationproposedManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegRoleManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegStatusManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegStatuslocalizationManager;
 import eu.europa.ec.re3gistry2.model.RegField;
@@ -84,6 +85,7 @@ import eu.europa.ec.re3gistry2.model.RegGroup;
 import eu.europa.ec.re3gistry2.model.RegItemRegGroupRegRoleMapping;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLocalizationproposed;
+import eu.europa.ec.re3gistry2.model.RegRole;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -933,7 +935,7 @@ public class ItemSupplier {
                 .filter(fieldmappingFilter)
                 .map(it -> {
                     try {
-                        return getLocalizedPropertyProposed(it, regItem, localizationsByField, localizationsByFieldML);
+                        return getLocalizedPropertyProposed(it, regItem, localizationsByField, localizationsByFieldML);     
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -1112,47 +1114,36 @@ public class ItemSupplier {
                             break;
                         }
                     }
-                    
-                    if (fieldmapping.getRegField().getRegRoleReference() == null) {
-                        rolLabel = this.regGroupManager.getByLocalid(regFieldManager.get(key).getLocalid());
-                    } else {
-                        RegItemRegGroupRegRoleMappingManager regItemRegGroupRegRoleMappingManager = new RegItemRegGroupRegRoleMappingManager(entityManager);
-                        List<RegItemRegGroupRegRoleMapping> regItemRegGroupRegRoleMappingManagerList = regItemRegGroupRegRoleMappingManager.getAll(regItem, fieldmapping.getRegField().getRegRoleReference());
-
-                        if (regItemRegGroupRegRoleMappingManagerList.size() > 1) {
-                            for (int i = 0; i < regItemRegGroupRegRoleMappingManagerList.size(); i++) {
-                                rolLabel = this.regGroupManager.get(regItemRegGroupRegRoleMappingManagerList.get(i).getRegGroup().getUuid());
-                                LocalizedPropertyValue localizedPropertyValue = new LocalizedPropertyValue(rolLabel.getName(), null);
-                                values.add(localizedPropertyValue);
-                            }
-                        } else {
-                            rolLabel = this.regGroupManager.get(regItemRegGroupRegRoleMappingManagerList.get(0).getRegGroup().getUuid());
-                        }
-
-                    }
-
-//            
                 }
-                if (localizations != null && !localizations.isEmpty()) {
+                RegRoleManager regRoleManager = new RegRoleManager(entityManager);
+                RegRole regRole = regRoleManager.getByLocalId(id);
+                 List<RegItemRegGroupRegRoleMapping> regItemRegGroupRegRoleMappingManagerList = null;
+                if (regRole != null) {
+                    RegItemRegGroupRegRoleMappingManager regItemRegGroupRegRoleMappingManager = new RegItemRegGroupRegRoleMappingManager(entityManager);
+                    regItemRegGroupRegRoleMappingManagerList = regItemRegGroupRegRoleMappingManager.getAll(regItem, regRole);
+                    if (regItemRegGroupRegRoleMappingManagerList.size() > 1) {
+                        for (int i = 0; i < regItemRegGroupRegRoleMappingManagerList.size(); i++) {
+                            rolLabel = this.regGroupManager.get(regItemRegGroupRegRoleMappingManagerList.get(i).getRegGroup().getUuid());
+                            LocalizedPropertyValue localizedPropertyValue = new LocalizedPropertyValue(rolLabel.getName(), null);
+                            values.add(localizedPropertyValue);
+                        }
+                    } else {
+                        rolLabel = this.regGroupManager.get(regItemRegGroupRegRoleMappingManagerList.get(0).getRegGroup().getUuid());
+                    }
+                }
+                if (localizations != null && !localizations.isEmpty() && regRole== null ) {
                     values = localizations.stream()
                             .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
                             .collect(Collectors.toList());
                 }
-                try {
-                    if (rolLabel != null) {
-                        if (!values.isEmpty() && fieldmapping.getRegField().getRegRoleReference().toString().equals("5")) {
-                            values.clear();
-                        }
-                        if (values.isEmpty()) {
-                            values = Collections.singletonList(new LocalizedPropertyValue(rolLabel.getName(), null));
-                        }
-
+                if (rolLabel != null && regItemRegGroupRegRoleMappingManagerList != null && regItemRegGroupRegRoleMappingManagerList.size()<=1) {
+                    if (!values.isEmpty()) {
+                        values.clear();
                     }
-                } catch (Exception e) {
-                    throw new Exception();
+                    values = Collections.singletonList(new LocalizedPropertyValue(rolLabel.getName(), null));
                 }
-
                 break;
+
         }
 
         return new LocalizedProperty(lang, id, istitle, label, values, order, tablevisible);
