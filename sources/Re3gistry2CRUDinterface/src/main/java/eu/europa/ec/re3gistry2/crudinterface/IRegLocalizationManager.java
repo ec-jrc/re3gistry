@@ -53,6 +53,7 @@ public interface IRegLocalizationManager{
     public List<RegLocalization> getAllWithRelationReference(RegItem regItem) throws Exception ;
     public List<RegLocalization> getAll(RegField regField, RegItem regItem, RegAction regAction) throws Exception;
     public List<RegLocalization> getAllByRelation(RegRelation relation) throws Exception;
+    public List<RegLanguagecode> getLanguageCodeByRegAction(RegAction regAction) throws Exception;
     
     public List<RegLocalization> getAllFieldsByValue(String value) throws Exception;
     

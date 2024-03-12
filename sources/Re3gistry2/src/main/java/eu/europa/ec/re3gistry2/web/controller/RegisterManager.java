@@ -37,6 +37,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemRegGroupRegRoleMappingM
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRoleManager;
 import eu.europa.ec.re3gistry2.javaapi.cache.RecacheItems;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegActionHandler;
@@ -98,6 +99,7 @@ public class RegisterManager extends HttpServlet {
         RegItemhistoryManager regItemhistoryManager = new RegItemhistoryManager(entityManager);
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManager);
+        RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
 
         // Getting form parameter
         String formRegActionUuid = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID);
@@ -168,6 +170,7 @@ public class RegisterManager extends HttpServlet {
                 List<RegItemproposed> regItemproposeds = null;
                 List<RegItemhistory> regItemhistorys = null;
                 List<RegItem> regItems = null;
+                List<RegLanguagecode> regLanguageCodes = null;
 
                 if (regActionUuid != null && regActionUuid.length() > 0) {
 
@@ -187,12 +190,13 @@ public class RegisterManager extends HttpServlet {
                             case BaseConstants.KEY_STATUS_LOCALID_PUBLISHED:
                                 // Getting the list of RegItem contained in the action
                                 regItems = regItemManager.getAll(regAction);
+                                regLanguageCodes = regLocalizationManager.getLanguageCodeByRegAction(regAction);
                                 if (formSubmitAction != null && !regItems.isEmpty()) {
                                     //update RSS
                                     UpdateRSS.updateRSS(regAction, regItems);
 
                                     //update CACHE
-                                    RecacheItems recacheItems = new RecacheItems(entityManager, request, regItems);
+                                    RecacheItems recacheItems = new RecacheItems(entityManager, request, regItems, regLanguageCodes);
                                     recacheItems.start();
 
                                     ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
