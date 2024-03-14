@@ -260,9 +260,9 @@ public class RegBulkImportHandler {
                             //Printing and mailing the appropiate message depending on the process executed
                             if (!operationResult.isEmpty()) {
                                 if (isBulkEdit) {
-                                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.success") + "</b>";
                                 } else {
-                                    operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>";
                                 }
                             } else {
                                 if (isBulkEdit) {
