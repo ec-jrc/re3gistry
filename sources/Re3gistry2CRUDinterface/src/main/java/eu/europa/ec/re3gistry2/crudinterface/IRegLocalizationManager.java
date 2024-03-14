@@ -29,6 +29,7 @@ import eu.europa.ec.re3gistry2.model.RegItem;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegLocalization;
+import eu.europa.ec.re3gistry2.model.RegRelation;
 import java.util.List;
 
 public interface IRegLocalizationManager{
@@ -51,6 +52,7 @@ public interface IRegLocalizationManager{
     public List<RegLocalization> getAll(RegField regField, RegItem regItem, RegLanguagecode regLanguagecode) throws Exception;
     public List<RegLocalization> getAllWithRelationReference(RegItem regItem) throws Exception ;
     public List<RegLocalization> getAll(RegField regField, RegItem regItem, RegAction regAction) throws Exception;
+    public List<RegLocalization> getAllByRelation(RegRelation relation) throws Exception;
     
     public List<RegLocalization> getAllFieldsByValue(String value) throws Exception;
     

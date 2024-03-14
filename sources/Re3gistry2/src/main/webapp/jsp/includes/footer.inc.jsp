@@ -30,7 +30,7 @@
     <div class="ecl-container ecl-footer-standardised__container">
         <section class="ecl-footer-core__section ecl-footer-core__section1">
             <a href="https://github.com/ec-jrc/re3gistry/releases"
-               class="ecl-footer-core__title ecl-link ecl-link--standalone">Re3gistry version 2.4.2</a>
+               class="ecl-footer-core__title ecl-link ecl-link--standalone">Re3gistry version 2.5.2</a>
             <div class="ecl-footer-core__description"><a data-i18n-link="l-ec-website" class="ecl-link ecl-link--standalone" 
                                                          href="https://inspire-sandbox.jrc.ec.europa.eu/registry"
                                                          aria-label="European Commission">
@@ -50,10 +50,11 @@
             </section>
             <section class="ecl-footer-standardised__section">
                 <div class="ecl-footer-standardised__title ecl-footer-standardised__title--separator">
-                    Re3gistry API
+                    ${properties.getProperty('application.default.name')} management 
                 </div>
                 <ul class="ecl-footer-standardised__list ecl-footer-standardised__list--inline">
-                    <li class="ecl-footer-standardised__list-item"><a href="https://inspire-sandbox.jrc.ec.europa.eu/registry/api.html" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Access API</a></li>
+                    <li class="ecl-footer-standardised__list-item"><a href="http://localhost:8082/" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Access API</a></li>
+                    <li class="ecl-footer-standardised__list-item"><a href="${properties.getProperty('application.default.frontend.link')}" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Go to public interface</a></li>
                 </ul>
             </section>
         </div>
@@ -73,7 +74,7 @@
                         <a href="/registry/release-note.xml" class="ecl-footer-standardised__link ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-before">
                             <svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs">
                             <use xlink:href="./res/ecl-v2/static/media/icons.svg#branded--rss"></use>
-                            </svg>&nbsp;<span class="ecl-link__label">Re3gistry sandbox RSS feed</span>
+                            </svg>&nbsp;<span class="ecl-link__label">${properties.getProperty('application.default.name')} RSS feed</span>
                         </a>
                     </li>   
                     <li class="ecl-footer-standardised__list-item"><a href="https://github.com/ec-jrc/re3gistry" class="ecl-footer-standardised__link ecl-link ecl-link--standalone">Join the Re3gistry community</a></li>

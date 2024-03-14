@@ -45,6 +45,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegStatusManager;
+import eu.europa.ec.re3gistry2.javaapi.handler.action.FieldsBulkImport;
 import eu.europa.ec.re3gistry2.model.RegAction;
 import eu.europa.ec.re3gistry2.model.RegField;
 import eu.europa.ec.re3gistry2.model.RegFieldmapping;
@@ -70,6 +71,9 @@ import eu.europa.ec.re3gistry2.model.uuidhandlers.RegLocalizationproposedUuidHel
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegRelationproposedUuidHelper;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -369,6 +373,96 @@ public class RegItemproposedHandler {
      * @param requestParameters
      * @param regUser
      * @throws Exception
+     */
+    public void handleBulkRegItemproposedSave(RegItemproposed itemProposed, RegUser regUser, Map requestParameters) throws Exception {
+
+        // Getting the ID of the RegItem (original item)
+        String regItemUuid = itemProposed.getLocalid();
+
+        // Getting the RegItem on which the proposal is done
+        RegItem regItem = null;
+        try {
+            RegItemManager regItemManager = new RegItemManager(entityManager);
+            regItem = regItemManager.get(regItemUuid);
+        } catch (NoResultException e) {
+        }
+
+        // Init managers
+        RegItemproposedManager regItemproposedManager = new RegItemproposedManager(entityManager);
+
+        // Check if the RegItemproposed is already available
+        try {
+            RegItemproposed regItemproposed = regItemproposedManager.getByRegItemReference(regItem);
+
+            // Checking the ownership
+            if (!regItemproposed.getRegUser().getUuid().equals(regUser.getUuid())) {
+                // If the user is not the owner of the current RegItemproposed, deny the update
+                throw new UnauthorizedUserException(ExceptionConstants.KEY_EXCEPTION_UNAUTHORIZED_USER_OWNER);
+            }
+
+            // The writing operation on the Database are synchronized
+            /* ## Start Synchronized ## */
+            synchronized (sync) {
+                // Update the RegItemproposed
+                if (!entityManager.getTransaction().isActive()) {
+                    entityManager.getTransaction().begin();
+                }
+                updateRegItemproposed(regItemproposed, requestParameters);
+                entityManager.getTransaction().commit();
+            }
+            /* ## End Synchronized ## */
+
+        } catch (NoResultException e) {
+            // If the RegItemproposed is not available, creating it
+
+            // The writing operation on the Database are synchronized
+            /* ## Start Synchronized ## */
+            synchronized (sync) {
+                if (!entityManager.getTransaction().isActive()) {
+                    entityManager.getTransaction().begin();
+                }
+                // Copy the RegItem to the RegItemproposed
+                RegItemproposed regItemproposed = copyRegItemToRegItemproposed(regItem, regUser);
+
+                // Copy all the regRelations
+                copyRegRelationsToRegRelationproposeds(regItem, regItemproposed);
+
+                // Copy groups relations
+                copyRegItemRegGroupRegRoleMappingToRegItemproposedRegGroupRegRoleMapping(regItem, regItemproposed);
+
+                // Register Federation export
+                String[] registerFederationExportTmp = (String[]) requestParameters.get(BaseConstants.KEY_FORM_FIELD_NAME_REGISTERFEDERATIONEXPORT);
+                // !!! Sanitizing input
+                String registerFederationExport;
+                boolean registerFederationExportBol;
+
+                if (registerFederationExportTmp != null) {
+                    registerFederationExport = InputSanitizerHelper.sanitizeInput(registerFederationExportTmp[0]);
+                    registerFederationExportBol = (registerFederationExport != null && registerFederationExport.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE));
+                } else {
+                    registerFederationExportBol = false;
+                }
+
+                if (regItemproposed != null) {
+                    regItemproposed.setRorExport(registerFederationExportBol);
+                }
+
+                // Update the RegFields
+                updateFields(regItemproposed, requestParameters);
+                entityManager.getTransaction().commit();
+            }
+            /* ## End Synchronized ## */
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    /**
+     * This method handles the save of a proposal when done via bulk edit
      */
     public void handleRegItemproposedSave(Map requestParameters, RegUser regUser) throws Exception {
 
@@ -1128,6 +1222,106 @@ public class RegItemproposedHandler {
             regLocalizationproposedManager.add(regLocalizationproposed);
         }
     }
+private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, RegItemproposed regItemproposed, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language) throws Exception {
+        RegRelationManager regRelationManager = new RegRelationManager(entityManager);
+        RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
+        RegRelationproposedManager regRelationproposedManager = new RegRelationproposedManager(entityManager);
+        RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
+        RegItemManager regItemManager = new RegItemManager(entityManager);
+        RegItemclassManager regItemclassManager = new RegItemclassManager(entityManager);
+        RegFieldManager regFieldManager = new RegFieldManager(entityManager);
+        try {
+
+            regItemManager.getByLocalid(language);
+            // Getting all the relations related to that object
+            List<RegRelation> regRelations = regRelationManager.getAllBySubject(regItem);
+
+            // Copying RegRelations to RegRelationProposeds
+            HashMap<String, RegRelationproposed> tempHashmap = new HashMap();
+
+            RegRelationproposed regRelationproposedEditLcl = null;
+            String fieldName = "";
+            List<RegRelationproposed> relationsLcl = new ArrayList();
+            int x = 0;
+            Map<String, RegRelationproposed> localizationMap = new HashMap<>();            
+            for (int j = 0; j < regRelations.size(); j++) {
+                List<RegLocalization> localizations = regLocalizationManager.getAllByRelation(regRelations.get(j));
+
+                RegItem regItemCurrent = regRelations.get(j).getRegItemObject();
+                RegItem regItemObject = new RegItem();
+                for (Map.Entry<RegField, String> entry : fields.entrySet()) {
+                    for (int i = 0; i < localizations.size(); i++) {
+                        if (localizations.get(i).getRegField().getLocalid().equalsIgnoreCase(entry.getKey().getLocalid())) {
+                            if(!entry.getValue().equalsIgnoreCase("")){
+                                    RegField regField = regFieldManager.get(entry.getKey().getUuid());
+                                    RegItemclass regItemClassObject = regItemclassManager.get(regField.getRegItemclassReference().getUuid());
+                                    regItemObject = regItemManager.getByLocalidAndRegItemClass(entry.getValue(), regItemClassObject);
+                                    regRelations.get(j).setRegItemObject(regItemCurrent);
+                            }
+                        }
+
+                    }
+                }
+
+                if (regItemObject.getUuid() == null){
+                    regItemObject = regItemCurrent;
+                }
+               
+                RegRelationproposed regRelationproposed = new RegRelationproposed();
+                String regRelationproposedUuid = RegRelationproposedUuidHelper.getUuid(regItemproposed, null, regRelations.get(j).getRegRelationpredicate(), null, regItemCurrent);
+                //String regRelationproposedUuid2 = RegRelationproposedUuidHelper.getUuid(regItemproposed, null, regRelations.get(j).getRegRelationpredicate(), null, regRelations.get(j).getRegItemObject());
+               
+                regRelationproposed.setUuid(regRelationproposedUuid);
+                regRelationproposed.setRegItemSubject(null);
+                regRelationproposed.setRegItemproposedSubject(regItemproposed);
+                regRelationproposed.setRegItemObject(regItemObject);
+                regRelationproposed.setRegItemproposedObject(null);
+              
+                regRelationproposed.setRegRelationpredicate(regRelations.get(j).getRegRelationpredicate());
+                regRelationproposed.setInsertdate(new Date());
+                
+                if(regItemObject != regRelations.get(j).getRegItemObject() || regRelations.get(j).getRegRelationpredicate().getUuid().equals("7")){
+                    regRelationproposed.setRegRelationReference(regRelations.get(j));
+                    relationsLcl.add(regRelationproposed);
+                } else{
+                    regRelationproposed.setRegRelationReference(regRelations.get(j)); 
+                }
+
+                regRelationproposedManager.add(regRelationproposed);
+
+                tempHashmap.put(regRelations.get(j).getUuid(), regRelationproposed);
+
+            }
+           
+                // Replicating the relevant Reglocalizationproposeds pointing to the
+                //  RegRelationproposed copyied above
+                // Getting all the localization with a reference to a reg relation
+                // related to the current RegItem
+            List<RegLocalization> regLocalizations = regLocalizationManager.getAllWithRelationReference(regItem);
+            for (RegLocalization regLocalization : regLocalizations) {
+                // Creating the regLocalizationproposed for the regRelationreference
+
+                RegLocalizationproposed regLocalizationproposed = new RegLocalizationproposed();
+                String newUuid = RegLocalizationproposedUuidHelper.getUuid(regLocalization.getFieldValueIndex(), regLocalization.getRegLanguagecode(), regItemproposed, regLocalization.getRegField());
+                regLocalizationproposed.setUuid(newUuid);
+                regLocalizationproposed.setFieldValueIndex(regLocalization.getFieldValueIndex());
+                regLocalizationproposed.setHref(regLocalization.getHref());
+                regLocalizationproposed.setRegField(regLocalization.getRegField());
+                regLocalizationproposed.setRegItemproposed(regItemproposed);
+                regLocalizationproposed.setRegLanguagecode(regLocalization.getRegLanguagecode());
+                regLocalizationproposed.setRegLocalizationReference(regLocalization);
+                regLocalizationproposed.setRegRelationproposedReference(tempHashmap.get(regLocalization.getRegRelationReference().getUuid()));
+                regLocalizationproposed.setValue(regLocalization.getValue());
+                regLocalizationproposed.setInsertdate(new Date());
+                regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
+
+                regLocalizationproposedManager.add(regLocalizationproposed);
+            }
+           
+        } catch (Exception e) {
+            System.out.println("eu.europa.ec.re3gistry2.javaapi.handler.RegItemproposedHandler.copyRegRelationsToRegRelationproposedsBulkEdit()");
+        }
+    }
 
     // Copy all the RegItemRegGroupRegRoleMapping related to the item passed by parameter
     // to RegItemproposedRegGroupRegRoleMapping
@@ -1578,6 +1772,160 @@ public class RegItemproposedHandler {
         return regLocalizationproposed;
     }
 
+    private void copyRegLocalizationsToRegLocalizationproposedBulkEdit(RegItem regItem, RegItemproposed regItemproposed, String checkDeleteUuid, HashMap<RegField, String> fields, String language) throws Exception {
+
+        RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
+        RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
+        RegRelationproposedManager regRelationproposedManager = new RegRelationproposedManager(entityManager);
+        RegLanguagecodeManager regLanguacecodeManager = new RegLanguagecodeManager(entityManager);
+        RegLanguagecode masterLanguage = regLanguacecodeManager.getByIso6391code(language);
+
+        // Getting all the regLocalizations realted to the RegItem (in the master language)
+        List<RegLocalization> regLocalizations = regLocalizationManager.getAll(regItem, masterLanguage);
+        int i = 0;
+        for (RegLocalization regLocalization : regLocalizations) {
+
+            String newRegLocalizationproposedUuid = RegLocalizationproposedUuidHelper.getUuid(regLocalization.getFieldValueIndex(), regLocalization.getRegLanguagecode(), regItemproposed, regLocalization.getRegField());
+
+            // Checking if the regLocalizationproposed is already available ( it
+            // may have been copyied by the reg relation copyier)
+            try {
+                // If the RegLocalizationproposed is already there, update it accordingly
+                RegLocalizationproposed regLocalizationproposed = regLocalizationproposedManager.get(newRegLocalizationproposedUuid);
+
+                // If the localization is the one passed by the delete action, deleting the values
+                if (checkDeleteUuid != null && regLocalization.getUuid().equals(checkDeleteUuid)) {
+                    // If there is a reference to a RegRelationproposed, deleting also the RegRelationproposed
+                    RegRelationproposed regRelationproposed = regLocalizationproposed.getRegRelationproposedReference();
+
+                    // Removing the values and the reference to the RegRelationproposed
+                    regLocalizationproposed.setValue(null);
+                    regLocalizationproposed.setHref(null);
+                    regLocalizationproposed.setRegRelationproposedReference(null);
+
+//                    regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
+
+                    regLocalizationproposedManager.update(regLocalizationproposed);
+
+                    if (regRelationproposed != null) {
+                        regRelationproposedManager.delete(regRelationproposed);
+                    }
+                }
+
+            } catch (NoResultException e) {
+                // Else, creating the new RegLocalizationproposed
+                RegLocalizationproposed newRegLocalizationproposed = new RegLocalizationproposed();
+                newRegLocalizationproposed.setUuid(newRegLocalizationproposedUuid);
+                newRegLocalizationproposed.setFieldValueIndex(regLocalization.getFieldValueIndex());
+                newRegLocalizationproposed.setInsertdate(new Date());
+                newRegLocalizationproposed.setRegField(regLocalization.getRegField());
+                newRegLocalizationproposed.setRegItemproposed(regItemproposed);
+                newRegLocalizationproposed.setRegLanguagecode(regLocalization.getRegLanguagecode());
+                newRegLocalizationproposed.setRegLocalizationReference(regLocalization);
+//                newRegLocalizationproposed.setRegAction(regItemproposed.getRegAction());
+
+                // If the localization is the one passed by the delete action, deleting the values
+                if (checkDeleteUuid != null && regLocalization.getUuid().equals(checkDeleteUuid)) {
+                    newRegLocalizationproposed.setValue(null);
+                    newRegLocalizationproposed.setHref(null);
+                    newRegLocalizationproposed.setRegRelationproposedReference(null);
+                } else {
+
+                    for (Map.Entry<RegField, String> entry : fields.entrySet()) {
+                        if (entry.getKey().getLocalid().equalsIgnoreCase(regLocalization.getRegField().getLocalid()) && !regLocalization.getRegField().getRegFieldtype().getUuid().equals("10")) {
+                            if (entry.getValue().equalsIgnoreCase("")) {
+                                newRegLocalizationproposed.setValue(regLocalization.getValue());
+                            } else {
+                                newRegLocalizationproposed.setValue(entry.getValue());
+                            }
+                        }
+                    }
+
+                    newRegLocalizationproposed.setHref(regLocalization.getHref());
+
+                    // Getting the related RegRelationproposed
+                    try {
+                        RegRelationproposed regRelationproposed = regRelationproposedManager.getByRegRelationReference(regLocalization.getRegRelationReference());
+                        newRegLocalizationproposed.setRegRelationproposedReference(regRelationproposed);
+                    } catch (NoResultException ex) {
+                        newRegLocalizationproposed.setRegRelationproposedReference(null);
+                    }
+                }
+
+                regLocalizationproposedManager.add(newRegLocalizationproposed);
+            }
+            i++;
+        }
+    }
+
+    private void storeRelarionReference(String fieldValue, RegField regField, RegItemproposed regItemproposed, HashMap<RegField, RegItem> mapCollection, RegItemclass regItemclassChild, RegLanguagecode fieldLanguage, String localId, FieldsBulkImport fieldsBulkImport) {
+        RegRelationproposedManager regRelationproposedManager = new RegRelationproposedManager(entityManager);
+        RegRelationpredicateManager regRelationpredicateManager = new RegRelationpredicateManager(entityManager);
+        RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
+        RegItemManager regItemManager = new RegItemManager(entityManager);
+        ArrayList<String> relationReferenceList = new ArrayList<>();
+
+        if (fieldValue.contains(",")) {
+            relationReferenceList = new ArrayList<>(Arrays.asList(fieldValue.split(",")));
+        } else {
+            relationReferenceList.add(fieldValue);
+        }
+
+        int i = 0;
+        for (String valueOfTheField : relationReferenceList) {
+            try {
+                RegItemclass itemClassRelationReference = regField.getRegItemclassReference();
+                String relationreferenceuuid = "";
+                
+                try {
+                    if (mapCollection.containsKey(regField)) {
+                        RegItem itemRelationReferenceCollection = mapCollection.get(regField);
+                        relationreferenceuuid = RegItemUuidHelper.getUuid(valueOfTheField, itemRelationReferenceCollection, itemClassRelationReference);
+                    } else {
+                        relationreferenceuuid = RegItemUuidHelper.getUuid(valueOfTheField, null, itemClassRelationReference);
+                    }
+
+                    RegItem regItemRelationReference = regItemManager.get(relationreferenceuuid);
+
+                    //create relation
+                    RegRelationpredicate regRelationpredicateReference = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_REFERENCE);
+                    RegRelationproposed regRelationproposedReference = new RegRelationproposed();
+                    regRelationproposedReference.setInsertdate(new Date());
+                    regRelationproposedReference.setRegItemSubject(null);
+                    regRelationproposedReference.setRegItemproposedSubject(regItemproposed);
+                    regRelationproposedReference.setUuid(RegRelationproposedUuidHelper.getUuid(regItemproposed, null, regRelationpredicateReference, null, regItemRelationReference));
+                    regRelationproposedReference.setRegItemObject(regItemRelationReference);
+
+                    regRelationproposedReference.setRegItemproposedObject(null);
+                    regRelationproposedReference.setRegRelationReference(null);
+                    regRelationproposedReference.setRegRelationpredicate(regRelationpredicateReference);
+
+                    regRelationproposedManager.add(regRelationproposedReference);
+
+//                                            create localization for red relation proposed
+                    RegLocalizationproposed regLocalizationproposed = new RegLocalizationproposed();
+                    regLocalizationproposed.setUuid(RegLocalizationproposedUuidHelper.getUuid(i, fieldLanguage, regItemproposed, regField));
+                    regLocalizationproposed.setRegLanguagecode(fieldLanguage);
+                    regLocalizationproposed.setRegItemproposed(regItemproposed);
+                    regLocalizationproposed.setRegField(regField);
+                    regLocalizationproposed.setRegRelationproposedReference(regRelationproposedReference);
+                    regLocalizationproposed.setInsertdate(new Date());
+                    regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
+
+                    regLocalizationproposedManager.add(regLocalizationproposed);
+                } catch (Exception ex) {
+                    relationreferenceuuid = RegItemproposedUuidHelper.getUuid(valueOfTheField, null, regItemclassChild, null);
+                    RegItemproposedManager regItemproposedManager = new RegItemproposedManager(entityManager);
+                    RegItemproposed regItemproposedrelation = regItemproposedManager.get(relationreferenceuuid);
+                }
+            } catch (Exception e) {
+                //Error
+            }
+            i++;
+
+        }
+    }
+
     // This method copies the RegLocalization to RegLocalizationproposed
     private void copyRegLocalizationsToRegLocalizationproposed(RegItem regItem, RegItemproposed regItemproposed, String checkDeleteUuid) throws Exception {
 
@@ -1754,6 +2102,40 @@ public class RegItemproposedHandler {
         return regItemproposed;
     }
 
+   public RegItemproposed completeCopyRegItemToRegItemporposedBulkEdit(RegItem regItem, RegUser regUser, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language) throws Exception {
+        RegItemproposed regItemproposed = null;
+        synchronized (sync) {
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+            regItemproposed = copyRegItemToRegItemproposed(regItem, regUser);
+            entityManager.getTransaction().commit();
+
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+            if (regItem != null && regItemproposed != null) {
+                copyRegItemRegGroupRegRoleMappingToRegItemproposedRegGroupRegRoleMapping(regItem, regItemproposed);
+            }
+            entityManager.getTransaction().commit();
+
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+            if (regItem != null && regItemproposed != null) {
+              copyRegRelationsToRegRelationproposedsBulkEdit(regItem, regItemproposed, fields, additionLines, language);  
+            }
+            entityManager.getTransaction().commit();
+
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+            copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fields, language);
+            entityManager.getTransaction().commit();
+        }
+        return regItemproposed;
+    }
+
     public String newRegisterLite(String registryItemUuid, String registerLocalId, RegItemclass registerItemclass, RegUser regUser, String labelValue, String contentSummaryValue, String registerOwnerGroupUuid, String registerManagerGroupUuid, String controlBodyGroupUuid, String[] submittingOrganizationGroupUuids) throws Exception {
 
         // Instantiating managers
@@ -1898,7 +2280,7 @@ public class RegItemproposedHandler {
 //                if (groupUuid == null) {
 //                    regGroup = regGroupManager.getByLocalid("registryManager");
 //                } else {
-                    regGroup = regGroupManager.get(groupUuid);
+                regGroup = regGroupManager.get(groupUuid);
 //                }
 
                 if (!entityManager.getTransaction().isActive()) {

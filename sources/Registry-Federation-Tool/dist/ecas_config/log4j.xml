@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+    <!--
+        File:   log4j.xml
+        Description:    Log4j configuration descriptor
+
+        Liability disclaimer:
+            This product is provided as is, without any representation or warranty of any kind, either
+            express or implied, including without limitation any representations or endorsements regarding
+            the use of, the results of, or performance of the product, its appropriateness, accuracy,
+            reliability, or correctness. The entire risk as to the use of this product is assumed by
+            the user.
+
+        Copyright (c)2004-2007 European Commission, all rights reserved.
+
+        Author:     Dominique LAURENT (mailto:Dominique.LAURENT@ext.ec.europa.eu)
+
+        Version:    $Revision$ $Date$
+
+        Since:      1.5.0
+
+        See:        http://logging.apache.org/log4j/
+        See:        http://logging.apache.org/log4j/docs/api/org/apache/log4j/PatternLayout.html for pattern formats
+    -->
+
+    <!-- 0) explain the PatternLayouts we are going to use -->
+    <!--
+        a. For the console appender:
+
+        %d [%t] %-5p %c{1} - %x - %m%n
+
+        - %d:       the date of the logging event
+        - [%t]:     the thread that generated the logging event (between square brackets)
+        - %-5p:     the priority of the logging event, left justified to a width of five characters
+        - %c{1}:    the category of the logging event, but only the last part (e.g. "c" in "a.b.c")
+        - %x:       the NDC (nested diagnostic context) associated with the thread that generated the logging event
+        - %m:       the application supplied message associated with the logging event
+        - %n:       the platform dependent line separator character or characters
+
+        b. For the ecas client file appender:
+
+        %d [%t] %-5p %c - %x - %m%n
+
+        - %c:       the category of the logging event (full)
+
+    -->
+
+    <!-- 1) define all the appenders -->
+
+    <!-- define the console appender -->
+    <appender name="CONSOLE_APPENDER" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <param name="threshold" value="error" /> <!-- we are only sending error and above logs to the console/nohup -->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%t] %-5p %c{1} - %x - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- define the ECAS_CLIENT_FILE file appender -->
+    <appender name="ECAS_CLIENT_FILE" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="ecas-client.log"/>
+        <param name="datePattern" value="'.'yyyy-MM-dd'.txt'"/>
+        <param name="Append" value="true"/>
+        <param name="BufferedIO" value="true"/>
+        <param name="BufferSize" value="16384"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%t] %-5p %c - %x - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- define the asynchronous appender to avoid locking the application while logging -->
+    <appender name="ASYNC_DISPATCH_APPENDER" class="eu.cec.digit.ecas.client.logging.log4j.ExecutorAsyncAppender" >
+        <param name="threadPoolName" value="EcasClientLoggingThreadPool"/>
+        <param name="threshold" value="info" /> <!-- we are not logging below info in all loggers so use threshold=info here -->
+        <param name="bufferSize" value="2048"/>
+        <param name="LocationInfo" value="false"/>
+        <appender-ref ref="CONSOLE_APPENDER"/>
+        <appender-ref ref="ECAS_CLIENT_FILE"/>
+    </appender>
+
+    <!-- 2) define all the loggers -->
+
+    <logger name="eu.cec.digit.ecas.util.httpclient" additivity="true">
+        <level value="error"/>
+    </logger>
+
+    <logger name="eu.cec.digit.commons" additivity="true">
+        <level value="warn"/>
+    </logger>
+
+    <logger name="eu.cec.digit.ecas.client.filter.MetaFilter" additivity="true">
+        <level value="error"/>
+    </logger>
+
+   <logger name="eu.cec.digit.ecas.util.dependencies" additivity="true">
+
+      <level value="error"/>
+   </logger>
+
+    <logger name="httpclient.wire" additivity="true">
+        <level value="error"/>
+    </logger>
+
+    <logger name="org.apache" additivity="true">
+        <level value="error"/>
+    </logger>
+
+    <!-- 3) define the root logger -->
+
+    <!-- define the root logger to use the asynchronous appender -->
+    <root>
+        <level value="info"/>
+        <appender-ref ref="ASYNC_DISPATCH_APPENDER"/>
+    </root>
+
+</log4j:configuration>
