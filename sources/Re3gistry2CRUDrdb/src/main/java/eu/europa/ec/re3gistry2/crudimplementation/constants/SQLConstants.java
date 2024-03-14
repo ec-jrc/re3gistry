@@ -132,7 +132,7 @@ public class SQLConstants {
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEM_AND_LANGUAGE = "SELECT r FROM RegLocalization r WHERE r.regItem = :regitem AND r.regLanguagecode = :regLanguagecode AND r.regField IS NOT NULL";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_LANGUAGE_AND_ITEMS = "SELECT r FROM RegLocalization r WHERE r.regLanguagecode = :regLanguagecode AND r.regField IS NOT NULL AND r.regItem IN :regitemList";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMCLASS = "SELECT r FROM RegLocalization r WHERE r.regItemclass = :regItemclass";
-    public static final String SQL_GET_DISTINCT_LANGUAGE_CODES_BY_REGACTION = "SELECT DISTINCT r.regLanguagecode FROM RegLocalization r WHERE r.regAction = :regaction";
+    public static final String SQL_GET_DISTINCT_LANGUAGE_CODES_BY_REGACTION ="SELECT DISTINCT r.regLanguagecode FROM RegLocalization r WHERE r.regAction = :regaction AND r.value IS NOT NULL";
     
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_REGFIELD_ITEMCLASS_HREFNORNULL = "SELECT * FROM RegLocalization r INNER JOIN RegItem ri ON ri.uuid = r.regItem AND ri.regItemclass = :regItemclass WHERE r.regField = :regfield AND r.href IS NOT NULL";
     public static final String SQL_GET_LOCALIZATION_BY_RELATION = "SELECT r FROM RegLocalization r WHERE r.regRelationReference = :relation";
