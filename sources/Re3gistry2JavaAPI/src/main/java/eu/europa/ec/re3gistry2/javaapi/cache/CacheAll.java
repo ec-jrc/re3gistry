@@ -26,11 +26,14 @@ public class CacheAll {
     private EntityManager em;
     private final ItemCache cache;
     private RegLanguagecode regMasterLanguagecode;
+    private List <RegLanguagecode> availableLanguages;
+    private Logger logger = Configuration.getInstance().getLogger();
 
-    public CacheAll(EntityManager em, ItemCache cache, RegLanguagecode regMasterLanguagecode) {
+    public CacheAll(EntityManager em, ItemCache cache, RegLanguagecode regMasterLanguagecode, List <RegLanguagecode> availableLanguages) {
         this.em = em;
         this.cache = cache;
         this.regMasterLanguagecode = regMasterLanguagecode;
+        this.availableLanguages = availableLanguages;
     }
 
     public void run(String itemclassID) throws Exception {
@@ -49,14 +52,18 @@ public class CacheAll {
         }
 
         try {
-            List<RegLanguagecode> availableLanguages;
             RegLanguagecode masterLanguage = languageManager.getMasterLanguage();
-            if (regMasterLanguagecode != null) {
-                availableLanguages = new ArrayList<>();
-                availableLanguages.add(regMasterLanguagecode);
-            } else {
-                availableLanguages = regLanguagecodeManager.getAllActive();
+                    
+            if (availableLanguages==null) {
+                if (regMasterLanguagecode != null) {
+                    availableLanguages = new ArrayList<>();
+                    availableLanguages.add(regMasterLanguagecode);
+                } else {
+                    availableLanguages = regLanguagecodeManager.getAllActive();
+                }
             }
+            
+            
 
             try {
                 logger.trace("---[ STARTING CACHE ALL]--- @ " + new Date());
@@ -96,7 +103,7 @@ public class CacheAll {
                                         em.getTransaction().begin();
                                     }
                                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
-                                    Optional<Item> optItem = getItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
+                                    getItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
                                 } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
                                     if (!em.isOpen()) {
                                         em = em.getEntityManagerFactory().createEntityManager();
@@ -165,5 +172,5 @@ public class CacheAll {
         cache.add(language, item, null);
         return Optional.of(item);
     }
-
 }
+    
