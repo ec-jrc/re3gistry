@@ -29,10 +29,9 @@ public class CacheAll {
     private List <RegLanguagecode> availableLanguages;
     private Logger logger = Configuration.getInstance().getLogger();
 
-    public CacheAll(EntityManager em, ItemCache cache, RegLanguagecode regMasterLanguagecode, List <RegLanguagecode> availableLanguages) {
+    public CacheAll(EntityManager em, ItemCache cache, List <RegLanguagecode> availableLanguages) {
         this.em = em;
         this.cache = cache;
-        this.regMasterLanguagecode = regMasterLanguagecode;
         this.availableLanguages = availableLanguages;
     }
 

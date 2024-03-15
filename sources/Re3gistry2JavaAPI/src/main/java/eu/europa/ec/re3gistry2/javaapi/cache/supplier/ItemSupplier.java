@@ -26,7 +26,6 @@
  */
 package eu.europa.ec.re3gistry2.javaapi.cache.supplier;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

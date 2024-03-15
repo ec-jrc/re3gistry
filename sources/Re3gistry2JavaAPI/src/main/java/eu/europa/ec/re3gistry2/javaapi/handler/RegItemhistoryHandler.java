@@ -145,7 +145,6 @@ public class RegItemhistoryHandler {
                             for (RegItemhistory regItemhistoryItem : regItemHistoryList) {
                                 versions.add(regItemhistoryItem.getVersionnumber());
                             }   
-                          int itemHistoryVersionupdated = regItemhistoryItem.getVersionnumber() + 1;
                                 maxVersionRegItemhistory.setVersionnumber(max(versions)+1);
                                 regItemhistoryManager.update(maxVersionRegItemhistory);
                         }
