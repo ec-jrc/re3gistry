@@ -240,19 +240,20 @@ public class RegistryManagerUsersAdd extends HttpServlet {
 
                         String subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_NEW_REGISTRATION);
                         String body;
+                        final Properties configurationProperties = Configuration.getInstance().getProperties();
 
                         if (loginType.equals(BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO)) {
-                            String host = request.getHeader(BaseConstants.KEY_PROPERTY_HOST);
-                            URL activationUrl = new URL(host.concat(WebConstants.PAGE_PATH_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("="+codeActivation.getCode()));
-                            URL deletionUrl = new URL(host.concat(WebConstants.PAGE_PATH_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("="+codeDeletion.getCode()));
+                            String mailHost = configurationProperties.getProperty(BaseConstants.KEY_MAIL_HOST);
+                            String activationUrl = mailHost.concat(WebConstants.EMAIL_URL).concat(WebConstants.PAGE_URINAME_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("="+codeActivation.getCode());
+                            String deletionUrl =   mailHost.concat(WebConstants.EMAIL_URL).concat(WebConstants.PAGE_URINAME_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("="+codeDeletion.getCode());
                             
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_NEW_REGISTRATION);
                             body = (body != null)
                                     ? body.replace("{name}", name)
                                             .replace("{email}", email)
                                             .replace("{key}", key)
-                                            .replace("{acceptLink}",activationUrl.toString())
-                                            .replace("{deleteLink}",deletionUrl.toString())
+                                            .replace("{acceptLink}",activationUrl)
+                                            .replace("{deleteLink}",deletionUrl)
                                     : "";
                         } else {
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ECAS_NEW_REGISTRATION);
