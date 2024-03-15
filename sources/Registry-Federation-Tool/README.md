@@ -1,7 +1,7 @@
 # Register Federation Tool
 
 
-The **Register Federation Tool**, previously known as "Register of Registers (RoR)", is an online platform providing a central access point to bring together or federate code lists or semantic asset registers. 
+The **Register Federation Tool**, also known as "Register of Registers (RoR)", is an online platform providing a central access point to bring together or federate code lists or semantic asset registers. 
 
 ## Features:
 
