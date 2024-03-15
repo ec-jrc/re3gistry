@@ -273,19 +273,26 @@ function updateDataI18nLocalizationLinks() {
  * otherwhise it returns the registryApp.defaultLanguage
  */
 function getBrowserLanguage() {
+    let JSONLINK = registryApp.hostURL + "/rest?lang=active&format=jsonc";
+    let unparsedLanguageJSON = $.ajax({
+        url: JSONLINK,
+        async: false
+    }).responseText;
 
+    let languageJSON = JSON.parse(unparsedLanguageJSON);
+    
     let userLang = navigator.language || navigator.userLanguage;
-    if (userLang !== null && userLang.length > 0) {
+    userLang = userLang.substring(0, 2);
 
-        // Getting just the first 2 characters from the string
-        userLang = userLang.substring(0, 2);
-    } else {
-        userLang = registryApp.defaultLanguage;
+    for (let i = 0; i < languageJSON.length; i++) {
+        if (languageJSON[i].iso6391code == userLang) {
+            return userLang; 
+        }
     }
 
-    return userLang;
-}
 
+    return registryApp.defaultLanguage;
+}
 function loadBackendLink(){
 
     var footerHref = document.getElementsByClassName("backend-link");
