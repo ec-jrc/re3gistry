@@ -41,6 +41,7 @@ import eu.europa.ec.re3gistry2.model.RegGroup;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -76,8 +77,8 @@ public class RegistryManagerDataExport extends HttpServlet {
         // Getting form parameter
         String startIndex = request.getParameter(BaseConstants.KEY_REQUEST_STARTINDEX);
         String startCaching = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING);
-        String startCachingMasterLanguage = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING_MASTERLANGUAGE);
         String removeCaching = request.getParameter(BaseConstants.KEY_REQUEST_REMOVECACHING);
+      
 
         // Getting request parameter
         String regUserDetailUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERDETAIL_UUID);
@@ -88,7 +89,6 @@ public class RegistryManagerDataExport extends HttpServlet {
 
         startIndex = (startIndex != null) ? InputSanitizerHelper.sanitizeInput(startIndex) : null;
         startCaching = (startCaching != null) ? InputSanitizerHelper.sanitizeInput(startCaching) : null;
-        startCachingMasterLanguage = (startCachingMasterLanguage != null) ? InputSanitizerHelper.sanitizeInput(startCachingMasterLanguage) : null;
         regUserDetailUUID = (regUserDetailUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserDetailUUID) : null;
         regUserRegGroupMappingUUID = (regUserRegGroupMappingUUID != null) ? InputSanitizerHelper.sanitizeInput(regUserRegGroupMappingUUID) : null;
         languageUUID = (languageUUID != null) ? InputSanitizerHelper.sanitizeInput(languageUUID) : null;
@@ -142,8 +142,7 @@ public class RegistryManagerDataExport extends HttpServlet {
                 sendMail(request, subject, body);
 
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
-            } else if ((startCaching != null && startCaching.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE))
-                    || (startCachingMasterLanguage != null && startCachingMasterLanguage.equals(BaseConstants.KEY_BOOLEAN_STRING_TRUE))) {
+            } else if (startCaching != null) {
                 // This is a save request
 
                 ItemCache cache = (ItemCache) request.getAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY);
@@ -151,18 +150,43 @@ public class RegistryManagerDataExport extends HttpServlet {
                     cache = new EhCache();
                     request.setAttribute(BaseConstants.ATTRIBUTE_CACHE_KEY, cache);
                 }
-//                cache.removeAll();
 
                 String subject;
                 String body;
-                CacheAll cacheall;
-                if (startCaching != null) {
+                CacheAll cacheall = null;
+                
+                //Regular all language cache
+                if (startCaching.equalsIgnoreCase("true")) {
                     cacheall = new CacheAll(entityManager, cache, null);
-                } else {
-                    cacheall = new CacheAll(entityManager, cache, regLanguagecodeManager.getMasterLanguage());
                 }
-                boolean result;
+                
+                //Selected languages Cache
+                if(!startCaching.equalsIgnoreCase("true")){
+                    
+                    String[] res = startCaching.split("[,]", 0);
+                    List<RegLanguagecode> localActiveLanguages = new ArrayList<>();
+                    for (String re : res) {
+                        try{
+                            RegLanguagecode code = regLanguagecodeManager.getByIso6391code(re);
+                            if(code != null){
+                           localActiveLanguages.add(code); 
+                           }
+                        }catch(Exception e){
+                            logger.trace("Unexpected exception occured", e);
+                            throw new Exception("Unexpected exception occured. " + e.getMessage());
+                        }
+                        
+                    }
 
+                    cacheall = new CacheAll(entityManager, cache, localActiveLanguages);
+                }
+                
+                if(cacheall == null){
+                    cacheall = new CacheAll(entityManager, cache, null);
+                }
+                
+                boolean result;
+                
                 try {
                     if (cacheClassUUID!=null) {
                         cacheall.run(cacheClassUUID);
