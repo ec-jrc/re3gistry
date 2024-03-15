@@ -1400,14 +1400,22 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
             value = (value.length() == 0) ? "" : InputSanitizerHelper.sanitizeInput(value);
 
             // Getting the eventual href
+            
             String hrefFieldName = processFieldHrefName(key);
-            String[] paramHrefs = (String[]) requestParameters.get(hrefFieldName);
+            String[] paramHrefs = (String[]) requestParameters.get(key);
             String href = "";
-            if (paramHrefs != null) {
-                //For each value there is just one link
-                href = paramHrefs[0];
-                // !!! Sanitizing form input
-                href = InputSanitizerHelper.sanitizeInput(href);
+            if(paramHrefs.length>1){
+                href = paramHrefs[1];
+            }
+            
+            else {
+                paramHrefs = (String[]) requestParameters.get(hrefFieldName);
+                if (paramHrefs != null){
+                    //For each value there is just one link
+                    href = paramHrefs[0];
+                    // !!! Sanitizing form input
+                    href = InputSanitizerHelper.sanitizeInput(href);
+                }
             }
 
             try {
@@ -1772,7 +1780,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
         return regLocalizationproposed;
     }
 
-    private void copyRegLocalizationsToRegLocalizationproposedBulkEdit(RegItem regItem, RegItemproposed regItemproposed, String checkDeleteUuid, HashMap<RegField, String> fields, String language) throws Exception {
+    private void copyRegLocalizationsToRegLocalizationproposedBulkEdit(RegItem regItem, RegItemproposed regItemproposed, String checkDeleteUuid, HashMap<RegField, String> fields, String language, String ref) throws Exception {
 
         RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
         RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
@@ -1837,6 +1845,9 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                                 newRegLocalizationproposed.setValue(regLocalization.getValue());
                             } else {
                                 newRegLocalizationproposed.setValue(entry.getValue());
+                            }
+                            if(entry.getKey().getLocalid().equalsIgnoreCase("ReferenceLink")){
+                               regLocalization.setHref(ref);
                             }
                         }
                     }
@@ -2102,7 +2113,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
         return regItemproposed;
     }
 
-   public RegItemproposed completeCopyRegItemToRegItemporposedBulkEdit(RegItem regItem, RegUser regUser, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language) throws Exception {
+   public RegItemproposed completeCopyRegItemToRegItemporposedBulkEdit(RegItem regItem, RegUser regUser, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language, String ref) throws Exception {
         RegItemproposed regItemproposed = null;
         synchronized (sync) {
             if (!entityManager.getTransaction().isActive()) {
@@ -2130,7 +2141,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
-            copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fields, language);
+            copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fields, language, ref);
             entityManager.getTransaction().commit();
         }
         return regItemproposed;
