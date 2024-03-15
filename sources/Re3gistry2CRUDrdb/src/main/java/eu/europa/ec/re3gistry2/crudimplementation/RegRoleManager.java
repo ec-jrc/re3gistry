@@ -30,6 +30,7 @@ import eu.europa.ec.re3gistry2.model.RegRole;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class RegRoleManager implements IRegRoleManager {
@@ -52,7 +53,7 @@ public class RegRoleManager implements IRegRoleManager {
 
         //Checking parameters
         if (uuid == null) {
-             throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, "uuid"));
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, "uuid"));
         }
 
         //Preparing query
@@ -62,7 +63,7 @@ public class RegRoleManager implements IRegRoleManager {
 
     }
 
-     /**
+    /**
      * Returns the RegRole object
      *
      * @param name The name of the RegRole
@@ -73,7 +74,7 @@ public class RegRoleManager implements IRegRoleManager {
     public RegRole getByName(String name) throws Exception {
         //Checking parameters
         if (name == null) {
-             throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, "name"));
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, "name"));
         }
 
         //Preparing query
@@ -108,7 +109,7 @@ public class RegRoleManager implements IRegRoleManager {
     public boolean add(RegRole regRole) throws Exception {
         //Checking parameters
         if (regRole == null) {
-             throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, RegRole.class));
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, RegRole.class));
         }
 
         //Checking the DB managers
@@ -126,8 +127,8 @@ public class RegRoleManager implements IRegRoleManager {
      * Update the RegRole specified by parameter. Returns true if the operation
      * succeed.
      *
-     * @param regRole the updated RegRole (this method update the RegRole on the db
-     * with the RegRole passed by parameter)
+     * @param regRole the updated RegRole (this method update the RegRole on the
+     * db with the RegRole passed by parameter)
      * @return True if the operation was successfully completed; otherwise it
      * returns false.
      * @throws java.lang.Exception
@@ -149,8 +150,8 @@ public class RegRoleManager implements IRegRoleManager {
 
         return true;
     }
-    
-         /**
+
+    /**
      * Returns the RegRole object
      *
      * @param localId
@@ -161,13 +162,18 @@ public class RegRoleManager implements IRegRoleManager {
     public RegRole getByLocalId(String localId) throws Exception {
         //Checking parameters
         if (localId == null) {
-             throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, SQLConstants.SQL_PARAMETERS_LOCALID));
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, SQLConstants.SQL_PARAMETERS_LOCALID));
         }
 
         //Preparing query
         Query q = this.em.createNamedQuery("RegRole.findByLocalid");
         q.setParameter(SQLConstants.SQL_PARAMETERS_LOCALID, localId);
-        return (RegRole) q.getSingleResult();
+        try {
+            return (RegRole) q.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+
     }
 
 }
