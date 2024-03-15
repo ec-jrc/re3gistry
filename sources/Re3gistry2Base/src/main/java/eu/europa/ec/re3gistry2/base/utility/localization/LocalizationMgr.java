@@ -136,7 +136,6 @@ public class LocalizationMgr {
 
     public static Locale getLocale(String localeId) {
         Locale outLocale = null;
-
         switch (localeId) {
             case "en":
                 outLocale = Locale.ENGLISH;
@@ -201,6 +200,12 @@ public class LocalizationMgr {
             case "sv":
                 outLocale = new Locale("sv");
                 break;
+            case "el":
+                outLocale = new Locale("el");
+                break;
+            case "et":
+                outLocale = new Locale("et");
+                break;        
             default:
                 outLocale = Locale.ENGLISH;
                 break;

@@ -37,9 +37,9 @@ application.version=Version: 2.0.0
 
 # Localization
 application.language.available=en
-#application.language.available=en-it
+application.language.available=it
 application.language.label.en=English (en)
-#application.language.label.it=Italiano (it)
+application.language.label.it=Italiano (it)
 application.language.defaultLocale=en
 
 # ECAS base URL (authetication method)
