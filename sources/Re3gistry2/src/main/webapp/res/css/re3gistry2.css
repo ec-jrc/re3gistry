@@ -421,7 +421,7 @@ footer {
   position: absolute;
   left: -20px;
   z-index: 9;
-  top: 150px;
+  top: 9.5rem;
   color: #dc3545; }
 
 .with-errors {
