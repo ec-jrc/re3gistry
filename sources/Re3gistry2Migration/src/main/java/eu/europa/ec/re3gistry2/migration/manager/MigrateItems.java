@@ -57,10 +57,7 @@ import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemhistoryUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegLocalizationUuidHelper;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.apache.logging.log4j.Logger;
@@ -131,6 +128,8 @@ public class MigrateItems {
                         RegItemclasstypeManager regItemclasstypeManager = new RegItemclasstypeManager(entityManagerRe3gistry2);
                         RegItemclasstype regItemclasstypeItem = regItemclasstypeManager.getByLocalid("item");
                         regItemclass = addRegItemClassByItemclass(itemclass, procedureorder, regItemclasstypeItem, commit);
+                        // The following line should fix legacy uuids for itemclasses used at BKG
+                        regItemclass.setUuid(UuidHelper.createUuid(itemclass.getUriname(), regItemclass.getRegItemclasstype().getClass()));
                     } catch (Exception ex) {
                         logger.error(ex.getMessage(), ex);
                         throw new Exception(ex.getMessage());
@@ -183,7 +182,7 @@ public class MigrateItems {
                         logger.error("Error in  getting the result list for " + queryItemByItemClass + " " + ex.getMessage());
                         throw new Exception("Error in  getting the localization for " + queryItemByItemClass + " " + ex.getMessage());
                     }
-                    
+
                     for (Item item : itemsList) {
 
                         Item collection = getCollectionFromItem(item);
@@ -206,7 +205,7 @@ public class MigrateItems {
                             }
                         } catch (Exception ex) {
                             logger.error(ex.getMessage(), ex);
-                            throw new Exception(ex.getMessage());
+//                            throw new Exception(ex.getMessage());
                         }
 
                         try {
@@ -216,7 +215,7 @@ public class MigrateItems {
                             entityManagerRe3gistry2.getTransaction().commit();
                         } catch (Exception ex) {
                             logger.error(ex.getMessage(), ex);
-                            throw new Exception(ex.getMessage());
+//                            throw new Exception(ex.getMessage());
                         }
 
                     }
@@ -558,7 +557,8 @@ uuid = item.getUuid();
         RegItemclass regItemclass = new RegItemclass();
 
         regItemclass.setUuid(UuidHelper.createUuid(itemclass.getUriname(), RegItemclass.class));
-        regItemclass.setUuid(itemclass.getUuid());
+        //try to use newly created uuid instead of legacy uuid from old database
+        //regItemclass.setUuid(itemclass.getUuid());
         regItemclass.setLocalid(itemclass.getUriname());
 
         if (itemclass.getParent() != null) {
