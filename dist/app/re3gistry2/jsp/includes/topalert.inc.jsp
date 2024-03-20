@@ -25,12 +25,12 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <c:if test="${(not empty properties.getProperty('application.headingmessage.class')) && (not empty properties.getProperty('application.headingmessage.text'))}">
-<div class="ecl-message ecl-message--info" style="padding-bottom: 0.1em; padding-top: 0.5em" data-ecl-message="" role="alert" data-ecl-auto-init="Message">
+<!--<div class="ecl-message ecl-message--info" style="padding-bottom: 0.1em; padding-top: 0.5em" data-ecl-message="" role="alert" data-ecl-auto-init="Message">
         <div class="ecl-message__content" style="text-align: center">
             <div class="ecl-message__title" style="max-width: 100%">
                 ${properties.getProperty('application.headingmessage.text')}
             </div>
         </div>
-    </div>
+    </div>-->
 </c:if>
     
