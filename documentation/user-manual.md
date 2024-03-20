@@ -495,7 +495,7 @@ The registry manager can edit the information related to each user, including th
 
 These new users will recieve an email with an activation link for their account. Once activated, the system will request a password change upon entering for the first time.
 
-![image](https://github.com/ec-jrc/re3gistry/assets/75972112/9a8d2ab5-e1e1-402b-a6c8-20be05849305)
+![Registry manager section - New user first time password update](images/new-password.png)
 
 
 The user can be "**disabled** but not deleted. All the users are kept to have a traceable history of the registered items. However, if a user is deactivated, he cannot log in to the system.
@@ -519,9 +519,9 @@ CACHE:
 * Button "Cache all - Selected languages": This option helps to run a full cache on the languages you select in the widget among the existing ones. Also the master language is marked with the [MASTER] indicator.
 * Button "Remove cache": This option helps to remove the index of all the cache items.
 
-![image](https://github.com/ec-jrc/re3gistry/assets/75972112/f879287c-5fcd-4555-b602-6edf96b309cb)
+![Registry manager - Data export](images/cache.png)
 
-![image](https://github.com/ec-jrc/re3gistry/assets/75972112/89a9b8a4-2790-4159-94d0-c62edf256d4c)
+![Registry manager - Data export cache selector](images/cache-displayed.png)
 
 
 
