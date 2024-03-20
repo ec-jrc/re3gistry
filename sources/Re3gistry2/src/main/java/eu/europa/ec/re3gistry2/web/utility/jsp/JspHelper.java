@@ -1127,7 +1127,10 @@ public class JspHelper {
                 ? ((regLocalizationproposed.getValue() != null && regLocalizationproposed.getValue().length() > 0) ? regLocalizationproposed.getValue() : "")
                 : ((currentLanguageLocalization != null && currentLanguageLocalization.getValue() != null && currentLanguageLocalization.getValue().length() > 0)
                 ? currentLanguageLocalization.getValue() : ""));
-
+        if (inputValue.contains("\"")) {
+                inputValue = inputValue.replace("\"", "&quot;");
+                }
+        
         // Getting input name
         String inputName = regFieldmapping.getUuid() + BaseConstants.KEY_FORM_FIELD_NAME_INDEXKEY + ((currentLanguageLocalization != null) ? currentLanguageLocalization.getFieldValueIndex() : regLocalization.getFieldValueIndex()) + BaseConstants.KEY_FORM_FIELD_NAME_REFERENCEKEY + ((currentLanguageLocalization != null) ? currentLanguageLocalization.getUuid() : ((regLocalizationproposed != null) ? regLocalizationproposed.getUuid() : ""));
 

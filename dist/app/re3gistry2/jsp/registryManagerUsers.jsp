@@ -285,6 +285,7 @@
                     <div class="col-sm-3">
                         <button type="submit" class="btn btn-success width100"><i class="far fa-save"></i> ${localization.getString("label.savechanges")}</button>
                     </div>
+
                 </div>
 
                 <p class="form-validation-messages"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ${localization.getString("label.completerequiredfields")}</p>
@@ -335,11 +336,16 @@
                     %>  
                 </tbody>
             </table>
+                <div class="col-sm-3">
+
+                        <button class="btn btn-success width100" id="mySaveButton"><i class="far fa-save"></i> ${localization.getString("label.savechanges")}</button>
+                    </div>
             <%
                 }
             %>
         </div>
-
+                    
+                    
         <%@include file="includes/footer.inc.jsp" %>
         <%@include file="includes/pageend.inc.jsp" %>
         <script src="./res/js/bootstrap-confirmation.min.js"></script>
@@ -362,14 +368,21 @@
                     "dom": '<"top">rt<"bottom"lip><"clear">',
                     "order": [[0, "desc"]]
                 });
-            });
-
-            $(".cbUpdate").on('change', function () {
-                var regGroupUuid = $(this).data("<%=BaseConstants.KEY_REQUEST_GROUP_UUID%>");
-                var regUserRegGroupMappingUuid = $(this).data("<%=BaseConstants.KEY_REQUEST_USERGROUPMAPPING_UUID%>");
-                var regUserDetailUuid = $(this).data("<%=BaseConstants.KEY_REQUEST_USERDETAIL_UUID%>");
-                var checked = $(this).is(":checked");
-                $.get(".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_USERS%>?<%=BaseConstants.KEY_REQUEST_GROUP_UUID%>=" + regGroupUuid + "&<%=BaseConstants.KEY_REQUEST_USERDETAIL_UUID%>=" + regUserDetailUuid + "&<%=BaseConstants.KEY_REQUEST_ACTIONTYPE%>=<%=BaseConstants.KEY_ACTION_TYPE_REMOVEUSERGROUP%>&<%=BaseConstants.KEY_REQUEST_USERGROUPMAPPING_UUID%>=" + regUserRegGroupMappingUuid + "&<%=BaseConstants.KEY_REQUEST_CHECKED%>=" + checked, function (data) {});
+            });            
+            $("#mySaveButton").on('click', function () {
+                var collection = document.getElementsByClassName("cbUpdate");                
+                var regUserDetailUuid = $(collection[0]).data("<%=BaseConstants.KEY_REQUEST_USERDETAIL_UUID%>");                
+                var regUserRegGroupMappingUuidList = new Array (collection.length);
+                var regGroupUUIDList = new Array(collection.length);
+                var checkedList = new Array(collection.length);
+                
+                for(var i=0; i<collection.length; i++){        
+                        regUserRegGroupMappingUuidList[i] = $(collection[i]).data("<%=BaseConstants.KEY_REQUEST_USERGROUPMAPPING_UUID%>");
+                        regGroupUUIDList[i] = $(collection[i]).data("<%=BaseConstants.KEY_REQUEST_GROUP_UUID%>");
+                        checkedList[i] = $(collection[i]).is(":checked");   
+                }
+                          
+                $.get(".<%=WebConstants.PAGE_URINAME_REGISTRYMANAGER_USERS%>?<%=BaseConstants.KEY_REQUEST_GROUP_UUID%>=" + regGroupUUIDList + "&<%=BaseConstants.KEY_REQUEST_USERDETAIL_UUID%>=" + regUserDetailUuid + "&<%=BaseConstants.KEY_REQUEST_ACTIONTYPE%>=<%=BaseConstants.KEY_ACTION_TYPE_REMOVEUSERGROUP%>&<%=BaseConstants.KEY_REQUEST_USERGROUPMAPPING_UUID%>=" + regUserRegGroupMappingUuidList + "&<%=BaseConstants.KEY_REQUEST_CHECKED%>=" + checkedList, function (data) {});
             });
 
         </script>

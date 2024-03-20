@@ -39,7 +39,8 @@ var config={
     baseurl:".",
     reloadDelay:5000,
     sessionCheckInterval:30000,
-    sessionCheckWarningTreshold:600000
+    sessionCheckWarningTreshold:600000,
+    afkTimer:600000
 };
 
 // Variable to handle the unsaved data alert
@@ -92,21 +93,21 @@ $(document).ready(function(){
     });
     
     //Session expiration message
-    setInterval(function(){ 
         <%
-        HttpSession sessionCheck = request.getSession();
-        Date expiry = new Date(session.getLastAccessedTime() + session.getMaxInactiveInterval()*1000);
+        Date expiry = new Date(session.getLastAccessedTime());
         %>
         var sessionExpiration = <%= expiry.getTime() %>
-        var now = new Date();
-        var nowTime = now.getTime()
+        
+        // AFK timer function
+    setInterval(function(){    
+            var now = new Date();
+            if((now - sessionExpiration) > config.afkTimer){
+                $('#expirationWarning').modal('show');
+                sessionExpiration = sessionExpiration + config.afkTimer;
+            }
+            //console.log(sessionExpiration - now);
 
-        if((sessionExpiration - now) < config.sessionCheckWarningTreshold){
-            $('#expirationWarning').modal('show');
-        }
-        //console.log(sessionExpiration - now);
-
-    }, config.sessionCheckInterval);
+        }, config.sessionCheckInterval, sessionExpiration);    
  
 });
 
@@ -185,21 +186,18 @@ function loadAndRender(itemUuid,languageUuid,obj,isRegItem){
             "ajax": {
                 url:config.baseurl+"<%=WebConstants.PAGE_URINAME_ITEMLISTLOADER %>?<%=BaseConstants.KEY_REQUEST_ITEMUUID %>=" + itemUuid + "&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID %>=" + languageUuid,
                 complete:function(data){
-                    if(data.responseJSON.languageNotAvailable){
+                if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && Object.hasOwn(data.responseJSON, "languageNotAvailable") && data.responseJSON.languageNotAvailable){
                         $("#langMessage").show();
                     }else{
                         $("#langMessage").hide();
                     }
-                }
+                }                      
             },
             "language": {
                 "processing": "<div class=\"loader\"></div>"
             },
             "processing": true,
             "serverSide": true,
-            "searching": true,
-            "search": {"smart": false},
-            "searchDelay": 3000,
             "ordering": false
         });
         
@@ -208,14 +206,14 @@ function loadAndRender(itemUuid,languageUuid,obj,isRegItem){
             "ajax": {
                 url:config.baseurl+"<%=WebConstants.PAGE_URINAME_ITEMPROPOSEDLISTLOADER %>?<%=BaseConstants.KEY_REQUEST_ITEMUUID %>=" + itemUuid + "&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID %>=" + languageUuid,
                 complete:function(data){
-                    if(data.responseJSON.languageNotAvailable){
+                        if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && data.responseJSON.languageNotAvailable !=null && data.responseJSON.languageNotAvailable){
                         $("#langMessage").show();
                     }else{
                         $("#langMessage").hide();
                     }                    
-                    if(data.responseJSON.data.length<1){
+                    if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && data.responseJSON.data !=null && data.responseJSON.data.length<1){
                         $("#proposedShow").hide();
-                    } 
+                    }
                 }                    
             },
             "language": {
@@ -231,14 +229,14 @@ function loadAndRender(itemUuid,languageUuid,obj,isRegItem){
             "ajax": {
                 url:config.baseurl+"<%=WebConstants.PAGE_URINAME_ITEMCHILDRENLISTLOADER %>?<%=BaseConstants.KEY_REQUEST_ITEMUUID %>=" + itemUuid + "&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID %>=" + languageUuid,
                 complete:function(data){
-                    if(data.responseJSON.languageNotAvailable){
+                        if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && data.responseJSON.languageNotAvailable !=null && data.responseJSON.languageNotAvailable){
                         $("#langMessage").show();
                     }else{
                         $("#langMessage").hide();
-                    }
-                    if(data.responseJSON.data.length<1){
-                        $("#childrenShow").hide();
                     }                    
+                    if(data != null && Object.hasOwn(data, "responseJSON") && data.responseJSON !=null && data.responseJSON.data !=null && data.responseJSON.data.length<1){
+                         $("#childrenShow").hide();
+                    }
                 }                    
             },
             "language": {

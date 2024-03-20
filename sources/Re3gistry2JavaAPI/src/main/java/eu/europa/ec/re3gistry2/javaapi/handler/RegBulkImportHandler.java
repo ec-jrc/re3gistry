@@ -32,6 +32,7 @@ import eu.europa.ec.re3gistry2.base.utility.exceptions.ExceptionConstants;
 import eu.europa.ec.re3gistry2.base.utility.exceptions.UnauthorizedUserException;
 import eu.europa.ec.re3gistry2.crudimplementation.RegActionManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegFieldtypeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegGroupManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
@@ -185,6 +186,9 @@ public class RegBulkImportHandler {
         for (RegFieldmapping field : regFieldMappingListWithoutStatus) {
             writer.append("|");
             writer.append(field.getRegField().getLocalid());
+            if(field.getHashref()){
+                writer.append("|ref");
+            }
         }
 
         return writer;
@@ -260,9 +264,9 @@ public class RegBulkImportHandler {
                             //Printing and mailing the appropiate message depending on the process executed
                             if (!operationResult.isEmpty()) {
                                 if (isBulkEdit) {
-                                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.success") + "</b>";
                                 } else {
-                                    operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>" + BR_HTML + systemLocalization.getString("bulk.import.error.solveerrors") + BR_HTML + operationResult;
+                                    operationResult = "<b>" + systemLocalization.getString("bulk.import.success") + "</b>";
                                 }
                             } else {
                                 if (isBulkEdit) {
@@ -451,15 +455,23 @@ public class RegBulkImportHandler {
 
     private StringBuilder findWrongFields(List<String> headerListSplitted, ArrayList<Object> fieldsHeader) {
         RegFieldManager regFieldManager = new RegFieldManager(entityManager);
-
+        RegFieldtypeManager regFieldTypeManager = new RegFieldtypeManager(entityManager);
         StringBuilder wrongFields = new StringBuilder();
         for (int i = 2; i < headerListSplitted.size(); i++) {
 
             final String fieldString = headerListSplitted.get(i);
 
             try {
-                RegField customFieldField = regFieldManager.getByLocalid(fieldString);
-                fieldsHeader.add(customFieldField);
+                if(fieldString.equalsIgnoreCase("ref")){
+                    RegField myRegField = new RegField();
+                    myRegField.setUuid("ref");
+                    myRegField.setRegFieldtype(regFieldTypeManager.get("1"));
+                    fieldsHeader.add(myRegField);
+                } else{
+                   RegField customFieldField = regFieldManager.getByLocalid(fieldString);
+                   fieldsHeader.add(customFieldField); 
+                }
+                
             } catch (Exception exx) {
 
                 if (fieldString.startsWith(BaseConstants.KEY_BULK_COLLECTION)) {
@@ -1302,6 +1314,21 @@ public class RegBulkImportHandler {
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegItemproposedHandler regItemproposedHandler = new RegItemproposedHandler();
 
+        String ref = null;
+        HashMap<String, String> refMaps = new HashMap();
+        for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
+            HashMap<RegField, String> map = items.getValue().get(0).getRegFieldsHashMap();
+            Iterator<Map.Entry<RegField, String>> iterator = map.entrySet().iterator();
+                while (iterator.hasNext()) {
+                Map.Entry<RegField, String> entry = iterator.next();
+                    if (entry.getKey().getUuid().equalsIgnoreCase("ref")) {
+                        refMaps.put(items.getKey(), entry.getValue());
+                        
+                        iterator.remove();
+                    }
+            }
+        }
+        
         RegItem regItemExistentAlready = null;
 
         Map.Entry<String, ArrayList<FieldsBulkImport>> any = itemsBulkImport.entrySet().iterator().next();
@@ -1330,7 +1357,15 @@ public class RegBulkImportHandler {
                     HashMap<RegField, String> fields = items.getValue().get(0).getRegFieldsHashMap();
                     RegItem regItemIterator = regItemManager.getByLocalidAndRegItemClass(items.getKey(), regItemclassChild);
                     String language = items.getValue().get(0).getLanguage().getUuid();
-                    regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language);
+                    
+                    for (Map.Entry<String, String> refIndex : refMaps.entrySet()){
+                        if(refIndex.getKey().equalsIgnoreCase(items.getKey())){
+                            ref = refMaps.get(items.getKey());
+                        }
+                    }
+                    
+                    regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language, ref);
+                    ref = null;
                 }
             } catch (Exception ex) {
                 throw new Exception();
@@ -1342,6 +1377,19 @@ public class RegBulkImportHandler {
     private void storeItemFromBulk(FieldsBulkImport fieldsBulkImport, RegItem regItemContainer, RegItemclass regItemclassChild, RegItemproposed regItemproposed, String localId, ArrayList<FieldsBulkImport> array, RegLanguagecode fieldLanguage, RegLanguagecode masterLanguage) throws Exception {
         HashMap<RegField, String> map = fieldsBulkImport.getRegFieldsHashMap();
         HashMap<RegField, RegItem> mapCollection = fieldsBulkImport.getRegFieldsCollectionHashMap();
+        String ref = null;
+        RegField fieldDelete = null;
+        Iterator<Map.Entry<RegField, String>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<RegField, String> entry = iterator.next();
+            if (entry.getKey().getUuid().equalsIgnoreCase("ref")) {
+                ref = entry.getValue();
+                iterator.remove();
+            }
+        }
+
+        
+        
         for (Map.Entry<RegField, String> entry : map.entrySet()) {
             Object object = entry.getKey();
             String fieldValue = entry.getValue();
@@ -1363,10 +1411,13 @@ public class RegBulkImportHandler {
                             }
                             break;
                         default:
-                            storeLocalization(fieldLanguage, regItemproposed, regField, masterLanguage, fieldValue, localId, array);
+                            storeLocalization(fieldLanguage, regItemproposed, regField, masterLanguage, fieldValue, localId, array, ref);
                             break;
                     }
                 }
+            }
+            if(entry.getKey().getUuid().equalsIgnoreCase("ReferenceLink")){
+                ref = null;
             }
         }
     }
@@ -1898,7 +1949,7 @@ public class RegBulkImportHandler {
         return outs;
     }
 
-    private void storeLocalization(RegLanguagecode fieldLanguage, RegItemproposed regItemproposed, RegField regField, RegLanguagecode masterLanguage, String fieldValue, String localId, ArrayList<FieldsBulkImport> array) throws Exception {
+    private void storeLocalization(RegLanguagecode fieldLanguage, RegItemproposed regItemproposed, RegField regField, RegLanguagecode masterLanguage, String fieldValue, String localId, ArrayList<FieldsBulkImport> array, String ref) throws Exception {
         RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
 
         RegLocalizationproposed regLocalizationproposed = new RegLocalizationproposed();
@@ -1916,6 +1967,9 @@ public class RegBulkImportHandler {
             regLocalizationproposed.setRegLocalizationReference(null);
             regLocalizationproposed.setValue(fieldValue);
             regLocalizationproposed.setHref(null);
+            if(ref!=null){
+                regLocalizationproposed.setHref(ref);
+            }
             regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
 
             regLocalizationproposedManager.add(regLocalizationproposed);

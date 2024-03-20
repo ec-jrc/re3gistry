@@ -368,6 +368,9 @@
                             %><textarea class="form-control" rows=4" data-<%=WebConstants.DATA_PARAMETER_FIELDVALUEINDEX%>="0" name="<%=inputName%>"<%=((regFieldmapping.getRequired()) ? " required" : "")%>></textarea><%
                             } else {
                             %><input type="<%=JspHelper.handleFieldType(regFieldmapping, localization)%>" class="form-control" data-<%=WebConstants.DATA_PARAMETER_FIELDVALUEINDEX%>="0" value="" name="<%=inputName%>"<%=((regFieldmapping.getRequired()) ? " required" : "")%> maxlength="<%=configuration.getProperties().getProperty("application.input.maxlength")%>" /><%
+                                    if(regFieldmapping.getRegField().getLocalid().equalsIgnoreCase("ReferenceLink")){
+                                        %><input type="<%=JspHelper.handleFieldType(regFieldmapping, localization)%>" class="form-control" data-<%=WebConstants.DATA_PARAMETER_FIELDVALUEINDEX%>="0" value="" name="<%=inputName%>"<%=((regFieldmapping.getRequired()) ? " required" : "")%> maxlength="<%=configuration.getProperties().getProperty("application.input.maxlength")%>" /><%
+                                    }
                                 }
 
                                 if (regFieldmapping.getRequired()) {

@@ -23,6 +23,7 @@
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
 --%>
+<%@page import="eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager"%>
 <%@page import="eu.europa.ec.re3gistry2.javaapi.cache.CacheHelper"%>
 <%@page import="eu.europa.ec.re3gistry2.javaapi.solr.SolrHandler"%>
 <%@page import="java.util.Properties"%>
@@ -75,6 +76,8 @@
 <!DOCTYPE html>
 <html lang="${localization.getString("property.localeid")}" role="document">
     <%@include file="includes/head.inc.jsp" %>
+    <link rel="stylesheet" href="res/css/css-loader.css">
+     <link rel="stylesheet" href="res/css/dropdown-checkbox.css">
     <body>
         <%@include file="includes/header.inc.jsp"%>
 
@@ -129,7 +132,7 @@
                     <h5 class="card-title"></h5>
                     <p class="card-text">${localization.getString("label.solrdescription")}</p>
                     <% if (SolrHandler.checkSolrCompleteIndexinglRunning()) { %>
-                    <p class="card-text mt-3 alert alert-warning">${localization.getString("label.solrrunning")}</p>
+                    <div class="card-text mt-3 alert alert-warning"><p>${localization.getString("label.solrrunning")}</p> <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div> </div>
                     <% } else {%>
                     <a id="startSolrIndexing" class="btn btn-primary btn-md<%=buttonDisabled%>" href="?<%=BaseConstants.KEY_REQUEST_STARTINDEX%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.solrstartindexing")}</a>
                     <script>
@@ -157,27 +160,58 @@
                 <div class="card-body">
                     <h5 class="card-title"></h5>
                     <p class="card-text">${localization.getString("label.cachingdescription")}</p>
-                    <% if (CacheHelper.checkCacheCompleteRunning()) { %>
-                    <p class="card-text mt-3 alert alert-warning">${localization.getString("label.cacheallrunning")}</p>
+                    <% if (CacheHelper.checkCacheCompleteRunning()) {                
+                    %>
+                    <div class="card-text mt-3 alert alert-warning"><p>${localization.getString("label.cacheallrunning")}</p> <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div> </div>
                     <% } else {%>
                     <div class="row">
-                        <div class="col-sm-4">
-                            <a id="startCachingMasterLanguage" class="buttoncache btn btn-warning width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING_MASTERLANGUAGE%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing.masterlanguage")}</a>
+                        <div class="col-sm-3">
+                                                        <a id="startCaching" class="buttoncache btn btn-success width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing")}</a>
                         </div>
-                        <div class="col-sm-4">
-                            <a id="startCaching" class="buttoncache btn btn-success width100 btn-md<%=buttonCacheDisabled%>" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_STARTCACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.cachestartindexing")}</a>
+                        <div class="col-sm-3">
+                            <a id="CacheLanguages" onclick="return modifyHrefLanguages();" class="buttoncache btn btn-warning width100 btn-md<%=buttonCacheDisabled%> " role="button">Cache Selected Languages</a>
+                        <div class="multiselect" id="countries" multiple="multiple" data-target="multi-0">
+                            <div class="title noselect">
+                                <span class="text" id="languagesText">Select language(s)</span>
+                                <span class="close-icon">&times;</span>
+                                <span class="expand-icon">&plus;</span>
+                            </div>
+                            <div class="container">
+                                <%  
+
+                                EntityManager localLanguageEntityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
+                                RegLanguagecodeManager localLanguageManager = new RegLanguagecodeManager(localLanguageEntityManager);
+                                List<RegLanguagecode> localActiveLanguages = localLanguageManager.getAllActive();
+                                RegLanguagecode masterLang = localLanguageManager.getMasterLanguage();
+                                
+                                for (int k = 0; k < localActiveLanguages.size(); k++) {
+                                if(localActiveLanguages.get(k).getIso6391code() == masterLang.getIso6391code()){
+                                
+                                %>
+                                <option value='<%=localActiveLanguages.get(k).getIso6391code()%>'><%= localActiveLanguages.get(k).getLabel() %> [MASTER]</option>
+                                <%
+                                
+                                    }else{
+                                    
+                                    
+                                %>
+                                
+                                <option value='<%=localActiveLanguages.get(k).getIso6391code()%>'><%= localActiveLanguages.get(k).getLabel() %></option>
+                                 
+                                <%
+                                    }
+                                    }
+                                %>
+                            </div>
                         </div>
-                        <script>
-                            $(".buttoncache").on('click', function () {
-                                //                        $('#startCaching').on('click', function () {
-                                $(".buttoncache").addClass('disabled');
-                                //                            $(this).addClass('disabled');
-                                setTimeout(function () {
-                                    location.reload();
-                                }, 3000);
-                            });
-                        </script>
-                        <div class="col-sm-4">
+                        
+                        
+                            
+                        </div>
+                        
+                        
+                        
+                        <div class="col-sm-3">
                             <a id="removeCaching" class="buttoncache btn btn-danger width100" <%=buttonCacheDisabled%> href="?<%=BaseConstants.KEY_REQUEST_REMOVECACHING%>=<%=BaseConstants.KEY_BOOLEAN_STRING_TRUE%>" role="button">${localization.getString("label.removecache")}</a>
                         </div>
                     </div>
@@ -193,13 +227,34 @@
         <%@include file="includes/footer.inc.jsp" %>
         <%@include file="includes/pageend.inc.jsp" %>
         <script src="./res/js/bootstrap-confirmation.min.js"></script>
-
+        <script src="./res/js/dropdown-checkbox.js"></script>
+        <script type="text/javascript">
+    function modifyHrefLanguages () {
+        
+        if(document.getElementById("languagesText").innerHTML !== "Select language(s)"){
+            document.getElementById("CacheLanguages").href = "?startCaching="+document.getElementById("languagesText").innerHTML;
+            return true;
+        }
+        return false;
+        
+        // return true or false, depending on whether you want to allow the `href` property to follow through or not
+    }
+        </script>
         <script>
             <%-- Init the confirm message --%>
                             $('[data-toggle=confirmation]').confirmation({
                                 rootSelector: '[data-toggle=confirmation]'
                             });
         </script>
-
+<script>
+                            $(".buttoncache").on('click', function () {
+                                //                        $('#startCaching').on('click', function () {
+                                $(".buttoncache").addClass('disabled');
+                                //                            $(this).addClass('disabled');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 3000);
+                            });
+                        </script>
     </body>
 </html>
