@@ -50,6 +50,7 @@
 <%@page import="eu.europa.ec.re3gistry2.base.utility.BaseConstants"%>
 <%@page import="javax.persistence.EntityManager"%>
 <%@page import="eu.europa.ec.re3gistry2.base.utility.PersistenceFactory"%>
+<%@page import="eu.europa.ec.re3gistry2.javaapi.cache.CacheHelper"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="includes/common.inc.jsp" %>
 <jsp:useBean id="constants" class="eu.europa.ec.re3gistry2.base.utility.BaseConstants" scope="session"/>
@@ -103,10 +104,33 @@
             </div>
             <%
                    } else {
-            %><h3>${localization.getString("label.actionslist")}</h3><%
-                       }
+            %><h3 style="display:inline-block">${localization.getString("label.actionslist")}</h3><%
+                }
 
-                       if (regActions.size() > 0) {
+                if (regActions.size() > 0) {
+
+                boolean showActionPublishCacheMessage = false;
+                boolean showMessageOnce = true;
+
+                    for (RegAction pubAction : regActions) {
+
+                        // Checking the status of the action
+                                
+
+                                if (pubAction.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_ACCEPTED)
+                                        || (pubAction.getRegItemRegistry() != null && pubAction.getRegItemRegister() == null && !pubAction.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_PUBLISHED))) {
+                                    showActionPublishCacheMessage = true;
+                                }
+
+                        if(CacheHelper.checkCacheCompleteRunning() && showActionPublishCacheMessage && showMessageOnce){
+                    %>
+                    
+                    <p style="display: inline-block; margin-left: 35rem; font-style: italic;"><svg style="display: inline-block;" width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.032 17.025c-.774 0-1.407-.674-1.407-1.499V11.03c0-.825.633-1.5 1.407-1.5s1.406.675 1.406 1.5v4.496c0 .825-.632 1.5-1.406 1.5zm0 4.497c-.774 0-1.407-.674-1.407-1.499 0-.825.633-1.499 1.407-1.499s1.406.674 1.406 1.499c0 .825-.632 1.499-1.406 1.499zm0-21.517L0 24h23.995L12.032.005z"/></svg> The publication will remain disabled until the caching process is completed.</p>
+                    
+                    <%
+                        showMessageOnce = false;
+                    }
+}
 
             %>
             <table id="list-table" class="table table-striped table-bordered mt-3" cellspacing="0" width="100%">
@@ -168,7 +192,25 @@
                                 }
                             %>
                             <%-- Action buttons --%>
-                            <%if (showActionPublish) {%>
+                            <%if (showActionPublish) {
+                            if (CacheHelper.checkCacheCompleteRunning()) {
+                            
+                            %>
+                            
+                            <a 
+                                href="?<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>=<%=tmp.getUuid()%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_SUBMITACTION%>=true" 
+                                data-toggle="confirmation" 
+                                data-title="${localization.getString("registermanager.label.publish.confirm")}" 
+                                data-placement="left"
+                                title=" Publishing is currently unavailable, wait for the current caching process to end."
+                                data-singleton="true" 
+                                class="btn btn-sm btn-success btn-approve-action btn-reg-action disabled" 
+                                data-<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>="<%=tmp.getUuid()%>"
+                                >
+                                <i class="fas fa-upload"></i> ${localization.getString("registermanager.label.publish")}</a><br/>
+                            <%
+                                }else{
+                            %>
                             <a 
                                 href="?<%=BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID%>=<%=tmp.getUuid()%>&<%=BaseConstants.KEY_FORM_FIELD_NAME_SUBMITACTION%>=true" 
                                 data-toggle="confirmation" 
@@ -179,7 +221,7 @@
                                 data-<%=WebConstants.DATA_PARAMETER_ACTIONUUID%>="<%=tmp.getUuid()%>"
                                 >
                                 <i class="fas fa-upload"></i> ${localization.getString("registermanager.label.publish")}</a><br/>
-                                <%}%>
+                                <%}}%>
 
                         </td>
                     </tr> 

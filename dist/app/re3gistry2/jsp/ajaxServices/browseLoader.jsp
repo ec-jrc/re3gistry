@@ -189,6 +189,7 @@
     request.setCharacterEncoding("UTF-8");
 %>
 
+<link rel="stylesheet" href="res/css/css-loader.css">
 <ol class="breadcrumb m-0 p-0" vocab="http://schema.org/" typeof="BreadcrumbList" style="font-size: 1.0em; font-weight: 700">
 
     <%        if (!registryURI.isEmpty() && !registryLabel.isEmpty()) {
@@ -596,7 +597,7 @@
 
 // Creating the table with the list of fields (note: the table contents are loaded via ajax)
 %>
-<div class="row">
+<div class="row mt-3">
     <div class="col-sm-6">
         <h2>${localization.getString("label.containeditems")}</h2>
     </div>
@@ -621,18 +622,25 @@
             <%-- Bulk import commands --%>
             <%
                 if (!statusDisallowed) { %> 
-            <div class="col-sm-6">
-                <button type="button" class="btn btn-primary float-right mr-2 width100" data-toggle="modal" data-target="#exampleModalLong" title="${localization.getString("load.template.bulkimport.title")}">
-                    <i class="fas fa-upload"></i> ${localization.getString("label.bulkimport")}
-                </button>
-            </div>
+                
+               <div class="col-sm-6">
+            <div class="dropdown d-inline"> 
+                    <button type="button" class="btn btn-primary float-right width100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Start bulk process</button>
+                <ul class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 32px, 0px);">              
+                    <a class="dropdown-item" data-target="#exampleModalLong" data-toggle="modal"> ${localization.getString("label.bulkimport")}</a>
+                    <a class="dropdown-item" data-target="#exampleModalLongEdit" data-toggle="modal"> ${localization.getString("label.bulkedit")}</a>
+                </ul>
+            </div> 
+        </div>
+                    
+
             <% }%>  
 
 
             <!-- Modal -->
             <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <form method="POST" action=".<%=WebConstants.PAGE_URINAME_BULK_TEMPLATE%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=regItem.getUuid()%>&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_LOAD_BULK_TEMPLATE%>&csrfPreventionSalt=${csrfPreventionSalt}" enctype="multipart/form-data">
+                    <form method="POST" action=".<%=WebConstants.PAGE_URINAME_BULK_TEMPLATE%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=regItem.getUuid()%>&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_LOAD_BULK_TEMPLATE%>&<%=BaseConstants.KEY_REQUEST_ISBULKEDIT%>=<%="false"%>&csrfPreventionSalt=${csrfPreventionSalt}" enctype="multipart/form-data">
 
                         <input type="hidden" name="csrfPreventionSalt" value="${csrfPreventionSalt}"/>
 
@@ -656,31 +664,89 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
+                            <div id="browseLoaderModalFooter" class="modal-footer">
                                 <div class="col-sm-6">
                                     <button type="reset" class="btn btn-danger width100"><i class="fas fa-sync-alt"></i> ${localization.getString("reset")}</button>                                    
                                 </div>
                                 <div class="col-sm-6">
-                                    <button type="submit" class="btn btn-primary width100">
+                                    <button id="btnStartBulkImport" type="submit" class="btn btn-primary width100">
                                         <i class="fas fa-upload"></i> ${localization.getString("label.start.bulkimport")}
                                     </button>
-                                </div>
+                                    <script>
+            $(document).on('click', '#btnStartBulkImport', function (e) {
+                $('#bufferLoader').html('<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>');
+            });
+        </script>
+                                    
+                                </div> 
+
                             </div>
+                                                                        <div id="bufferLoader"></div>
                         </div>
                     </form>
                 </div>
             </div>
+            <!-- Same structure but for bulk edit instead of bulk import -->                        
+            <div class="modal fade" id="exampleModalLongEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongEditTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="POST" action=".<%=WebConstants.PAGE_URINAME_BULK_TEMPLATE%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=regItem.getUuid()%>&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_LOAD_BULK_TEMPLATE%>&<%=BaseConstants.KEY_REQUEST_ISBULKEDIT%>=<%="true"%>&csrfPreventionSalt=${csrfPreventionSalt}" enctype="multipart/form-data">
 
+                        <input type="hidden" name="csrfPreventionSalt" value="${csrfPreventionSalt}"/>
+
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongEditTitle">${localization.getString("label.bulkedit")}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h5>${localization.getString("download.template.bulkedit")}</h5>
+                                <a href=".<%=WebConstants.PAGE_URINAME_BULK_TEMPLATE%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=regItem.getUuid()%>&<%=BaseConstants.KEY_REQUEST_ACTION%>=<%=BaseConstants.KEY_REQUEST_DOWNLOAD_BULK_TEMPLATE%>" class="btn btn-success" title="${localization.getString("template.bulkedit.title")}">
+                                    <i class="fas fa-download"></i> ${localization.getString("template")}
+                                </a>
+                                <hr/>
+                                <h5 for="templateFileUpload">${localization.getString("choose.csv.file")}</h5>
+                                <div class="form-group">
+                                    <div class="input-group" name="divFile">
+                                        <input type="file" class="form-control-file" id="templateFileUpload" placeholder='${localization.getString("choose.file")}...' accept=".csv" name="<%=BaseConstants.KEY_REQUEST_LOAD_FILE_BULK%>" id="<%=BaseConstants.KEY_REQUEST_LOAD_FILE_BULK%>"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="browseLoaderModalFooter" class="modal-footer">
+                                <div class="col-sm-6">
+                                    <button type="reset" class="btn btn-danger width100"><i class="fas fa-sync-alt"></i> ${localization.getString("reset")}</button>                                    
+                                </div>
+                                <div class="col-sm-6">
+                                    <button id="btnStartBulkImport" type="submit" class="btn btn-primary width100">
+                                        <i class="fas fa-upload"></i> ${localization.getString("label.start.bulkedit")}
+                                    </button>
+                                    <script>
+            $(document).on('click', '#btnStartBulkImport', function (e) {
+                $('#bufferLoader').html('<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>');
+            });
+        </script>
+                                    
+                                </div> 
+
+                            </div>
+                                                                        <div id="bufferLoader"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>                         
+                                    
+                                    
             <% } else { %>
             <div class="col-sm-6"></div>
+            
             <%}%>
 
             <%
                 if (!statusDisallowed) {%> 
             <div class="col-sm-6">
                 <a href=".<%=(regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) ? WebConstants.PAGE_URINAME_ADDREGISTER : WebConstants.PAGE_URINAME_ADDITEM%>?<%=BaseConstants.KEY_REQUEST_ITEMUUID%>=<%=regItem.getUuid()%>" class="btn btn-success float-right width100"><% if (regItem.getRegItemclass().getRegItemclasstype().getLocalid().equals(BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY)) {%><i class="fas fa-plus"></i> ${localization.getString("label.addregister")}<%} else {%><i class="fas fa-plus"></i> ${localization.getString("label.additem")}<%}%></a>
-            </div>
-
+            </div>  
             <% } %> 
             <% } %> 
             <% } %> 

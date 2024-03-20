@@ -30,19 +30,20 @@
         <class>eu.europa.ec.re3gistry2.model.RegUserRegGroupMapping</class>       
         <class>eu.europa.ec.re3gistry2.model.RegItemproposedRegGroupRegRoleMapping</class>
         <class>eu.europa.ec.re3gistry2.model.RegItemhistoryRegGroupRegRoleMapping</class>
+        <class>eu.europa.ec.re3gistry2.model.RegUserCodes</class>
        
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         
         <properties>      
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://DB_ADDRESS:5432/re3gistry2_srv"/>
-            <property name="javax.persistence.jdbc.password" value="DB_PASSWORD"/>
+            <property name="javax.persistence.jdbc.url" value="${persistence.jdbc.url}"/>
+            <property name="javax.persistence.jdbc.password" value="${persistence.jdbc.password}"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.user" value="DB_USERNAME"/>
+            <property name="javax.persistence.jdbc.user" value="${persistence.jdbc.username}"/>
             <property name="eclipselink.ddl-generation" value="none"/>
             <property name="eclipselink.logging.level" value="CONFIG"/>
             <property name="eclipselink.logging.level.sql" value="CONFIG"/>
             <property name="eclipselink.logging.parameters" value="false"/>
-            <property name="eclipselink.logging.file" value="path/to/catalina/base/logs/eclipselink.log"/>
+            <property name="eclipselink.logging.file" value="${persistence.eclipselink.logging.file}"/>
         </properties>
     </persistence-unit>
 </persistence>
