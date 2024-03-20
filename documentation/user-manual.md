@@ -493,6 +493,11 @@ The registry manager can edit the information related to each user, including th
 
 ![Registry manager section - Add new user](images/registrymanager-useradd.png)
 
+These new users will recieve an email with an activation link for their account. Once activated, the system will request a password change upon entering for the first time.
+
+![image](https://github.com/ec-jrc/re3gistry/assets/75972112/9a8d2ab5-e1e1-402b-a6c8-20be05849305)
+
+
 The user can be "**disabled** but not deleted. All the users are kept to have a traceable history of the registered items. However, if a user is deactivated, he cannot log in to the system.
 
 ### Groups
@@ -510,11 +515,15 @@ The Data export subtab allows the registry manager to run a complete SOLR index 
 SOLR: This option helps to easily run a full export of the registry data to the Solr index on the published items.
 
 CACHE: 
-* Button "Cache all - Master language": This option helps to run a full cache of the master language of the system.
 * Button "Cache all": This option helps to run a full cache of the active languages of the system.
+* Button "Cache all - Selected languages": This option helps to run a full cache on the languages you select in the widget among the existing ones. Also the master language is marked with the [MASTER] indicator.
 * Button "Remove cache": This option helps to remove the index of all the cache items.
 
-![Registry manager - Data export](images/data_export_registry_manager.PNG)
+![image](https://github.com/ec-jrc/re3gistry/assets/75972112/f879287c-5fcd-4555-b602-6edf96b309cb)
+
+![image](https://github.com/ec-jrc/re3gistry/assets/75972112/89a9b8a4-2790-4159-94d0-c62edf256d4c)
+
+
 
 When the cache process is active, no new publication will be possible.
 
