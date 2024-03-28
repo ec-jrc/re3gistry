@@ -75,7 +75,7 @@ const htmlSnippet_paginationNextIcon = '<span class="ecl-link__label">{0}</span>
 function fetchData(uri, lang) {
 
     if (uri === null || typeof uri === val_undefined || uri.length === 0) {
-        uri = uriFromUrl;
+        uri = registryApp.defaultRegisterURI || uriFromUrl;
     }
 
     if (lang === null || typeof lang === val_undefined || lang.length === 0) {
