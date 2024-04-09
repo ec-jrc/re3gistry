@@ -186,7 +186,7 @@ public class RegBulkImportHandler {
         for (RegFieldmapping field : regFieldMappingListWithoutStatus) {
             writer.append("|");
             writer.append(field.getRegField().getLocalid());
-            if(field.getHashref()){
+            if (field.getHashref()) {
                 writer.append("|ref");
             }
         }
@@ -462,16 +462,16 @@ public class RegBulkImportHandler {
             final String fieldString = headerListSplitted.get(i);
 
             try {
-                if(fieldString.equalsIgnoreCase("ref")){
+                if (fieldString.equalsIgnoreCase("ref")) {
                     RegField myRegField = new RegField();
                     myRegField.setUuid("ref");
                     myRegField.setRegFieldtype(regFieldTypeManager.get("1"));
                     fieldsHeader.add(myRegField);
-                } else{
-                   RegField customFieldField = regFieldManager.getByLocalid(fieldString);
-                   fieldsHeader.add(customFieldField); 
+                } else {
+                    RegField customFieldField = regFieldManager.getByLocalid(fieldString);
+                    fieldsHeader.add(customFieldField);
                 }
-                
+
             } catch (Exception exx) {
 
                 if (fieldString.startsWith(BaseConstants.KEY_BULK_COLLECTION)) {
@@ -1270,7 +1270,26 @@ public class RegBulkImportHandler {
     private void storeProposedItemsBulkImport(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegItem regItemContainer, RegUser regUser, RegItemclass regItemclassChild, RegAction regAction, HttpServletRequest request) throws Exception {
 
         RegItemproposed regItemproposed;
+        RegItemManager regItemManager = new RegItemManager(entityManager);
+        int position = 1;
+        for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
+            RegItem regItemExistentAlready = null;
+            try {
+                regItemExistentAlready = regItemManager.getByLocalidAndRegItemClass(items.getKey(), regItemclassChild);
+            } catch (Exception ex) {
 
+            }
+            position ++;
+            if (regItemExistentAlready != null) {
+                operationResult = "<b>" + systemLocalization.getString("bulk.import.error.localId").replace("{localid}", "<b>" + items.getKey() + "</b>").replace("{line}", "<b>" + position + "</b>")
+                        + "</b>" + BR_HTML + operationResult;
+                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+            }
+        }
+        if (!operationResult.isEmpty()) {
+
+            throw new Exception();
+        }
         for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
             try {
                 if (items.getValue().size() > 1) {
@@ -1319,16 +1338,16 @@ public class RegBulkImportHandler {
         for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
             HashMap<RegField, String> map = items.getValue().get(0).getRegFieldsHashMap();
             Iterator<Map.Entry<RegField, String>> iterator = map.entrySet().iterator();
-                while (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 Map.Entry<RegField, String> entry = iterator.next();
-                    if (entry.getKey().getUuid().equalsIgnoreCase("ref")) {
-                        refMaps.put(items.getKey(), entry.getValue());
-                        
-                        iterator.remove();
-                    }
+                if (entry.getKey().getUuid().equalsIgnoreCase("ref")) {
+                    refMaps.put(items.getKey(), entry.getValue());
+
+                    iterator.remove();
+                }
             }
         }
-        
+
         RegItem regItemExistentAlready = null;
 
         Map.Entry<String, ArrayList<FieldsBulkImport>> any = itemsBulkImport.entrySet().iterator().next();
@@ -1357,13 +1376,13 @@ public class RegBulkImportHandler {
                     HashMap<RegField, String> fields = items.getValue().get(0).getRegFieldsHashMap();
                     RegItem regItemIterator = regItemManager.getByLocalidAndRegItemClass(items.getKey(), regItemclassChild);
                     String language = items.getValue().get(0).getLanguage().getUuid();
-                    
-                    for (Map.Entry<String, String> refIndex : refMaps.entrySet()){
-                        if(refIndex.getKey().equalsIgnoreCase(items.getKey())){
+
+                    for (Map.Entry<String, String> refIndex : refMaps.entrySet()) {
+                        if (refIndex.getKey().equalsIgnoreCase(items.getKey())) {
                             ref = refMaps.get(items.getKey());
                         }
                     }
-                    
+
                     regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language, ref);
                     ref = null;
                 }
@@ -1388,8 +1407,6 @@ public class RegBulkImportHandler {
             }
         }
 
-        
-        
         for (Map.Entry<RegField, String> entry : map.entrySet()) {
             Object object = entry.getKey();
             String fieldValue = entry.getValue();
@@ -1416,7 +1433,7 @@ public class RegBulkImportHandler {
                     }
                 }
             }
-            if(entry.getKey().getUuid().equalsIgnoreCase("ReferenceLink")){
+            if (entry.getKey().getUuid().equalsIgnoreCase("ReferenceLink")) {
                 ref = null;
             }
         }
@@ -1967,7 +1984,7 @@ public class RegBulkImportHandler {
             regLocalizationproposed.setRegLocalizationReference(null);
             regLocalizationproposed.setValue(fieldValue);
             regLocalizationproposed.setHref(null);
-            if(ref!=null){
+            if (ref != null) {
                 regLocalizationproposed.setHref(ref);
             }
             regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
