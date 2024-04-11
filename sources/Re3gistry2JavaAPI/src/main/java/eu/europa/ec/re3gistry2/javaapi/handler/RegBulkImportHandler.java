@@ -186,7 +186,7 @@ public class RegBulkImportHandler {
         for (RegFieldmapping field : regFieldMappingListWithoutStatus) {
             writer.append("|");
             writer.append(field.getRegField().getLocalid());
-            if(field.getHashref()){
+            if (field.getHashref()) {
                 writer.append("|ref");
             }
         }
@@ -462,16 +462,16 @@ public class RegBulkImportHandler {
             final String fieldString = headerListSplitted.get(i);
 
             try {
-                if(fieldString.equalsIgnoreCase("ref")){
+                if (fieldString.equalsIgnoreCase("ref")) {
                     RegField myRegField = new RegField();
                     myRegField.setUuid("ref");
                     myRegField.setRegFieldtype(regFieldTypeManager.get("1"));
                     fieldsHeader.add(myRegField);
-                } else{
-                   RegField customFieldField = regFieldManager.getByLocalid(fieldString);
-                   fieldsHeader.add(customFieldField); 
+                } else {
+                    RegField customFieldField = regFieldManager.getByLocalid(fieldString);
+                    fieldsHeader.add(customFieldField);
                 }
-                
+
             } catch (Exception exx) {
 
                 if (fieldString.startsWith(BaseConstants.KEY_BULK_COLLECTION)) {
@@ -1261,7 +1261,7 @@ public class RegBulkImportHandler {
     private void storeProposedItems(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulk, RegItem regItemContainer, RegUser regUser, RegItemclass regItemclassChild, RegAction regAction, HttpServletRequest request, ArrayList<String> additionLines, Boolean isBulkEdit) throws Exception {
 
         if (isBulkEdit) {
-            storeProposedItemsBulkEdit(itemsBulk, regUser, regItemclassChild, request, additionLines);
+            storeProposedItemsBulkEdit(itemsBulk, regItemContainer, regUser, regItemclassChild, request, additionLines);
         } else {
             storeProposedItemsBulkImport(itemsBulk, regItemContainer, regUser, regItemclassChild, regAction, request);
         }
@@ -1270,6 +1270,8 @@ public class RegBulkImportHandler {
     private void storeProposedItemsBulkImport(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegItem regItemContainer, RegUser regUser, RegItemclass regItemclassChild, RegAction regAction, HttpServletRequest request) throws Exception {
 
         RegItemproposed regItemproposed;
+        RegItemManager regItemManager = new RegItemManager(entityManager);
+        RegItem regItemExistentAlready = null;
 
         for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
             try {
@@ -1282,53 +1284,57 @@ public class RegBulkImportHandler {
                 request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
                 throw new Exception();
             }
-            String localId = items.getKey();
-            regItemproposed = createItemProposed(regItemContainer, regItemclassChild, localId, regUser, regAction, request);
-            ArrayList<FieldsBulkImport> array = items.getValue();
+           
+                String localId = items.getKey();
+                regItemproposed = createItemProposed(regItemContainer, regItemclassChild, localId, regUser, regAction, request);
+                ArrayList<FieldsBulkImport> array = items.getValue();
 
-            RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManager);
-            RegLanguagecode masterLanguage = regLanguagecodeManager.getMasterLanguage();
+                RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManager);
+                RegLanguagecode masterLanguage = regLanguagecodeManager.getMasterLanguage();
 
-            ArrayList<FieldsBulkImport> fieldsBulkImportListLocal = new ArrayList<>();
-            for (FieldsBulkImport fieldsBulkImport : array) {
-                RegLanguagecode fieldLanguage = fieldsBulkImport.getLanguage();
-                if (fieldLanguage.equals(masterLanguage)) {
-                    storeItemFromBulk(fieldsBulkImport, regItemContainer, regItemclassChild, regItemproposed, localId, array, fieldLanguage, masterLanguage);
-                } else {
-                    fieldsBulkImportListLocal.add(fieldsBulkImport);
-                }
-            }
-
-            if (!fieldsBulkImportListLocal.isEmpty()) {
-                for (FieldsBulkImport fieldsBulkImport : fieldsBulkImportListLocal) {
+                ArrayList<FieldsBulkImport> fieldsBulkImportListLocal = new ArrayList<>();
+                for (FieldsBulkImport fieldsBulkImport : array) {
                     RegLanguagecode fieldLanguage = fieldsBulkImport.getLanguage();
-                    storeItemFromBulk(fieldsBulkImport, regItemContainer, regItemclassChild, regItemproposed, localId, array, fieldLanguage, masterLanguage);
+                    if (fieldLanguage.equals(masterLanguage)) {
+                        storeItemFromBulk(fieldsBulkImport, regItemContainer, regItemclassChild, regItemproposed, localId, fieldLanguage, masterLanguage);
+                    } else {
+                        fieldsBulkImportListLocal.add(fieldsBulkImport);
+                    }
+                }
+
+                if (!fieldsBulkImportListLocal.isEmpty()) {
+                    for (FieldsBulkImport fieldsBulkImport : fieldsBulkImportListLocal) {
+                        RegLanguagecode fieldLanguage = fieldsBulkImport.getLanguage();
+                        storeItemFromBulk(fieldsBulkImport, regItemContainer, regItemclassChild, regItemproposed, localId, fieldLanguage, masterLanguage);
+                    }
                 }
             }
+
         }
 
-    }
+    
 
-    private void storeProposedItemsBulkEdit(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegUser regUser, RegItemclass regItemclassChild, HttpServletRequest request, ArrayList<String> additionLines) throws Exception {
+    private void storeProposedItemsBulkEdit(HashMap<String, ArrayList<FieldsBulkImport>> itemsBulkImport, RegItem regItemContainer, RegUser regUser, RegItemclass regItemclassChild, HttpServletRequest request, ArrayList<String> additionLines) throws Exception {
 
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegItemproposedHandler regItemproposedHandler = new RegItemproposedHandler();
+        RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
 
         String ref = null;
         HashMap<String, String> refMaps = new HashMap();
         for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
             HashMap<RegField, String> map = items.getValue().get(0).getRegFieldsHashMap();
             Iterator<Map.Entry<RegField, String>> iterator = map.entrySet().iterator();
-                while (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 Map.Entry<RegField, String> entry = iterator.next();
-                    if (entry.getKey().getUuid().equalsIgnoreCase("ref")) {
-                        refMaps.put(items.getKey(), entry.getValue());
-                        
-                        iterator.remove();
-                    }
+                if (entry.getKey().getUuid().equalsIgnoreCase("ref")) {
+                    refMaps.put(items.getKey(), entry.getValue());
+
+                    iterator.remove();
+                }
             }
         }
-        
+
         RegItem regItemExistentAlready = null;
 
         Map.Entry<String, ArrayList<FieldsBulkImport>> any = itemsBulkImport.entrySet().iterator().next();
@@ -1340,6 +1346,7 @@ public class RegBulkImportHandler {
             request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
             throw new Exception();
         }
+        Integer i = 0;
         for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
             try {
                 try {
@@ -1352,29 +1359,52 @@ public class RegBulkImportHandler {
                     request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
                     throw new Exception();
                 }
+                List<RegLocalization> regLocalizations;
+                String localId = items.getKey();
+
                 if (regItemExistentAlready != null) {
                     items.getValue().get(0).getRegFieldsHashMap().values();
                     HashMap<RegField, String> fields = items.getValue().get(0).getRegFieldsHashMap();
+
                     RegItem regItemIterator = regItemManager.getByLocalidAndRegItemClass(items.getKey(), regItemclassChild);
                     String language = items.getValue().get(0).getLanguage().getUuid();
-                    
-                    for (Map.Entry<String, String> refIndex : refMaps.entrySet()){
-                        if(refIndex.getKey().equalsIgnoreCase(items.getKey())){
+
+                    for (Map.Entry<String, String> refIndex : refMaps.entrySet()) {
+                        if (refIndex.getKey().equalsIgnoreCase(items.getKey())) {
                             ref = refMaps.get(items.getKey());
                         }
                     }
-                    
-                    regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language, ref);
+
+                    RegItemproposed regItemProposedModify = regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language, ref);
                     ref = null;
+                    ArrayList<FieldsBulkImport> array = items.getValue();
+                    for (FieldsBulkImport fieldsBulkImport : array) {
+                        HashMap<RegField, String> fields2 = fieldsBulkImport.getRegFieldsHashMap();
+                        HashMap<RegField, RegItem> mapCollection = fieldsBulkImport.getRegFieldsCollectionHashMap();
+                        for (Map.Entry<RegField, String> entry : fields2.entrySet()) {
+                            regLocalizations = regLocalizationManager.getAll(entry.getKey(), regItemExistentAlready);
+
+                            if (regLocalizations.isEmpty()) {
+
+                                RegLanguagecode fieldLanguage = fieldsBulkImport.getLanguage();
+                                storeRelarionReference(entry.getValue(), entry.getKey(), regItemProposedModify, mapCollection, regItemclassChild, fieldLanguage, localId, fieldsBulkImport);
+
+                            }
+                            regLocalizations.clear();
+                        }
+
+                    }
+
                 }
             } catch (Exception ex) {
                 throw new Exception();
             }
+            i++;
         }
 
     }
 
-    private void storeItemFromBulk(FieldsBulkImport fieldsBulkImport, RegItem regItemContainer, RegItemclass regItemclassChild, RegItemproposed regItemproposed, String localId, ArrayList<FieldsBulkImport> array, RegLanguagecode fieldLanguage, RegLanguagecode masterLanguage) throws Exception {
+    private void storeItemFromBulk(FieldsBulkImport fieldsBulkImport, RegItem regItemContainer, RegItemclass regItemclassChild, RegItemproposed regItemproposed, String localId, RegLanguagecode fieldLanguage, RegLanguagecode masterLanguage) throws Exception {
         HashMap<RegField, String> map = fieldsBulkImport.getRegFieldsHashMap();
         HashMap<RegField, RegItem> mapCollection = fieldsBulkImport.getRegFieldsCollectionHashMap();
         String ref = null;
@@ -1388,8 +1418,6 @@ public class RegBulkImportHandler {
             }
         }
 
-        
-        
         for (Map.Entry<RegField, String> entry : map.entrySet()) {
             Object object = entry.getKey();
             String fieldValue = entry.getValue();
@@ -1411,12 +1439,12 @@ public class RegBulkImportHandler {
                             }
                             break;
                         default:
-                            storeLocalization(fieldLanguage, regItemproposed, regField, masterLanguage, fieldValue, localId, array, ref);
+                            storeLocalization(fieldLanguage, regItemproposed, regField, masterLanguage, fieldValue, localId, ref);
                             break;
                     }
                 }
             }
-            if(entry.getKey().getUuid().equalsIgnoreCase("ReferenceLink")){
+            if (entry.getKey().getUuid().equalsIgnoreCase("ReferenceLink")) {
                 ref = null;
             }
         }
@@ -1949,7 +1977,7 @@ public class RegBulkImportHandler {
         return outs;
     }
 
-    private void storeLocalization(RegLanguagecode fieldLanguage, RegItemproposed regItemproposed, RegField regField, RegLanguagecode masterLanguage, String fieldValue, String localId, ArrayList<FieldsBulkImport> array, String ref) throws Exception {
+    private void storeLocalization(RegLanguagecode fieldLanguage, RegItemproposed regItemproposed, RegField regField, RegLanguagecode masterLanguage, String fieldValue, String localId, String ref) throws Exception {
         RegLocalizationproposedManager regLocalizationproposedManager = new RegLocalizationproposedManager(entityManager);
 
         RegLocalizationproposed regLocalizationproposed = new RegLocalizationproposed();
@@ -1967,7 +1995,7 @@ public class RegBulkImportHandler {
             regLocalizationproposed.setRegLocalizationReference(null);
             regLocalizationproposed.setValue(fieldValue);
             regLocalizationproposed.setHref(null);
-            if(ref!=null){
+            if (ref != null) {
                 regLocalizationproposed.setHref(ref);
             }
             regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
