@@ -54,6 +54,7 @@ import eu.europa.ec.re3gistry2.model.RegItemhistory;
 import eu.europa.ec.re3gistry2.model.RegLocalization;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegFieldmappingUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemUuidHelper;
+import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemclassUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemhistoryUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegLocalizationUuidHelper;
 import java.text.MessageFormat;
@@ -468,22 +469,29 @@ public class MigrateItems {
             RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
 
             RegItemclass regItemclass = regItemclassManager.getByLocalid(item.getItemclass().getUriname());
-
+            
+            String legacyuuid = null;
             String uuid = null;
             String localid = item.getUriname();
-//            try {
-//                if (collection == null) {
-//                    uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
-//                } else {
-//                    uuid = RegItemUuidHelper.getUuid(localid, regItemManager.getByLocalidAndRegItemClass(collection.getUriname(), regItemclassManager.getByLocalid(collection.getItemclass().getUriname())), regItemclass);
-//                }
-//            } catch (Exception ex) {
-//                uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
-//            }
-        uuid = item.getUuid();
+            try {
+                if (collection == null) {
+                    uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
+                } else {
+                    uuid = RegItemUuidHelper.getUuid(localid, regItemManager.getByLocalidAndRegItemClass(collection.getUriname(), regItemclassManager.getByLocalid(collection.getItemclass().getUriname())), regItemclass);
+                }
+            } catch (Exception ex) {
+                uuid = RegItemUuidHelper.getUuid(localid, null, regItemclass);
+            }
 
-            regItem = regItemManager.get(uuid);
-
+            legacyuuid = item.getUuid();
+            if(legacyuuid.length() != 32){
+                regItem = regItemManager.get(legacyuuid);
+                regItem.setUuid(uuid);
+                regItemManager.update(regItem);    
+            }else{
+                regItem = regItemManager.get(uuid);
+            }
+            
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             throw new Exception(ex.getMessage());
@@ -556,17 +564,22 @@ uuid = item.getUuid();
 
     private RegItemclass addRegItemClassByItemclass(Itemclass itemclass, int procedureorder, RegItemclasstype regItemclasstypeItem, boolean commit) throws Exception {
         RegItemclass regItemclass = new RegItemclass();
-
+        RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
         regItemclass.setUuid(UuidHelper.createUuid(itemclass.getUriname(), RegItemclass.class));
         regItemclass.setUuid(itemclass.getUuid());
         regItemclass.setLocalid(itemclass.getUriname());
 
+                    
+            if(regItemclass.getUuid().length() != 32){
+                regItemclass.setUuid(RegItemclassUuidHelper.getUuid(regItemclass.getLocalid(), regItemclass.getRegItemclassParent().getLocalid(), regItemclass.getRegItemclasstype()));
+                regItemclassManager.update(regItemclass);
+            }
+        
+        
         if (itemclass.getParent() != null) {
-            RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
             RegItemclass regItemclassParent = regItemclassManager.getByLocalid(itemclass.getParent().getUriname());
             regItemclass.setRegItemclassParent(regItemclassParent);
         } else {
-            RegItemclassManager regItemclassManager = new RegItemclassManager(entityManagerRe3gistry2);
             RegItemclass parent = regItemclassManager.getByLocalid(itemclass.getRegister().getUriname());
             regItemclass.setRegItemclassParent(parent);
         }
