@@ -1273,6 +1273,26 @@ public class RegBulkImportHandler {
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegItem regItemExistentAlready = null;
 
+        int position = 1;
+        for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
+            RegItem regItemExistentAlready = null;
+            try {
+                regItemExistentAlready = regItemManager.getByLocalidAndRegItemClass(items.getKey(), regItemclassChild);
+            } catch (Exception ex) {
+
+            }
+            position ++;
+            if (regItemExistentAlready != null) {
+                operationResult = "<b>" + systemLocalization.getString("bulk.import.error.localId").replace("{localid}", "<b>" + items.getKey() + "</b>").replace("{line}", "<b>" + position + "</b>")
+                        + "</b>" + BR_HTML + operationResult;
+                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+            }
+        }
+        if (!operationResult.isEmpty()) {
+
+
+            throw new Exception();
+        }
         for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
             try {
                 if (items.getValue().size() > 1) {
@@ -1376,6 +1396,7 @@ public class RegBulkImportHandler {
                     }
 
                     RegItemproposed regItemProposedModify = regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language, ref);
+
                     ref = null;
                     ArrayList<FieldsBulkImport> array = items.getValue();
                     for (FieldsBulkImport fieldsBulkImport : array) {
