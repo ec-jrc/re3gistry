@@ -227,17 +227,17 @@
                                     boolean showChangesRequest = false;
 
                                     // Check if the user is the owner of the action
-                                    if (Configuration.checkWorkflowSimplified()== false) {
+                                    if (Configuration.checkWorkflowSimplified()== true) {
+                                        if (tmp.getRegUser().getSsoreference().equals(regUser.getSsoreference())) {
+                                            if (tmp.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT)) {
+                                                showSubmit = true;
+                                            }
+                                            if (tmp.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT) && (tmp.getChangeRequest() != null && tmp.getChangeRequest().length() > 0)) {
+                                                showChangesRequest = true;
+                                            }
+                                        }
+                                    }
                                     
-                                    }
-                                    if (tmp.getRegUser().getSsoreference().equals(regUser.getSsoreference())) {
-                                        if (tmp.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT)) {
-                                            showSubmit = true;
-                                        }
-                                        if (tmp.getRegStatus().getLocalid().equals(BaseConstants.KEY_STATUS_LOCALID_DRAFT) && (tmp.getChangeRequest() != null && tmp.getChangeRequest().length() > 0)) {
-                                            showChangesRequest = true;
-                                        }
-                                    }
                                     
                                 // Checking the status of the action
                                 boolean showActionPublish = false;
