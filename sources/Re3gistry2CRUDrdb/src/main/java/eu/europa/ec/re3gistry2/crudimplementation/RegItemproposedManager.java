@@ -184,7 +184,7 @@ public class RegItemproposedManager implements IRegItemproposedManager {
 
         return (RegItemproposed) q.getSingleResult();
     }
-    
+
     public RegItemproposed getByLocalidAndRegItemClassAndRegStatus(String localid, RegItemclass regItemclass, RegStatus regStatus) throws Exception {
         //Checking parameters
         if (localid == null || regItemclass == null) {
@@ -491,8 +491,8 @@ public class RegItemproposedManager implements IRegItemproposedManager {
         q.setParameter("regAction", regAction);
         return (List<RegItemproposed>) q.getResultList();
     }
-    
-        public List<String> getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(RegItemproposed regItemproposed, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception {
+
+    public List<String> getAllItemByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(RegItemproposed regItemproposed, RegStatus regStatus, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception {
         //Preparing query
         Query q = null;
 //            q = this.em.createQuery(SQLConstants.SQL_GET_REG_ITEM_BY_SUBJECT_PREDICATE_AND_FILTER_PREDICATE);
@@ -510,8 +510,8 @@ public class RegItemproposedManager implements IRegItemproposedManager {
         }
         return (List<String>) q.getResultList();
     }
-        
-           public List<RegItemproposed> getAllSubjectsByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception {
+
+    public List<RegItemproposed> getAllSubjectsByRegItemProposedObjectAndPredicateAndSubjectNotPredicate(RegItem regItem, RegRelationpredicate regRelationPredicate, RegRelationpredicate subjectNotHavingPredicate) throws Exception {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_REG_ITEM_BY_OBJECT_PREDICATE_AND_SUBJECT_FILTER);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMPROPOSED, regItem);
@@ -523,13 +523,31 @@ public class RegItemproposedManager implements IRegItemproposedManager {
             return null;
         }
     }
-           
-               public List<RegItemproposed> getAllItemProposed(RegItemclass regItemcalss) throws Exception {
+
+    public List<RegItemproposed> getAllItemProposed(RegItemclass regItemcalss) throws Exception {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEM_BY_REGITEMCLASS);
         q.setParameter(SQLConstants.SQL_PARAMETERS_REGITEMCLASS, regItemcalss);
         return (List<RegItemproposed>) q.getResultList();
     }
-               
+
+    /**
+     * Return the Regitemproposed associated to a localid
+     * @param localid of a RegItem 
+     * @return RegItemproposed
+     * @throws Exception throw a exception if an error occurs
+     */
+    @Override
+    public RegItemproposed getByLocalid(String localid) throws Exception {
+        //Checking parameters
+        if (localid == null) {
+            throw new Exception(MessageFormat.format(ErrorConstants.ERROR_MANAGER_PATTERN_NULL, "uuid"));
+        }
+
+        //Preparing query
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEMPROPOSED_BY_LOCALID);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_LOCALID, localid);
+        return (RegItemproposed) q.getSingleResult();
+    }
 
 }
