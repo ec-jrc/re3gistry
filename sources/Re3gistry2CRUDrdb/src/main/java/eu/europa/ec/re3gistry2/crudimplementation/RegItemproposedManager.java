@@ -38,6 +38,7 @@ import eu.europa.ec.re3gistry2.model.RegRelationpredicate;
 import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.text.MessageFormat;
+import javax.persistence.NoResultException;
 
 public class RegItemproposedManager implements IRegItemproposedManager {
 
@@ -533,7 +534,8 @@ public class RegItemproposedManager implements IRegItemproposedManager {
 
     /**
      * Return the Regitemproposed associated to a localid
-     * @param localid of a RegItem 
+     *
+     * @param localid of a RegItem
      * @return RegItemproposed
      * @throws Exception throw a exception if an error occurs
      */
@@ -547,7 +549,12 @@ public class RegItemproposedManager implements IRegItemproposedManager {
         //Preparing query
         Query q = this.em.createQuery(SQLConstants.SQL_GET_REGITEMPROPOSED_BY_LOCALID);
         q.setParameter(SQLConstants.SQL_PARAMETERS_LOCALID, localid);
-        return (RegItemproposed) q.getSingleResult();
+
+        try {
+            return (RegItemproposed) q.getSingleResult();
+        } catch (NoResultException e) {
+            return null; 
+        }
     }
 
 }

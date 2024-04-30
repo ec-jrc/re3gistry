@@ -1271,7 +1271,6 @@ public class RegBulkImportHandler {
 
         RegItemproposed regItemproposed;
         RegItemManager regItemManager = new RegItemManager(entityManager);
-        RegItem regItemExistentAlready = null;
 
         int position = 1;
         for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
@@ -1449,7 +1448,6 @@ public class RegBulkImportHandler {
                     request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
                     throw new Exception();
                 }
-                List<RegLocalization> regLocalizations;
                 String localId = items.getKey();
 
                 if (regItemExistentAlready != null) {
