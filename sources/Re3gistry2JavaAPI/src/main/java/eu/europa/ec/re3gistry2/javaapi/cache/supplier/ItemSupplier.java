@@ -934,7 +934,7 @@ public class ItemSupplier {
                 .filter(fieldmappingFilter)
                 .map(it -> {
                     try {
-                        return getLocalizedPropertyProposed(it, regItem, localizationsByField, localizationsByFieldML);     
+                        return getLocalizedPropertyProposed(it, regItem, localizationsByField, localizationsByFieldML);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -1116,30 +1116,30 @@ public class ItemSupplier {
                 }
                 RegRoleManager regRoleManager = new RegRoleManager(entityManager);
                 RegRole regRole = regRoleManager.getByLocalId(id);
-                 List<RegItemRegGroupRegRoleMapping> regItemRegGroupRegRoleMappingManagerList = null;
+                List<RegItemRegGroupRegRoleMapping> regItemRegGroupRegRoleMappingManagerList = null;
                 if (regRole != null) {
                     RegItemRegGroupRegRoleMappingManager regItemRegGroupRegRoleMappingManager = new RegItemRegGroupRegRoleMappingManager(entityManager);
                     regItemRegGroupRegRoleMappingManagerList = regItemRegGroupRegRoleMappingManager.getAll(regItem, regRole);
                     if (regItemRegGroupRegRoleMappingManagerList.size() > 1) {
                         for (int i = 0; i < regItemRegGroupRegRoleMappingManagerList.size(); i++) {
                             rolLabel = this.regGroupManager.get(regItemRegGroupRegRoleMappingManagerList.get(i).getRegGroup().getUuid());
-                            LocalizedPropertyValue localizedPropertyValue = new LocalizedPropertyValue(rolLabel.getName(), null);
+                            LocalizedPropertyValue localizedPropertyValue = new LocalizedPropertyValue(rolLabel.getName(), rolLabel.getWebsite());
                             values.add(localizedPropertyValue);
                         }
                     } else {
                         rolLabel = this.regGroupManager.get(regItemRegGroupRegRoleMappingManagerList.get(0).getRegGroup().getUuid());
                     }
                 }
-                if (localizations != null && !localizations.isEmpty() && regRole== null ) {
+                if (localizations != null && !localizations.isEmpty() && regRole == null) {
                     values = localizations.stream()
                             .map(l -> new LocalizedPropertyValue(l.getValue(), l.getHref()))
                             .collect(Collectors.toList());
                 }
-                if (rolLabel != null && regItemRegGroupRegRoleMappingManagerList != null && regItemRegGroupRegRoleMappingManagerList.size()<=1) {
+                if (rolLabel != null && regItemRegGroupRegRoleMappingManagerList != null && regItemRegGroupRegRoleMappingManagerList.size() <= 1) {
                     if (!values.isEmpty()) {
                         values.clear();
                     }
-                    values = Collections.singletonList(new LocalizedPropertyValue(rolLabel.getName(), null));
+                    values = Collections.singletonList(new LocalizedPropertyValue(rolLabel.getName(), rolLabel.getWebsite()));
                 }
                 break;
 
