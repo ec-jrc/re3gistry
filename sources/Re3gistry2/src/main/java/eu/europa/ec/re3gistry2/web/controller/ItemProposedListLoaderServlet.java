@@ -180,8 +180,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
 //                }
                 List<RegItemproposed> containedRegItemsCheck = regItemproposedManager.getAllNew(regItemclasses, regItem, regRelationpredicateCollection, start, length);
 
-                if (!containedRegItemsCheck.isEmpty()
-//                        && containedRegItemsCheck.size() != containedRegItems.size()
+                if (!containedRegItemsCheck.isEmpty() //                        && containedRegItemsCheck.size() != containedRegItems.size()
                         ) {
                     containedRegItems = containedRegItemsCheck;
                     totalCount = regItemproposedManager.countAllNew(regItemclasses, regItem, regRelationpredicateCollection);
@@ -224,7 +223,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                     if (i != 0) {
                         outs += ",";
                     }
-                    outs += "[\"<a href=\\\"./"+WebConstants.PAGE_URINAME_BROWSE+"?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + tmpRegItem.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalozations.get(0).getValue()) + "</a>\"]";
+                    outs += "[\"<a href=\\\"./" + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + tmpRegItem.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(tmpRegLocalozations.get(0).getValue()) + "</a>\"]";
 
                     // It the contained itemclass is just one
                 } else {
@@ -459,7 +458,7 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                     regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage);
                                 }
 
-                                String statusURI = regStatusgroup.getBaseuri()+ "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();
+                                String statusURI = regStatusgroup.getBaseuri() + "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();
                                 outs += "\"<a data-uri=\\\"/" + statusURI + "\\\" href=\\\"" + statusURI + "\\\">" + regStatusLocalization.getLabel() + "</a>\"";
 
                                 j++;
@@ -510,7 +509,9 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                             } catch (NoResultException e) {
                                                 regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
                                             }
-
+                                            if (regLocalizationTmps.isEmpty()) {
+                                                regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
+                                            }
                                             for (RegLocalization regLocalizationTmp : regLocalizationTmps) {
                                                 outs += "\"<a href=\\\"./content?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
                                             }
@@ -528,10 +529,12 @@ public class ItemProposedListLoaderServlet extends HttpServlet {
                                                     List<RegLocalization> regLocalizationTmps;
                                                     try {
                                                         regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), regLanguagecode);
-                                                    } catch (NoResultException e) {
+                                                    } catch (Exception e) {
                                                         regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
                                                     }
-
+                                                    if (regLocalizationTmps.isEmpty()) {
+                                                        regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
+                                                    }
                                                     if (k != 0) {
                                                         outs += ",";
                                                     }
