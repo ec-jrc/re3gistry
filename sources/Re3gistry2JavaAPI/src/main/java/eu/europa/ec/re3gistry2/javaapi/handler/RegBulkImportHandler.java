@@ -1339,6 +1339,46 @@ public class RegBulkImportHandler {
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegItemproposedHandler regItemproposedHandler = new RegItemproposedHandler();
         RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
+        List<RegLocalization> regLocalizations = null;
+        Map<String, Map<String, String>> regItemsKey = new HashMap<>();
+        Integer position = itemsBulkImport.size();
+        for (Map.Entry<String, ArrayList<FieldsBulkImport>> items : itemsBulkImport.entrySet()) {
+            List<RegItem> regItem = regItemManager.getByLocalid(items.getKey());
+            regLocalizations = regLocalizationManager.getAll(regItem.get(0), items.getValue().get(0).getLanguage());
+            if (regLocalizations.isEmpty()) {
+                Map<String, String> entryRegItems = new HashMap<>();
+                entryRegItems.put("position", position.toString());
+                entryRegItems.put("language", items.getValue().get(0).getLanguage().getIso6391code());
+                regItemsKey.put(items.getKey(), entryRegItems);
+            }
+            position--;
+            regLocalizations.clear();
+            regItem.clear();
+        }
+        if (regLocalizations != null) {
+            try {
+                if (!regItemsKey.isEmpty()) {
+                    throw new Exception();
+                }
+            } catch (Exception ex) {
+                for (Map.Entry<String, Map<String, String>> entry : regItemsKey.entrySet()) {
+                    String regItemKey = entry.getKey();
+                    Map<String, String> regItemValues = entry.getValue();
+                    String count = regItemValues.get("position");
+                    String language = regItemValues.get("language");
+
+                    operationResult = "<b>" + systemLocalization.getString("bulk.edit.error.language").replace("{localid}", "<b>" + regItemKey + "</b>").replace("{language}", "<b>" + language + "</b>").replace("{line}", "<b>" + count + "</b>")
+                            + "</b>" + BR_HTML + operationResult;
+                    request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, operationResult);
+
+                }
+                operationResult = operationResult + "<br>" + "<b>" + systemLocalization.getString("bulk.edit.error.language.add")
+                            + "</b>" + BR_HTML;
+                throw new Exception();
+            }
+
+        }
+
 
         String ref = null;
         HashMap<String, String> refMaps = new HashMap();
@@ -1395,8 +1435,8 @@ public class RegBulkImportHandler {
                         }
                     }
 
-                    RegItemproposed regItemProposedModify = regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language, ref);
 
+                    RegItemproposed regItemProposedModify = regItemproposedHandler.completeCopyRegItemToRegItemporposedBulkEdit(regItemIterator, regUser, fields, additionLines, language, ref);
                     ref = null;
                     ArrayList<FieldsBulkImport> array = items.getValue();
                     for (FieldsBulkImport fieldsBulkImport : array) {
