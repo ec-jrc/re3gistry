@@ -295,7 +295,7 @@ function renderProperties(data) {
 
         if (values.length > 1) {
             htmlOutput += renderFieldListValues(item.label, values);
-        } else if (values.length == 1) {
+        } else if (values.length == 1 && values[0].value !== "") {
             let value = values[0].value;
             let href = values[0].href;
 
