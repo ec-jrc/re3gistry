@@ -44,6 +44,7 @@ public class SendEmailFromAction {
         LinkedHashSet<InternetAddress> users = new LinkedHashSet<>();
         users.add(new InternetAddress(regAction.getSubmittedBy().getEmail()));
         users.add(new InternetAddress(regAction.getApprovedBy().getEmail()));
+        users.add(new InternetAddress(regAction.getPublishedBy().getEmail()));
         users.add(new InternetAddress(regAction.getRegUser().getEmail()));
 
         if (!users.isEmpty()) {
