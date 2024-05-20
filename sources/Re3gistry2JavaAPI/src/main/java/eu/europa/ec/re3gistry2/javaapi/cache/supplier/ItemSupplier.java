@@ -558,18 +558,6 @@ public class ItemSupplier {
                     }
                 }
 
-                // ADD REGITEMPROPOSEDs
-                containedItemsproposedList = getDirectlyContainedItemsproposedOfRegister(regItem);
-
-                if (containedItemsproposedList != null && !containedItemsproposedList.isEmpty()) {
-                    for (RegItemproposed containedItemproposed : containedItemsproposedList) {
-
-                        if (!containedItemproposed.getRegItemclass().getSystemitem()) {
-                            containedItems.add(toContainedItemWithoutItemsproposed(containedItemproposed));
-                        }
-                    }
-                }
-
                 //toContainedItemWithoutItemsproposed(containedItemsProposedList);
                 // ADD TO THE CONTAINED ITEMS
                 if (!containedItems.isEmpty()) {
