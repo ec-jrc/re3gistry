@@ -1222,7 +1222,8 @@ public class RegItemproposedHandler {
             regLocalizationproposedManager.add(regLocalizationproposed);
         }
     }
-private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, RegItemproposed regItemproposed, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language) throws Exception {
+
+    private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, RegItemproposed regItemproposed, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language) throws Exception {
         RegRelationManager regRelationManager = new RegRelationManager(entityManager);
         RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
         RegRelationproposedManager regRelationproposedManager = new RegRelationproposedManager(entityManager);
@@ -1239,11 +1240,8 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
             // Copying RegRelations to RegRelationProposeds
             HashMap<String, RegRelationproposed> tempHashmap = new HashMap();
 
-            RegRelationproposed regRelationproposedEditLcl = null;
-            String fieldName = "";
             List<RegRelationproposed> relationsLcl = new ArrayList();
-            int x = 0;
-            Map<String, RegRelationproposed> localizationMap = new HashMap<>();            
+
             for (int j = 0; j < regRelations.size(); j++) {
                 List<RegLocalization> localizations = regLocalizationManager.getAllByRelation(regRelations.get(j));
 
@@ -1252,39 +1250,39 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 for (Map.Entry<RegField, String> entry : fields.entrySet()) {
                     for (int i = 0; i < localizations.size(); i++) {
                         if (localizations.get(i).getRegField().getLocalid().equalsIgnoreCase(entry.getKey().getLocalid())) {
-                            if(!entry.getValue().equalsIgnoreCase("")){
-                                    RegField regField = regFieldManager.get(entry.getKey().getUuid());
-                                    RegItemclass regItemClassObject = regItemclassManager.get(regField.getRegItemclassReference().getUuid());
-                                    regItemObject = regItemManager.getByLocalidAndRegItemClass(entry.getValue(), regItemClassObject);
-                                    regRelations.get(j).setRegItemObject(regItemCurrent);
+                            if (!entry.getValue().equalsIgnoreCase("")) {
+                                RegField regField = regFieldManager.get(entry.getKey().getUuid());
+                                RegItemclass regItemClassObject = regItemclassManager.get(regField.getRegItemclassReference().getUuid());
+                                regItemObject = regItemManager.getByLocalidAndRegItemClass(entry.getValue(), regItemClassObject);
+                                regRelations.get(j).setRegItemObject(regItemCurrent);
                             }
                         }
 
                     }
                 }
 
-                if (regItemObject.getUuid() == null){
+                if (regItemObject.getUuid() == null) {
                     regItemObject = regItemCurrent;
                 }
-               
+
                 RegRelationproposed regRelationproposed = new RegRelationproposed();
                 String regRelationproposedUuid = RegRelationproposedUuidHelper.getUuid(regItemproposed, null, regRelations.get(j).getRegRelationpredicate(), null, regItemCurrent);
                 //String regRelationproposedUuid2 = RegRelationproposedUuidHelper.getUuid(regItemproposed, null, regRelations.get(j).getRegRelationpredicate(), null, regRelations.get(j).getRegItemObject());
-               
+
                 regRelationproposed.setUuid(regRelationproposedUuid);
                 regRelationproposed.setRegItemSubject(null);
                 regRelationproposed.setRegItemproposedSubject(regItemproposed);
                 regRelationproposed.setRegItemObject(regItemObject);
                 regRelationproposed.setRegItemproposedObject(null);
-              
+
                 regRelationproposed.setRegRelationpredicate(regRelations.get(j).getRegRelationpredicate());
                 regRelationproposed.setInsertdate(new Date());
-                
-                if(regItemObject != regRelations.get(j).getRegItemObject() || regRelations.get(j).getRegRelationpredicate().getUuid().equals("7")){
+
+                if (regItemObject != regRelations.get(j).getRegItemObject() || regRelations.get(j).getRegRelationpredicate().getUuid().equals("7")) {
                     regRelationproposed.setRegRelationReference(regRelations.get(j));
                     relationsLcl.add(regRelationproposed);
-                } else{
-                    regRelationproposed.setRegRelationReference(regRelations.get(j)); 
+                } else {
+                    regRelationproposed.setRegRelationReference(regRelations.get(j));
                 }
 
                 regRelationproposedManager.add(regRelationproposed);
@@ -1292,11 +1290,11 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 tempHashmap.put(regRelations.get(j).getUuid(), regRelationproposed);
 
             }
-           
-                // Replicating the relevant Reglocalizationproposeds pointing to the
-                //  RegRelationproposed copyied above
-                // Getting all the localization with a reference to a reg relation
-                // related to the current RegItem
+
+            // Replicating the relevant Reglocalizationproposeds pointing to the
+            //  RegRelationproposed copyied above
+            // Getting all the localization with a reference to a reg relation
+            // related to the current RegItem
             List<RegLocalization> regLocalizations = regLocalizationManager.getAllWithRelationReference(regItem);
             for (RegLocalization regLocalization : regLocalizations) {
                 // Creating the regLocalizationproposed for the regRelationreference
@@ -1317,7 +1315,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
 
                 regLocalizationproposedManager.add(regLocalizationproposed);
             }
-           
+
         } catch (Exception e) {
             System.out.println("eu.europa.ec.re3gistry2.javaapi.handler.RegItemproposedHandler.copyRegRelationsToRegRelationproposedsBulkEdit()");
         }
@@ -1400,17 +1398,14 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
             value = (value.length() == 0) ? "" : InputSanitizerHelper.sanitizeInput(value);
 
             // Getting the eventual href
-            
             String hrefFieldName = processFieldHrefName(key);
             String[] paramHrefs = (String[]) requestParameters.get(key);
             String href = "";
-            if(paramHrefs.length>1){
+            if (paramHrefs.length > 1) {
                 href = paramHrefs[1];
-            }
-            
-            else {
+            } else {
                 paramHrefs = (String[]) requestParameters.get(hrefFieldName);
-                if (paramHrefs != null){
+                if (paramHrefs != null) {
                     //For each value there is just one link
                     href = paramHrefs[0];
                     // !!! Sanitizing form input
@@ -1812,7 +1807,6 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                     regLocalizationproposed.setRegRelationproposedReference(null);
 
 //                    regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
-
                     regLocalizationproposedManager.update(regLocalizationproposed);
 
                     if (regRelationproposed != null) {
@@ -1846,8 +1840,8 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                             } else {
                                 newRegLocalizationproposed.setValue(entry.getValue());
                             }
-                            if(entry.getKey().getLocalid().equalsIgnoreCase("ReferenceLink")){
-                               regLocalization.setHref(ref);
+                            if (entry.getKey().getLocalid().equalsIgnoreCase("ReferenceLink")) {
+                                regLocalization.setHref(ref);
                             }
                         }
                     }
@@ -1887,7 +1881,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
             try {
                 RegItemclass itemClassRelationReference = regField.getRegItemclassReference();
                 String relationreferenceuuid = "";
-                
+
                 try {
                     if (mapCollection.containsKey(regField)) {
                         RegItem itemRelationReferenceCollection = mapCollection.get(regField);
@@ -2113,7 +2107,7 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
         return regItemproposed;
     }
 
-   public RegItemproposed completeCopyRegItemToRegItemporposedBulkEdit(RegItem regItem, RegUser regUser, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language, String ref) throws Exception {
+    public RegItemproposed completeCopyRegItemToRegItemporposedBulkEdit(RegItem regItem, RegUser regUser, HashMap<RegField, String> fields, ArrayList<String> additionLines, String language, String ref, ArrayList<FieldsBulkImport> fieldsBulk) throws Exception {
         RegItemproposed regItemproposed = null;
         synchronized (sync) {
             if (!entityManager.getTransaction().isActive()) {
@@ -2134,15 +2128,17 @@ private void copyRegRelationsToRegRelationproposedsBulkEdit(RegItem regItem, Reg
                 entityManager.getTransaction().begin();
             }
             if (regItem != null && regItemproposed != null) {
-              copyRegRelationsToRegRelationproposedsBulkEdit(regItem, regItemproposed, fields, additionLines, language);  
+                copyRegRelationsToRegRelationproposedsBulkEdit(regItem, regItemproposed, fields, additionLines, language);
             }
             entityManager.getTransaction().commit();
+            for (FieldsBulkImport fieldsBulkImport : fieldsBulk) {
+                if (!entityManager.getTransaction().isActive()) {
+                    entityManager.getTransaction().begin();
+                }
+                copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fieldsBulkImport.getRegFieldsHashMap(), fieldsBulkImport.getLanguage().getUuid(), ref);
+                entityManager.getTransaction().commit();
+            }
 
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            copyRegLocalizationsToRegLocalizationproposedBulkEdit(regItem, regItemproposed, null, fields, language, ref);
-            entityManager.getTransaction().commit();
         }
         return regItemproposed;
     }
