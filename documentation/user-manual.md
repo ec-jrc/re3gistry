@@ -569,12 +569,12 @@ When the process is complete, a congratulations message will be displayed, and t
 
 ![Bulk import Draft Items](images/bulkImportFinal.JPG)
 
-    - How can an item be imported into the master language and other languages in the same CSV?
-        To import an item in the master language and other languages in the same CSV, you must first write the item in the master language, followed by the item in the other languages.
-        ![Bulk import MultiLanguage](images/BulkImportMultilanguages.JPG)
+How can an item be imported into the master language and other languages in the same CSV?
+    To import an item in the master language and other languages in the same CSV, you must first write the item in the master language, followed by the item in the other languages.
+    ![Bulk import MultiLanguage](images/BulkImportMultilanguages.JPG)
 
-        All the languages will be added simultaneously in the same action.
-        ![Bulk import MultiLanguage Action ](images/BulkImportMultiAction.JPG)
+    All the languages will be added simultaneously in the same action.
+    ![Bulk import MultiLanguage Action ](images/BulkImportMultiAction.JPG)
 
 
 BULK EDIT:
