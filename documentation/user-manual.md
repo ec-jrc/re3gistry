@@ -544,7 +544,7 @@ Depending on the type of installation, using an external authentication provider
 
 Users can receive different email notifications to inform them about statuses and actions done to the items and actions they have taken part in. These notifications indicate the status of the items (Items been submitted, published etc.) and some of the actions done in the instance, such as permissions and roles given to a user.
 
-### Bulk Import and Bulk Edit
+## Bulk Import and Bulk Edit
 
 This feature allows the user to make modifications to multiple existing items.
 These massive inserts or modifications are made using the bulk process:
@@ -559,7 +559,7 @@ When clicking the "Start bulk import/edit" button, the automated process starts 
 
 In the available items table, the new or modified items will be displayed in the table with Valid/Draft status.
 
-BULK IMPORT:
+### Bulk Import:
 
 To perform a bulk import, it is necessary to fill in all the fields listed in the template (the ones designated as required on the structure page). The fields in the template are separated by pipes (|) . It is crucial to maintain the same structure.
 
@@ -569,15 +569,18 @@ When the process is complete, a congratulations message will be displayed, and t
 
 ![Bulk import Draft Items](images/bulkImportFinal.JPG)
 
-How can an item be imported into the master language and other languages in the same CSV?
-    To import an item in the master language and other languages in the same CSV, you must first write the item in the master language, followed by the item in the other languages.
-    ![Bulk import MultiLanguage](images/BulkImportMultilanguages.JPG)
+#### How can an item be imported into the master language and other languages in the same CSV? 
 
-    All the languages will be added simultaneously in the same action.
-    ![Bulk import MultiLanguage Action ](images/BulkImportMultiAction.JPG)
+  To import an item in the master language and other languages in the same CSV, you must first write the item in the master language, followed by the item in the other languages.
+  
+  ![Bulk import MultiLanguage](images/BulkImportMultilanguages.JPG)
+
+  All the languages will be added simultaneously in the same action.
+
+  ![Bulk import MultiLanguage Action ](images/BulkImportMultiAction.JPG)
 
 
-BULK EDIT:
+### Bulk Edit:
 
 To perform a bulk edit, it is mandatory to enter the item’s ID an the language. Fields that remain unchanged should be left blank.
 
