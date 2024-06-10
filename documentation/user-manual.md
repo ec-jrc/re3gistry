@@ -559,6 +559,34 @@ When clicking the "Start bulk import/edit" button, the automated process starts 
 
 In the available items table, the new or modified items will be displayed in the table with Valid/Draft status.
 
+BULK IMPORT:
+
+To perform a bulk import, it is necessary to fill in all the fields listed in the template (the ones designated as required on the structure page). The fields in the template are separated by pipes (|) . It is crucial to maintain the same structure.
+
+![Bulk import CSV example](images/bulkImport.JPG)
+
+When the process is complete, a congratulations message will be displayed, and the proposed items will appear in the table at the bottom.
+
+![Bulk import Draft Items](images/bulkImportFinal.JPG)
+
+    - How can an item be imported into the master language and other languages in the same CSV?
+        To import an item in the master language and other languages in the same CSV, you must first write the item in the master language, followed by the item in the other languages.
+        ![Bulk import MultiLanguage](images/BulkImportMultilanguages.JPG)
+
+        All the languages will be added simultaneously in the same action.
+        ![Bulk import MultiLanguage Action ](images/BulkImportMultiAction.JPG)
+
+
+BULK EDIT:
+
+To perform a bulk edit, it is mandatory to enter the item’s ID an the language. Fields that remain unchanged should be left blank.
+
+![Bulk Edit CSV example](images/bulkEdit.JPG)
+
+When navigating to the 'Admin' tab, it can be observed that the item has been edited.
+
+![Bulk Edit Admin Tab](images/BulkEditAdminTab.JPG)
+
 ## Additional Notes
 
 ### Default Language
