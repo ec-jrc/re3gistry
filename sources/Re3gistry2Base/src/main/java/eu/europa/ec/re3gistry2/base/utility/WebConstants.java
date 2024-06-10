@@ -69,7 +69,7 @@ public class WebConstants {
 
     public static final String PAGE_URINAME_BROWSELOADER = "/browseLoader";
     public static final String PAGE_PATH_BROWSELOADER = "/ajaxServices";
-    
+
     public static final String PAGE_URINAME_BULK_TEMPLATE = "/bulkImport";
     public static final String PAGE_PATH_BULK_TEMPLATE = "";
 
@@ -125,13 +125,15 @@ public class WebConstants {
 
     public static final String PAGE_URINAME_ADDFIELD = "/addField";
     public static final String PAGE_PATH_ADDFIELD = "";
-    
+
     public static final String PAGE_URINAME_ACTIVATE = "/activate";
     public static final String PAGE_PATH_ACTIVATE = "";
+    public static final String PAGE_PATH_CHANGEPASSWORD = "";
+    public static final String PAGE_URINAME_CHANGEPASSWORD = "/changePassword";
 
     public static final String PAGE_URINAME_DELETE_USER = "/userDeleted";
     public static final String PAGE_PATH_DELETE_USER = "";
-    
+
     /**
      * installation steps
      */
@@ -162,10 +164,10 @@ public class WebConstants {
 
     public static final String PAGE_URINAME_REGISTRYMANAGER_GROUPS = "/registryManagerGroups";
     public static final String PAGE_PATH_REGISTRYMANAGER_GROUPS = "";
-    
-    public static final String  PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT = "/registryManagerDataExport";
+
+    public static final String PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT = "/registryManagerDataExport";
     public static final String PAGE_PATH_REGISTRYMANAGER_DATAEXPORT = "";
-            
+
     public static final String PAGE_URINAME_REGISTRYMANAGER_GROUPS_ADD = "/registryManagerGroupsAdd";
     public static final String PAGE_PATH_REGISTRYMANAGER_GROUPS_ADD = "";
 
@@ -189,17 +191,16 @@ public class WebConstants {
 
     public static final String PAGE_URINAME_ABOUT = "/about";
     public static final String PAGE_PATH_ABOUT = "";
-    
+
     public static final String PAGE_URINAME_RSS = "/release-note";
     public static final String PAGE_PATH_RSS = "";
 
     public static final String PAGE_URINAME_HELP = "/help";
     public static final String PAGE_PATH_HELP = "";
-    
+
     public static final String PAGE_URINAME_STATUS = "/status";
     public static final String PAGE_PATH_STATUS = "";
-    
-    
+
     public static final String KEY_API_CONTEXT_NAME = "/re3gistry2restapi";
     public static final String KEY_PATH_API_CONTEXT_NAME = "";
     public static final String KEY_CACHEALL_NAME = "/cacheall";
@@ -230,6 +231,9 @@ public class WebConstants {
     public static final String HTML_CONSTANT_DIV_COL_SM_6_OPENING = "<div class=\"col-sm-6\">";
     public static final String HTML_CONSTANT_DIV_COL_SM_12_OPENING = "<div class=\"col-sm-12\">";
     public static final String HTML_CONSTANT_DIV_CLOSING = "</div>";
+
+    //Email
+    public static final String EMAIL_URL = "/re3gistry2";
 
     public String getPAGE_JSP_FOLDER() {
         return PAGE_JSP_FOLDER;

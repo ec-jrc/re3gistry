@@ -7687,7 +7687,10 @@ button.bg-dark:focus {
     align-self: stretch !important;
   }
 }
-
+.select-field {
+    position: relative;
+    z-index: 100;
+}
 .float-left {
   float: left !important;
 }
@@ -7798,7 +7801,7 @@ button.bg-dark:focus {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-    z-index: 1020;
+    z-index: 50;
   }
 }
 

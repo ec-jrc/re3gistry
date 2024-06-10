@@ -493,6 +493,11 @@ The registry manager can edit the information related to each user, including th
 
 ![Registry manager section - Add new user](images/registrymanager-useradd.png)
 
+These new users will recieve an email with an activation link for their account. Once activated, the system will request a password change upon entering for the first time.
+
+![Registry manager section - New user first time password update](images/new-password.png)
+
+
 The user can be "**disabled** but not deleted. All the users are kept to have a traceable history of the registered items. However, if a user is deactivated, he cannot log in to the system.
 
 ### Groups
@@ -510,11 +515,20 @@ The Data export subtab allows the registry manager to run a complete SOLR index 
 SOLR: This option helps to easily run a full export of the registry data to the Solr index on the published items.
 
 CACHE: 
-* Button "Cache all - Master language": This option helps to run a full cache of the master language of the system.
 * Button "Cache all": This option helps to run a full cache of the active languages of the system.
+* Button "Cache all - Selected languages": This option helps to run a full cache on the languages you select in the widget among the existing ones. Also the master language is marked with the [MASTER] indicator.
 * Button "Remove cache": This option helps to remove the index of all the cache items.
 
-![Registry manager - Data export](images/data_export_registry_manager.PNG)
+![Registry manager - Data export](images/cache.png)
+
+![Registry manager - Data export cache selector](images/cache-displayed.png)
+
+
+
+When the cache process is active, no new publication will be possible.
+
+![Registry manager - No publication](images/cache-nopublication.png)
+
 
 ### User profile
 
@@ -530,20 +544,20 @@ Depending on the type of installation, using an external authentication provider
 
 Users can receive different email notifications to inform them about statuses and actions done to the items and actions they have taken part in. These notifications indicate the status of the items (Items been submitted, published etc.) and some of the actions done in the instance, such as permissions and roles given to a user.
 
-### Bulk Edit
+### Bulk Import and Bulk Edit
 
 This feature allows the user to make modifications to multiple existing items.
-These massive modifications are made using the bulk import tool:
+These massive inserts or modifications are made using the bulk process:
 
-![Bulk import tool](images/Bulk.png)
+![Bulk import tool](images/Bulk_options.png)
 
-The edition process starts by loading a .csv file containing the specific fields to be modified.
-Within this file, it is mandatory to enter the ID of the item and the language. Fields that remain unchanged should be left blank.
+The bulk process starts by loading a .csv file containing the specific fields to be modified.
 
-When clicking on the "Start bulk import" button, the automated process starts and the items will be updated.
+For the edition, it is mandatory to enter the item's ID and the language. Fields that remain unchanged should be left blank.
 
-In the available items table the modified items will be displayed in the table with Valid/Draft status.
+When clicking the "Start bulk import/edit" button, the automated process starts and the items will be inserted or updated.
 
+In the available items table, the new or modified items will be displayed in the table with Valid/Draft status.
 
 ## Additional Notes
 

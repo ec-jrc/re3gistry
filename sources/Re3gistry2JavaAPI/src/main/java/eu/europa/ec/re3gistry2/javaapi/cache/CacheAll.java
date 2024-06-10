@@ -28,11 +28,13 @@ public class CacheAll {
     private EntityManager em;
     private final ItemCache cache;
     private RegLanguagecode regMasterLanguagecode;
+    private List <RegLanguagecode> availableLanguages;
+    private Logger logger = Configuration.getInstance().getLogger();
 
-    public CacheAll(EntityManager em, ItemCache cache, RegLanguagecode regMasterLanguagecode) {
+    public CacheAll(EntityManager em, ItemCache cache, List <RegLanguagecode> availableLanguages) {
         this.em = em;
         this.cache = cache;
-        this.regMasterLanguagecode = regMasterLanguagecode;
+        this.availableLanguages = availableLanguages;
     }
 
     public void run(String itemclassID) throws Exception {
@@ -51,14 +53,18 @@ public class CacheAll {
         }
 
         try {
-            List<RegLanguagecode> availableLanguages;
             RegLanguagecode masterLanguage = languageManager.getMasterLanguage();
-            if (regMasterLanguagecode != null) {
-                availableLanguages = new ArrayList<>();
-                availableLanguages.add(regMasterLanguagecode);
-            } else {
-                availableLanguages = regLanguagecodeManager.getAllActive();
+                    
+            if (availableLanguages==null) {
+                if (regMasterLanguagecode != null) {
+                    availableLanguages = new ArrayList<>();
+                    availableLanguages.add(regMasterLanguagecode);
+                } else {
+                    availableLanguages = regLanguagecodeManager.getAllActive();
+                }
             }
+            
+            
 
             try {
                 logger.trace("---[ STARTING CACHE ALL]--- @ " + new Date());
@@ -196,3 +202,4 @@ public class CacheAll {
   }
 
 }
+    

@@ -23,6 +23,13 @@
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
 --%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Arrays"%>
+<%@page import="eu.europa.ec.re3gistry2.model.RegLanguagecode"%>
+<%@page import="java.util.List"%>
+<%@page import="javax.persistence.EntityManager"%>
+<%@page import="eu.europa.ec.re3gistry2.base.utility.PersistenceFactory"%>
+<%@page import="eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager"%>
 <%@page import="eu.europa.ec.re3gistry2.base.utility.Configuration"%>
 <%@page import="eu.europa.ec.re3gistry2.base.utility.WebConstants"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -36,17 +43,16 @@
                href="https://inspire-sandbox.jrc.ec.europa.eu/registry"
                aria-label="European Commission">
                 <img src="./res/img/logo-1.png" alt="" width="50%" height="50%">
-            </a>
-            
+            </a>            
 <!--            <div >
                 <h3><a href="https://github.com/ec-jrc/re3gistry" class="mt-5 mb-5 text-center">Frontend panel</a></h3>
             </div>-->
             
             <div class="ecl-site-header__selector"><a class="ecl-link ecl-link--standalone ecl-site-header__selector-link"
-                                                      href="" data-ecl-language-selector="true">English<span class="ecl-site-header__language-icon"><svg
+                                                      href="" data-ecl-language-selector="true">${localization.getString("label.language.current")}<span class="ecl-site-header__language-icon"><svg
                             focusable="false" aria-hidden="true" class="ecl-icon ecl-icon--m">
                         <use xlink:href="./res/ecl-v2/static/media/icons.svg#general--language"></use>
-                        </svg><span class="ecl-site-header__language-code">en</span></span></a>
+                        </svg><span class="ecl-site-header__language-code">${localization.getString("label.language.current.code")}</span></span></a>
                 <div hidden="" class="ecl-language-list ecl-language-list--overlay" aria-labelledby="ecl-language-list__title"
                      role="dialog" data-ecl-language-list-overlay="true">
                     <div class="ecl-language-list__container ecl-container">
@@ -68,86 +74,43 @@
                         <div class="ecl-row">
                             <div class="ecl-language-list__column ecl-col-12 ecl-col-lg-4 ecl-offset-lg-2">
                                 <ul class="ecl-language-list__list">
-                                    <li class="ecl-language-list__item "><a lang="bg" hrefLang="bg" rel="alternate"
-                                                                            href="#language_bg"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">български</a></li>
-                                    <li class="ecl-language-list__item "><a lang="es" hrefLang="es" rel="alternate"
-                                                                            href="#language_es"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">español</a></li>
-                                    <li class="ecl-language-list__item "><a lang="cs" hrefLang="cs" rel="alternate"
-                                                                            href="#language_cs"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">čeština</a></li>
-                                    <li class="ecl-language-list__item "><a lang="da" hrefLang="da" rel="alternate"
-                                                                            href="#language_da"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">dansk</a></li>
-                                    <li class="ecl-language-list__item "><a lang="de" hrefLang="de" rel="alternate"
-                                                                            href="#language_de"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">Deutsch</a></li>
-                                    <li class="ecl-language-list__item "><a lang="et" hrefLang="et" rel="alternate"
-                                                                            href="#language_et"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">eesti</a></li>
-                                    <li class="ecl-language-list__item "><a lang="el" hrefLang="el" rel="alternate"
-                                                                            href="#language_el"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">ελληνικά</a></li>
-                                    <li class="ecl-language-list__item ecl-language-list__item--is-active"><a lang="en" hrefLang="en"
-                                                                                                              rel="alternate" href="#language_en"
-                                                                                                              class="ecl-language-list__link ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-after"><span
-                                                class="ecl-link__label">English</span> <svg focusable="false" aria-hidden="true"
-                                                class="ecl-link__icon ecl-icon ecl-icon--xs">
-                                            <use xlink:href="./res/ecl-v2/static/media/icons.svg#ui--check"></use>
-                                            </svg></a></li>
-                                    <li class="ecl-language-list__item "><a lang="fr" hrefLang="fr" rel="alternate"
-                                                                            href="#language_fr"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">français</a></li>
-                                    <li class="ecl-language-list__item "><a lang="ga" hrefLang="ga" rel="alternate"
-                                                                            href="#language_ga"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">Gaeilge</a></li>
-                                    <li class="ecl-language-list__item "><a lang="hr" hrefLang="hr" rel="alternate"
-                                                                            href="#language_hr"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">hrvatski</a></li>
-                                    <li class="ecl-language-list__item "><a lang="it" hrefLang="it" rel="alternate"
-                                                                            href="#language_it"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">italiano</a></li>
-                                </ul>
+                                    
+                                    <%
+                                        EntityManager localEntityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
+                                        RegLanguagecodeManager manager = new RegLanguagecodeManager(localEntityManager);
+                                        List <RegLanguagecode> activeLanguages = manager.getAllActive();
+                                        
+                                        int listSize = activeLanguages.size();                                                     
+                                        List<RegLanguagecode> firstColumn = new ArrayList<RegLanguagecode>(activeLanguages.subList(0, (listSize) / 2));
+                                        List<RegLanguagecode> secondColumn = new ArrayList<RegLanguagecode>(activeLanguages.subList((listSize) / 2, listSize));
+                                                                                                   
+                                        for(int i=0; i<firstColumn.size(); i++){
+                                        %>
+                                        <li class="ecl-language-list__item "><a lang='<%=firstColumn.get(i).getIso6391code()%>' hrefLang='<%=firstColumn.get(i).getIso6391code()%>' rel="alternate"
+                                                                                href=".<%=WebConstants.PAGE_URINAME_CHANGELOCALE%>?<%=BaseConstants.KEY_REQUEST_LANGUAGE%>=<%=firstColumn.get(i).getIso6391code()%>"
+                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone"> <%= firstColumn.get(i).getLabel() %></a></li>
+                                        <%
+                                        }
+
+                                        %>                                
+                                    </ul>
                             </div>
                             <div class="ecl-language-list__column ecl-col-12 ecl-col-lg-4">
                                 <ul class="ecl-language-list__list">
-                                    <li class="ecl-language-list__item "><a lang="lv" hrefLang="lv" rel="alternate"
-                                                                            href="#language_lv"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">latviešu</a></li>
-                                    <li class="ecl-language-list__item "><a lang="lt" hrefLang="lt" rel="alternate"
-                                                                            href="#language_lt"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">lietuvių</a></li>
-                                    <li class="ecl-language-list__item "><a lang="hu" hrefLang="hu" rel="alternate"
-                                                                            href="#language_hu"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">magyar</a></li>
-                                    <li class="ecl-language-list__item "><a lang="mt" hrefLang="mt" rel="alternate"
-                                                                            href="#language_mt"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">Malti</a></li>
-                                    <li class="ecl-language-list__item "><a lang="nl" hrefLang="nl" rel="alternate"
-                                                                            href="#language_nl"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">Nederlands</a></li>
-                                    <li class="ecl-language-list__item "><a lang="pl" hrefLang="pl" rel="alternate"
-                                                                            href="#language_pl"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">polski</a></li>
-                                    <li class="ecl-language-list__item "><a lang="pt" hrefLang="pt" rel="alternate"
-                                                                            href="#language_pt"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">português</a></li>
-                                    <li class="ecl-language-list__item "><a lang="ro" hrefLang="ro" rel="alternate"
-                                                                            href="#language_ro"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">română</a></li>
-                                    <li class="ecl-language-list__item "><a lang="sk" hrefLang="sk" rel="alternate"
-                                                                            href="#language_sk"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">slovenčina</a></li>
-                                    <li class="ecl-language-list__item "><a lang="sl" hrefLang="sl" rel="alternate"
-                                                                            href="#language_sl"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">slovenščina</a></li>
-                                    <li class="ecl-language-list__item "><a lang="fi" hrefLang="fi" rel="alternate"
-                                                                            href="#language_fi"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">suomi</a></li>
-                                    <li class="ecl-language-list__item "><a lang="sv" hrefLang="sv" rel="alternate"
-                                                                            href="#language_sv"
-                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone">svenska</a></li>
+                                    <% 
+                                    
+                                        for(int y=0; y<secondColumn.size(); y++){
+                                        %>
+                                        <li class="ecl-language-list__item "><a lang='<%=secondColumn.get(y).getIso6391code()%>' hrefLang='<%=secondColumn.get(y).getIso6391code()%>' rel="alternate"
+                                                                            href=".<%=WebConstants.PAGE_URINAME_CHANGELOCALE%>?<%=BaseConstants.KEY_REQUEST_LANGUAGE%>=<%=secondColumn.get(y).getIso6391code()%>"
+                                                                            class="ecl-language-list__link ecl-link ecl-link--standalone"> <%= secondColumn.get(y).getLabel() %></a></li>
+                                        <%
+                                        }
+                                    
+                                    
+                                    %>
+                                    
+                                    
                                 </ul>
                             </div>
                         </div>
@@ -167,9 +130,8 @@
         </nav>
         <h1 class="ecl-page-header__title ecl-u-type-color-white" data-i18n="s-site-title">Re3gistry sandbox - admin interface</h1>
     </div>
-</div>
-
-
+</div>                           
+                                    
 <div class="hb4">
     <div class="container">
         <%@include file="menu.inc.jsp" %>        

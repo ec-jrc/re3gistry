@@ -525,11 +525,24 @@ public class ItemsServlet extends HttpServlet {
             }
             if (sizeHistory != 0 || sizeHistory + 1 != version) {
                 try {
+                    if(version.equals(sizeHistory + 1)){
+                    optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+                    }else{          
                     optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+                    }
                 } catch (Exception ex) {
                     optItem = Optional.empty();
                 }
             }
+            
+            if(sizeHistory == 0 && version == 1){
+                try {
+                    optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+                } catch (Exception ex) {
+                    optItem = Optional.empty();
+                }
+            }
+            
         }
 
         return optItem;     

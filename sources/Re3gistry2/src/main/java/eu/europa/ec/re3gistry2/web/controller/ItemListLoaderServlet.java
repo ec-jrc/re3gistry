@@ -147,7 +147,7 @@ public class ItemListLoaderServlet extends HttpServlet {
         //Getting the master language
         RegLanguagecode masterLanguage = regLanguagecodeManager.getMasterLanguage();
         request.setAttribute(BaseConstants.KEY_REQUEST_MASTERLANGUAGE, masterLanguage);
-        
+
         RegLanguagecode english = regLanguagecodeManager.getByIso6391code("en");
 
         // Getting the language by parameter (if not available the master language is used)
@@ -415,7 +415,7 @@ public class ItemListLoaderServlet extends HttpServlet {
                                 j++;
 
                             } else if (tmpRegFieldmapping.getRegField().getRegFieldtype().getLocalid().equals(BaseConstants.KEY_FIELD_TYPE_SUCCESSOR)) {
-                               
+
                                 // Get the "successor" reg relation
                                 List<RegRelation> tmpRegRelations = regRelationManager.getAll(tmpRegItem, regRelationpredicateSuccessor);
                                 if (!tmpRegRelations.isEmpty()) {
@@ -473,11 +473,15 @@ public class ItemListLoaderServlet extends HttpServlet {
                                     RegStatus regStatusProposedItem = regItemproposed.getRegStatus();
 
                                     //Getting the RegStatus localization
-                                    RegStatuslocalization regStatusLocalizationProposedItem;
+                                    RegStatuslocalization regStatusLocalizationProposedItem = null;
                                     try {
                                         regStatusLocalizationProposedItem = regStatuslocalizationManager.get(regStatusProposedItem, regLanguagecode);
                                     } catch (NoResultException e) {
                                         regStatusLocalizationProposedItem = regStatuslocalizationManager.get(regStatusProposedItem, masterLanguage);
+                                    }
+                                    
+                                    if(regStatusLocalizationProposedItem == null) {
+                                         regStatusLocalizationProposedItem = regStatuslocalizationManager.get(regStatusProposedItem, masterLanguage);
                                     }
 
                                     regItemproposedStatus = " / " + regStatusLocalizationProposedItem.getLabel();
@@ -490,14 +494,14 @@ public class ItemListLoaderServlet extends HttpServlet {
                                 try {
                                     regStatusLocalization = regStatuslocalizationManager.get(regStatus, regLanguagecode);
                                 } catch (NoResultException e) {
-                                    try{
-                                        regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage); 
-                                    } catch (Exception ex){
+                                    try {
+                                        regStatusLocalization = regStatuslocalizationManager.get(regStatus, masterLanguage);
+                                    } catch (Exception ex) {
                                         regStatusLocalization = regStatuslocalizationManager.get(regStatus, english);
                                     }
                                 }
 
-                                String statusURI = regStatusgroup.getBaseuri()+ "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();
+                                String statusURI = regStatusgroup.getBaseuri() + "/" + regStatusgroup.getLocalid() + "/" + regStatus.getLocalid();
                                 outs += "\"<a data-uri=\\\"/" + statusURI + "\\\" href=\\\"" + statusURI + "\\\">" + regStatusLocalization.getLabel() + regItemproposedStatus + "</a>\"";
 
                                 j++;
@@ -550,6 +554,9 @@ public class ItemListLoaderServlet extends HttpServlet {
                                             } catch (NoResultException e) {
                                                 regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
                                             }
+                                            if (regLocalizationTmps.isEmpty()) {
+                                                regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
+                                            }
 
                                             for (RegLocalization regLocalizationTmp : regLocalizationTmps) {
                                                 outs += "\"<a href=\\\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regItemReference.getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + regLanguagecode.getUuid() + "\\\">" + StringEscapeUtils.escapeJson(regLocalizationTmp.getValue()) + "</a>\"";
@@ -571,7 +578,11 @@ public class ItemListLoaderServlet extends HttpServlet {
                                                     } catch (NoResultException e) {
                                                         regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
                                                     }
-                                                       
+                                                    
+                                                   /* if(regLocalizationTmps.isEmpty()){
+                                                        regLocalizationTmps = regLocalizationManager.getAll(regFieldManager.getTitleRegField(), regRelation.getRegItemObject(), masterLanguage);
+                                                    } */
+
                                                     if (k != 0) {
                                                         outs += ",";
                                                     }

@@ -47,6 +47,10 @@
     </div>
 </div>
 
+<script>
+    ECL.autoInit();
+</script>            
+            
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",

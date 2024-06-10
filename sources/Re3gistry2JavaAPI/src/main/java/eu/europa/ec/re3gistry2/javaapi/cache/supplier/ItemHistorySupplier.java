@@ -40,6 +40,10 @@ import javax.persistence.NoResultException;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
 import eu.europa.ec.re3gistry2.base.utility.ItemHelper;
+import static eu.europa.ec.re3gistry2.base.utility.ItemHelper.getRelatedItemBySubject;
+import static eu.europa.ec.re3gistry2.base.utility.ItemHelper.getRelatedItemsBySubject;
+import static eu.europa.ec.re3gistry2.base.utility.ItemHelper.getURI;
+import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegFieldmappingManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemManager;
@@ -47,6 +51,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationhistoryManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegStatusManager;
@@ -74,6 +79,7 @@ import eu.europa.ec.re3gistry2.javaapi.cache.model.LocalizedPropertyValue;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.VersionInformation;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.NoVersionException;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.StatusLocalization;
+import eu.europa.ec.re3gistry2.model.RegRelation;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -374,6 +380,66 @@ public class ItemHistorySupplier {
                 throw new RuntimeException("Invalid type");
         }
     }
+    
+    public static String getURIItem(RegItem regItem) throws Exception {
+        // Getting the DB manager
+        EntityManager entityManager = PersistenceFactory.getEntityManagerFactory().createEntityManager();
+
+        RegRelationpredicateManager relationPredicateManager = new RegRelationpredicateManager(entityManager);
+        RegRelationpredicate hasRegistry = relationPredicateManager.get(BaseConstants.KEY_PREDICATE_REGISTRY);
+        RegRelationpredicate hasRegister = relationPredicateManager.get(BaseConstants.KEY_PREDICATE_REGISTER);
+
+        if (regItem == null) {
+            return null;
+        }
+        RegItemclass itemclass = regItem.getRegItemclass();
+        switch (itemclass.getRegItemclasstype().getLocalid()) {
+            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY:
+                return itemclass.getBaseuri() + "/" + regItem.getLocalid();
+            case BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER:
+                String baseuri = itemclass.getBaseuri();
+                if (baseuri != null) {
+                    return baseuri + "/" + regItem.getLocalid();
+                }
+                String registryURI = getURIItem(getRelatedItemBySubject(regItem, hasRegistry, entityManager));
+                return registryURI + "/" + regItem.getLocalid();
+            case BaseConstants.KEY_ITEMCLASS_TYPE_ITEM:
+                String itemURI = null;
+                if (regItem.getExternal()) {
+                    itemURI = regItem.getLocalid();
+                } else {
+                    String registerURI = getURIItem(getRelatedItemBySubject(regItem, hasRegister, entityManager));
+                    List<RegItem> collectionChain = getCollectionChain(regItem, entityManager);
+                    if (collectionChain.isEmpty()) {
+                        return registerURI + "/" + regItem.getLocalid();
+                    }
+                    String collectionsPath = collectionChain.stream()
+                            .map(collection -> collection.getLocalid())
+                            .collect(Collectors.joining("/"));
+                    itemURI = registerURI + "/" + collectionsPath + "/" + regItem.getLocalid();
+                }
+
+                return itemURI;
+            default:
+                throw new RuntimeException("Invalid type");
+        }
+    }
+        
+    private static List<RegItem> getCollectionChain(RegItem regItem, EntityManager entityManager) throws Exception {
+        RegRelationpredicateManager regRelationpredicateManager = new RegRelationpredicateManager(entityManager);
+        RegRelationpredicate hasCollection = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_COLLECTION);
+        RegItem collection = getRelatedItemBySubject(regItem, hasCollection, entityManager);
+        if (collection == null) {
+            return Collections.emptyList();
+        }
+        LinkedList<RegItem> collectionChain = new LinkedList<>();
+        while (collection != null) {
+            collectionChain.addFirst(collection);
+            collection = getRelatedItemBySubject(collection, hasCollection, entityManager);
+        }
+        return collectionChain;
+    }
+    
 
     private List<LocalizedProperty> getLocalizedProperties(RegItemhistory regItemhistory, Predicate<RegFieldmapping> fieldmappingFilter) throws Exception {
         List<RegLocalizationhistory> localizations = regLocalizationhistoryManager.getAll(regItemhistory, languageCode);
@@ -620,8 +686,8 @@ public class ItemHistorySupplier {
     private LocalizedProperty getLinksToRelatedItems(RegField field,
             String label, int order, boolean tablevisible, RegItemhistory regItemhistory,
             Map<String, List<RegLocalizationhistory>> localizationsByField,
-            Map<String, List<RegLocalizationhistory>> localizationsByFieldML) throws Exception {
-        String id = field.getLocalid();
+            Map<String, List<RegLocalizationhistory>> localizationsByFieldML) throws Exception {      
+        String id = field.getLocalid();      
         boolean istitle = field.getIstitle();
         String lang = languageCode.getIso6391code();
 
@@ -651,7 +717,9 @@ public class ItemHistorySupplier {
             if (value == null) {
                 continue;
             }
-            String href = getURI(regItemhistory);
+            //String href = getURIRelationalField(regItemhistory, urlDATA, id);
+            
+             String href = getURIItem(relItem);
             values.add(new LocalizedPropertyValue(value, href));
         }
 

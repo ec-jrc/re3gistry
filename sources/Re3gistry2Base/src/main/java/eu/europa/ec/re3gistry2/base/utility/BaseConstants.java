@@ -444,6 +444,8 @@ public class BaseConstants {
     public static final String KEY_REQUEST_STARTCACHING = "startCaching";
     public static final String KEY_REQUEST_STARTCACHING_MASTERLANGUAGE = "startCachingMasterLanguage";
     public static final String KEY_REQUEST_REMOVECACHING = "removeCaching";
+    public static final String KEY_REQUEST_STARTCACHING_SELECTEDLANGUAGES = "startCachingSelectedLanguages";
+    
 
     /* - Keys for naming the form fields - */
     public static final String KEY_FORM_FIELD_NAME_HREF_SUFFIX = "__href";

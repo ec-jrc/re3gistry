@@ -123,7 +123,7 @@ public class UserHelper {
 
                             //Getting the user from the system using SHIRO username as key.
                             try {
-                                regUser = regUserManager.findByEmail(((String) detailedUser.getPrincipal()).toLowerCase());
+                                regUser = regUserManager.findByEmail(((String) detailedUser.getPrincipal()));
                                 request.setAttribute(BaseConstants.KEY_SESSION_USER, regUser);
                             } catch (Exception e) {
                                 request.setAttribute(BaseConstants.KEY_REQUEST_USER_ERROR_MESSAGES, BaseConstants.KEY_REQUEST_USER_NOT_AVAILABLE);

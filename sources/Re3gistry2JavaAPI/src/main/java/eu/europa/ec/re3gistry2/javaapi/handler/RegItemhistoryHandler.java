@@ -56,6 +56,8 @@ import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemhistoryRegGroupRegRoleM
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegItemhistoryUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegLocalizationhistoryUuidHelper;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegRelationhistoryUuidHelper;
+import java.util.ArrayList;
+import static java.util.Collections.max;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -142,17 +144,18 @@ public class RegItemhistoryHandler {
                         int minVersion = regItemhistoryManager.getMinVersionByLocalidAndRegItemClass(maxVersionRegItemhistory.getLocalid(), maxVersionRegItemhistory.getRegItemclass()).getVersionnumber();
                         if (minVersion == 0) {
                             List<RegItemhistory> regItemHistoryList = regItemhistoryManager.getByLocalidAndRegItemClass(maxVersionRegItemhistory.getLocalid(), maxVersionRegItemhistory.getRegItemclass());
+                            ArrayList<Integer> versions = new ArrayList<>();
                             for (RegItemhistory regItemhistoryItem : regItemHistoryList) {
-                                int itemHistoryVersionupdated = regItemhistoryItem.getVersionnumber() + 1;
-                                maxVersionRegItemhistory.setVersionnumber(itemHistoryVersionupdated);
+                                versions.add(regItemhistoryItem.getVersionnumber());
+                            }   
+                                maxVersionRegItemhistory.setVersionnumber(max(versions)+1);
                                 regItemhistoryManager.update(maxVersionRegItemhistory);
-                            }
                         }
 
                         versionNumber = maxVersion + 1;
                     } else {
                         //history starts with 1
-//it was 0 before the release 2.3.2:  versionNumber = 0;
+                        //it was 0 before the release 2.3.2:  versionNumber = 0;
                         versionNumber = 1;
                     }
                 } catch (Exception e) {
@@ -166,7 +169,12 @@ public class RegItemhistoryHandler {
                 String newRegItemhistoryUuid = RegItemhistoryUuidHelper.getUuid(regItem.getLocalid(), regItemCollection, regItem.getRegItemclass(), regItem, versionNumber);
 
                 newRegItemhistory.setUuid(newRegItemhistoryUuid);
-                newRegItemhistory.setVersionnumber(versionNumber);
+                if(versionNumber==0){
+                    newRegItemhistory.setVersionnumber(versionNumber+1);
+                }else{
+                    newRegItemhistory.setVersionnumber(versionNumber);
+                }
+                
                 newRegItemhistory.setLocalid(regItem.getLocalid());
                 newRegItemhistory.setRegItemclass(regItem.getRegItemclass());
                 newRegItemhistory.setInsertdate(new Date());
