@@ -178,3 +178,16 @@ For tomcat, add two files to the Tomcat lib folder: ecas-tomcat-x.y.z.jar and lo
 
 Verify that the JDK trusts the [ECAS certificates](https://webgate.ec.europa.eu/CITnet/confluence/display/IAM/Downloads-Certificates) else import them on the keystore of the JVM.
 Restart the service and check the authentication mechanism.
+
+## Updating the URLs for Page Icons (Favicons) and Images
+
+To modify the URL where the page icons (favicons) and images point, navigate to the following path: `sources\Re3gistry2\src\main\resources\configurations_files\configuration.properties.` Within this file, locate the property **web.cdn_url** . This property serves as the base URL for your icons and images and can be adjusted according to your requirements.
+
+Once you've made changes to the **web.cdn_url** property, it will be used in `sources\Re3gistry2\src\main\webapp\jsp\includes\head.inc.jsp` to generate the final URLs for the page icons and images, enabling you to customize their paths as necessary.
+
+
+
+
+
+
+
