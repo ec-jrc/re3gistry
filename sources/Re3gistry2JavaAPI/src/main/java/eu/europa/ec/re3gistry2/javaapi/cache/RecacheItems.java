@@ -7,12 +7,14 @@ package eu.europa.ec.re3gistry2.javaapi.cache;
 
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.Configuration;
+import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRelationpredicateManager;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemSupplier;
 import eu.europa.ec.re3gistry2.model.RegItem;
+import eu.europa.ec.re3gistry2.model.RegItemhistory;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.model.RegRelation;
 import java.util.ArrayList;
@@ -29,16 +31,18 @@ public class RecacheItems extends Thread {
     private ItemCache cache;
     private final Logger logger;
     private final List<RegItem> regItems;
+    private final List<RegLanguagecode> regLanguageCode;
     private final HttpServletRequest request;
 
     private static final String TYPE_REGISTRY = BaseConstants.KEY_ITEMCLASS_TYPE_REGISTRY;
     private static final String TYPE_REGISTER = BaseConstants.KEY_ITEMCLASS_TYPE_REGISTER;
     private static final String TYPE_ITEM = BaseConstants.KEY_ITEMCLASS_TYPE_ITEM;
 
-    public RecacheItems(EntityManager em, HttpServletRequest request, List<RegItem> regItems) {
+    public RecacheItems(EntityManager em, HttpServletRequest request, List<RegItem> regItems, List<RegLanguagecode> regLanguageCode ) {
         this.em = em;
         this.request = request;
         this.regItems = regItems;
+        this.regLanguageCode = regLanguageCode;
 
         // Init logger
         this.logger = Configuration.getInstance().getLogger();
@@ -54,7 +58,7 @@ public class RecacheItems extends Thread {
     public void run() {
         try {
             if (!CacheHelper.checkCacheCompleteRunning()) {
-                recacheItems(regItems);
+                recacheItems(regItems, regLanguageCode);
             }
         } catch (Exception e) {
             CacheHelper.deleteCacheCompleteRunningFile();
@@ -66,7 +70,7 @@ public class RecacheItems extends Thread {
         }
     }
 
-    private void recacheItems(List<RegItem> regItems) throws Exception {
+    private void recacheItems(List<RegItem> regItems, List<RegLanguagecode> regLanguageCode) throws Exception {
         CacheHelper.createCacheCompleteRunningFile();
         RegLanguagecodeManager languageManager = new RegLanguagecodeManager(em);
 
@@ -82,13 +86,13 @@ public class RecacheItems extends Thread {
 
         // Iterating on the RegItems
         regItems.forEach((regItem) -> {
-            availableLanguages.forEach((RegLanguagecode languageCode) -> {
+            regLanguageCode.forEach((RegLanguagecode languageCode) -> {
                 try {
                     this.logger.info("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
                     System.out.println("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
 
                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
-                    Optional<Item> optItem = updateCacheForItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
+                    updateCacheForItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
 
                     switch (regItem.getRegItemclass().getRegItemclasstype().getLocalid()) {
                         case TYPE_REGISTRY:
@@ -101,6 +105,10 @@ public class RecacheItems extends Thread {
                             }
                             break;
                         case TYPE_ITEM:
+                             registry = regRelationManager.getAllByRegItemSubjectAndPredicate(regItem, relationpredicateManager.get(BaseConstants.KEY_PREDICATE_REGISTER)).get(0).getRegItemObject();
+                            if (!itemsToRecache.contains(registry)) {
+                                itemsToRecache.add(registry);
+                            }
                             List<RegRelation> collectionList = regRelationManager.getAllByRegItemSubjectAndPredicate(regItem, relationpredicateManager.get(BaseConstants.KEY_PREDICATE_COLLECTION));
                             if (collectionList != null && !collectionList.isEmpty()) {
                                 RegItem collection = collectionList.get(0).getRegItemObject();
@@ -146,12 +154,13 @@ public class RecacheItems extends Thread {
         //if the item has a collection, parent, successor, predecessor update it
         itemsToRecache.forEach((regItem) -> {
             try {
-                for (RegLanguagecode languageCode : availableLanguages) {
+                for (RegLanguagecode languageCode : regLanguageCode) {
                     this.logger.info("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
                     System.out.println("RECACHE - regItems: " + regItem.getLocalid() + ", language: " + languageCode.getIso6391code() + " - @ " + new Date());
 
                     ItemSupplier itemSupplier = new ItemSupplier(em, masterLanguage, languageCode);
-                    Optional<Item> optItem = updateCacheForItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
+                    updateCacheForItemByUuid(regItem, languageCode.getIso6391code(), itemSupplier);
+
                 }
             } catch (javax.persistence.PersistenceException | org.eclipse.persistence.exceptions.DatabaseException | org.postgresql.util.PSQLException e) {
                 if (!em.isOpen()) {
@@ -178,7 +187,7 @@ public class RecacheItems extends Thread {
 
     private Optional<Item> updateCacheForItemByUuid(RegItem regItem, String language, ItemSupplier itemSupplier) throws Exception {
         Item cached = cache.getByUuid(language, regItem.getUuid());
-        
+
         Item item = itemSupplier.getItem(regItem);
         if (item == null) {
             return Optional.empty();
@@ -190,5 +199,6 @@ public class RecacheItems extends Thread {
         cache.add(language, item, null);
         return Optional.of(item);
     }
+
 
 }

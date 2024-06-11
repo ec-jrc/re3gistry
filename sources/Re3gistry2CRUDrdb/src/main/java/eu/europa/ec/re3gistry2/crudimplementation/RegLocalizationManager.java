@@ -361,5 +361,12 @@ public class RegLocalizationManager implements IRegLocalizationManager {
         q.setParameter(SQLConstants.SQL_PARAMETERS_RELATION, relation);
         return (List<RegLocalization>) q.getResultList();
     }
+    
+   @Override
+    public List<RegLanguagecode> getLanguageCodeByRegAction(RegAction regAction) throws Exception{
+        Query q = this.em.createQuery(SQLConstants.SQL_GET_DISTINCT_LANGUAGE_CODES_BY_REGACTION);
+        q.setParameter(SQLConstants.SQL_PARAMETERS_ACTION, regAction);
+        return (List<RegLanguagecode>) q.getResultList();
+    }
 
 }
