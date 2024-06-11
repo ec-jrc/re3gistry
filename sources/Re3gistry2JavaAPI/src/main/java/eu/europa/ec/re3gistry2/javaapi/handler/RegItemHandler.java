@@ -159,8 +159,8 @@ public class RegItemHandler {
                     // update the existing RegItem
                     regItem.setLocalid(regItemProposed.getLocalid());
                     regItem.setRegItemclass(regItemProposed.getRegItemclass());
-                    regItem.setInsertdate(new Date());
-                    regItem.setEditdate(regItemProposed.getEditdate());
+                    regItem.setInsertdate(regItemProposed.getInsertdate());
+                    regItem.setEditdate(new Date());
                     regItem.setRegAction(regItemProposed.getRegAction());
                     regItem.setRegUser(regItemProposed.getRegUser());
                     regItem.setRorExport(regItemProposed.getRorExport());
