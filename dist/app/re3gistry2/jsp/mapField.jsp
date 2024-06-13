@@ -127,7 +127,7 @@
                     <label class="col-sm-4">${localization.getString("mapField.label.textselectfield")}</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <select class="selectpicker form-control float-left" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_FIELDUUID%>" required data-live-search="true">
+                            <select class="select-field form-control" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_FIELDUUID%>" required data-live-search="true">
                                 <option value=""></option>
                                 <%
                                     for (RegField tmpRegField : regFields) {
