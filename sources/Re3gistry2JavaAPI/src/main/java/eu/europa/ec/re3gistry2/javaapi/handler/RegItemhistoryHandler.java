@@ -134,7 +134,10 @@ public class RegItemhistoryHandler {
                 int versionNumber = 0;
                 try {
                     RegItemhistory maxVersionRegItemhistory = regItemhistoryManager.getMaxVersionByLocalidAndRegItemClass(regItem.getLocalid(), regItem.getRegItemclass());
-                    int maxVersion = maxVersionRegItemhistory.getVersionnumber();
+                    int maxVersion = 0;
+                    if (maxVersionRegItemhistory != null) {
+                        maxVersion = maxVersionRegItemhistory.getVersionnumber();
+                    }
 
                     if (maxVersion > 0) {
 
@@ -155,7 +158,8 @@ public class RegItemhistoryHandler {
                         //it was 0 before the release 2.3.2:  versionNumber = 0;
                         versionNumber = 1;
                     }
-                } catch (NoResultException e) {
+                } catch (Exception e) {
+                    logger.trace("Error" + e.getMessage());
                 }
 
                 //Creating the new RegItemhistory

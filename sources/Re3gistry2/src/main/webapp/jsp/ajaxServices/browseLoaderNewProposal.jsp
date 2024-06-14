@@ -280,7 +280,7 @@
         use: <%=(fieldTranslationUnavailable) ? "*" : ""%> inside the label tag --%>
 
         <%-- Display the label of the current field --%>
-        <label for="<%=regFieldmapping.getUuid()%>" class="col-sm-4 control-label"><%=regFieldLocalization.getValue()%><% if (regFieldmapping.getHidden()) {%>  <i title="<%=localization.getString("label.hiddenpublicinterface")%>" data-toggle="tooltip" class="notice fas fa-eye-slash"></i><%}%></label>
+        <label for="<%=regFieldmapping.getUuid()%>" class="col-sm-4 control-label"><%=regFieldLocalization.getValue()%><% if (regFieldmapping.getHidden()) {%>  <i title="<%=localization.getString("label.hiddenpublicinterface")%>" class="notice fas fa-eye-slash"></i><%}%></label>
 
         <div class="col-sm-8">            
             <%

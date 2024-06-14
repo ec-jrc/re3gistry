@@ -58,5 +58,6 @@ public interface IRegItemproposedManager{
     public List<RegItemproposed> getAll(RegUser regUser, int start, int length) throws Exception;
     public int countAll(RegUser regUser) throws Exception;
     public List<RegItemproposed> getAll(RegAction regAction) throws Exception;
+    public RegItemproposed getByLocalid(String localid) throws Exception;
     
 }

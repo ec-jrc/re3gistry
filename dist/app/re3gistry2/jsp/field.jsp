@@ -23,6 +23,7 @@
  * through Action 2016.10: European Location Interoperability Solutions for e-Government (ELISE)
  */
 --%>
+<%@page import="java.util.ResourceBundle"%>
 <%@page import="eu.europa.ec.re3gistry2.javaapi.cache.CacheHelper"%>
 <%@page import="eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager"%>
 <%@page import="eu.europa.ec.re3gistry2.model.RegFieldtype"%>
@@ -61,6 +62,8 @@
     // Checking if the current user has the rights to add a new itemclass
     String[] actionManageFieldMapping = {BaseConstants.KEY_USER_ACTION_MANAGEFIELDMAPPING};
     boolean permissionManageFieldMapping = UserHelper.checkGenericAction(actionManageFieldMapping, currentUserGroupsMap, regItemRegGroupRegRoleMappingManager);
+    // Loading the system localization (note: it is different from the content localization)
+    ResourceBundle localization = (ResourceBundle) request.getAttribute(BaseConstants.KEY_REQUEST_LOCALIZATION);
 %>
 <!DOCTYPE html>
 <html lang="${localization.getString("property.localeid")}" role="document">
@@ -225,7 +228,7 @@
       the map button --%>
                     <% if (permissionManageFieldMapping) {%>
                     <a href=".<%=WebConstants.PAGE_URINAME_MAPFIELD%>?<%=BaseConstants.KEY_REQUEST_ITEMCLASSUUID%>=<%=regItemclass.getUuid()%>&<%=BaseConstants.KEY_REQUEST_LANGUAGEUUID%>=<%=regLanguagecode.getUuid()%>" class="btn btn-success width100"><i class="fas fa-plus"></i> ${localization.getString("label.field.map")}</a>
-                    <% } %>
+                    <% }%>
                 </div>
             </div>
             <div class="alert alert-warning mt-3" role="alert">
@@ -241,10 +244,10 @@
                             <th>${localization.getString("label.label")}</th>
                             <th>${localization.getString("label.type")}</th>
                             <th>${localization.getString("label.ishyperlinked")}</th>
-                            <th>${localization.getString("label.hidden")}<i class='fas fa-exclamation-circle'></i></th>
+                            <th>${localization.getString("label.hidden")}<i class='fas fa-exclamation-circle' title="<%=localization.getString("label.hiddenpublicinterface")%>"></i></th>
                             <th>${localization.getString("label.multivalued")}</th>
                             <th>${localization.getString("label.required")}</th>
-                            <th>${localization.getString("label.tablevisible")}<i class='fas fa-exclamation-circle'></i></th>
+                            <th>${localization.getString("label.tablevisible")}<i class='fas fa-exclamation-circle' title="<%=localization.getString("label.showintable")%>"></i></th>
                             <th>${localization.getString("label.actions")}</th>
                         </tr>
                     </thead>

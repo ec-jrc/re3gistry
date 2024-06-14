@@ -100,6 +100,7 @@ public class SQLConstants {
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGUSER = "SELECT r FROM RegItemproposed r WHERE r.regUser = :regUser";
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGUSER_COUNT = "SELECT count(r) FROM RegItemproposed r WHERE r.regUser = :regUser";
     public static final String SQL_GET_REGITEMPROPOSED_BY_REGACTION = "SELECT r FROM RegItemproposed r WHERE r.regAction = :regAction";
+    public static final String SQL_GET_REGITEMPROPOSED_BY_LOCALID= "SELECT r FROM RegItemproposed r WHERE r.localid = :localid";
    
     public static final String SQL_GET_REGITEMPROPOSED_NEW_BY_REGITEMCLASSES_COLLECTION = "SELECT p.regItemproposedSubject FROM RegRelationproposed p JOIN  p.regItemproposedSubject r WHERE r.regItemclass IN :regItemclasses AND r.regItemReference IS NULL and p.regItemObject = :regItemObject and p.regRelationpredicate=:regRelationpredicete ORDER BY r.localid";
     public static final String SQL_GET_REGITEMPROPOSED_NEW_BY_REGITEMCLASSES_COLLECTION_COUNT = "SELECT count(p.regItemproposedSubject) FROM RegRelationproposed p JOIN  p.regItemproposedSubject r WHERE r.regItemclass IN :regItemclasses AND r.regItemReference IS NULL and p.regItemObject = :regItemObject and p.regRelationpredicate=:regRelationpredicete";
@@ -132,7 +133,8 @@ public class SQLConstants {
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEM_AND_LANGUAGE = "SELECT r FROM RegLocalization r WHERE r.regItem = :regitem AND r.regLanguagecode = :regLanguagecode AND r.regField IS NOT NULL";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_LANGUAGE_AND_ITEMS = "SELECT r FROM RegLocalization r WHERE r.regLanguagecode = :regLanguagecode AND r.regField IS NOT NULL AND r.regItem IN :regitemList";
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_ITEMCLASS = "SELECT r FROM RegLocalization r WHERE r.regItemclass = :regItemclass";
-   
+    public static final String SQL_GET_DISTINCT_LANGUAGE_CODES_BY_REGACTION ="SELECT DISTINCT r.regLanguagecode FROM RegLocalization r WHERE r.regAction = :regaction AND r.value IS NOT NULL";
+    
     public static final String SQL_GET_LOCALIZATION_FIELDS_BY_REGFIELD_ITEMCLASS_HREFNORNULL = "SELECT * FROM RegLocalization r INNER JOIN RegItem ri ON ri.uuid = r.regItem AND ri.regItemclass = :regItemclass WHERE r.regField = :regfield AND r.href IS NOT NULL";
     public static final String SQL_GET_LOCALIZATION_BY_RELATION = "SELECT r FROM RegLocalization r WHERE r.regRelationReference = :relation";
     public static final String SQL_GET_LOCALIZATION_BY_FIELD = "SELECT r FROM RegLocalization r WHERE r.regField = :regfield AND r.regItem IS NULL";

@@ -231,9 +231,6 @@
                         <button type="submit" class="btn btn-success width100"><i class="far fa-save"></i> ${localization.getString("label.save")}</button>
                     </div>
                 </div>
-                <div class="row alert alert-danger mt-3" role="alert">
-                    <p class="form-validation-messages"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ${localization.getString("label.completerequiredfields")}</p>
-                </div>
                 <% }%>
 
             </form>     

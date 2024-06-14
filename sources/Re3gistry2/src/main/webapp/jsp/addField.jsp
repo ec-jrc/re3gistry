@@ -138,7 +138,7 @@
                     <label class="col-sm-4">${localization.getString("label.fieldtype")}</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <select id="fieldtype" class="selectpicker form-control" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_FIELDTYPEUUID%>" required>
+                            <select id="fieldtype" class="select-field form-control" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_FIELDTYPEUUID%>" required>
                                 <option value="" selected="selected"></option>
                                 <%
                                     for (RegFieldtype tmpRegFieldtype : regFieldtypes) {
@@ -163,7 +163,7 @@
                     <label class="col-sm-4">${localization.getString("label.itemclassreference")}</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <select id="referencepicker" class="selectpicker form-control d-none" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_ITEMCLASSREFERENCEUUID%>" data-live-search="true">
+                            <select id="referencepicker" class="selectpicker  form-control d-none" name="<%=BaseConstants.KEY_FORM_FIELD_NAME_ITEMCLASSREFERENCEUUID%>" data-live-search="true">
                                 <option value="" selected="selected"></option>
                                 <%
                                     for (RegItemclass tmpRegItemclass : regItemclasses) {
@@ -222,6 +222,7 @@
                 }
                 $('#editing-form').validator('update');
                 $('#editing-form').validator('validate');
+                $('#referencepicker').selectpicker('refresh');
             });
         </script>
     </body>

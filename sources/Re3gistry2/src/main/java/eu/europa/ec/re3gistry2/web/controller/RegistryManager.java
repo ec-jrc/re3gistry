@@ -37,6 +37,7 @@ import eu.europa.ec.re3gistry2.crudimplementation.RegItemRegGroupRegRoleMappingM
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemproposedManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegLocalizationManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegRoleManager;
 import eu.europa.ec.re3gistry2.javaapi.cache.RecacheItems;
 import eu.europa.ec.re3gistry2.javaapi.handler.RegActionHandler;
@@ -47,6 +48,7 @@ import eu.europa.ec.re3gistry2.model.RegItemRegGroupRegRoleMapping;
 import eu.europa.ec.re3gistry2.model.RegItemhistory;
 import eu.europa.ec.re3gistry2.model.RegItemproposed;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
+import eu.europa.ec.re3gistry2.model.RegLocalization;
 import eu.europa.ec.re3gistry2.model.RegRole;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import eu.europa.ec.re3gistry2.web.utility.SendEmailFromAction;
@@ -92,6 +94,7 @@ public class RegistryManager extends HttpServlet {
         RegItemhistoryManager regItemhistoryManager = new RegItemhistoryManager(entityManager);
         RegItemManager regItemManager = new RegItemManager(entityManager);
         RegLanguagecodeManager regLanguagecodeManager = new RegLanguagecodeManager(entityManager);
+        RegLocalizationManager regLocalizationManager = new RegLocalizationManager(entityManager);
 
         // Getting form parameter
         String formRegActionUuid = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_ACTIONUUID);
@@ -99,7 +102,7 @@ public class RegistryManager extends HttpServlet {
 
         String regActionUuid = request.getParameter(BaseConstants.KEY_REQUEST_ACTION_UUID);
         String languageUUID = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
-        
+
         String formDirectPublish = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_DIRECTPUBLISH);
         String changelog = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_CHANGELOG);
         String issueReference = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_ISSUEREFERENCE);
@@ -133,7 +136,7 @@ public class RegistryManager extends HttpServlet {
         String[] actionManageSystem = {BaseConstants.KEY_USER_ACTION_MANAGESYSTEM};
         boolean permissionManageSystem = UserHelper.checkGenericAction(actionManageSystem, currentUserGroupsMap, regItemRegGroupRegRoleMappingManager);
 
-        if (permissionManageSystem || StringUtils.equals(formDirectPublish,BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
+        if (permissionManageSystem || StringUtils.equals(formDirectPublish, BaseConstants.KEY_BOOLEAN_STRING_TRUE)) {
 
             if (formRegActionUuid != null && formRegActionUuid.length() > 0 && formSubmitAction != null && formSubmitAction.length() > 0) {
                 // This is a save request
@@ -144,7 +147,6 @@ public class RegistryManager extends HttpServlet {
                 } else {
                     regActionHandler.registryManagerAction(formRegActionUuid, regUser);
                 }
-                
 
                 regActionUuid = formRegActionUuid;
 
@@ -152,14 +154,12 @@ public class RegistryManager extends HttpServlet {
             // This is a view request
 
             // Getting the submitting organization RegRole
-            
             RegRole regRoleRegistryManager = regRoleManager.getByLocalId(BaseConstants.KEY_ROLE_REGISTRYMANAGER);
             RegGroup regGroupRegistry = regGroupManager.getByLocalid(BaseConstants.KEY_ROLE_REGISTRYMANAGER);
             // Getting the list of mapping that contains the specified role
             List<RegItemRegGroupRegRoleMapping> tmps = regItemRegGroupRegRoleMappingManager.getAll(regRoleRegistryManager);
-            
+
             tmps = regItemRegGroupRegRoleMappingManager.getAll(regGroupRegistry);
-            
 
             // Getting the action for which the current user is RYM
             Set<RegAction> regActions = new HashSet<>();
@@ -177,6 +177,7 @@ public class RegistryManager extends HttpServlet {
                 List<RegItemproposed> regItemproposeds = null;
                 List<RegItemhistory> regItemhistorys = null;
                 List<RegItem> regItems = null;
+                List<RegLanguagecode> regLanguageCodes = null;
 
                 if (regActionUuid != null && regActionUuid.length() > 0) {
 
@@ -196,13 +197,13 @@ public class RegistryManager extends HttpServlet {
                             case BaseConstants.KEY_STATUS_LOCALID_PUBLISHED:
                                 // Getting the list of RegItem contained in the action
                                 regItems = regItemManager.getAll(regAction);
-
+                                regLanguageCodes = regLocalizationManager.getLanguageCodeByRegAction(regAction);
                                 if (formSubmitAction != null && !regItems.isEmpty()) {
                                     //update RSS
                                     UpdateRSS.updateRSS(regAction, regItems);
 
                                     //update CACHE
-                                    RecacheItems recacheItems = new RecacheItems(entityManager, request, regItems);
+                                    RecacheItems recacheItems = new RecacheItems(entityManager, request, regItems, regLanguageCodes);
                                     recacheItems.start();
 
                                     ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
