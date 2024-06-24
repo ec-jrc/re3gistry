@@ -3,6 +3,10 @@
 
 The **Register Federation Tool**, also known as "Register of Registers (RoR)", is an online platform providing a central access point to bring together or federate code lists or semantic asset registers. 
 
+[![European Union Public Licence 1.2](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
+
+&copy; 2020-2024 European Union. Licensed under the EUPL.
+
 ## Features:
 
 - Intuitive harvesting control panel
