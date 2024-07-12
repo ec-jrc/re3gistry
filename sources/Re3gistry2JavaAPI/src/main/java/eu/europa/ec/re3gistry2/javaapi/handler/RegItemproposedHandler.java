@@ -84,6 +84,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.Jsoup;
 
 public class RegItemproposedHandler {
 
@@ -1215,7 +1216,7 @@ public class RegItemproposedHandler {
             regLocalizationproposed.setRegLanguagecode(regLocalization.getRegLanguagecode());
             regLocalizationproposed.setRegLocalizationReference(regLocalization);
             regLocalizationproposed.setRegRelationproposedReference(tempHashmap.get(regLocalization.getRegRelationReference().getUuid()));
-            regLocalizationproposed.setValue(regLocalization.getValue());
+            regLocalizationproposed.setValue(Jsoup.parse(regLocalization.getValue()).text());
             regLocalizationproposed.setInsertdate(new Date());
             regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
 
@@ -1309,7 +1310,7 @@ public class RegItemproposedHandler {
                 regLocalizationproposed.setRegLanguagecode(regLocalization.getRegLanguagecode());
                 regLocalizationproposed.setRegLocalizationReference(regLocalization);
                 regLocalizationproposed.setRegRelationproposedReference(tempHashmap.get(regLocalization.getRegRelationReference().getUuid()));
-                regLocalizationproposed.setValue(regLocalization.getValue());
+                regLocalizationproposed.setValue(Jsoup.parse(regLocalization.getValue()).text());
                 regLocalizationproposed.setInsertdate(new Date());
                 regLocalizationproposed.setRegAction(regItemproposed.getRegAction());
 
@@ -1602,7 +1603,7 @@ public class RegItemproposedHandler {
                         if ((regLocalizationproposed.getValue() == null && value != null && value.length() != 0) || (regLocalizationproposed.getValue() != null && !regLocalizationproposed.getValue().equals(value)) || (regFieldmapping.getHashref() && regLocalizationproposed.getHref() != null && !regLocalizationproposed.getHref().equals(href)) || (regFieldmapping.getHashref() && regLocalizationproposed.getHref() == null && href != null && href.length() > 0)) {
 
                             // Setting the values in the new RegLocalizationproposed
-                            regLocalizationproposed.setValue(value);
+                            regLocalizationproposed.setValue(Jsoup.parse(value).text());
 
                             // Updating the href if the RegFieldmapping has also the href
                             if (regFieldmapping.getHashref()) {
@@ -1683,7 +1684,7 @@ public class RegItemproposedHandler {
                         }
 
                         //Setting the value
-                        regLocalizationproposed.setValue(value);
+                        regLocalizationproposed.setValue(Jsoup.parse(value).text());
 
                         // Setting the href if the RegFieldmapping has also the href
                         if (regFieldmapping.getHashref()) {
@@ -1990,7 +1991,7 @@ public class RegItemproposedHandler {
                     newRegLocalizationproposed.setHref(null);
                     newRegLocalizationproposed.setRegRelationproposedReference(null);
                 } else {
-                    newRegLocalizationproposed.setValue(regLocalization.getValue());
+                    newRegLocalizationproposed.setValue(Jsoup.parse(regLocalization.getValue()).text());
                     newRegLocalizationproposed.setHref(regLocalization.getHref());
 
                     // Getting the related RegRelationproposed
