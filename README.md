@@ -97,7 +97,8 @@ Join [this repository](https://github.com/ec-jrc/re3gistry) and subscribe to not
 ## Get started with the Re3gistry and the INSPIRE Registry
 Access the [Re3gistry and INSPIRE Registry Starting Kit](https://github.com/ec-jrc/re3gistry/blob/master/training-material/2024-05-29-JRC-Training/README.md)
 
-## Have your say! - Re3gistry survey
+## Have your say! 
+### Re3gistry survey
 There is available a [Re3gistry survey](https://ec.europa.eu/eusurvey/runner/Re3gistry_Survey). Please complete it and let us know your opinion.
 
 # Re3gistry governance and Contributions (Under development)
