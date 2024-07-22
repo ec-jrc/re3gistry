@@ -226,7 +226,15 @@ public class ItemSupplier {
 
                 RegItemclass regItemRegItemClassChild = regItemClassManager.getChildItemclass(regItemRegItemClass).get(0);
                 regItem = regItemManager.getByLocalidAndRegItemClass(localid, regItemRegItemClassChild);
-
+                Boolean incorrect = false;
+                for(RegRelation regRelation: regItem.getRegRelationList1()){
+                    if(regRelation.getRegItemObject().getLocalid().equals(regItemClassLocalId)){
+                        incorrect = true;
+                    }
+                }
+                if(!incorrect){
+                    return null;
+                }
                 return regItem;
             }
 
