@@ -1,0 +1,1045 @@
+/* Drop Tables */
+
+DROP TABLE reg_action CASCADE;
+DROP TABLE reg_field CASCADE;
+DROP TABLE reg_fieldmapping CASCADE;
+DROP TABLE reg_fieldtype CASCADE;
+DROP TABLE reg_group ;
+DROP TABLE reg_item_reg_group_reg_role_mapping ;
+DROP TABLE reg_itemproposed_reg_group_reg_role_mapping ;
+DROP TABLE reg_itemhistory_reg_group_reg_role_mapping ;
+DROP TABLE reg_item ;
+DROP TABLE reg_itemclass ;
+DROP TABLE reg_itemclasstype ;
+DROP TABLE reg_itemhistory ;
+DROP TABLE reg_itemproposed ;
+DROP TABLE reg_languagecode ;
+DROP TABLE reg_localization ;
+DROP TABLE reg_localizationhistory ;
+DROP TABLE reg_localizationproposed ;
+DROP TABLE reg_relation ;
+DROP TABLE reg_relationhistory ;
+DROP TABLE reg_relationpredicate ;
+DROP TABLE reg_relationproposed ;
+DROP TABLE reg_role ;
+DROP TABLE reg_status ;
+DROP TABLE reg_statusgroup ;
+DROP TABLE reg_statuslocalization ;
+DROP TABLE reg_user ;
+DROP TABLE reg_user_reg_group_mapping ;
+
+
+/* Create Tables */
+
+CREATE TABLE reg_action
+(
+	uuid VARCHAR2(50) NOT NULL,
+	LABEL VARCHAR2(512) NOT NULL,
+	reg_user VARCHAR2(50) NOT NULL,
+	reg_item_registry VARCHAR2(50),
+	reg_item_register VARCHAR2(50),
+	reg_status VARCHAR2(50) NOT NULL,
+	submitted_by VARCHAR2(50),
+	approved_by VARCHAR2(50),
+	rejected_by VARCHAR2(50),
+	published_by VARCHAR2(50),
+	change_request VARCHAR2(4000),
+	changelog VARCHAR2(4000),
+	reject_message VARCHAR2(4000),
+	changes_implemented number DEFAULT 0,
+	issue_tracker_link VARCHAR2(512),
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_field
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200) NOT NULL,
+	reg_fieldtype VARCHAR2(50) NOT NULL,
+	istitle number DEFAULT 0,
+	reg_itemclass_reference VARCHAR2(50),
+	reg_role_reference VARCHAR2(50),
+	reg_status VARCHAR2(50) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_fieldmapping
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_field VARCHAR2(50) NOT NULL,
+	reg_itemclass VARCHAR2(50) NOT NULL,
+	listorder INTEGER NOT NULL,
+	tablevisible number DEFAULT 0,
+	reg_status VARCHAR2(50) NOT NULL,
+	required number DEFAULT 0,
+	hidden number DEFAULT 0,
+	multivalue number DEFAULT 0,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP,
+	hashref number DEFAULT 0
+);
+
+CREATE TABLE reg_fieldtype
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_group
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200) NOT NULL ,
+	NAME VARCHAR2(350) NOT NULL,
+	email VARCHAR2(350),
+	website VARCHAR2(350),
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_item
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(300) NOT NULL,
+	reg_itemclass VARCHAR2(50) NOT NULL,
+	reg_status VARCHAR2(50) NOT NULL,
+	reg_action VARCHAR2(50),
+	EXTERNAL number DEFAULT 0,
+	currentversion INTEGER,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP,
+	reg_user VARCHAR2(50) NOT NULL,
+	ror_export number DEFAULT 0
+);
+
+CREATE TABLE reg_item_reg_group_reg_role_mapping
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_item VARCHAR2(50) NOT NULL,
+	reg_group VARCHAR2(50) NOT NULL,
+	reg_role VARCHAR2(50) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_itemhistory_reg_group_reg_role_mapping
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_itemhistory VARCHAR2(50) NOT NULL,
+	reg_group VARCHAR2(50) NOT NULL,
+	reg_role VARCHAR2(50) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_itemproposed_reg_group_reg_role_mapping
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_itemproposed VARCHAR2(50) NOT NULL,
+	reg_group VARCHAR2(50) NOT NULL,
+	reg_role VARCHAR2(50) NOT NULL,
+	reg_item_reg_group_reg_role_mapping_reference VARCHAR2(50),
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_itemclass
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200) NOT NULL,
+	baseuri VARCHAR2(500),
+	systemitem number DEFAULT 0,
+	active number DEFAULT 1,
+	reg_itemclass_parent VARCHAR2(50),
+	reg_itemclasstype VARCHAR2(50) NOT NULL,
+	reg_status VARCHAR2(50) NOT NULL,
+	dataprocedureorder INTEGER NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_itemclasstype
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200),
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_itemhistory
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(300) NOT NULL,
+	reg_itemclass VARCHAR2(50) NOT NULL,
+	reg_item_reference VARCHAR2(50) NOT NULL,
+	versionnumber INTEGER NOT NULL,
+	EXTERNAL number DEFAULT 0,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP,
+	reg_user VARCHAR2(50) NOT NULL,
+	reg_action VARCHAR2(50),
+	ror_export number DEFAULT 0,
+	reg_status VARCHAR2(50) NOT NULL
+);
+
+CREATE TABLE reg_itemproposed
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_item_reference VARCHAR2(50),
+	EXTERNAL number DEFAULT 0,
+	localid VARCHAR2(300) NOT NULL,
+	reg_status VARCHAR2(50) NOT NULL,
+	reg_itemclass VARCHAR2(50) NOT NULL,
+	reg_action VARCHAR2(50) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP,
+	reg_user VARCHAR2(50) NOT NULL,
+	ror_export number DEFAULT 0
+);
+
+CREATE TABLE reg_languagecode
+(
+	uuid VARCHAR2(50) NOT NULL,
+	LABEL VARCHAR2(50) NOT NULL,
+	iso6391code VARCHAR2(10) NOT NULL,
+	iso6392code VARCHAR2(10),
+	masterlanguage number DEFAULT 0,
+	active number DEFAULT 1,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_localization
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_languagecode VARCHAR2(50) NOT NULL,
+	reg_item VARCHAR2(50),
+	reg_field VARCHAR2(50),
+	field_value_index INTEGER NOT NULL,
+	VALUE VARCHAR2(4000),
+	href VARCHAR2(1024),
+    reg_action VARCHAR2(50),
+	reg_relation_reference VARCHAR2(50),
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_localizationhistory
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_languagecode VARCHAR2(50) NOT NULL,
+	reg_itemhistory VARCHAR2(50),
+	reg_field VARCHAR2(50),
+	field_value_index INTEGER NOT NULL,
+	VALUE VARCHAR2(4000),
+	href VARCHAR2(1024),
+    reg_action VARCHAR2(50),
+	reg_relationhistory_reference VARCHAR2(50),
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_localizationproposed
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_localization_reference VARCHAR2(50),
+	reg_languagecode VARCHAR2(50) NOT NULL,
+	reg_itemproposed VARCHAR2(50) NOT NULL,
+	reg_field VARCHAR2(50) NOT NULL,
+	field_value_index INTEGER NOT NULL,
+	VALUE VARCHAR2(4000),
+	href VARCHAR2(1024),
+    reg_action VARCHAR2(50),
+	reg_relationproposed_reference VARCHAR2(50),
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_relation
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_item_subject VARCHAR2(50) NOT NULL,
+	reg_relationpredicate VARCHAR2(50) NOT NULL,
+	reg_item_object VARCHAR2(50) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_relationhistory
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_item_subject VARCHAR2(50),
+	reg_itemhistory_subject VARCHAR2(50),
+	reg_item_object VARCHAR2(50),
+	reg_itemhistory_object VARCHAR2(50),
+	reg_relationpredicate VARCHAR2(50),
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_relationpredicate
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_relationproposed
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_relation_reference VARCHAR2(50),
+	reg_item_subject VARCHAR2(50),
+	reg_itemproposed_subject VARCHAR2(50),
+	reg_item_object VARCHAR2(50),
+	reg_itemproposed_object VARCHAR2(50),
+	reg_relationpredicate VARCHAR2(50) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_role
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200) NOT NULL,
+	NAME VARCHAR2(350) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_status
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200) NOT NULL,
+	ispublic number DEFAULT 1,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP,
+	reg_statusgroup VARCHAR2(50) NOT NULL
+);
+
+CREATE TABLE reg_statusgroup
+(
+	uuid VARCHAR2(50) NOT NULL,
+	localid VARCHAR2(200) NOT NULL,
+	baseuri VARCHAR2(500) NOT NULL,
+	EXTERNAL number DEFAULT 0,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_statuslocalization
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_status VARCHAR2(50),
+	reg_statusgroup VARCHAR2(50),
+	LABEL VARCHAR2(350),
+	description VARCHAR2(4000),
+	reg_languagecode VARCHAR2(50) NOT NULL,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_user
+(
+	uuid VARCHAR2(50) NOT NULL,
+	ssoreference VARCHAR2(200),
+	NAME VARCHAR2(350) NOT NULL,
+	shiropassword VARCHAR2(350),
+	shirosalt VARCHAR2(350),
+	email VARCHAR2(350) NOT NULL,
+	enabled number DEFAULT 1,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+CREATE TABLE reg_user_reg_group_mapping
+(
+	uuid VARCHAR2(50) NOT NULL,
+	reg_group VARCHAR2(50) NOT NULL,
+	reg_user VARCHAR2(50) NOT NULL,
+	is_groupadmin number DEFAULT 0,
+	insertdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	editdate TIMESTAMP
+);
+
+
+/* Create Primary Keys */
+
+ALTER TABLE reg_action ADD CONSTRAINT PK_reg_action
+	PRIMARY KEY (uuid);
+
+ALTER TABLE reg_field ADD CONSTRAINT PK_reg_field
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_fieldmapping ADD CONSTRAINT PK_reg_fieldmapping
+	PRIMARY KEY (uuid);
+
+ALTER TABLE reg_fieldtype ADD CONSTRAINT PK_reg_fieldtype
+	PRIMARY KEY (uuid);
+
+ALTER TABLE reg_group ADD CONSTRAINT PK_reg_group
+	PRIMARY KEY (uuid);
+
+ALTER TABLE reg_item_reg_group_reg_role_mapping ADD CONSTRAINT PK_reg_item_reg_group_reg_role_mapping
+	PRIMARY KEY (uuid);
+
+ALTER TABLE reg_itemhistory_reg_group_reg_role_mapping ADD CONSTRAINT PK_reg_itemhistory_reg_group_reg_role_mapping
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_itemproposed_reg_group_reg_role_mapping ADD CONSTRAINT PK_reg_itemproposed_reg_group_reg_role_mapping
+	PRIMARY KEY (uuid);
+
+ALTER TABLE reg_itemclass ADD CONSTRAINT PK_reg_itemclass
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_item ADD CONSTRAINT PK_reg_item
+	PRIMARY KEY (uuid);
+
+ALTER TABLE reg_itemclasstype ADD CONSTRAINT PK_reg_itemclasstype
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_itemhistory ADD CONSTRAINT PK_reg_itemhistory
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_itemproposed ADD CONSTRAINT PK_reg_itemproposed
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_languagecode ADD CONSTRAINT PK_reg_languagecode
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_localization ADD CONSTRAINT PK_reg_localization
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_localizationproposed ADD CONSTRAINT PK_reg_localizationproposed
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_localizationhistory ADD CONSTRAINT PK_reg_localizationhistory
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_relation ADD CONSTRAINT PK_reg_relation
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_relationhistory ADD CONSTRAINT PK_reg_relationhistory
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_relationpredicate ADD CONSTRAINT PK_reg_relationpredicete
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_relationproposed ADD CONSTRAINT PK_reg_relationproposed
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_role ADD CONSTRAINT PK_reg_role
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_status ADD CONSTRAINT PK_reg_status
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_statusgroup ADD CONSTRAINT PK_reg_statusgroup
+	PRIMARY KEY (uuid);
+
+ALTER TABLE reg_statuslocalization ADD CONSTRAINT PK_reg_statuslocalization
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_user ADD CONSTRAINT PK_reg_user
+	PRIMARY KEY (uuid);
+	
+ALTER TABLE reg_user_reg_group_mapping ADD CONSTRAINT PK_reg_user_reg_group_mapping
+	PRIMARY KEY (uuid);
+
+	
+/* Create Uniques */
+
+ALTER TABLE reg_field
+    ADD CONSTRAINT localid_unique_reg_field UNIQUE (localid);
+	
+ALTER TABLE reg_fieldtype
+    ADD CONSTRAINT localid_unique_reg_fieldtype UNIQUE (localid);
+	
+ALTER TABLE reg_group
+    ADD CONSTRAINT localid_unique_reg_group UNIQUE (localid);
+	
+ALTER TABLE reg_itemclass
+    ADD CONSTRAINT localid_unique_reg_itemclass UNIQUE (localid);
+	
+ALTER TABLE reg_itemclasstype
+    ADD CONSTRAINT localid_unique_reg_itemclasstype UNIQUE (localid);
+	
+ALTER TABLE reg_languagecode
+    ADD CONSTRAINT iso6391code_unique_reg_languagecode UNIQUE (iso6391code);
+	
+ALTER TABLE reg_relationpredicate
+    ADD CONSTRAINT localid_unique_reg_relationpredicate UNIQUE (localid);
+	
+ALTER TABLE reg_role
+    ADD CONSTRAINT name_unique_reg_role UNIQUE (localid);
+
+ALTER TABLE reg_status
+    ADD CONSTRAINT name_unique_reg_status UNIQUE (localid);
+	
+ALTER TABLE reg_statusgroup
+    ADD CONSTRAINT name_unique_reg_statusgroup UNIQUE (localid);
+
+ALTER TABLE reg_user
+    ADD CONSTRAINT email_unique_reg_user UNIQUE (email);
+
+
+/* Create Foreign Keys */
+
+ALTER TABLE reg_action ADD CONSTRAINT FK_reg_action_reg_user
+	FOREIGN KEY (reg_user) REFERENCES reg_user (uuid);
+	
+ALTER TABLE reg_action ADD CONSTRAINT FK_reg_action_reg_status
+	FOREIGN KEY (reg_status) REFERENCES reg_status (uuid);
+	
+ALTER TABLE reg_action ADD CONSTRAINT FK_reg_action_reg_user_approved
+	FOREIGN KEY (approved_by) REFERENCES reg_user (uuid);
+	
+ALTER TABLE reg_action ADD CONSTRAINT FK_reg_action_reg_user_rejected
+	FOREIGN KEY (rejected_by) REFERENCES reg_user (uuid);
+	
+ALTER TABLE reg_action ADD CONSTRAINT FK_reg_action_reg_user_published
+	FOREIGN KEY (published_by) REFERENCES reg_user (uuid);
+	
+ALTER TABLE reg_action ADD CONSTRAINT FK_reg_action_reg_user_submitted
+	FOREIGN KEY (submitted_by) REFERENCES reg_user (uuid);
+
+ALTER TABLE reg_action ADD CONSTRAINT FK_reg_action_reg_item_register
+	FOREIGN KEY (reg_item_register) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_action ADD CONSTRAINT FK_reg_action_reg_item_regisry
+	FOREIGN KEY (reg_item_registry) REFERENCES reg_item (uuid);	
+
+ALTER TABLE reg_field ADD CONSTRAINT FK_reg_field_reg_fieldtype
+	FOREIGN KEY (reg_fieldtype) REFERENCES reg_fieldtype (uuid);
+
+ALTER TABLE reg_field ADD CONSTRAINT FK_reg_field_reg_itemclass
+	FOREIGN KEY (reg_itemclass_reference) REFERENCES reg_itemclass (uuid);
+	
+ALTER TABLE reg_field ADD CONSTRAINT FK_reg_field_reg_role
+	FOREIGN KEY (reg_role_reference) REFERENCES reg_role (uuid);
+
+ALTER TABLE reg_field ADD CONSTRAINT FK_reg_field_reg_status
+	FOREIGN KEY (reg_status) REFERENCES reg_status (uuid);
+
+ALTER TABLE reg_fieldmapping ADD CONSTRAINT FK_reg_fieldmapping_reg_field
+	FOREIGN KEY (reg_field) REFERENCES reg_field (uuid);
+
+ALTER TABLE reg_fieldmapping ADD CONSTRAINT FK_reg_fieldmapping_reg_itemclass
+	FOREIGN KEY (reg_itemclass) REFERENCES reg_itemclass (uuid);
+
+ALTER TABLE reg_fieldmapping ADD CONSTRAINT FK_reg_fieldmapping_reg_status
+	FOREIGN KEY (reg_status) REFERENCES reg_status (uuid);
+
+ALTER TABLE reg_item_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_item_reg_group_reg_role_mapping_reg_group
+	FOREIGN KEY (reg_group) REFERENCES reg_group (uuid);
+	
+ALTER TABLE reg_item_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_item_reg_group_reg_role_mapping_reg_item
+	FOREIGN KEY (reg_item) REFERENCES reg_item (uuid);
+	
+ALTER TABLE reg_item_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_item_reg_group_reg_role_mapping_reg_role
+	FOREIGN KEY (reg_role) REFERENCES reg_role (uuid);
+	
+ALTER TABLE reg_itemhistory_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_itemhistory_reg_group_reg_role_mapping_reg_group
+	FOREIGN KEY (reg_group) REFERENCES reg_group (uuid);
+	
+ALTER TABLE reg_itemhistory_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_itemhistory_reg_group_reg_role_mapping_reg_itemhistory
+	FOREIGN KEY (reg_itemhistory) REFERENCES reg_itemhistory (uuid);
+	
+ALTER TABLE reg_itemhistory_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_itemhistory_reg_group_reg_role_mapping_reg_role
+	FOREIGN KEY (reg_role) REFERENCES reg_role (uuid);
+
+ALTER TABLE reg_itemproposed_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_itemproposed_reg_group_reg_role_mapping_reg_group
+	FOREIGN KEY (reg_group) REFERENCES reg_group (uuid);
+	
+ALTER TABLE reg_itemproposed_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_itemproposed_reg_group_reg_role_mapping_reg_itemproposed
+	FOREIGN KEY (reg_itemproposed) REFERENCES reg_itemproposed (uuid);
+	
+ALTER TABLE reg_itemproposed_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_itemproposed_reg_group_reg_role_mapping_reg_role
+	FOREIGN KEY (reg_role) REFERENCES reg_role (uuid);
+
+ALTER TABLE reg_itemproposed_reg_group_reg_role_mapping ADD CONSTRAINT FK_reg_itemproposed_reg_group_reg_role_mapping_reference
+	FOREIGN KEY (reg_item_reg_group_reg_role_mapping_reference) REFERENCES reg_item_reg_group_reg_role_mapping (uuid);	
+
+ALTER TABLE reg_item ADD CONSTRAINT FK_reg_item_reg_itemclass
+	FOREIGN KEY (reg_itemclass) REFERENCES reg_itemclass (uuid);
+
+ALTER TABLE reg_item ADD CONSTRAINT FK_reg_item_reg_status
+	FOREIGN KEY (reg_status) REFERENCES reg_status (uuid);
+
+ALTER TABLE reg_item ADD CONSTRAINT FK_reg_item_reg_user
+	FOREIGN KEY (reg_user) REFERENCES reg_user (uuid);
+	
+ALTER TABLE reg_item ADD CONSTRAINT FK_reg_item_reg_action
+	FOREIGN KEY (reg_action) REFERENCES reg_action (uuid);
+
+ALTER TABLE reg_itemclass ADD CONSTRAINT FK_reg_itemclass_reg_itemclass
+	FOREIGN KEY (reg_itemclass_parent) REFERENCES reg_itemclass (uuid);
+
+ALTER TABLE reg_itemclass ADD CONSTRAINT FK_reg_itemclass_reg_itemclasstype
+	FOREIGN KEY (reg_itemclasstype) REFERENCES reg_itemclasstype (uuid);
+
+ALTER TABLE reg_itemclass ADD CONSTRAINT FK_reg_itemclass_reg_status
+	FOREIGN KEY (reg_status) REFERENCES reg_status (uuid);
+
+ALTER TABLE reg_itemhistory ADD CONSTRAINT FK_reg_itemhistory_reg_item
+	FOREIGN KEY (reg_item_reference) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_itemhistory ADD CONSTRAINT FK_reg_itemhistory_reg_itemclass
+	FOREIGN KEY (reg_itemclass) REFERENCES reg_itemclass (uuid);
+
+ALTER TABLE reg_itemhistory ADD CONSTRAINT FK_reg_itemhistory_reg_user
+	FOREIGN KEY (reg_user) REFERENCES reg_user (uuid);
+	
+ALTER TABLE reg_itemhistory ADD CONSTRAINT FK_reg_itemhistory_reg_action
+	FOREIGN KEY (reg_action) REFERENCES reg_action (uuid);
+	
+ALTER TABLE reg_itemhistory ADD CONSTRAINT FK_reg_itemhistory_reg_status
+	FOREIGN KEY (reg_status) REFERENCES reg_status (uuid);
+
+ALTER TABLE reg_itemproposed ADD CONSTRAINT FK_reg_itemproposed_reg_item
+	FOREIGN KEY (reg_item_reference) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_itemproposed ADD CONSTRAINT FK_reg_itemproposed_reg_itemclass
+	FOREIGN KEY (reg_itemclass) REFERENCES reg_itemclass (uuid);
+
+ALTER TABLE reg_itemproposed ADD CONSTRAINT FK_reg_itemproposed_reg_status
+	FOREIGN KEY (reg_status) REFERENCES reg_status (uuid);
+
+ALTER TABLE reg_itemproposed ADD CONSTRAINT FK_reg_itemproposed_reg_user
+	FOREIGN KEY (reg_user) REFERENCES reg_user (uuid);
+
+ALTER TABLE reg_itemproposed ADD CONSTRAINT FK_reg_itemproposed_reg_action
+	FOREIGN KEY (reg_action) REFERENCES reg_action (uuid);
+
+ALTER TABLE reg_localization ADD CONSTRAINT FK_reg_localization_reg_field
+	FOREIGN KEY (reg_field) REFERENCES reg_field (uuid);
+
+ALTER TABLE reg_localization ADD CONSTRAINT FK_reg_localization_reg_item
+	FOREIGN KEY (reg_item) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_localization ADD CONSTRAINT FK_reg_localization_reg_languagecode
+	FOREIGN KEY (reg_languagecode) REFERENCES reg_languagecode (uuid);
+
+ALTER TABLE reg_localization ADD CONSTRAINT FK_reg_localization_reg_relation
+	FOREIGN KEY (reg_relation_reference) REFERENCES reg_relation (uuid);
+
+ALTER TABLE reg_localization ADD CONSTRAINT FK_reg_localization_reg_action
+	FOREIGN KEY (reg_action) REFERENCES reg_action (uuid);
+    
+ALTER TABLE reg_localizationhistory ADD CONSTRAINT FK_reg_localizationhistory_reg_field
+	FOREIGN KEY (reg_field) REFERENCES reg_field (uuid);
+    
+ALTER TABLE reg_localizationhistory ADD CONSTRAINT FK_reg_localizationhistory_reg_itemhistory
+	FOREIGN KEY (reg_itemhistory) REFERENCES reg_itemhistory (uuid);
+
+ALTER TABLE reg_localizationhistory ADD CONSTRAINT FK_reg_localizationhistory_reg_languagecode
+	FOREIGN KEY (reg_languagecode) REFERENCES reg_languagecode (uuid);
+
+ALTER TABLE reg_localizationhistory ADD CONSTRAINT FK_reg_localizationhistory_reg_relationhistory
+	FOREIGN KEY (reg_relationhistory_reference) REFERENCES reg_relationhistory (uuid);
+    
+ALTER TABLE reg_localizationhistory ADD CONSTRAINT FK_reg_localizationhistory_reg_action
+	FOREIGN KEY (reg_action) REFERENCES reg_action (uuid);
+
+ALTER TABLE reg_localizationproposed ADD CONSTRAINT FK_reg_localizationproposed_reg_field
+	FOREIGN KEY (reg_field) REFERENCES reg_field (uuid);
+
+ALTER TABLE reg_localizationproposed ADD CONSTRAINT FK_reg_localizationproposed_reg_itemproposed
+	FOREIGN KEY (reg_itemproposed) REFERENCES reg_itemproposed (uuid);
+
+ALTER TABLE reg_localizationproposed ADD CONSTRAINT FK_reg_localizationproposed_reg_languagecode
+	FOREIGN KEY (reg_languagecode) REFERENCES reg_languagecode (uuid);
+
+ALTER TABLE reg_localizationproposed ADD CONSTRAINT FK_reg_localizationproposed_reg_relationproposed
+	FOREIGN KEY (reg_relationproposed_reference) REFERENCES reg_relationproposed (uuid);
+
+ALTER TABLE reg_localizationproposed ADD CONSTRAINT FK_reg_localizationproposed_reg_localization
+	FOREIGN KEY (reg_localization_reference) REFERENCES reg_localization (uuid);
+
+ALTER TABLE reg_localizationproposed ADD CONSTRAINT FK_reg_localizationproposed_reg_action
+	FOREIGN KEY (reg_action) REFERENCES reg_action (uuid);
+
+ALTER TABLE reg_relation ADD CONSTRAINT FK_reg_relation_reg_item_object
+	FOREIGN KEY (reg_item_object) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_relation ADD CONSTRAINT FK_reg_relation_reg_item_subject
+	FOREIGN KEY (reg_item_subject) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_relation ADD CONSTRAINT FK_reg_relation_reg_relationpredicate
+	FOREIGN KEY (reg_relationpredicate) REFERENCES reg_relationpredicate (uuid);
+
+ALTER TABLE reg_relationhistory ADD CONSTRAINT FK_reg_relationhistory_reg_item_object
+	FOREIGN KEY (reg_item_object) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_relationhistory ADD CONSTRAINT FK_reg_relationhistory_reg_item_subject
+	FOREIGN KEY (reg_item_subject) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_relationhistory ADD CONSTRAINT FK_reg_relationhistory_reg_itemhistory_object
+	FOREIGN KEY (reg_itemhistory_object) REFERENCES reg_itemhistory (uuid);
+
+ALTER TABLE reg_relationhistory ADD CONSTRAINT FK_reg_relationhistory_reg_itemhistory_subject
+	FOREIGN KEY (reg_itemhistory_subject) REFERENCES reg_itemhistory (uuid);
+
+ALTER TABLE reg_relationhistory ADD CONSTRAINT FK_reg_relationhistory_reg_relationpredicate
+	FOREIGN KEY (reg_relationpredicate) REFERENCES reg_relationpredicate (uuid);
+
+ALTER TABLE reg_relationproposed ADD CONSTRAINT FK_reg_relationproposed_reg_item_object
+	FOREIGN KEY (reg_item_object) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_relationproposed ADD CONSTRAINT FK_reg_relationproposed_reg_item_subject
+	FOREIGN KEY (reg_item_subject) REFERENCES reg_item (uuid);
+
+ALTER TABLE reg_relationproposed ADD CONSTRAINT FK_reg_relationproposed_reg_itemproposed_object
+	FOREIGN KEY (reg_itemproposed_object) REFERENCES reg_itemproposed (uuid);
+
+ALTER TABLE reg_relationproposed ADD CONSTRAINT FK_reg_relationproposed_reg_itemproposed_subject
+	FOREIGN KEY (reg_itemproposed_subject) REFERENCES reg_itemproposed (uuid);
+
+ALTER TABLE reg_relationproposed ADD CONSTRAINT FK_reg_relationproposed_reg_relationpredicate
+	FOREIGN KEY (reg_relationpredicate) REFERENCES reg_relationpredicate (uuid);
+	
+ALTER TABLE reg_relationproposed ADD CONSTRAINT FK_reg_relationproposed_reg_relation
+	FOREIGN KEY (reg_relation_reference) REFERENCES reg_relation (uuid);
+
+ALTER TABLE reg_status ADD CONSTRAINT FK_reg_status_reg_statusgroup
+	FOREIGN KEY (reg_statusgroup) REFERENCES reg_statusgroup (uuid);
+
+ALTER TABLE reg_statuslocalization ADD CONSTRAINT FK_reg_statuslocalization_reg_languagecode
+	FOREIGN KEY (reg_languagecode) REFERENCES reg_languagecode (uuid);
+
+ALTER TABLE reg_statuslocalization ADD CONSTRAINT FK_reg_statuslocalization_reg_status
+	FOREIGN KEY (reg_status) REFERENCES reg_status (uuid);
+
+ALTER TABLE reg_statuslocalization ADD CONSTRAINT FK_reg_statuslocalization_reg_statusgroup
+	FOREIGN KEY (reg_statusgroup) REFERENCES reg_statusgroup (uuid);
+
+ALTER TABLE reg_user_reg_group_mapping ADD CONSTRAINT FK_reg_user_reg_group_mapping_reg_group
+	FOREIGN KEY (reg_group) REFERENCES reg_group (uuid);
+
+ALTER TABLE reg_user_reg_group_mapping ADD CONSTRAINT FK_reg_user_reg_group_mapping_reg_user
+	FOREIGN KEY (reg_user) REFERENCES reg_user (uuid);
+
+	
+/* Create functions and triggers */	
+	
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_action_editdate
+BEFORE UPDATE ON reg_action
+FOR EACH ROW 
+BEGIN :new.editdate := systimestamp;
+end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_field_editdate
+BEFORE UPDATE ON reg_field
+FOR EACH ROW BEGIN :new.editdate := systimestamp;
+end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_fieldmapping_editdate
+BEFORE UPDATE ON reg_fieldmapping
+FOR EACH ROW BEGIN :new.editdate := systimestamp;
+end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_fieldtype_editdate
+BEFORE UPDATE ON reg_fieldtype
+FOR EACH ROW BEGIN :new.editdate := systimestamp;
+end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_group_editdate
+BEFORE UPDATE ON reg_group
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_item_reg_group_reg_role_mapping_editdate
+BEFORE UPDATE ON reg_item_reg_group_reg_role_mapping
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_itemproposed_reg_group_reg_role_mapping_editdate
+BEFORE UPDATE ON reg_itemproposed_reg_group_reg_role_mapping
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_item_editdate
+BEFORE UPDATE ON reg_item
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_itemclass_editdate
+BEFORE UPDATE ON reg_itemclass
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_itemclasstype_editdate
+BEFORE UPDATE ON reg_itemclasstype
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_itemhistory_editdate
+BEFORE UPDATE ON reg_itemhistory
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_itemproposed_editdate
+BEFORE UPDATE ON reg_itemproposed
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_languagecode_editdate
+BEFORE UPDATE ON reg_languagecode
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_localization_editdate
+BEFORE UPDATE ON reg_localization
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_localizationhistory_editdate
+BEFORE UPDATE ON reg_localizationhistory
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_localizationproposed_editdate
+BEFORE UPDATE ON reg_localizationproposed
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_relation_editdate
+BEFORE UPDATE ON reg_relation
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_relationhistory_editdate
+BEFORE UPDATE ON reg_relationhistory
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_relationpredicate_editdate
+BEFORE UPDATE ON reg_relationpredicate
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_relationproposed_editdate
+BEFORE UPDATE ON reg_relationproposed
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_role_editdate
+BEFORE UPDATE ON reg_role
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_status_editdate
+BEFORE UPDATE ON reg_status
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_statusgroup_editdate
+BEFORE UPDATE ON reg_statusgroup
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_statuslocalization_editdate
+BEFORE UPDATE ON reg_statuslocalization
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_user_editdate
+BEFORE UPDATE ON reg_user
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+
+CREATE OR REPLACE TRIGGER TRG_reg_user_reg_group_mapping_editdate
+BEFORE UPDATE ON reg_user_reg_group_mapping
+FOR EACH ROW BEGIN :new.editdate := systimestamp; end;
+/
+
+--reg_languagecode
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('en', 'english', 'en', 'eng', 1, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('it', 'italiano', 'it', 'ita', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('cs', 'czech', 'cs', 'cze', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('bg', 'bulgarian', 'bg', 'bul', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('da', 'danish', 'da', 'dan', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('de', 'german', 'de', 'ger', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('el', 'greek', 'el', 'gre', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('es', 'spanish', 'es', 'spa', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('et', 'estonian', 'et', 'est', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('fi', 'finnish', 'fi', 'fin', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('fr', 'french', 'fr', 'fra', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('hu', 'hungarian', 'hu', 'hun', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('lt', 'lithuanian', 'lt', 'lit', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('lv', 'latvian', 'lv', 'lav', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('mt', 'maltese', 'mt', 'mlt', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('pl', 'polish', 'pl', 'pol', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('nl', 'dutch', 'nl', 'dut', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('pt', 'portuguese', 'pt', 'por', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('ro', 'romanian', 'ro', 'rum', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('sk', 'slovak', 'sk', 'slo', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('sl', 'slovenian', 'sl', 'slv', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('sv', 'swedish', 'sv', 'swe', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_languagecode(uuid, label, iso6391code, iso6392code, masterlanguage, active, insertdate, editdate) VALUES ('hr', 'croatian', 'hr', 'hrv', 0, 1, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+--reg_itemclasstype
+INSERT INTO reg_itemclasstype(uuid, localid, insertdate, editdate) VALUES ('1', 'registry', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_itemclasstype(uuid, localid, insertdate, editdate) VALUES ('2', 'register', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_itemclasstype(uuid, localid, insertdate, editdate) VALUES ('3', 'item', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+--reg_statusgroup
+INSERT INTO reg_statusgroup(uuid, localid, baseuri, EXTERNAL, insertdate, editdate) VALUES ('1', 'status', 'statusbaseuri', 0, to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL );
+
+--reg_status
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('1', 'valid', 1, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('2', 'invalid', 1, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('3', 'superseded', 1, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('4', 'retired', 1, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('5', 'draft', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('6', 'submitted', 1, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('7', 'needreview', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('8', 'proposed', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('9', 'notAccepted', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('10', 'acceptedWithChanges', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('11', 'changesCompleted', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('12', 'accepted', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('13', 'withdrawn', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_status(uuid, localid, ispublic, reg_statusgroup, insertdate, editdate) VALUES ('14', 'published', 0, '1', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+-- reg_statuslocalization
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('status-ml', NULL, '1', 'Status', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('valid-ml', '1', NULL, 'Valid', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('invalid-ml', '2', NULL, 'invalid', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('superseded-ml', '3', NULL, 'Superseded', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('retired-ml', '4', NULL, 'Retired', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('draft-ml', '5', NULL, 'Draft', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('submitted-ml', '6', NULL, 'Submitted', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('needreview-ml', '7', NULL, 'Need review', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('proposed-ml', '8', NULL, 'proposed', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('notaccepted-ml', '9', NULL, 'Not accepted', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('acceptedWithChanges-ml', '10', NULL, 'Accepted With Changes', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('changesCompleted-ml', '11', NULL, 'Changes Completed', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('accepted-ml', '12', NULL, 'Accepted', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('withdrawn-ml', '13', NULL, 'Withdrawn', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+INSERT INTO reg_statuslocalization(uuid, reg_status, reg_statusgroup, label, description, reg_languagecode, insertdate, editdate)
+VALUES('published-ml', '14', NULL, 'Published', '', 'en', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+
+
+--reg_fieldtype
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('1', 'text', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('2', 'date', to_timestamp('2017-12-15 10:00:00.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('3', 'number', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('4', 'registry', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('5', 'register', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('6', 'collection', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('7', 'parent', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('8', 'successor', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('9', 'predecessor', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('10', 'relationReference', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('11', 'longtext', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('12', 'groupReference', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('13', 'status', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('14', 'dateCreation', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_fieldtype(uuid, localid, insertdate, editdate) VALUES ('15', 'dateEdit', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+--reg_relationpredicate
+INSERT INTO reg_relationpredicate(uuid, localid, insertdate, editdate) VALUES ('1', 'hasRegistry', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_relationpredicate(uuid, localid, insertdate, editdate) VALUES ('2', 'hasRegister', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_relationpredicate(uuid, localid, insertdate, editdate) VALUES ('3', 'hasCollection', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_relationpredicate(uuid, localid, insertdate, editdate) VALUES ('4', 'hasParent', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_relationpredicate(uuid, localid, insertdate, editdate) VALUES ('5', 'hasSuccessor', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_relationpredicate(uuid, localid, insertdate, editdate) VALUES ('6', 'hasPredecessor', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_relationpredicate(uuid, localid, insertdate, editdate) VALUES ('7', 'itemReference', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+
+--reg_role
+INSERT INTO reg_role(uuid, localid, name, insertdate, editdate) VALUES ('1', 'registryManager', 'Registry Manager', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_role(uuid, localid, name, insertdate, editdate) VALUES ('2', 'registerManager', 'Register Manager', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_role(uuid, localid, name, insertdate, editdate) VALUES ('3', 'registerOwner', 'Register Owner', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_role(uuid, localid, name, insertdate, editdate) VALUES ('4', 'controlBody', 'Control Body', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+INSERT INTO reg_role(uuid, localid, name, insertdate, editdate) VALUES ('5', 'submittingOrganization', 'Submitting Organization', to_timestamp('2017-05-11 14:14:05.33835','yyyy-mm-dd hh24:mi:ss.FF'), NULL);
+
+
+commit;
+
