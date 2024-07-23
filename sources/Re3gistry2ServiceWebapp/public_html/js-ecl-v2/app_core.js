@@ -75,7 +75,7 @@ const htmlSnippet_paginationNextIcon = '<span class="ecl-link__label">{0}</span>
 function fetchData(uri, lang) {
 
     if (uri === null || typeof uri === val_undefined || uri.length === 0) {
-        uri = uriFromUrl;
+        uri = registryApp.defaultRegisterURI || uriFromUrl;
     }
 
     if (lang === null || typeof lang === val_undefined || lang.length === 0) {
@@ -645,7 +645,7 @@ function renderTableProperties(data, headerProperties) {
                                             value = renderHref(tmpValue, data.uri);
                                           } else {
                                             value = renderHref(tmpValue, data.uri + "?status=" + data.properties[2].values[0].value.toLowerCase());
-                                          }   
+                                          }
                                     } else {
                                         value = renderHrefExternalLink(tmpValue, data.uri);
                                     }
