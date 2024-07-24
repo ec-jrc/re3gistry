@@ -186,7 +186,7 @@ function refreshSelectedLanguages(selector) {
     $(elementName_html).attr(elementAttributeName_lang, currentLanguage);
 
     // Update the main logo
-    $('.' + elementClassName_eclsiteHeaderLogoImage).attr(key_src, registryApp.hostURL + registryApp.staticResourcesPath + key_languageLogoPattern.replace('{0}', currentLanguage));
+    $('.' + elementClassName_eclsiteHeaderLogoImage).attr(key_src, registryApp.hostURL + registryApp.staticResourcesPath + '../logo/' + key_languageLogoPattern.replace('{0}', currentLanguage));
 
     // Updating the selected text label and code
     let currentLanguageLabel = selector.text();
