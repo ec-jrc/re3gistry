@@ -186,7 +186,12 @@ function refreshSelectedLanguages(selector) {
     $(elementName_html).attr(elementAttributeName_lang, currentLanguage);
 
     // Update the main logo
-    $('.' + elementClassName_eclsiteHeaderLogoImage).attr(key_src, registryApp.hostURL + registryApp.staticResourcesPath + '../logo/' + key_languageLogoPattern.replace('{0}', currentLanguage));
+    if(registryApp.multiLogo){
+        $('.' + elementClassName_eclsiteHeaderLogoImage).attr(key_src, registryApp.hostURL + registryApp.staticResourcesPath + '../logo/' + key_languageLogoPattern.replace('{0}', currentLanguage));
+    }else{
+        $('.' + elementClassName_eclsiteHeaderLogoImage).attr(key_src, registryApp.hostURL + registryApp.singleLogoPath);
+    }
+    
 
     // Updating the selected text label and code
     let currentLanguageLabel = selector.text();
