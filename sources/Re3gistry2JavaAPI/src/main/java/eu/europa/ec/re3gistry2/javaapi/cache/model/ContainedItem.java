@@ -41,6 +41,7 @@ public class ContainedItem extends BasicContainedItem implements Serializable {
     private String uri;
     private String localid;
     private VersionInformation version;
+    private LastVersionInformation lastVersion;
     private List<VersionInformation> versionHistory;
     private String language;
     private String type;
@@ -98,6 +99,14 @@ public class ContainedItem extends BasicContainedItem implements Serializable {
 
     public void setVersion(VersionInformation version) {
         this.version = version;
+    }
+
+    public LastVersionInformation getLastVersion() {
+        return lastVersion;
+    }
+
+    public void setLastVersion(LastVersionInformation lastVersion) {
+        this.lastVersion = lastVersion;
     }
 
     public List<VersionInformation> getVersionHistory() {
