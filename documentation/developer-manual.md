@@ -190,7 +190,7 @@ By default, the site header logo image is configured to display a different pict
 
 ![Site HeaderLogo](images/site-header-logo.png)
 
-If you prefer to use a single logo for all languages, you can modify the configuration file located at `dist/webapp/public_html/conf/conf.js` Set the registryApp.multiLogo variable to false. Below this variable, you will find registryApp.singleLogoPath, where you should specify the path to the single logo.
+If you prefer to use a single logo for all languages, you can modify the configuration file located at `dist/webapp/public_html/conf/conf.js` Set the **registryApp.multiLogo** variable to false. Below this variable, you will find **registryApp.singleLogoPath**, where you should specify the path to the single logo.
 
 
 
