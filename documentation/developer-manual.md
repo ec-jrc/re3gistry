@@ -188,6 +188,8 @@ Once you've made changes to the **web.cdn_url** property, it will be used in `so
 ## Webapp Icons
 By default, the site header logo image is configured to display a different picture for each language. When you change the language using the language selector, the logo will automatically update to match the selected language.
 
+![Site HeaderLogo](images/site-header-logo.png)
+
 If you prefer to use a single logo for all languages, you can modify the configuration file located at `dist/webapp/public_html/conf/conf.js` Set the registryApp.multiLogo variable to false. Below this variable, you will find registryApp.singleLogoPath, where you should specify the path to the single logo.
 
 
