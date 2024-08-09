@@ -236,7 +236,7 @@ function renderVersionInfo(data) {
         // Getting version info from the data
         let version = data.version;
         let versionHistory = data.versionHistory;
-        let lastVersion = data.lastVersion.number;
+        let lastVersion = data?.lastVersion?.number;
         let lastVersionUri = data.lastVersion.uri;
 
         if (lastVersion !== undefined && version.number === lastVersion) {
