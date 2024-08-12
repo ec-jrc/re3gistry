@@ -93,14 +93,14 @@ public class AddItem extends HttpServlet {
         RegRelationpredicate regRelationpredicateRegister = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_REGISTER);
 
         // Getting parameters
-        //String languageUuid = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
+        String languageUuid = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
         String itemUuid = request.getParameter(BaseConstants.KEY_REQUEST_ITEMUUID);
         String formNewItemCheck = request.getParameter(BaseConstants.KEY_REQUEST_NEWITEMINSERT);
         String newItemItemclassUuid = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_NEWITEMREGITEMCLASSUUID);
         String formRegItemContainerUuid = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_REGITEMCONTAINERUUID);
         String externalItem = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_EXTERNAL_ITEM);
         
-        //languageUuid = (languageUuid != null) ? InputSanitizerHelper.sanitizeInput(languageUuid) : null;
+        languageUuid = (languageUuid != null) ? InputSanitizerHelper.sanitizeInput(languageUuid) : null;
         itemUuid = (itemUuid != null) ? InputSanitizerHelper.sanitizeInput(itemUuid) : null;
         formNewItemCheck = (formNewItemCheck != null) ? InputSanitizerHelper.sanitizeInput(formNewItemCheck) : null;
         newItemItemclassUuid = (newItemItemclassUuid != null) ? InputSanitizerHelper.sanitizeInput(newItemItemclassUuid) : null;
@@ -224,7 +224,7 @@ public class AddItem extends HttpServlet {
 
                         // Getting the request's parameters
                         Map requestParameters = request.getParameterMap();
-                                              
+                        
                         // Dispatch the rerquest
                         try {
                             regItemproposedHandler.handleRegItemproposedAddition(requestParameters, regUser, localization);
@@ -232,10 +232,12 @@ public class AddItem extends HttpServlet {
                             String operationResult = e.getMessage();
                             request.setAttribute(BaseConstants.KEY_REQUEST_OPERATIONRESULT, operationResult);
                             logger.error(e.getMessage(), e);
+                            
                         }
 
                         // Redirecting to the Item container page
-                        response.sendRedirect("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + formRegItemContainerUuid);
+                        request.getRequestDispatcher("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + languageUuid).forward(request, response);
+                        
 
                     } else {
 
