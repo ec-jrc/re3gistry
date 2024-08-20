@@ -28,3 +28,18 @@ registryApp.searchURL = '//registry-test.eu/registry/search';
 registryApp.searchApiURL = '//registry-test.eu/registry/searchapi';
 registryApp.dataServiceURL = '//registry-test.eu/registry/rest';
 
+
+// Webapp icon
+// If you need more information, you can find it in the manual.
+registryApp.staticResourcesPath = '/ecl-v2/static/media/';
+
+// If you want to have an icon for each language, set this variable to true
+// and establish the logo path in registryApp.singleLogoPath.
+registryApp.multiLogo = true;
+
+// This variable is ONLY for those who want to establish a single site header logo image.
+// To do so, registryApp.multiLogo should be false.
+registryApp.singleLogoPath = '/ecl-v2/static/media/../logo/logo-1.png';
+
+
+
