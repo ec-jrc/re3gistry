@@ -17,6 +17,8 @@ const elementName_title = 'title';
 const key_uri = 's-uri';
 const key_mainAppTitle = 's-site-title';
 const key_thisVersion = 's-thisversion';
+const key_thisVersionLast = 's-thisversionLast';
+const key_goToTheLastVersion = 's-GoToLastVersion';
 const key_versionHistory = 's-versionhistory';
 const key_collectionTitle = 's-collection-title';
 const key_narrowerTitle = 's-narrower-title';
@@ -47,6 +49,7 @@ const htmlSnippet_href = '<a href="{0}" class="ecl-link ecl-link--standalone">{1
 const htmlSnippet_href_external_link = '<a href="{0}" class="ecl-link ecl-link--standalone">{1} <svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#ui--external"></use></svg></a>';
 const htmlSnippet_href_format = '<li class="ecl-social-media-follow__item"><a href="{0}" class="ecl-link ecl-link--standalone ecl-link--icon ecl-link--icon-before ecl-social-media-follow__link"><svg focusable="false" aria-hidden="true" class="ecl-link__icon ecl-icon ecl-icon--xs"><use xlink:href="' + registryApp.hostURL + registryApp.staticResourcesPath + 'icons.svg#general--file"></use></svg> {1}</a></li>';
 const htmlSnippet_field = '<div class="ecl-row"><div class="ecl-col-lg-3 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m">{0}</span></div><div class="ecl-col-lg-9 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m {2}">{1}</span></div></div>';
+const htmlSnippet_fieldTwo = '<div class="ecl-row"><div class="ecl-col-lg-3 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m">{0}</span>&nbsp;<span class="ecl-u-type-s">{1}</span></div><div class="ecl-col-lg-9 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m {2}">{3}</span></div></div>';
 const htmlSnippet_field_format = '<div class="ecl-row"><div class="ecl-col-lg-3 ecl-col-sm-12 ecl-u-mv-s"><span class="ecl-u-type-m">{0}</span></div><div class="ecl-col-lg-9 ecl-col-sm-12 ecl-u-mv-s"><ul class="ecl-social-media-follow__list">{1}</ul></div></div>';
 //const htmlSnippet_field = '<dt class="ecl-description-list__term">{0}</dt><dd class="ecl-description-list__definition">{1}</dd>';
 const htmlSnippet_hx = '<h{0} class="ecl-u-type-heading-{0}{1}">{2}</h{0}>';
@@ -81,7 +84,7 @@ function fetchData(uri, lang) {
     if (lang === null || typeof lang === val_undefined || lang.length === 0) {
         lang = currentLanguage;
     }
-    
+
     var url = new URL(uri);
     var status = url.searchParams.get("status");
     uri = uri.split('?')[0];
@@ -93,7 +96,7 @@ function fetchData(uri, lang) {
 
         // Base URL of the service taken from the configuration 
         url: registryApp.dataServiceURL,
-        data: {uri: uri, lang: lang, format: key_jsonc, status: status}
+        data: { uri: uri, lang: lang, format: key_jsonc, status: status }
 
     }).done(function (responseData) {
 
@@ -139,7 +142,7 @@ function renderData(data) {
         mainContainer.append(renderProperties(data));
         mainContainer.append(renderDate(data));
         mainContainer.append(renderFormats(data));
-//        mainContainer.append(renderHr(key_marginVL));
+        //        mainContainer.append(renderHr(key_marginVL));
         let containedItems = data.containedItems;
         if (containedItems !== null && typeof containedItems !== val_undefined && containedItems.length > 0) {
             mainContainer.append(renderCollections(data));
@@ -175,9 +178,9 @@ function renderFetchError(data) {
     mainContainer.empty();
 
     if (data) {
-        mainContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorPrefix + data.error.code].replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition)));
+        mainContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_errorPrefix + data.error.code].replace('{0}', registryApp.errorMessageURL).replace('{1}', registryApp.errorMessageDefinition)));
     } else {
-        mainContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_genericError].replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition)));
+        mainContainer.append(htmlSnippet_errorMessage.replace('{0}', i18n[key_genericError].replace('{0}', registryApp.errorMessageURL).replace('{1}', registryApp.errorMessageDefinition)));
     }
 
     // Initializing the ECL Message component after creating it
@@ -196,7 +199,7 @@ function renderServiceError(data) {
 
     let htmlOutput = val_emptyString;
 
-    htmlOutput += htmlSnippet_errorMessage.replace('{0}', i18n[key_errorPrefix + data.error.code].replace('{0}',registryApp.errorMessageURL).replace('{1}',registryApp.errorMessageDefinition));
+    htmlOutput += htmlSnippet_errorMessage.replace('{0}', i18n[key_errorPrefix + data.error.code].replace('{0}', registryApp.errorMessageURL).replace('{1}', registryApp.errorMessageDefinition));
 
     mainContainer.append(htmlOutput);
 
@@ -233,9 +236,19 @@ function renderVersionInfo(data) {
         // Getting version info from the data
         let version = data.version;
         let versionHistory = data.versionHistory;
+        let lastVersion = data?.lastVersion?.number;
+        let lastVersionUri = data.lastVersion.uri;
 
-        // Rendering info of current version
-        htmlOutput += renderField(i18n[key_thisVersion], renderHref(version.uri, version.uri));
+        if (lastVersion !== undefined && version.number === lastVersion) {
+            // Rendering info of current version
+            htmlOutput += renderField(i18n[key_thisVersionLast], renderHref(version.uri, version.uri));
+        } else {
+            //ESTO NO FUNCIONA!!
+            // Rendering info of current version
+            htmlOutput += renderFieldTwo(i18n[key_thisVersion],renderHref(i18n[key_goToTheLastVersion], lastVersionUri), renderHref(version.uri, version.uri));
+            //htmlOutput += renderField(i18n[key_thisVersion], renderHref(version.uri, version.uri));
+        }
+
 
         // Checking if the version history info are available
         if (typeof versionHistory !== 'undefined' && versionHistory !== null && versionHistory.length > 0) {
@@ -300,15 +313,15 @@ function renderProperties(data) {
             let href = values[0].href;
 
             tmpHtml = (href !== null && href !== val_emptyString) ? renderHref(value, href) : value;
-            
-            if((item.id === "label" || item.id ==="definition") && data.language != item.lang){
+
+            if ((item.id === "label" || item.id === "definition") && data.language != item.lang) {
 
                 let myJSON = getLanguageJSON(data.language);
                 let finalJSON = JSON.parse(myJSON);
                 let language = finalJSON.translatenotavailable;
-                let finalLabel = item.label + "<br><small> "+" [" + language + "] </small> ";
+                let finalLabel = item.label + "<br><small> " + " [" + language + "] </small> ";
                 htmlOutput += renderField(finalLabel, tmpHtml);
-            }else{
+            } else {
                 htmlOutput += renderField(item.label, tmpHtml);
             }
 
@@ -321,7 +334,7 @@ function renderProperties(data) {
 
     htmlOutput = renderDl(htmlOutput);
 
-//    htmlOutput += renderHr(key_marginVL);
+    //    htmlOutput += renderHr(key_marginVL);
 
     return htmlOutput;
 }
@@ -349,7 +362,7 @@ function renderFormats(data) {
     }
 
     if (typeof href !== 'undefined') {
-//        href = encodeURIComponent(href);
+        //        href = encodeURIComponent(href);
 
         let htmlInner = val_emptyString;
         htmlInner += renderHrefFormat("XML Registry", href + "xml");
@@ -510,6 +523,20 @@ function renderField(label, value) {
         return htmlSnippet_field.replace('{0}', label).replace('{1}', value).replace('{2}', '');
     }
 }
+/*
+ * Render the label and value of the field in HTML
+ * 
+ * @param {String} label The label of the field
+ * @param {String} value The value of the field
+ * @returns {String} The rendered HTML of the field  
+ */
+function renderFieldTwo(label, value1, value2) {
+    if (label.toLowerCase() === 'label') {
+        return htmlSnippet_fieldTwo.replace('{0}', label).replace('{1}', value1).replace('{3}', value2).replace('{2}', 'ecl-u-type-bold');
+    } else {
+        return htmlSnippet_fieldTwo.replace('{0}', label).replace('{1}', value1).replace('{3}', value2).replace('{2}', '');
+    }
+}
 function renderFieldFormat(label, value) {
     return htmlSnippet_field_format.replace('{0}', label).replace('{1}', value).replace('{2}', '');
 }
@@ -641,11 +668,11 @@ function renderTableProperties(data, headerProperties) {
                                     let contain = windowlocation.substring(0, indexSlash);
 
                                     if (data.uri.includes(contain)) {
-                                          if(data.properties[2].values[0].value.toLowerCase() === "valid"){
+                                        if (data.properties[2].values[0].value.toLowerCase() === "valid") {
                                             value = renderHref(tmpValue, data.uri);
-                                          } else {
+                                        } else {
                                             value = renderHref(tmpValue, data.uri + "?status=" + data.properties[2].values[0].value.toLowerCase());
-                                          }   
+                                        }
                                     } else {
                                         value = renderHrefExternalLink(tmpValue, data.uri);
                                     }
@@ -1035,9 +1062,9 @@ function generateBreadcrumbTrail(data) {
     //Rest of items
     let topconcepts = true;
     let currentLevel = data;
-    while(topconcepts){
+    while (topconcepts) {
         try {
-            myBreadCrumbElements.push(currentLevel.topConceptOf.values[0].value); 
+            myBreadCrumbElements.push(currentLevel.topConceptOf.values[0].value);
             myBreadCrumbElementsURL.push(currentLevel.topConceptOf.uri)
             currentLevel = currentLevel.topConceptOf;
         } catch (error) {
@@ -1048,7 +1075,7 @@ function generateBreadcrumbTrail(data) {
     myBreadCrumbElements.reverse();
     myBreadCrumbElementsURL.reverse();
     let liHtml = val_emptyString;
-    for(let i= 0 ; i<myBreadCrumbElements.length; i++){
+    for (let i = 0; i < myBreadCrumbElements.length; i++) {
         liHtml += renderBreadcrumbLink(myBreadCrumbElements[i], myBreadCrumbElementsURL[i]);
     }
 
@@ -1093,11 +1120,11 @@ function renderDl(string) {
     return htmlSnippet_dl.replace('{0}', string);
 }
 
-function getLanguageJSON(locale){
+function getLanguageJSON(locale) {
     let JSONLINK = registryApp.hostURL + key_dataLocalizationFilesPath + '/' + locale + '.' + key_json;
-    var value= $.ajax({ 
-        url: JSONLINK, 
+    var value = $.ajax({
+        url: JSONLINK,
         async: false
-     }).responseText;
-     return value;
+    }).responseText;
+    return value;
 }
