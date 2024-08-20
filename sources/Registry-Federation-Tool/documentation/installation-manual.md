@@ -1,7 +1,7 @@
 # Register-Federation-Tool
 
 ## Overview
-The Rgister-Federation-Tool is a reusable open-source solution.
+The Register-Federation-Tool is a reusable open-source solution.
 This manual will cover the installation and configuration of the software
 
 The requirements to run the software are:
