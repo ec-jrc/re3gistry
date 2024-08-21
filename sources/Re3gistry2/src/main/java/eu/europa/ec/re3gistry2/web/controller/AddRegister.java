@@ -48,6 +48,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -178,7 +179,7 @@ public class AddRegister extends HttpServlet {
                     }
 
                 } catch (NoResultException e) {
-                    logger.error(e.getMessage(), e);
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within AddRegister class. Please check the details: " + e.getMessage(), e.getMessage());
                     // Setting the operation success attribute
                     operationResult = localization.getString("error.generic");
                     request.setAttribute(BaseConstants.KEY_REQUEST_OPERATIONRESULT, operationResult);

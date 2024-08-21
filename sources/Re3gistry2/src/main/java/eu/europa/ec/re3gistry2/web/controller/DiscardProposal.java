@@ -44,6 +44,7 @@ import eu.europa.ec.re3gistry2.model.RegRelationproposed;
 import eu.europa.ec.re3gistry2.web.utility.jsp.JspCommon;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -146,7 +147,7 @@ public class DiscardProposal extends HttpServlet {
                     redirectURI = "." + WebConstants.PAGE_PATH_SUBMITTINGORGANISATIONS + WebConstants.PAGE_URINAME_SUBMITTINGORGANISATIONS;
 //                    request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_SUBMITTINGORGANISATIONS + WebConstants.PAGE_URINAME_SUBMITTINGORGANISATIONS + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
                 } catch (NoResultException e) {
-                    logger.error(e.getMessage(), e);
+                   java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within DiscardProposal class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
             } else //                    discard item
             if (regItemproposedUUID != null && !regItemproposedUUID.isEmpty()) {
@@ -226,6 +227,7 @@ public class DiscardProposal extends HttpServlet {
             response.sendRedirect(redirectURI);
 
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within DiscardProposal class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
     }

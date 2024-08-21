@@ -58,6 +58,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -244,6 +245,7 @@ public class RegistryManager extends HttpServlet {
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_REGISTRYMANAGER + WebConstants.PAGE_URINAME_REGISTRYMANAGER + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 
             } catch (Exception e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManager class. Please check the details: " + e.getMessage(), e.getMessage());
                 // Redirecting to the RegItemclasses list page
                 response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
             }
