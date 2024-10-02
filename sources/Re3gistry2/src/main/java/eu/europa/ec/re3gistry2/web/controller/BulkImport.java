@@ -100,6 +100,7 @@ public class BulkImport extends HttpServlet {
                     request.getRequestDispatcher("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + languageUuid).forward(request, response);
                 }
             } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within BulkImport class. Please check the details: " + ex.getMessage(), ex.getMessage());
 //                request.setAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR, ex.getMessage());
                 request.getRequestDispatcher("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + languageUuid).forward(request, response);
             }
