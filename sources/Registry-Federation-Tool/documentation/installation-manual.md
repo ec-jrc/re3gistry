@@ -1,5 +1,27 @@
 # Register-Federation-Tool
 
+## Overview
+The Register-Federation-Tool is a reusable open-source solution.
+This manual will cover the installation and configuration of the software
+
+The requirements to run the software are:
+
+* Machine with 4GB of RAM
+* [Apache Httpd server](https://httpd.apache.org/) (or another Http server)
+* Java 1.8 – versions higher than 1.8 should not be used, and the code should be compiled and run using Java 1.8[^note_java_8]
+* [Apache Tomcat](https://tomcat.apache.org) 8.5 or 9.0[^note_apache_tomcat]
+* [Apache Solr](https://solr.apache.org/) 8.x[^note_apache_solr]
+* PostgreSQL 9.6 (the system supports other relational databases, but it has been tested only on the specified one - for the list of supported databases, please check [this link](https://wiki.eclipse.org/EclipseLink/FAQ/JPA).)
+
+[^note_java_8]: This is because the software is dependent on the [https://en.wikipedia.org/wiki/Jakarta_XML_Binding](JAXB framework) (package `javax.xml.bind`, see also [JAXB on Java 9, 10, 11 and beyond](https://www.jesperdj.com/2018/09/30/jaxb-on-java-9-10-11-and-beyond/).
+[^note_apache_solr]: Check the version of the jar file `solr-solrj-8.x.y.jar` of the Solrj Client API in the distribution (this version can be set when building the software with Maven, using property `${application.solr.version}`, and install the matching server.
+[^note_apache_tomcat]: The software is dependent on classes from the `javax.servlet` package, and therefore Tomcat 10 cannot be used; see also [Migration Guide - Tomcat 10.0.x](https://tomcat.apache.org/migration-10.html). See [Apache Tomcat Versions](https://tomcat.apache.org/whichversion.html) for more information about the different Apache Tomcat Versions.
+
+The prerequisites to follow this manual are:
+* to have an instance of Apache Tomcat installed and configured to run with Java 1.8
+* to have an instance of Apache Solr installed and configured
+* to have a PostgreSQL database server installed and configured (or an alternative relational database server)
+
 ## Installing the Federation Tool software 
 
 The following steps need to be followed to install the system properly. 
