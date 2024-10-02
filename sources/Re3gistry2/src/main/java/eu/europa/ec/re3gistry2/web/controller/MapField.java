@@ -45,7 +45,6 @@ import eu.europa.ec.re3gistry2.base.utility.WebConstants;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -163,7 +162,6 @@ public class MapField extends HttpServlet {
                     List<RegFieldmapping> listRegFieldmappingsItemclass = regFieldmappingManager.getAll(regItemclass);
                     request.setAttribute(BaseConstants.KEY_REQUEST_REGFIELDMAPPINGSITEMCLASS, listRegFieldmappingsItemclass);
                 } catch (Exception e) {
-                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within MapField class. Please check the details: " + e.getMessage(), e.getMessage());
                     request.setAttribute(BaseConstants.KEY_REQUEST_REGITEMCLASS, null);
                     request.setAttribute(BaseConstants.KEY_REQUEST_REGFIELDMAPPINGSITEMCLASS, null);
                 }
@@ -173,7 +171,6 @@ public class MapField extends HttpServlet {
                     List<RegItemclass> regItemclasses = regItemclassManager.getAll();
                     request.setAttribute(BaseConstants.KEY_REQUEST_REGITEMCLASSES, regItemclasses);
                 } catch (Exception e) {
-                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within MapField class. Please check the details: " + e.getMessage(), e.getMessage());
                     request.setAttribute(BaseConstants.KEY_REQUEST_REGITEMCLASS, null);
                 }
 

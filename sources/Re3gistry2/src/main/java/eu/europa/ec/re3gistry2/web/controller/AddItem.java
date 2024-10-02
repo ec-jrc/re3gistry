@@ -58,16 +58,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.util.logging.Level;
 
 @WebServlet(WebConstants.PAGE_URINAME_ADDITEM)
 public class AddItem extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Init logger
-         Logger logger = Configuration.getInstance().getLogger();
+        Logger logger = Configuration.getInstance().getLogger();
 
         // Init frontend servlet
         Configuration.getInstance().initServlet(request, response, false, false);
@@ -95,19 +93,20 @@ public class AddItem extends HttpServlet {
         RegRelationpredicate regRelationpredicateRegister = regRelationpredicateManager.get(BaseConstants.KEY_PREDICATE_REGISTER);
 
         // Getting parameters
-        String languageUuid = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
+        //String languageUuid = request.getParameter(BaseConstants.KEY_REQUEST_LANGUAGEUUID);
         String itemUuid = request.getParameter(BaseConstants.KEY_REQUEST_ITEMUUID);
         String formNewItemCheck = request.getParameter(BaseConstants.KEY_REQUEST_NEWITEMINSERT);
         String newItemItemclassUuid = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_NEWITEMREGITEMCLASSUUID);
         String formRegItemContainerUuid = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_REGITEMCONTAINERUUID);
         String externalItem = request.getParameter(BaseConstants.KEY_FORM_FIELD_NAME_EXTERNAL_ITEM);
-
-        languageUuid = (languageUuid != null) ? InputSanitizerHelper.sanitizeInput(languageUuid) : null;
+        
+        //languageUuid = (languageUuid != null) ? InputSanitizerHelper.sanitizeInput(languageUuid) : null;
         itemUuid = (itemUuid != null) ? InputSanitizerHelper.sanitizeInput(itemUuid) : null;
         formNewItemCheck = (formNewItemCheck != null) ? InputSanitizerHelper.sanitizeInput(formNewItemCheck) : null;
         newItemItemclassUuid = (newItemItemclassUuid != null) ? InputSanitizerHelper.sanitizeInput(newItemItemclassUuid) : null;
         formRegItemContainerUuid = (formRegItemContainerUuid != null) ? InputSanitizerHelper.sanitizeInput(formRegItemContainerUuid) : null;
-        externalItem = (externalItem != null) ? InputSanitizerHelper.sanitizeInput(externalItem) : null;
+        externalItem = (externalItem != null) ? InputSanitizerHelper.sanitizeInput(externalItem) : null;   
+
 
         if (itemUuid == null || itemUuid.length() < 1) {
             itemUuid = formRegItemContainerUuid;
@@ -124,7 +123,7 @@ public class AddItem extends HttpServlet {
 
         // Getting the language by parameter (if not available the master language is used)
         RegLanguagecode regLanguagecode = null;
-
+        
         // Adding a new item it always add in the masterLanguage
         /*if (languageUuid != null && languageUuid.length() == 2) {
             try {
@@ -133,7 +132,7 @@ public class AddItem extends HttpServlet {
                 regLanguagecode = masterLanguage;
             }
         } else {*/
-        regLanguagecode = masterLanguage;
+            regLanguagecode = masterLanguage;
         //}
         request.setAttribute(BaseConstants.KEY_REQUEST_CURRENTLANGUAGE, regLanguagecode);
 
@@ -154,7 +153,6 @@ public class AddItem extends HttpServlet {
                     try {
                         regItemRegistry = regRelationRegistries.get(0).getRegItemObject();
                     } catch (Exception e) {
-                        java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.INFO, e.getMessage(), e.getMessage());
                         regItemRegistry = null;
                     }
                 }
@@ -166,7 +164,6 @@ public class AddItem extends HttpServlet {
                     try {
                         regItemRegister = regRelationRegisters.get(0).getRegItemObject();
                     } catch (Exception e) {
-                        java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.INFO, e.getMessage(), e.getMessage());
                         regItemRegister = null;
                     }
                 }
@@ -227,19 +224,18 @@ public class AddItem extends HttpServlet {
 
                         // Getting the request's parameters
                         Map requestParameters = request.getParameterMap();
-
+                                              
                         // Dispatch the rerquest
                         try {
                             regItemproposedHandler.handleRegItemproposedAddition(requestParameters, regUser, localization);
                         } catch (Exception e) {
                             String operationResult = e.getMessage();
                             request.setAttribute(BaseConstants.KEY_REQUEST_OPERATIONRESULT, operationResult);
-                            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within AddItem class. Please check the details: " + e.getMessage(), e.getMessage());
-
+                            logger.error(e.getMessage(), e);
                         }
 
                         // Redirecting to the Item container page
-                        request.getRequestDispatcher("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + languageUuid).forward(request, response);
+                        response.sendRedirect("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + formRegItemContainerUuid);
 
                     } else {
 
@@ -291,7 +287,6 @@ public class AddItem extends HttpServlet {
                             request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_ADDITEM + WebConstants.PAGE_URINAME_ADDITEM + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 
                         } catch (Exception e) {
-                            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within AddItem class. Please check the details: " + e.getMessage(), e.getMessage());
                             // Redirecting to the Item container page
                             response.sendRedirect("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid);
                         }
@@ -301,11 +296,10 @@ public class AddItem extends HttpServlet {
                     response.sendRedirect("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid);
                 }
             } catch (NoResultException e) {
-                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within AddItem class. Please check the details: " + e.getMessage(), e.getMessage());
                 // Redirecting to the Item container page
                 response.sendRedirect("." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + itemUuid);
             } catch (Exception e) {
-                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within AddItem class. Please check the details: " + e.getMessage(), e.getMessage());
+                logger.error(e.getMessage(), e);
             }
         } else {
             response.sendRedirect("." + WebConstants.PAGE_URINAME_BROWSE);
@@ -318,7 +312,7 @@ public class AddItem extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within AddItem class. Please check the details: " + ex.getMessage(), ex.getMessage());
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -328,7 +322,7 @@ public class AddItem extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             Logger logger = Configuration.getInstance().getLogger();
-            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within AddItem class. Please check the details: " + ex.getMessage(), ex.getMessage());
+            logger.error(ex.getMessage(), ex);
         }
     }
 }

@@ -30,7 +30,6 @@ import eu.europa.ec.re3gistry2.base.utility.WebConstants;
 import eu.europa.ec.re3gistry2.crudimplementation.RegActionManager;
 import eu.europa.ec.re3gistry2.model.RegAction;
 import java.io.IOException;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -63,7 +62,7 @@ public class ActionDetail extends HttpServlet {
         try {
             regAction = regActionManager.get(actionUUID);
         } catch (NoResultException e) {
-            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within ActionDetail class. Please check the details: " + e.getMessage(), e.getMessage());
+            logger.error(e.getMessage(), e);
         }
 
         // Setting the RegAction parameter
