@@ -301,6 +301,8 @@ public class BaseConstants {
     public static final String KEY_REQUEST_USER_RESETPASSWORD_SUCCESS = "userResetpasswordError";
     public static final String KEY_REQUEST_USER_RESETPASSWORD_ERROR = "userResetpasswordError";
     public static final String KEY_REQUEST_USER_RESETPASSWORD_USERNOTAVAILABLE_ERROR = "usernotavailableResetpasswordError";
+    public static final String KEY_REQUEST_USER_RESETPASSWORD_NO_CONNECTION_ERROR = "noconnectionResetpasswordError";
+    public static final String KEY_REQUEST_USER_RESETPASSWORD_GENERIC_ERROR = "genericResetpasswordError";
 
     public static final String KEY_REQUEST_INSTALLATION_CLEAN_DB_ERROR = "installationCleanDBError";
     public static final String KEY_REQUEST_INSTALLATION_SUCCESS = "installationSuccess";
@@ -990,7 +992,15 @@ public class BaseConstants {
     public String getKEY_REQUEST_USER_RESETPASSWORD_USERNOTAVAILABLE_ERROR() {
         return KEY_REQUEST_USER_RESETPASSWORD_USERNOTAVAILABLE_ERROR;
     }
-
+    
+    public String getKEY_REQUEST_USER_RESETPASSWORD_NO_CONNECTION_ERROR() {
+        return KEY_REQUEST_USER_RESETPASSWORD_NO_CONNECTION_ERROR;
+    }
+    
+    public String getKEY_REQUEST_USER_RESETPASSWORD_GENERIC_ERROR() {
+        return KEY_REQUEST_USER_RESETPASSWORD_GENERIC_ERROR;
+    }
+    
     public String getKEY_REQUEST_USER_INCORECT_CREDENTIALS_EXCEPTION() {
         return KEY_REQUEST_USER_INCORECT_CREDENTIALS_EXCEPTION;
     }

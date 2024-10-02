@@ -36,9 +36,12 @@ import eu.europa.ec.re3gistry2.javaapi.handler.RegUserHandler;
 import eu.europa.ec.re3gistry2.model.RegUser;
 import eu.europa.ec.re3gistry2.model.uuidhandlers.RegUserUuidHelper;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import javax.persistence.NoResultException;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -93,10 +96,10 @@ public class ResetPassword extends HttpServlet {
                 RandomString generateKey = new RandomString(23, new SecureRandom(), RandomString.alphanum);
                 String key = generateKey.nextString();
                 UserHelper.generatePassword(regUser, key);
-
+                
                 // Store the user
                 result = regUserHandler.updateUser(regUser);
-
+                
                 // Prepare the email email to the user with the generated key
                 String recipientString = regUser.getEmail();
                 InternetAddress[] recipient = {
@@ -125,8 +128,19 @@ public class ResetPassword extends HttpServlet {
                     request.setAttribute(BaseConstants.KEY_REQUEST_USER_ERROR_MESSAGES, BaseConstants.KEY_REQUEST_USER_RESETPASSWORD_ERROR);
                     request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_RESETPASSWORD + WebConstants.PAGE_URINAME_RESETPASSWORD + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
                 }
-            } catch (Exception e) {
+            } catch (MessagingException e) {
+                request.setAttribute(BaseConstants.KEY_REQUEST_USER_ERROR_MESSAGES, BaseConstants.KEY_REQUEST_USER_RESETPASSWORD_NO_CONNECTION_ERROR);
+                request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_RESETPASSWORD + WebConstants.PAGE_URINAME_RESETPASSWORD + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
+            } catch (NoResultException e) {
+                //if (e.getMessage()=="getSingleResult() did not retrieve any entities.") {
+                //    request.setAttribute(BaseConstants.KEY_REQUEST_USER_ERROR_MESSAGES, BaseConstants.GENERIC);
+                //    request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_RESETPASSWORD + WebConstants.PAGE_URINAME_RESETPASSWORD + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
+                //}else {
                 request.setAttribute(BaseConstants.KEY_REQUEST_USER_ERROR_MESSAGES, BaseConstants.KEY_REQUEST_USER_RESETPASSWORD_USERNOTAVAILABLE_ERROR);
+                request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_RESETPASSWORD + WebConstants.PAGE_URINAME_RESETPASSWORD + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
+                //}
+            } catch (Exception e) {
+                request.setAttribute(BaseConstants.KEY_REQUEST_USER_ERROR_MESSAGES, BaseConstants.KEY_REQUEST_USER_RESETPASSWORD_GENERIC_ERROR);
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_RESETPASSWORD + WebConstants.PAGE_URINAME_RESETPASSWORD + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
             }
 
