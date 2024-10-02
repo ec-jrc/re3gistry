@@ -355,7 +355,7 @@ public class XSDFormatter implements Formatter {
                 }
             }
 
-            if (!BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON.equals(legacyFlag)) {
+            if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
                 if (fieldLocalId != null && "successor".equals(fieldLocalId)) {
                     writeComplexeListElements(xml, "successors", 0, 1, "successor");
                 } else if (fieldLocalId != null && "predecessor".equals(fieldLocalId)) {

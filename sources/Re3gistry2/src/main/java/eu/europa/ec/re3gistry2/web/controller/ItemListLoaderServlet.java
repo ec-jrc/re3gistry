@@ -56,7 +56,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -188,7 +187,6 @@ public class ItemListLoaderServlet extends HttpServlet {
                             RegItem tmp = regItemManager.get(regItemUuid);
                             containedRegItems.add(tmp);
                         } catch (Exception e) {
-                             java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within ItemListLoaderServlet class. Please check the details: " + e.getMessage(), e.getMessage());
                         }
                     }
                 }
@@ -489,7 +487,6 @@ public class ItemListLoaderServlet extends HttpServlet {
                                     regItemproposedStatus = " / " + regStatusLocalizationProposedItem.getLabel();
 
                                 } catch (NoResultException e) {
-                                     java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within ItemListLoaderServlet class. Please check the details: " + e.getMessage(), e.getMessage());
                                 }
 
                                 //Getting the RegStatus localization

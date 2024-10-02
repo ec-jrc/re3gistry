@@ -46,7 +46,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -165,7 +164,6 @@ public class Field extends HttpServlet {
                 try {
                     newPositionValue = Integer.parseInt(formNewPosition);
                 } catch (Exception e) {
-                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Field class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
 
                 // Updating the order
@@ -186,7 +184,6 @@ public class Field extends HttpServlet {
                     RegField regField = regFieldManager.get(fieldUuid);
                     request.setAttribute(BaseConstants.KEY_REQUEST_REGFIELD, regField);
                 } catch (Exception e) {
-                     java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Field class. Please check the details: " + e.getMessage(), e.getMessage());
                     request.setAttribute(BaseConstants.KEY_REQUEST_REGFIELD, null);
                 }
             } else {
@@ -223,7 +220,6 @@ public class Field extends HttpServlet {
                     // Dispatch request
                     request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_FIELD + WebConstants.PAGE_URINAME_FIELD + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
                 } catch (Exception e) {
-                     java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Field class. Please check the details: " + e.getMessage(), e.getMessage());
                     response.sendRedirect("." + WebConstants.PAGE_URINAME_ITEMCLASS);
                 }
             } else {

@@ -58,7 +58,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -91,8 +90,7 @@ public class Browse extends HttpServlet {
             mainRegistryItemclassLocalId = properties.getProperty("application.multiregistry.mainregistryitemclasslocalid");
             mainRegistryLocalId = properties.getProperty("application.multiregistry.mainregistrylocalid");
         } catch (Exception e) {
-            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Browse class. Please check the details: " + e.getMessage(), e.getMessage());
-            
+            logger.error(e.getMessage(), e);
         }
 
         // Setup the entity manager
@@ -312,7 +310,7 @@ public class Browse extends HttpServlet {
                     try {
                         regItemproposedHandler.handleRegItemproposedSave(requestParameters, regUser);
                     } catch (Exception e) {
-                        java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Browse class. Please check the details: " + e.getMessage(), e.getMessage());
+                        logger.error(e.getMessage(), e);
                         saveError = true;
                     }
                 } else if (regItemproposed != null && ( // Permission to edit Registers and items
@@ -330,7 +328,7 @@ public class Browse extends HttpServlet {
                     try {
                         regItemproposedHandler.handleRegItemproposedNewSave(requestParameters, regUser);
                     } catch (Exception e) {
-                        java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Browse class. Please check the details: " + e.getMessage(), e.getMessage());
+                        logger.error(e.getMessage(), e);
                         saveError = true;
                     }
                 }
@@ -387,7 +385,7 @@ public class Browse extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Browse class. Please check the details: " + e.getMessage(), e.getMessage());
+            logger.error(e.getMessage(), e);
             response.sendRedirect(".");
         } finally {
             if (entityManager.isOpen()) {

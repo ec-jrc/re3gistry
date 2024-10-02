@@ -55,7 +55,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -193,7 +192,7 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                         /**
                          * save group reference
                          */
-                        if (selectedgroups != null && selectedgroups.length > 0) {
+                        if(selectedgroups != null && selectedgroups.length > 0){
                             RegGroupManager regGroupManager = new RegGroupManager(entityManager);
                             for (String selectedgroup : selectedgroups) {
                                 RegUserRegGroupMapping regUserRegGroupMapping = new RegUserRegGroupMapping();
@@ -212,16 +211,16 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                                     entityManager.persist(regUserRegGroupMapping);
                                     entityManager.getTransaction().commit();
                                 } catch (Exception ec) {
-                                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerUsersAdd class. Please check the details: " + ec.getMessage(), ec.getMessage());
+                                    logger.error("@ RegUserHandler.addUser: generic error.", e);
                                 }
                             }
                         }
-
+                        
                         //Generate activation and deletion codes
-                        RegUserCodes codeActivation = new RegUserCodes(newUser.getUuid(), BaseConstants.KEY_USER_ACTION_ACTIVATE_USER, new Date());
-                        RegUserCodes codeDeletion = new RegUserCodes(newUser.getUuid(), BaseConstants.KEY_USER_ACTION_DELETE_USER, new Date());
-
-                        try {
+                        RegUserCodes codeActivation = new RegUserCodes(newUser.getUuid(),BaseConstants.KEY_USER_ACTION_ACTIVATE_USER,new Date());
+                        RegUserCodes codeDeletion = new RegUserCodes(newUser.getUuid(),BaseConstants.KEY_USER_ACTION_DELETE_USER,new Date());
+                        
+                        try{
                             if (!entityManager.getTransaction().isActive()) {
                                 entityManager.getTransaction().begin();
                             }
@@ -230,9 +229,9 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                             entityManager.persist(codeDeletion);
                             entityManager.getTransaction().commit();
                         } catch (Exception ec) {
-                            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerUsersAdd class. Please check the details: " + ec.getMessage(), ec.getMessage());
+                                logger.error("@ RegUserHandler.addUser: generic error.", ec);
                         }
-
+                        
                         // Prepare the email email to the user with the generated key
                         String recipientString = newUser.getEmail();
                         InternetAddress[] recipient = {
@@ -245,16 +244,16 @@ public class RegistryManagerUsersAdd extends HttpServlet {
 
                         if (loginType.equals(BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO)) {
                             String mailHost = configurationProperties.getProperty(BaseConstants.KEY_MAIL_HOST);
-                            String activationUrl = mailHost.concat(WebConstants.EMAIL_URL).concat(WebConstants.PAGE_URINAME_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("=" + codeActivation.getCode());
-                            String deletionUrl = mailHost.concat(WebConstants.EMAIL_URL).concat(WebConstants.PAGE_URINAME_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("=" + codeDeletion.getCode());
-
+                            String activationUrl = mailHost.concat(WebConstants.EMAIL_URL).concat(WebConstants.PAGE_URINAME_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("="+codeActivation.getCode());
+                            String deletionUrl =   mailHost.concat(WebConstants.EMAIL_URL).concat(WebConstants.PAGE_URINAME_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("="+codeDeletion.getCode());
+                            
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_NEW_REGISTRATION);
                             body = (body != null)
                                     ? body.replace("{name}", name)
                                             .replace("{email}", email)
                                             .replace("{key}", key)
-                                            .replace("{acceptLink}", activationUrl)
-                                            .replace("{deleteLink}", deletionUrl)
+                                            .replace("{acceptLink}",activationUrl)
+                                            .replace("{deleteLink}",deletionUrl)
                                     : "";
                         } else {
                             body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_ECAS_NEW_REGISTRATION);
@@ -268,7 +267,7 @@ public class RegistryManagerUsersAdd extends HttpServlet {
 
                     }
                 } catch (Exception e) {
-                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerUsersAdd class. Please check the details: " + e.getMessage(), e.getMessage());
+                    logger.error(e.getMessage(), e);
                 }
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
             }
@@ -288,7 +287,6 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                     response.sendRedirect("." + WebConstants.PAGE_PATH_REGISTRYMANAGER_USERS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_USERS);
                 }
             } catch (Exception e) {
-                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerUsersAdd class. Please check the details: " + e.getMessage(), e.getMessage());
                 // Redirecting to the RegItemclasses list page
                 response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
             }

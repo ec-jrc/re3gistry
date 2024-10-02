@@ -338,7 +338,7 @@ public class JSONFormatter implements Formatter {
                 } else if (fieldName != null && "parent".equals(fieldLocalId.toLowerCase())) {
                     JSONArray successorsArray = writeComplexListElement(value, href, lang, fieldLocalId);
                     regItemJsonObject.put("parents", successorsArray);
-                } else if (!BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON.equals(legacyFlag)) {
+                } else if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
                     if (!href.isEmpty() && !value.isEmpty()) {
                         JSONObject labelJson = createOrderedJSONObject();
                         labelJson.put("lang", item.getLanguage());

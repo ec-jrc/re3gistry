@@ -41,7 +41,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -145,8 +144,7 @@ public class RegistryManagerGroupsAdd extends HttpServlet {
                     result = regGroupHandler.addGroup(newGroup,regUser);
 
                 } catch (Exception e) {
-                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerGroupsAdd class. Please check the details: " + e.getMessage(), e.getMessage());
-                    
+                    logger.error(e.getMessage(), e);
                 }
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
             }
@@ -162,7 +160,6 @@ public class RegistryManagerGroupsAdd extends HttpServlet {
                     response.sendRedirect("." + WebConstants.PAGE_PATH_REGISTRYMANAGER_GROUPS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_GROUPS);
                 }
             } catch (Exception e) {
-                 java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerGroupsAdd class. Please check the details: " + e.getMessage(), e.getMessage());
                 // Redirecting to the RegItemclasses list page
                 response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
             }

@@ -66,7 +66,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -273,7 +272,6 @@ public class ControlBody extends HttpServlet {
                         }
 
                     } catch (NoResultException e) {
-                        java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within ControlBody class. Please check the details: " + e.getMessage(), e.getMessage());
                     }
                 }
                 
@@ -297,7 +295,6 @@ public class ControlBody extends HttpServlet {
 
             } catch (Exception e) {
                 // Redirecting to the RegItemclasses list page
-               java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within ControlBody class. Please check the details: " + e.getMessage(), e.getMessage());
                 response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
             }
         } else {
