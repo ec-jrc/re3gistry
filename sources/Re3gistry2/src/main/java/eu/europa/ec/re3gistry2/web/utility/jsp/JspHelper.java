@@ -55,12 +55,14 @@ import eu.europa.ec.re3gistry2.model.RegItemproposedRegGroupRegRoleMapping;
 import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegStatusgroup;
 import eu.europa.ec.re3gistry2.model.RegStatuslocalization;
+import eu.europa.ec.re3gistry2.web.controller.RegisterManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.persistence.NoResultException;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -111,7 +113,7 @@ public class JspHelper {
             formattedObjectText = "<a href=\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + currentLanguage.getUuid() + "\">" + tmpRegLocalizations.get(0).getValue() + "</a>";
 
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspRegistryFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Registry
@@ -157,7 +159,8 @@ public class JspHelper {
             formattedObjectText = "<a href=\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + currentLanguage.getUuid() + "\">" + tmpRegLocalizations.get(0).getValue() + "</a>";
 
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspRegisterFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
+            
         }
 
         // Returning the HTML string for the Register
@@ -218,7 +221,7 @@ public class JspHelper {
                 tmp += WebConstants.HTML_CONSTANT_DIV_CLOSING;
             }
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspRegisterFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Register
@@ -283,7 +286,7 @@ public class JspHelper {
                 tmp += WebConstants.HTML_CONSTANT_DIV_CLOSING;
             }
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspRegisterFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Register
@@ -356,7 +359,7 @@ public class JspHelper {
                 tmp += WebConstants.HTML_CONSTANT_DIV_CLOSING;
             }
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspRegisterFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Register
@@ -403,6 +406,7 @@ public class JspHelper {
                     tmpRegItemproposedRegGroupRegRoleMappings.add(regItemproposedRegGroupRegRoleMapping);
 
                 } catch (NoResultException e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
 
                 // Handling the the RegRelation parent (get the HTML string with translated labels of the items)
@@ -442,7 +446,7 @@ public class JspHelper {
                 }
             }*/
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspGroupFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -489,7 +493,8 @@ public class JspHelper {
                 outText = localization.getString("label.nocollection");
             }
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspCollectionFieldHandler: generic error.", e);
+            
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Collection
@@ -541,6 +546,7 @@ public class JspHelper {
                     regRelationproposed = regRelationproposedManager.getByRegRelationReference(regRelation);
                     tmpRegRelationproposeds.add(regRelationproposed);
                 } catch (NoResultException e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
 
                 // Handling the the RegRelation parent
@@ -561,6 +567,7 @@ public class JspHelper {
                     tmpRegRelationproposeds.add(regRelationproposed);
                 }
             } catch (NoResultException e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
             }
 
             // Handling the multivalued fields
@@ -575,7 +582,7 @@ public class JspHelper {
                 tmp += "<div class=\"row\"><div class=\"col-sm-6\">" + localization.getString("label.nopredecessor") + "</div><div class=\"col-sm-6\">" + localization.getString("label.nopredecessor") + "</div></div>";
             }
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspPredecessorFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -625,6 +632,7 @@ public class JspHelper {
                     regRelationproposed = regRelationproposedManager.getByRegRelationReference(regRelation);
                     tmpRegRelationproposeds.add(regRelationproposed);
                 } catch (NoResultException e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
 
                 // Handling the the RegRelation parent
@@ -645,6 +653,7 @@ public class JspHelper {
                     tmpRegRelationproposeds.add(regRelationproposed);
                 }
             } catch (NoResultException e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
             }
 
             // Handling the multivalued fields
@@ -659,7 +668,7 @@ public class JspHelper {
                 tmp += "<div class=\"row\"><div class=\"col-sm-6\">" + localization.getString("label.nosuccessor") + "</div><div class=\"col-sm-6\">" + localization.getString("label.nosuccessor") + "</div></div>";
             }
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspSuccessorFieldHelper: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -722,6 +731,7 @@ public class JspHelper {
                     regRelationproposed = regRelationproposedManager.getByRegRelationReference(regRelation);
                     tmpRegRelationproposeds.add(regRelationproposed);
                 } catch (NoResultException e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
 
                 // Handling the the RegRelation parent (get the HTML string with translated labels of the items)
@@ -743,6 +753,7 @@ public class JspHelper {
                     tmpRegRelationproposeds.add(regRelationproposed);
                 }
             } catch (NoResultException e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
             }
 
             // Handling the multivalued fields
@@ -772,7 +783,7 @@ public class JspHelper {
                 }
             }
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspParentFieldHandler: generic error.", e);
+           java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -900,6 +911,7 @@ public class JspHelper {
                 }
 
             } catch (NoResultException e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
             }
 
             // Handling the multivalued fields
@@ -1061,7 +1073,7 @@ public class JspHelper {
                 }
             }
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspNormalValueHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -1084,6 +1096,7 @@ public class JspHelper {
                 try {
                     currentLanguageLocalization = getRegLocalizationInCurrentLanguage(regLocalization, regLocalizationManager, currentLanguage);
                 } catch (NoResultException e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
             } else {
                 currentLanguageLocalization = regLocalization;
@@ -1103,6 +1116,7 @@ public class JspHelper {
                 regLocalizationproposed = regLocalizationproposedManager.getByRegLocalizationReferenceAndLanguage(currentLanguageLocalization, currentLanguage);
             }
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         /* -- Calculating field values and names -- */
@@ -1348,6 +1362,7 @@ public class JspHelper {
                 try {
                     currentLanguageLocalizationproposed = getRegLocalizationproposedInCurrentLanguage(regLocalizationproposed, regLocalizationproposedManager, currentLanguage);
                 } catch (NoResultException e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
             } else {
                 currentLanguageLocalizationproposed = regLocalizationproposed;
@@ -1567,6 +1582,7 @@ public class JspHelper {
                 regItemproposedObjectFromProposedRelation = regRelationproposed.getRegItemproposedObject();
             }
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         String newContentClass = ((regLocalizationproposed != null && regLocalizationproposed.getRegRelationproposedReference() == null) ? " class=\"pe-icon new-content\"" : "");
@@ -1662,6 +1678,7 @@ public class JspHelper {
                 regItemproposedObjectFromProposedRelation = regRelationproposed.getRegItemproposedObject();
             }
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         String newContentClass = " class=\"pe-icon new-content\"";
@@ -1962,6 +1979,7 @@ public class JspHelper {
         try {
             out = regLocalizationManager.get(tmpUuid);
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return out;
@@ -1983,6 +2001,7 @@ public class JspHelper {
         try {
             out = regLocalizationproposedManager.get(tmpUuid);
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return out;
@@ -2004,6 +2023,7 @@ public class JspHelper {
         try {
             out = regLocalizationproposedManager.get(tmpUuid);
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelper class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return out;

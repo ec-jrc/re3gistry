@@ -50,10 +50,12 @@ import eu.europa.ec.re3gistry2.model.RegItemproposedRegGroupRegRoleMapping;
 import eu.europa.ec.re3gistry2.model.RegStatus;
 import eu.europa.ec.re3gistry2.model.RegStatusgroup;
 import eu.europa.ec.re3gistry2.model.RegStatuslocalization;
+import eu.europa.ec.re3gistry2.web.controller.RegisterManager;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.persistence.NoResultException;
 import org.apache.logging.log4j.Logger;
 
@@ -102,7 +104,7 @@ public class JspHelperNewProposedItem {
             formattedObjectText = "<a href=\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationproposedTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + currentLanguage.getUuid() + "\">" + tmpRegLocalizations.get(0).getValue() + "</a>";
 
         } catch (Exception e) {
-            logger.error("@ JspHelperNewProposedItem.jspRegistryFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Registry
@@ -147,7 +149,7 @@ public class JspHelperNewProposedItem {
             formattedObjectText = "<a href=\"." + WebConstants.PAGE_URINAME_BROWSE + "?" + BaseConstants.KEY_REQUEST_ITEMUUID + "=" + regRelationproposedTmp.getRegItemObject().getUuid() + "&" + BaseConstants.KEY_REQUEST_LANGUAGEUUID + "=" + currentLanguage.getUuid() + "\">" + tmpRegLocalizations.get(0).getValue() + "</a>";
 
         } catch (Exception e) {
-            logger.error("@ JspHelperNewProposedItem.jspRegisterFieldHandler: generic error.", e);
+           java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Register
@@ -201,7 +203,7 @@ public class JspHelperNewProposedItem {
             }
 
         } catch (Exception e) {
-            logger.error("@ JspHelperNewProposedItem.jspGroupFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -247,7 +249,7 @@ public class JspHelperNewProposedItem {
                 outText = localization.getString("label.nocollection");
             }
         } catch (Exception e) {
-            logger.error("@ JspHelperNewProposedItem.jspCollectionFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Collection
@@ -307,6 +309,7 @@ public class JspHelperNewProposedItem {
                     tmpRegRelationproposeds.add(regRelationproposed);
                 }
             } catch (NoResultException e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
             }
 
             // Handling the multivalued fields
@@ -320,7 +323,7 @@ public class JspHelperNewProposedItem {
             }
 
         } catch (Exception e) {
-            logger.error("@ JspHelperNewProposedItem.jspPredecessorFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -372,6 +375,7 @@ public class JspHelperNewProposedItem {
                     tmpRegRelationproposeds.add(regRelationproposed);
                 }
             } catch (NoResultException e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
             }
 
             // Handling the multivalued fields
@@ -384,7 +388,7 @@ public class JspHelperNewProposedItem {
                 tmp += localization.getString("label.nosuccessor");
             }
         } catch (Exception e) {
-            logger.error("@ JspHelperNewProposedItem.jspSuccessorFieldHelper: generic error.", e);
+           java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -450,6 +454,7 @@ public class JspHelperNewProposedItem {
                     tmpRegRelationproposeds.add(regRelationproposed);
                 }
             } catch (NoResultException e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
             }
 
             // Handling the multivalued fields
@@ -475,7 +480,7 @@ public class JspHelperNewProposedItem {
                 }
             }
         } catch (Exception e) {
-            logger.error("@ JspHelperNewProposedItem.jspParentFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -573,6 +578,7 @@ public class JspHelperNewProposedItem {
                     // Index of each field (needed for multiple values fields)
                 }
             } catch (NoResultException e) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
             }
 
             // Handling the multivalued fields
@@ -635,7 +641,7 @@ public class JspHelperNewProposedItem {
                 }
             }
         } catch (Exception e) {
-            logger.error("@ JspHelperNewProposedItem.jspNormalValueHandler: generic error.", e);
+           java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return tmp;
@@ -658,6 +664,7 @@ public class JspHelperNewProposedItem {
                 try {
                     currentLanguageLocalizationproposed = getRegLocalizationproposedInCurrentLanguage(regLocalizationproposed, regLocalizationproposedManager, currentLanguage);
                 } catch (NoResultException e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
                 }
             } else {
                 currentLanguageLocalizationproposed = regLocalizationproposed;
@@ -870,6 +877,7 @@ public class JspHelperNewProposedItem {
                 regItemproposedObjectFromProposedRelation = regRelationproposed.getRegItemproposedObject();
             }
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         String newContentClass = "";
@@ -930,6 +938,7 @@ public class JspHelperNewProposedItem {
                 regItemproposedObjectFromProposedRelation = regRelationproposed.getRegItemproposedObject();
             }
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         String newContentClass = "";
@@ -1107,6 +1116,7 @@ public class JspHelperNewProposedItem {
         try {
             out = regLocalizationproposedManager.get(tmpUuid);
         } catch (NoResultException e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         return out;
@@ -1272,7 +1282,7 @@ public class JspHelperNewProposedItem {
             tmp += WebConstants.HTML_CONSTANT_DIV_CLOSING;
 
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspRegisterFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Register
@@ -1321,7 +1331,7 @@ public class JspHelperNewProposedItem {
             tmp += WebConstants.HTML_CONSTANT_DIV_CLOSING;
 
         } catch (Exception e) {
-            logger.error("@ JspHelper.jspRegisterFieldHandler: generic error.", e);
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within jspHelperNewProposedItem class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Returning the HTML string for the Register

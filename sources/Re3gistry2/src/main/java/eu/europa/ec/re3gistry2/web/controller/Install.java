@@ -37,6 +37,7 @@ import eu.europa.ec.re3gistry2.migration.handler.RegInstallationStepMigrationSum
 import eu.europa.ec.re3gistry2.model.RegUser;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -85,16 +86,17 @@ public class Install extends HttpServlet {
         }
 
         if (step.equals(BaseConstants.KEY_REQUEST_CLEAN_INSTALLATION_PROFILE)) {
-          if(session!=null) {
-            request.getSession().setAttribute(BaseConstants.KEY_REQUEST_WORKFLOW, request.getParameterValues(BaseConstants.KEY_REQUEST_WORKFLOW)[0]);
-          }
-          try {
-            new RegInstallationStepCleanInstallationProfileHandler(request);
-          } catch (Exception ex) {
-            Configuration.getInstance().getLogger().error(ex.getMessage(), ex);
-            step = "3";
-            request.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_CLEAN_DB_ERROR, ex.getMessage());
-          }
+            if (session != null) {
+                request.getSession().setAttribute(BaseConstants.KEY_REQUEST_WORKFLOW, request.getParameterValues(BaseConstants.KEY_REQUEST_WORKFLOW)[0]);
+            }
+            try {
+                new RegInstallationStepCleanInstallationProfileHandler(request);
+            } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Install class. Please check the details: " + ex.getMessage(), ex.getMessage());
+                Configuration.getInstance().getLogger().error(ex.getMessage(), ex);
+                step = "3";
+                request.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_CLEAN_DB_ERROR, ex.getMessage());
+            }
         }
 
         boolean lastStep = false;
@@ -103,6 +105,7 @@ public class Install extends HttpServlet {
                 new RegInstallationStepCleanInstallationSummaryHandler(request);
             } catch (Exception ex) {
                 Configuration.getInstance().getLogger().error(ex.getMessage(), ex);
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Install class. Please check the details: " + ex.getMessage(), ex.getMessage());
                 step = BaseConstants.KEY_REQUEST_CLEAN_INSTALLATION_SUMMARY;
                 request.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_CLEAN_DB_ERROR, ex.getMessage());
             }
@@ -114,7 +117,7 @@ public class Install extends HttpServlet {
                 new RegInstallationStepCleanInstallationProcessHandler(request, entityManagerRe3gistry2);
                 deleteSystemInstallingFile();
                 createSystemInstalledFile();
-                if (session!=null) {
+                if (session != null) {
                     String workflow = (String) session.getAttribute(BaseConstants.KEY_REQUEST_WORKFLOW);
                     if (StringUtils.equals(workflow, BaseConstants.KEY_REQUEST_WORKFLOW_SIMPLIFIED)) {
                         createWorkflowFile();
@@ -128,6 +131,7 @@ public class Install extends HttpServlet {
                 Configuration.getInstance().getLogger().info("Installation succeeded");
             } catch (Exception ex) {
                 Configuration.getInstance().getLogger().error("Exception occurred in step " + BaseConstants.KEY_REQUEST_CLEAN_INSTALLATION_PROCESS, ex);
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Install class. Please check the details: " + ex.getMessage(), ex.getMessage());
                 step = "3";
                 deleteSystemInstallingFile();
                 request.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_CLEAN_DB_ERROR, ex.getMessage());
@@ -139,6 +143,7 @@ public class Install extends HttpServlet {
                 new RegInstallationStepMigrationSummaryHandler(request, entityManagerRe3gistry2);
             } catch (Exception ex) {
                 Configuration.getInstance().getLogger().error("Exception occurred in step " + BaseConstants.KEY_REQUEST_MIGRATION_SUMMARY, ex);
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Install class. Please check the details: " + ex.getMessage(), ex.getMessage());
                 step = "3";
                 request.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_MIGRATION_ERROR, ex.getMessage());
             }
@@ -150,7 +155,7 @@ public class Install extends HttpServlet {
                 new RegInstallationStepMigrationPorcessHandler(request, entityManagerRe3gistry2);
                 deleteSystemInstallingFile();
                 createSystemInstalledFile();
-                if (session!=null) {
+                if (session != null) {
                     String workflow = (String) session.getAttribute(BaseConstants.KEY_REQUEST_WORKFLOW);
                     if (StringUtils.equals(workflow, BaseConstants.KEY_REQUEST_WORKFLOW_SIMPLIFIED)) {
                         createWorkflowFile();
@@ -162,6 +167,7 @@ public class Install extends HttpServlet {
                 }
             } catch (Exception ex) {
                 Configuration.getInstance().getLogger().error("Exception occurred in step " + BaseConstants.KEY_REQUEST_MIGRATION_PROCESS, ex);
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Install class. Please check the details: " + ex.getMessage(), ex.getMessage());
                 step = "3";
                 deleteSystemInstallingFile();
                 request.setAttribute(BaseConstants.KEY_REQUEST_INSTALLATION_MIGRATION_ERROR, ex.getMessage());
@@ -215,7 +221,7 @@ public class Install extends HttpServlet {
             throw new Exception(ex.getMessage());
         }
     }
-    
+
     private void createWorkflowFile() throws Exception {
         String systemInstallingPath = Configuration.getPathHelperFiles() + File.separator + BaseConstants.KEY_FILE_NAME_WORKFLOW_SIMPLIFIED;
         File workflowFile = new File(systemInstallingPath);
@@ -243,7 +249,7 @@ public class Install extends HttpServlet {
         try {
             success = systemInstallingFile.delete();
         } catch (Exception e) {
-          Configuration.getInstance().getLogger().error("Error while trying to delete the system installing file", e);
+            Configuration.getInstance().getLogger().error("Error while trying to delete the system installing file", e);
         }
 
 //        if (!success) {
@@ -264,6 +270,7 @@ public class Install extends HttpServlet {
             }
 
         } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within Install class. Please check the details: " + ex.getMessage(), ex.getMessage());
             Configuration.getInstance().getLogger().error("Error while trying to create the system installed file", ex);
             throw new Exception(ex.getMessage());
         }

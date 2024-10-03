@@ -55,6 +55,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
@@ -82,6 +83,7 @@ public class ItemChildrenListLoaderServlet extends HttpServlet {
         try {
             showSystemRegisters = Boolean.valueOf((String) properties.getProperty("application.systemregisters.show"));
         } catch (Exception e) {
+            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within ItemChildrenListLoaderServlet class. Please check the details: " + e.getMessage(), e.getMessage());
         }
 
         // Gatering parameters

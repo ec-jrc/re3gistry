@@ -323,7 +323,7 @@ public class RORFormatter implements Formatter {
         }
         final Properties configurationProperties = Configuration.getInstance().getProperties();
         String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
-        if (!legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
+        if (!BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON.equals(legacyFlag)) {
             writeEmptyElement(xml, FOAF, "mbox", RDF, "resource", "mailto:jrc-inspire-support@ec.europa.eu");
         }
         xml.writeEndElement();

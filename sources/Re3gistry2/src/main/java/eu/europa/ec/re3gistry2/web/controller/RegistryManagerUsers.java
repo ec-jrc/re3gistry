@@ -54,6 +54,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -84,7 +85,7 @@ public class RegistryManagerUsers extends HttpServlet {
         RegUserRegGroupMappingManager regUserRegGroupMappingManager = new RegUserRegGroupMappingManager(entityManager);
         RegUserHandler regUserHandler = new RegUserHandler();
         RegGroupManager regGroupManager = new RegGroupManager(entityManager);
-        
+
         //System localization
         ResourceBundle systemLocalization = Configuration.getInstance().getLocalization();
 
@@ -184,7 +185,7 @@ public class RegistryManagerUsers extends HttpServlet {
                             result = regUserHandler.updateUser(regUserDetail);
                         } else if (actionType != null && actionType.equals(BaseConstants.KEY_ACTION_TYPE_REMOVEUSERGROUP)) {
                             List<String> addedGroups = new ArrayList<>();
-                             List<String> removedGroups = new ArrayList<>();
+                            List<String> removedGroups = new ArrayList<>();
                             if (checkBoxChecked != null) {
                                 List<RegUserRegGroupMapping> activeGroupsList = regUserRegGroupMappingManager.getAll(regUserDetail);
                                 for (int i = 0; i < checkBoxChecked.size(); i++) {
@@ -192,28 +193,28 @@ public class RegistryManagerUsers extends HttpServlet {
                                         // Removing the selected group from the user
                                         if (regUserRegGroupMappingUUID != null && !regUserRegGroupMappingUUID.isEmpty() && regUserRegGroupMappingUUID.size() >= i) {
                                             if (!regUserRegGroupMappingUUID.get(i).isEmpty()) {
-                                                try{
-                                                   RegUserRegGroupMapping regUserRegGroupMapping = regUserRegGroupMappingManager.get(regUserRegGroupMappingUUID.get(i));
-                                                for (RegUserRegGroupMapping r : activeGroupsList) {
-                                                    if (r.getUuid().equals(regUserRegGroupMapping.getUuid())) {
-                                                        result = regUserHandler.removeUserFromGroup(regUserRegGroupMapping);
-                                                        if (selectedRegGroupUUID != null && !selectedRegGroupUUID.isEmpty() && selectedRegGroupUUID.size() >= i) {
-                                                            RegGroup selectedRegGroup = regGroupManager.get(selectedRegGroupUUID.get(i));
-                                                            String group = selectedRegGroup.getName();
-                                                            removedGroups.add(group);
-                                                            break;
+                                                try {
+                                                    RegUserRegGroupMapping regUserRegGroupMapping = regUserRegGroupMappingManager.get(regUserRegGroupMappingUUID.get(i));
+                                                    for (RegUserRegGroupMapping r : activeGroupsList) {
+                                                        if (r.getUuid().equals(regUserRegGroupMapping.getUuid())) {
+                                                            result = regUserHandler.removeUserFromGroup(regUserRegGroupMapping);
+                                                            if (selectedRegGroupUUID != null && !selectedRegGroupUUID.isEmpty() && selectedRegGroupUUID.size() >= i) {
+                                                                RegGroup selectedRegGroup = regGroupManager.get(selectedRegGroupUUID.get(i));
+                                                                String group = selectedRegGroup.getName();
+                                                                removedGroups.add(group);
+                                                                break;
+                                                            }
                                                         }
+
                                                     }
-                                                    
-                                                } 
-                                                }catch(Exception e){
-                                                    logger.error(e.getMessage(), e);
+                                                } catch (Exception e) {
+                                                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerGroupsAdd class. Please check the details: " + e.getMessage(), e.getMessage());
                                                 }
                                             }
                                         }
-                                    }else {
+                                    } else {
                                         // Adding the selected group to the user
-                                        if(selectedRegGroupUUID != null && !selectedRegGroupUUID.isEmpty() && selectedRegGroupUUID.size() >= i){
+                                        if (selectedRegGroupUUID != null && !selectedRegGroupUUID.isEmpty() && selectedRegGroupUUID.size() >= i) {
                                             //RegUserRegGroupMapping regUserRegGroupMapping = regUserRegGroupMappingManager.get(regUserRegGroupMappingUUID.get(i));
                                             RegGroup selectedRegGroup = regGroupManager.get(selectedRegGroupUUID.get(i));
                                             RegUserRegGroupMapping newMapping = new RegUserRegGroupMapping();
@@ -224,7 +225,7 @@ public class RegistryManagerUsers extends HttpServlet {
                                                     break;
                                                 }
                                             }
-                                            if(!b){
+                                            if (!b) {
                                                 String newUUID = RegUserRegGroupMappingUuidHelper.getUuid(regUserDetail, selectedRegGroup);
                                                 newMapping.setUuid(newUUID);
                                                 newMapping.setRegUser(regUserDetail);
@@ -235,14 +236,15 @@ public class RegistryManagerUsers extends HttpServlet {
                                                 String group = selectedRegGroup.getName();
                                                 addedGroups.add(group);
                                             }
-                                            
-                                        }else{
-                                            logger.error("Error: Failed retrieving selected regGroup");
+
+                                        } else {
+                                            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerUsersclass. Please check the details: " + "Failed retrieving selected regGroup", "Failed retrieving selected regGroup");
                                         }
                                     }
                                 }
                             } else {
-                                logger.error("Error: Couldn't retrieve checkboxes");
+                                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerUsersclass. Please check the details: " + "Failed retrieving selected regGroup", "Couldn't retrieve checkboxes");
+                               
                             }
                             //Send email to affected user/s
                             LinkedHashSet<InternetAddress> users = new LinkedHashSet<>();
@@ -252,21 +254,21 @@ public class RegistryManagerUsers extends HttpServlet {
                                 users.toArray(recipient);
                                 String subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_GROUPSCHANGED);
                                 subject = (subject != null)
-                                            ? subject.replace("{contact}",systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME))
-                                            : "";
-                                
+                                        ? subject.replace("{contact}", systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME))
+                                        : "";
+
                                 String body = "";
                                 body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED);
                                 body = (body != null)
                                         ? body.replace("{user}", regUserDetail.getName())
-                                              .replace("{id}",regUserDetail.getEmail())
+                                                .replace("{id}", regUserDetail.getEmail())
                                         : "";
-                                
+
                                 if (!addedGroups.isEmpty()) {
                                     body += systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ADD);
                                     body = (body != null)
-                                        ? body.replace("{name}", regUserDetail.getEmail())
-                                        : "";
+                                            ? body.replace("{name}", regUserDetail.getEmail())
+                                            : "";
                                     for (int i = 0; i < addedGroups.size(); i++) {
                                         if (i == addedGroups.size() - 1) {
                                             body += addedGroups.get(i) + ". <br/>";
@@ -275,12 +277,12 @@ public class RegistryManagerUsers extends HttpServlet {
                                         }
                                     }
                                 }
-                                
+
                                 if (!removedGroups.isEmpty()) {
                                     body += systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_REMOVE);
                                     body = (body != null)
-                                        ? body.replace("{name}", regUserDetail.getEmail())
-                                        : "";
+                                            ? body.replace("{name}", regUserDetail.getEmail())
+                                            : "";
                                     for (int y = 0; y < removedGroups.size(); y++) {
                                         if (y == removedGroups.size() - 1) {
                                             body += removedGroups.get(y) + ". ";
@@ -290,14 +292,13 @@ public class RegistryManagerUsers extends HttpServlet {
                                     }
                                 }
                                 body += systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING);
-                                
-                                
+
                                 String value = request.getHeader("host");
                                 value = value + "/re3gistry2/userProfile";
                                 body = (body != null)
                                         ? body.replace("{page}", value)
-                                        .replace("{name}", regUserDetail.getName())
-                                        .replace("{contact}",systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME))
+                                                .replace("{name}", regUserDetail.getName())
+                                                .replace("{contact}", systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_GROUPSCHANGED_ENDING_CONTACT_NAME))
                                         : "";
                                 MailManager.sendMail(recipient, subject, body);
                                 regUserHandler.closeEntityManager();
@@ -305,6 +306,7 @@ public class RegistryManagerUsers extends HttpServlet {
                         }
                     }
                 } catch (Exception e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerUsers class. Please check the details: " + e.getMessage(), e.getMessage());
                     logger.error(e.getMessage(), e);
                 }
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
@@ -344,7 +346,7 @@ public class RegistryManagerUsers extends HttpServlet {
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_REGISTRYMANAGER_USERS + WebConstants.PAGE_URINAME_REGISTRYMANAGER_USERS + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 
             } catch (Exception e) {
-                logger.error(e.getMessage(), e);
+                java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerGroupsAdd class. Please check the details: " + e.getMessage(), e.getMessage());;
                 // Redirecting to the RegItemclasses list page
                 response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
             }
