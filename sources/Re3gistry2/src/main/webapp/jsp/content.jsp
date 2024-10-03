@@ -104,20 +104,30 @@
                     <%
                         String bulkOperationError = (String) request.getAttribute(BaseConstants.KEY_REQUEST_BULK_ERROR);
                         String bulkOperationSuccess = (String) request.getAttribute(BaseConstants.KEY_REQUEST_BULK_SUCCESS);
+                        String operationResult = (String) request.getAttribute(BaseConstants.KEY_REQUEST_OPERATIONRESULT);
+
                         if (bulkOperationError != null) {%>
                     <div class="alert alert-danger alert-dismissible mt-3" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <%=bulkOperationError%>
                     </div>
                     <% }
-                        if (bulkOperationSuccess != null) {%>
-                    <div class="alert alert-success text-center  alert-dismissible">
+
+        if (bulkOperationSuccess != null) {%>
+                    <div class="alert alert-success text-center alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h1 class="text-success text-center">${localization.getString("installation.success.login.congratulations")}</h1>
                         <hr/>
                         <%=bulkOperationSuccess%>
                     </div>
-                    <% }%>
+                    <% }
+
+        if (operationResult != null) {%>
+                    <div class="alert alert-danger alert-dismissible mt-3" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <%=operationResult%>
+                    </div>
+                    <% } %>
 
                     <%-- Language tabs --%>
                     <div class="browse-contents">

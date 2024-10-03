@@ -261,7 +261,7 @@ public class ATOMFormatter implements Formatter {
         // Get configuration properties
         final Properties configurationProperties = Configuration.getInstance().getProperties();
         String legacyFlag = configurationProperties.getProperty(BaseConstants.KEY_APPLICATION_LEGACY_FLAG);
-        if (legacyFlag.equals(BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON)) {
+        if (BaseConstants.KEY_APPLICATION_LEGACY_FLAG_ON.equals(legacyFlag)) {
             writeEmptyElement(xml, "name", "INSPIRE Registry team");
             writeEmptyElement(xml, "email", "JRC-INSPIRE-SUPPORT@ec.europa.eu");
         } else {
