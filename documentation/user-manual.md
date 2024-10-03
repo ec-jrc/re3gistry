@@ -544,6 +544,8 @@ Depending on the type of installation, using an external authentication provider
 
 Users can receive different email notifications to inform them about statuses and actions done to the items and actions they have taken part in. These notifications indicate the status of the items (Items been submitted, published etc.) and some of the actions done in the instance, such as permissions and roles given to a user.
 
+Please ensure that an email server is configured to handle notifications and proper delivery of emails.
+
 ## Bulk Import and Bulk Edit
 
 This feature allows the user to make modifications to multiple existing items.

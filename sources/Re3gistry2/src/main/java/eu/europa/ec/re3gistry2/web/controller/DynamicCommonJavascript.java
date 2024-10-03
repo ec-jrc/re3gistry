@@ -40,9 +40,11 @@ public class DynamicCommonJavascript extends HttpServlet {
 
         // Init frontend servlet
         Configuration.getInstance().initServlet(request, response, false, false);
+        if (!response.isCommitted()) {
+            // Dispatch request
+            request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_COMMONJS + WebConstants.PAGE_URINAME_COMMONJS + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
+        }
 
-        // Dispatch request
-        request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_COMMONJS + WebConstants.PAGE_URINAME_COMMONJS + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
     }
 
     @Override

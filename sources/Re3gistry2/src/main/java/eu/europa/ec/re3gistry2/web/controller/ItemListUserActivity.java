@@ -140,7 +140,7 @@ public class ItemListUserActivity extends HttpServlet {
             RegField regLabel = regFieldManager.getTitleRegField();
             List<RegLocalizationproposed> regLocalizationproposeds = regLocalizationproposedManager.getAll(regLabel, tmpRegitemproposed, regLanguagecode);
             if (regLocalizationproposeds.isEmpty()) {
-                regLocalizationproposeds = regLocalizationproposedManager.getAll(regLabel, tmpRegitemproposed, masterLanguage);
+                regLocalizationproposeds = regLocalizationproposedManager.getAll(regLabel, tmpRegitemproposed);
             }
 
             String refUuid = (tmpRegitemproposed.getRegItemReference() != null) ? tmpRegitemproposed.getRegItemReference().getUuid() : tmpRegitemproposed.getUuid();

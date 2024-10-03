@@ -63,6 +63,20 @@
                                         ${localization.getString("error.user.notavailable")}
                                     </div>
                                 </c:when>
+                                <c:when test="${userErrorMessages == constants.KEY_REQUEST_USER_RESETPASSWORD_NO_CONNECTION_ERROR}">
+                                    <div class=" alert alert-danger text-center">
+                                        <h1 class="text-danger text-center">${localization.getString("login.reset.password.title")}</h1>
+                                        <hr/>
+                                        ${localization.getString("error.user.noconnection")}
+                                    </div>
+                                </c:when>
+                                <c:when test="${userErrorMessages == constants.KEY_REQUEST_USER_RESETPASSWORD_GENERIC_ERROR}">
+                                    <div class=" alert alert-danger text-center">
+                                        <h1 class="text-danger text-center">${localization.getString("login.reset.password.title")}</h1>
+                                        <hr/>
+                                        ${localization.getString("error.user.generic")}
+                                    </div>
+                                </c:when>
                             </c:choose>
                             
 

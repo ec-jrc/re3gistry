@@ -26,60 +26,26 @@
  */
 package eu.europa.ec.re3gistry2.javaapi.cache.model;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import java.io.Serializable;
 
-/**
- * Common basic information about any registry item
- */
-@JsonPropertyOrder({
-    "uri",
-    "localid",
-    "version",
-    "lastVersion",
-    "versionHistory",
-    "language",
-    "type",
-    "insertDate",
-    "editDate",
-    "itemclass",
-    "registry",
-    "register",
-    "properties",
-    "containedItems"
-})
-public class Item extends ContainedItem implements Serializable {
+public class LastVersionInformation implements Serializable {
 
-   
-    private ItemRef registry;
-    private ItemRef register;
-    private List<RegLanguagecode> activeLanguages;
+    private final int number;
+    private final String uri;
 
-    public ItemRef getRegistry() {
-        return registry;
+    public LastVersionInformation(int number, String uri) {
+        this.number = number;
+        this.uri = uri;
     }
 
-    public void setRegistry(ItemRef registry) {
-        this.registry = registry;
+    public int getNumber() {
+        return number;
     }
 
-    public ItemRef getRegister() {
-        return register;
+    public String getUri() {
+        return uri;
     }
-
-    public void setRegister(ItemRef register) {
-        this.register = register;
-    }
-
-    public List<RegLanguagecode> getActiveLanguages() {
-        return activeLanguages;
-    }
-
-    public void setActiveLanguages(List<RegLanguagecode> activeLanguages) {
-        this.activeLanguages = activeLanguages;
-    }
+    
+    
 
 }

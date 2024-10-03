@@ -47,6 +47,7 @@ import org.apache.logging.log4j.Logger;
 import eu.europa.ec.re3gistry2.base.utility.BaseConstants;
 import eu.europa.ec.re3gistry2.base.utility.PersistenceFactory;
 import eu.europa.ec.re3gistry2.crudimplementation.RegItemclassManager;
+import eu.europa.ec.re3gistry2.crudimplementation.RegItemhistoryManager;
 import eu.europa.ec.re3gistry2.crudimplementation.RegLanguagecodeManager;
 import eu.europa.ec.re3gistry2.model.RegLanguagecode;
 import eu.europa.ec.re3gistry2.javaapi.cache.ItemCache;
@@ -62,9 +63,11 @@ import eu.europa.ec.re3gistry2.restapi.format.RORFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.XMLFormatter;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.Item;
 import eu.europa.ec.re3gistry2.javaapi.cache.model.ItemClass;
+import eu.europa.ec.re3gistry2.javaapi.cache.model.LastVersionInformation;
 import eu.europa.ec.re3gistry2.javaapi.cache.supplier.ItemproposedSupplier;
 import eu.europa.ec.re3gistry2.javaapi.cache.util.NoVersionException;
 import eu.europa.ec.re3gistry2.model.RegItemclass;
+import eu.europa.ec.re3gistry2.model.RegItemhistory;
 import eu.europa.ec.re3gistry2.restapi.format.ATOMFormatter;
 import eu.europa.ec.re3gistry2.restapi.format.XSDFormatter;
 import eu.europa.ec.re3gistry2.restapi.util.RequestUtil;
@@ -159,7 +162,7 @@ public class ItemsServlet extends HttpServlet {
                     byte[] body = JSONInternalFormatter.OM.writeValueAsBytes(toActiveLanguages);
                     resp.setContentType(type);
                     resp.setContentLength(body.length);
-                    try (OutputStream out = resp.getOutputStream()) {
+                    try ( OutputStream out = resp.getOutputStream()) {
                         out.write(body);
                     }
                     return;
@@ -212,24 +215,24 @@ public class ItemsServlet extends HttpServlet {
                     ItemproposedSupplier itemproposedSupplier = new ItemproposedSupplier(em, masterLanguage, languageCode);
 
                     Optional<Item> optItem = Optional.empty();
-                    
+
                     Integer version;
-                    try{
-                         version = getVersionFromUri(uri);
-                    }catch(Exception uriError){
+                    try {
+                        version = getVersionFromUri(uri);
+                    } catch (Exception uriError) {
                         version = 0;
                     }
-                    
-                    if(uuid != null && status != null ){                       
-                       throw new Exception();
-                    }else if (uuid != null){
-                        optItem = searchForItemByUuid(uuid, lang, itemSupplier, itemproposedSupplier, itemHistorySupplier);   
-                    }else if (uri != null && status != null){
+
+                    if (uuid != null && status != null) {
+                        throw new Exception();
+                    } else if (uuid != null) {
+                        optItem = searchForItemByUuid(uuid, lang, itemSupplier, itemproposedSupplier, itemHistorySupplier);
+                    } else if (uri != null && status != null) {
                         optItem = searchForItemByURIStatus(uri, lang, version, status, itemSupplier, itemproposedSupplier, itemHistorySupplier);
-                    } else if (uri != null){
+                    } else if (uri != null) {
                         optItem = searchForItemByURI(uri, version, lang, itemSupplier, itemproposedSupplier, itemHistorySupplier);
                     }
- 
+
                     //try to see if is a status request
                     if (!optItem.isPresent() && status == null) {
                         StatusSupplier statusSupplier = new StatusSupplier(em, masterLanguage, languageCode);
@@ -371,6 +374,7 @@ public class ItemsServlet extends HttpServlet {
         }
 
         Item item = itemSupplier.getItemByUri(uri);
+        item = getLatestVersionItem(item, uri);
         if (item == null) {
             return Optional.empty();
         }
@@ -402,7 +406,7 @@ public class ItemsServlet extends HttpServlet {
         }
         return Optional.of(item);
     }
-    
+
     private Optional<Item> getItemByUriAndStatus(String uri, String language, ItemSupplier itemSupplier, String itemStatus) throws Exception {
         Item cached = cache.getByUrl(language, uri, null, itemStatus);
         if (cached != null) {
@@ -439,12 +443,48 @@ public class ItemsServlet extends HttpServlet {
         }
 
         Item item = itemHistorySupplier.getItemHistoryByUri(uri, version);
+        item = getLatestVersionItem(item, uri);
         if (item == null) {
             return Optional.empty();
         }
 
         cache.add(language, item, version);
         return Optional.of(item);
+    }
+
+    private Item getLatestVersionItem(Item item, String uri) throws Exception {
+        int i = uri.lastIndexOf('/');
+        if (i < 0) {
+            throw new NoResultException();
+        }
+
+        String localidWithVersion = uri.substring(i + 1);
+        int uriCollection = uri.substring(0, i).lastIndexOf('/');
+        String regItemClassLocalId = uri.replace(localidWithVersion, "").substring(uriCollection + 1).replace("/", "");
+        EntityManager em = null;
+        em = emf.createEntityManager();
+
+        RegItemhistoryManager regItemHistoryManager = new RegItemhistoryManager(em);
+        RegItemclassManager regItemClassManager = new RegItemclassManager(em);
+        try {
+            RegItemclass parentRegItemClass = regItemClassManager.getByLocalid(regItemClassLocalId);
+            RegItemclass childRegItemClass = regItemClassManager.getChildItemclass(parentRegItemClass).get(0);
+
+            List<RegItemhistory> regItemHistory = regItemHistoryManager.getByLocalidAndRegItemClass(item.getLocalid(), childRegItemClass);
+            int uriIndex = uri.lastIndexOf(':');
+            String newUri = null;
+            if (uriIndex != -1 && uriIndex != 4) {
+                // Construir la nueva URI con el número modificado
+                newUri = uri.substring(0, uriIndex + 1) + (regItemHistory.size() + 1);
+            } else {
+                newUri = uri + ":" + (regItemHistory.size() + 1);
+            }
+            LastVersionInformation lastVersionInformation = new LastVersionInformation(regItemHistory.size() + 1, newUri);
+            item.setLastVersion(lastVersionInformation);
+        } catch (Exception ex) {
+            return item;
+        }
+        return item;
     }
 
     private Optional<Item> getItemStatusByUuid(String uuid, String language, StatusSupplier statusSupplier) throws Exception {
@@ -477,25 +517,25 @@ public class ItemsServlet extends HttpServlet {
     }
 
     private Optional<Item> searchForItemByUuid(String uuid, String lang, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
-        Optional <Item> optItem;
+        Optional<Item> optItem;
         try {
-                            optItem = getItemByUuid(uuid, lang, itemSupplier);
-                        } catch (Exception ex) {
-                            try {
-                                optItem = getItemProposedByUuid(uuid, lang, itemproposedSupplier);
-                            } catch (Exception e) {
-                                try {
-                                    optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
-                                } catch (Exception ex1) {
-                                    optItem = Optional.empty();
-                                }
-                            }
-                        }
+            optItem = getItemByUuid(uuid, lang, itemSupplier);
+        } catch (Exception ex) {
+            try {
+                optItem = getItemProposedByUuid(uuid, lang, itemproposedSupplier);
+            } catch (Exception e) {
+                try {
+                    optItem = getItemHistoryByUuid(uuid, lang, itemHistorySupplier);
+                } catch (Exception ex1) {
+                    optItem = Optional.empty();
+                }
+            }
+        }
         return optItem;
     }
 
     private Optional<Item> searchForItemByURI(String uri, Integer version, String lang, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
-        
+
         Optional<Item> optItem;
         optItem = Optional.empty();
 
@@ -525,52 +565,52 @@ public class ItemsServlet extends HttpServlet {
             }
             if (sizeHistory != 0 || sizeHistory + 1 != version) {
                 try {
-                    if(version.equals(sizeHistory + 1)){
-                    optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
-                    }else{          
-                    optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
+                    if (version.equals(sizeHistory + 1)) {
+                        optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
+                    } else {
+                        optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
                     }
                 } catch (Exception ex) {
                     optItem = Optional.empty();
                 }
             }
-            
-            if(sizeHistory == 0 && version == 1){
+
+            if (sizeHistory == 0 && version == 1) {
                 try {
                     optItem = getItemByUri(uri.replace(":" + version, ""), lang, itemSupplier);
                 } catch (Exception ex) {
                     optItem = Optional.empty();
                 }
             }
-            
+
         }
 
-        return optItem;     
+        return optItem;
     }
 
     private Optional<Item> searchForItemByURIStatus(String uri, String lang, Integer version, String status, ItemSupplier itemSupplier, ItemproposedSupplier itemproposedSupplier, ItemHistorySupplier itemHistorySupplier) {
-        
+
         Optional<Item> optItem;
-        
+
         if (version == 0) {
 
             if (status.equalsIgnoreCase("valid")
-                        || status.equalsIgnoreCase("invalid")
-                        || status.equalsIgnoreCase("superseded")
-                        || status.equalsIgnoreCase("retired")) {
+                    || status.equalsIgnoreCase("invalid")
+                    || status.equalsIgnoreCase("superseded")
+                    || status.equalsIgnoreCase("retired")) {
                 try {
                     optItem = getItemByUriAndStatus(uri.replace(":" + version, ""), lang, itemSupplier, status);
                 } catch (Exception ex) {
                     optItem = Optional.empty();
                 }
-            }else{
+            } else {
                 try {
                     optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
                 } catch (Exception ex) {
                     optItem = Optional.empty();
                 }
             }
-            
+
         } else {
             int sizeHistory;
             try {
@@ -578,9 +618,9 @@ public class ItemsServlet extends HttpServlet {
             } catch (Exception ex) {
                 sizeHistory = 0;
             }
-            
+
             if (sizeHistory == 0 || sizeHistory + 1 == version) {
-                
+
                 if (status.equalsIgnoreCase("valid")
                         || status.equalsIgnoreCase("invalid")
                         || status.equalsIgnoreCase("superseded")
@@ -590,13 +630,13 @@ public class ItemsServlet extends HttpServlet {
                     } catch (Exception ex) {
                         optItem = Optional.empty();
                     }
-                }else{
-                   try {
-                    optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
-                } catch (Exception e) {
-                    optItem = Optional.empty();
-                } 
-                } 
+                } else {
+                    try {
+                        optItem = getItemProposedByUriAndStatus(uri.replace(":" + version, ""), status, itemproposedSupplier);
+                    } catch (Exception e) {
+                        optItem = Optional.empty();
+                    }
+                }
             } else {
                 try {
                     optItem = getItemHistoryByUri(uri, lang, itemHistorySupplier, version);
@@ -605,7 +645,7 @@ public class ItemsServlet extends HttpServlet {
                 }
             }
         }
-        
+
         return optItem;
     }
 }

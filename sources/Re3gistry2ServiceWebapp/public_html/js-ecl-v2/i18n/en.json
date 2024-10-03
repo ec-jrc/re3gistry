@@ -27,6 +27,8 @@
     "s-inspire-community-forum":"INSPIRE community forum",
     "s-uri": "URI",
     "s-thisversion":"This version",
+    "s-GoToLastVersion": "(Go to the lastest version)",
+    "s-thisversionLast":"This version (Last version)",
     "s-versionhistory":"Version history",
     "s-collection-title":"Available items",
     "s-narrower-title":"Narrowers",

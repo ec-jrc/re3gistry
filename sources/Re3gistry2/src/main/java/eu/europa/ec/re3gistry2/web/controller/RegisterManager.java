@@ -61,6 +61,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -222,6 +223,7 @@ public class RegisterManager extends HttpServlet {
                         }
 
                     } catch (NoResultException e) {
+                         java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegisterManager class. Please check the details: " + e.getMessage(), e.getMessage());
                     }
                 }
 
@@ -235,6 +237,7 @@ public class RegisterManager extends HttpServlet {
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_REGISTERMANAGER + WebConstants.PAGE_URINAME_REGISTERMANAGER + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 
             } catch (Exception e) {
+                 java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegisterManager class. Please check the details: " + e.getMessage(), e.getMessage());
                 // Redirecting to the RegItemclasses list page
                 response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
             }

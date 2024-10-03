@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -78,7 +79,6 @@ public class RegistryManagerDataExport extends HttpServlet {
         String startIndex = request.getParameter(BaseConstants.KEY_REQUEST_STARTINDEX);
         String startCaching = request.getParameter(BaseConstants.KEY_REQUEST_STARTCACHING);
         String removeCaching = request.getParameter(BaseConstants.KEY_REQUEST_REMOVECACHING);
-      
 
         // Getting request parameter
         String regUserDetailUUID = request.getParameter(BaseConstants.KEY_REQUEST_USERDETAIL_UUID);
@@ -135,6 +135,7 @@ public class RegistryManagerDataExport extends HttpServlet {
                     body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_SOLR_SUCCESS);
                     result = true;
                 } catch (Exception e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerDataExport class. Please check the details: " + e.getMessage(), e.getMessage());
                     subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_SOLR_ERROR);
                     body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_SOLR_ERROR) + e.getMessage();
                     result = false;
@@ -154,41 +155,41 @@ public class RegistryManagerDataExport extends HttpServlet {
                 String subject;
                 String body;
                 CacheAll cacheall = null;
-                
+
                 //Regular all language cache
                 if (startCaching.equalsIgnoreCase("true")) {
                     cacheall = new CacheAll(entityManager, cache, null);
                 }
-                
+
                 //Selected languages Cache
-                if(!startCaching.equalsIgnoreCase("true")){
-                    
+                if (!startCaching.equalsIgnoreCase("true")) {
+
                     String[] res = startCaching.split("[,]", 0);
                     List<RegLanguagecode> localActiveLanguages = new ArrayList<>();
                     for (String re : res) {
-                        try{
+                        try {
                             RegLanguagecode code = regLanguagecodeManager.getByIso6391code(re);
-                            if(code != null){
-                           localActiveLanguages.add(code); 
-                           }
-                        }catch(Exception e){
-                            logger.trace("Unexpected exception occured", e);
+                            if (code != null) {
+                                localActiveLanguages.add(code);
+                            }
+                        } catch (Exception e) {
+                            java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerDataExport class. Please check the details: " + e.getMessage(), e.getMessage());
                             throw new Exception("Unexpected exception occured. " + e.getMessage());
                         }
-                        
+
                     }
 
                     cacheall = new CacheAll(entityManager, cache, localActiveLanguages);
                 }
-                
-                if(cacheall == null){
+
+                if (cacheall == null) {
                     cacheall = new CacheAll(entityManager, cache, null);
                 }
-                
+
                 boolean result;
-                
+
                 try {
-                    if (cacheClassUUID!=null) {
+                    if (cacheClassUUID != null) {
                         cacheall.run(cacheClassUUID);
                     } else {
                         cacheall.run(null);
@@ -197,6 +198,7 @@ public class RegistryManagerDataExport extends HttpServlet {
                     body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_CACHE_SUCCESS);
                     result = true;
                 } catch (Exception e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerDataExport class. Please check the details: " + e.getMessage(), e.getMessage());
                     subject = systemLocalization.getString(BaseConstants.KEY_EMAIL_SUBJECT_CACHE_ERROR);
                     body = systemLocalization.getString(BaseConstants.KEY_EMAIL_BODY_CACHE_ERROR);
                     result = false;
@@ -215,6 +217,7 @@ public class RegistryManagerDataExport extends HttpServlet {
                     cache.removeAll();
                     result = true;
                 } catch (Exception e) {
+                    java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerDataExport class. Please check the details: " + e.getMessage(), e.getMessage());
                     result = false;
                 }
                 request.setAttribute(BaseConstants.KEY_REQUEST_RESULT, result);
@@ -232,7 +235,7 @@ public class RegistryManagerDataExport extends HttpServlet {
                 request.getRequestDispatcher(WebConstants.PAGE_JSP_FOLDER + WebConstants.PAGE_PATH_REGISTRYMANAGER_DATAEXPORT + WebConstants.PAGE_URINAME_REGISTRYMANAGER_DATAEXPORT + WebConstants.PAGE_JSP_EXTENSION).forward(request, response);
 
             } catch (Exception e) {
-                logger.error(e.getMessage(), e);
+               java.util.logging.Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Error encountered within RegistryManagerDataExport class. Please check the details: " + e.getMessage(), e.getMessage());
                 // Redirecting to the RegItemclasses list page
                 response.sendRedirect("." + WebConstants.PAGE_PATH_INDEX + WebConstants.PAGE_URINAME_INDEX);
             }
