@@ -81,9 +81,9 @@ This tool allows you to **gather external records from third parties in one plac
 > Register interconnection is possible by connecting registers that implement the ROR data exchange specification. Re3gistry produces this exchange format automatically between its export formats.
 
 The European Commission Joint Research Center developed the Register Federation Tool as a testbed funded by the ISA Action 1.17 "ARE3NA" to test the feasibility of creating and declaring code list extensions that accommodate specific semantic needs while guaranteeing interoperability of the systems that use them.
-Since then, the European Commission has operated the [**INSPIRE federated registry**] (https://inspire.ec.europa.eu/register-federation/) to publish extensions to the INSPIRE code lists used in national and thematic contexts. This favours flexibility and the satisfaction of specific needs, guaranteeing the general interoperability of the INSPIRE spatial data infrastructure.
+Since then, the European Commission operated the INSPIRE federated registry until October 2024. It was used to publish extensions to the INSPIRE code lists used in national and thematic contexts. 
 
-**However, this tool can be used in any domain that uses semantic assets, so it is freely distributed as an open source for anyone who needs to cover this gap.**
+**This tool can be used in any domain that uses semantic assets, so it is freely distributed as an open source for anyone who needs to cover this gap.**
 
 ### Documentation
 * [RoR descriptor file](sources/Registry-Federation-Tool/documentation/administrator-manual.md)
