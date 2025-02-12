@@ -15,6 +15,7 @@ This page informs about the release strategy for the Re3gistry software and the 
 ## The release plan in a nutshell
 
 The annual release plan comprises:
+There is a single annual release:
 * A **major annual release** of the Re3gistry software is expected by the **end of June**, including major developments and bug fixes.
 * The Re3gistry major release is followed **two months later** by the **Register Federation Tool standalone major release**. 
 * In addition to these major releases, at least **two other minor releases** are expected for each tool throughout each year.
