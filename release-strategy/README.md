@@ -4,27 +4,26 @@
 
 - [Release strategy](#release-strategy)
   - [Table of contents](#table-of-contents)
-    - [The release plan in a nutshell](#the-release-plan-in-a-nutshell)
-    - [Release plan calendar](#release-plan-calendar)
-      - [Re3gistry software calendar for 2022-2024](#re3gistry-software-calendar-for-2022-2024)
-      - [Register Federation Tool calendar for 2022-2024](#register-federation-tool-calendar-for-2022-2024)
+  - [The release plan in a nutshell](#the-release-plan-in-a-nutshell)
+      - [Re3gistry software](#re3gistry-software)
+      - [Release plan calendar](#release-plan-calendar)
+      - [Re3gistry software calendar for 2025-2026](#re3gistry-software-calendar-for-2025-2026)
 
-
-This page informs about the release strategy for the Re3gistry software and the Register Federation Tool. It aims at clarifying the release planning process openly and transparently to the community.
+This page provides an overview of the release strategy for the Re3gistry software. Its purpose is to clearly and transparently communicate the release planning process to the community.
 
 ## The release plan in a nutshell
 
-There is a yearly single release:
+The Re3gistry software follows an annual release schedule:
 * A **annual release** of the Re3gistry software is expected in **mid-June**, including bug fixes.
-* Just so you know, this annual release will be carried out at the same time as the INSPIRE Reference validator.
+* These releases will be carried out at the same time as the INSPIRE Reference validator release.
 
 ###  Re3gistry software:
 
 - **Major release**: June 2025, June 2026
 
 **Notes**: 
-* The release will contain changes related to the implementation of bug fixes. 
-* This annual release may also contain improvements and developments carried out by the Re³gistry Requirements Clarification Group.
+* The release will contain changes related to essential bug fixes. 
+* This annual release may also include feature updates and new developments based on the work of the 'Re³gistry Requirements Clarification Group'.
 
 ## Release plan calendar
 Issues are assigned specific milestones to inform users which issues will be included in each release.
@@ -37,5 +36,5 @@ More information on published releases is available [here](https://github.com/ec
 | Release type | Expected by | Milestone         |
 | ------------ | ----------- | ----------------- |
 | Major        | Jun 25      | v2.6.3 13/06/2025 |
-| Major        | Jun 26      | v2.6.4 12/06/2026 |
+| Major        | Jun 26      | v2.6.4 xx/06/2026 |
 
