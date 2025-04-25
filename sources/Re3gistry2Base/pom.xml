@@ -28,19 +28,19 @@
             <version>4.15.0</version>
             <scope>provided</scope>
         </dependency>-->
-        <!--<dependency>
+        <dependency>
             <groupId>eu.cec.digit.ecas</groupId>
             <artifactId>ecas-tomcat-7.0</artifactId>
             <version>4.26.0</version>
             <type>jar</type>
             <scope>provided</scope>
-        </dependency>-->
-        <dependency>
+        </dependency>
+        <!--<dependency>
             <groupId>eu.europa.ec.digit.iam.ecas.client</groupId>
             <artifactId>ecas-tomcat-7.0</artifactId>
             <version>4.61.0</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
