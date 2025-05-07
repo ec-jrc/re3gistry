@@ -7,19 +7,19 @@
   - [The release plan in a nutshell](#the-release-plan-in-a-nutshell)
       - [Re3gistry software](#re3gistry-software)
       - [Release plan calendar](#release-plan-calendar)
-      - [Re3gistry software calendar for 2025-2026](#re3gistry-software-calendar-for-2025-2026)
+      - [Re3gistry software calendar for 2025-2026](#re3gistry-software-calendar-for-2025)
 
 This page provides an overview of the release strategy for the Re3gistry software. Its purpose is to clearly and transparently communicate the release planning process to the community.
 
 ## The release plan in a nutshell
 
 The Re3gistry software follows an annual release schedule:
-* An **annual release** of the Re3gistry software is scheduled in **mid-June**, including bug fixes.
-* These releases will be carried out at the same time as the INSPIRE Reference validator releases (scheduled with the same periodicity).
+* An **annual release** of the Re3gistry software is scheduled by the **end of September**, including bug fixes.
+* This release will be carried out at the same time as the INSPIRE Reference validator releases (scheduled with the same periodicity).
 
 ###  Re3gistry software:
 
-- **Major release**: June 2025, June 2026
+- **Major release**: September 2025
 
 **Notes**: 
 * The release will contain changes related to essential bug fixes. 
@@ -32,9 +32,9 @@ Milestones are available at [this page](https://github.com/ec-jrc/re3gistry/mile
 When a new version of the Re3gistry software is released, the corresponding milestone is closed and moved to the list of closed milestones. 
 More information on published releases is available [here](https://github.com/ec-jrc/re3gistry/releases). 
 
-###  Re3gistry software calendar for 2025-2026
+###  Re3gistry software calendar for 2025
 | Release type | Expected by | Milestone         |
 | ------------ | ----------- | ----------------- |
-| Major        | June 2025      | v2.6.2 13/06/2025 |
-| Major        | June 2026      | v2.6.3 15/06/2026 |
+| Major        | June 2025      | v2.6.2 30/09/2025 |
+| Major        | June 2026      | the need for this release will be reviewed |
 
