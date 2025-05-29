@@ -36,5 +36,5 @@ More information on published releases is available [here](https://github.com/ec
 | Release type | Expected by | Milestone         |
 | ------------ | ----------- | ----------------- |
 | Major        | September 2025      | v2.6.2 30/09/2025 |
-| Major        | June 2026      | The need for this release will be reviewed |
+| Major        | September 2026      | The need for this release will be reviewed |
 
