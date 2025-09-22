@@ -244,7 +244,7 @@ public class RegistryManagerUsersAdd extends HttpServlet {
                         final Properties configurationProperties = Configuration.getInstance().getProperties();
 
                         if (loginType.equals(BaseConstants.KEY_PROPERTY_LOGIN_TYPE_SHIRO)) {
-                            String mailHost = configurationProperties.getProperty(BaseConstants.KEY_MAIL_HOST);
+                            String mailHost = configurationProperties.getProperty(BaseConstants.KEY_MAIL_APPLICATION_ROOTURL);
                             String activationUrl = mailHost.concat(WebConstants.EMAIL_URL).concat(WebConstants.PAGE_URINAME_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("=" + codeActivation.getCode());
                             String deletionUrl = mailHost.concat(WebConstants.EMAIL_URL).concat(WebConstants.PAGE_URINAME_ACTIVATE).concat("?").concat(BaseConstants.KEY_PROPERTY_CODE).concat("=" + codeDeletion.getCode());
 
