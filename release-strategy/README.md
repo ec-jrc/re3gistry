@@ -14,12 +14,12 @@ This page provides an overview of the release strategy for the Re3gistry softwar
 ## The release plan in a nutshell
 
 The Re3gistry software follows an annual release schedule:
-* An **annual release** of the Re3gistry software is scheduled by the **end of September**, including bug fixes.
+* An **annual release** of the Re3gistry software is scheduled, including bug fixes.
 * These releases will be carried out taking into account the INSPIRE Reference validator releases.
 
 ###  Re3gistry software:
 
-- **Major release**: September 2025
+- **Major release**: September 2025, June 2026
 
 **Notes**: 
 * The release will contain changes related to essential bug fixes. 
@@ -36,5 +36,5 @@ More information on published releases is available [here](https://github.com/ec
 | Release type | Expected by | Milestone         |
 | ------------ | ----------- | ----------------- |
 | Major        | September 2025      | v2.6.2 30/09/2025 |
-| Major        | September 2026      | The need for this release will be reviewed |
+| Major        | June 2026           | v2.6.3 15/06/2026 |
 
