@@ -134,7 +134,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.6</version>
+            <version>[4.5.13,)</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -173,7 +173,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20141113</version>
+            <version>[20231013,)</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -183,7 +183,7 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.17.1</version>
+            <version>[2.25.3,)</version>
         </dependency>
         <dependency>
             <groupId>${dependency.postgres.group.id}</groupId>
@@ -212,9 +212,9 @@
             <version>1.2</version>
         </dependency>
         <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <version>2.7.2</version>
+		  <groupId>xalan</groupId>
+		  <artifactId>xalan</artifactId>
+		  <version>[2.7.3,)</version>
         </dependency>
     </dependencies>
     

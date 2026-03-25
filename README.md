@@ -81,9 +81,9 @@ This tool allows you to **gather external records from third parties in one plac
 > Register interconnection is possible by connecting registers that implement the ROR data exchange specification. Re3gistry produces this exchange format automatically between its export formats.
 
 The European Commission Joint Research Center developed the Register Federation Tool as a testbed funded by the ISA Action 1.17 "ARE3NA" to test the feasibility of creating and declaring code list extensions that accommodate specific semantic needs while guaranteeing interoperability of the systems that use them.
-Since then, the European Commission has operated the [**INSPIRE federated registry**] (https://inspire.ec.europa.eu/register-federation/) to publish extensions to the INSPIRE code lists used in national and thematic contexts. This favours flexibility and the satisfaction of specific needs, guaranteeing the general interoperability of the INSPIRE spatial data infrastructure.
+Since then, the European Commission operated the INSPIRE federated registry until October 2024. It was used to publish extensions to the INSPIRE code lists used in national and thematic contexts. 
 
-**However, this tool can be used in any domain that uses semantic assets, so it is freely distributed as an open source for anyone who needs to cover this gap.**
+**This tool can be used in any domain that uses semantic assets, so it is freely distributed as an open source for anyone who needs to cover this gap.**
 
 ### Documentation
 * [RoR descriptor file](sources/Registry-Federation-Tool/documentation/administrator-manual.md)
@@ -120,5 +120,5 @@ The Re3gistry project has established a governance model with well-defined proce
 Re3gistry welcomes contributions from everyone; please read carefully the [contribution guidelines](contribution.md) and follow our [Code of Conduct](https://github.com/ec-jrc/re3gistry/blob/master/CODE_OF_CONDUCT.adoc).
 
 ## Release plan
-Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2022-2024.
+Check out the [Re3gistry release plan](https://github.com/ec-jrc/re3gistry/tree/master/release-strategy) for 2025-2026.
 
